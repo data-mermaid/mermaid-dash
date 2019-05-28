@@ -1,0 +1,48 @@
+{
+  "name": "mermaid-dashboard",
+  "version": "0.0.1",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1",
+    "styled-components": "^4.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/data-mermaid/mermaid-dash.git"
+  },
+  "keywords": [
+    "skeleton"
+  ],
+  "author": "Data Mermaid <hi@sparkgeo.com>",
+  "bugs": {
+    "url": "https://github.com/data-mermaid/mermaid-dash/issues"
+  },
+  "homepage": "https://github.com/data-mermaid/mermaid-dash#readme",
+  "engines": {
+    "node": ">=10.15.3 <11.00",
+    "npm": "~6.8.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
