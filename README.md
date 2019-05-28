@@ -1,6 +1,8 @@
 # mermaid-dash
 
-MERMAID global dashboard. A read-only platform that summarizes all the information collected through the datamermaid application. You can read more about [datamermaid here](https://datamermaid.org/).
+MERMAID Global Dashboard. A read-only platform that summarizes all the information collected through the datamermaid application. You can read more about [datamermaid here](https://datamermaid.org/).
+
+MERMAID Global Dashboard uses Create-React-App for its build tooling.
 
 ## Setup
 
@@ -21,3 +23,4 @@ Once you've installed Node, you should fork this repo, then clone locally. Once 
 ### Run/Test
 
 You can run the application using `npm start`. To run the existing tests, run `npm run test`.
+
