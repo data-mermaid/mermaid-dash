@@ -6,6 +6,8 @@ MERMAID Global Dashboard uses Create-React-App for its build tooling.
 
 ## Setup
 
+If you've been onboarded, or have worked with a Node-based project that uses NPM or Yarn, you will be in a comfortable, familiar space. If not, we suggest that you take some time to brush up on how Node works, and how you can use it to build new projects through tutorials such as (but not limited to) [this](https://www.tutorialspoint.com/nodejs/nodejs_npm.htm). We also suggest that you be familiar with how to use [git](https://try.github.io/).
+
 ### Base Requirements
 
 #### Node
