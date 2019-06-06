@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import styled, { keyframes, ThemeProvider } from "styled-components";
+import React, { Component } from 'react';
+import styled, { keyframes, ThemeProvider } from 'styled-components/macro';
 
-import { theme1, theme2, Button, GlobalStyle } from "./theme/globalStyle";
-import ThemeSelect from "./components/ThemeSelect";
+import { theme1, theme2, Button, GlobalStyle } from './theme/globalStyle';
+import ThemeSelect from './components/ThemeSelect';
 
 const logo =
-  "https://user-images.githubusercontent.com/234708/37256552-32635a02-2554-11e8-8fe3-8ab5bd969d8e.png";
+  'https://user-images.githubusercontent.com/234708/37256552-32635a02-2554-11e8-8fe3-8ab5bd969d8e.png';
 
 const AppWrapper = styled.div`
   text-align: center;
@@ -48,7 +48,7 @@ const AppIntro = styled.p`
 `;
 
 const EmojiWrapper = styled.span.attrs({
-  role: "img"
+  role: 'img'
 })``;
 
 const Underline = styled.span`
@@ -68,7 +68,7 @@ class App extends Component {
   };
   handleThemeChange = e => {
     let theme = e.target.value;
-    theme === "theme1" ? (theme = theme1) : (theme = theme2);
+    theme === 'theme1' ? (theme = theme1) : (theme = theme2);
     this.setState({ theme });
   };
   render() {
@@ -81,17 +81,17 @@ class App extends Component {
             <AppTitle>Welcome to React</AppTitle>
           </AppHeader>
           <AppIntro>
-            Bootstrapped with{" "}
+            Bootstrapped with{' '}
             <Underline>
               <code>create-react-app</code>
             </Underline>
             .
           </AppIntro>
           <AppIntro>
-            Components styled with{" "}
+            Components styled with{' '}
             <Underline>
               <code>styled-components</code>
-            </Underline>{" "}
+            </Underline>{' '}
             <EmojiWrapper aria-label="nail polish">💅</EmojiWrapper>
           </AppIntro>
           <Button>Normal Button</Button>
@@ -103,5 +103,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;
