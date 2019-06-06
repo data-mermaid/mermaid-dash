@@ -147,3 +147,5 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+build/
