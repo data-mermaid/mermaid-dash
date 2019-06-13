@@ -34,7 +34,6 @@
   "devDependencies": {
     "babel-plugin-macros": "^2.6.1",
     "husky": "^2.3.0",
-    "jest": "^24.8.0",
     "lint-staged": "^8.1.7",
     "prettier": "^1.17.1",
     "react-test-renderer": "^16.8.6"
