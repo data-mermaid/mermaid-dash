@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 
+import Mapcanvas from './containers/Mapcanvas/Mapcanvas';
+
 class App extends Component {
-  state = {};
   render() {
-    return <div>hello react</div>;
+    return (
+      <div className="App">
+        <section>
+          <Mapcanvas />
+        </section>
+      </div>
+    );
   }
 }
 export default App;
