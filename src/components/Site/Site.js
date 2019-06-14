@@ -2,7 +2,7 @@ import React from 'react';
 
 const site = props => (
   <article>
-    <div>Site Component</div>
+    <header>{props.siteName}</header>
   </article>
 );
 
