@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Route, Switch } from 'react-router-dom';
 
 import Sites from '../Mapcanvas/Sites/Sites';
+import SiteView from '../Mapcanvas/SiteView/SiteView';
 
 class Mapcanvas extends Component {
   render() {
     return (
       <div className="Mapcanvas">
         <p>TOOLBAR</p>
-        <Sites />
+        <Switch>
+          <Route path="/:id" exact component={SiteView} />
+          <Route path="/" component={Sites} />
+        </Switch>
       </div>
     );
   }
