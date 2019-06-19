@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
-
 class SiteDetail extends Component {
   state = {
     loadedSites: null
