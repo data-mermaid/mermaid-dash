@@ -20,14 +20,21 @@ class SiteList extends Component {
 
   render() {
     let sites = this.state.sites.map(site => {
-      return <SiteItem key={site.id} site={site} clicked={() => this.siteSelectHandler(site.id)} />;
+      return (
+        <div className="item" key={site.id}>
+          <div className="header">
+            <SiteItem site={site} clicked={() => this.siteSelectHandler(site.id)} />
+          </div>
+          {site.properties.country_name}
+        </div>
+      );
     });
 
     return (
       <div>
         <section>
-          <p>LIST OF SITES: </p>
-          {sites}
+          <h2 className="header">List of Sites:</h2>
+          <div className="ui list">{sites}</div>
         </section>
       </div>
     );

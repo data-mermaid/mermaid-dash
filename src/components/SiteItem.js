@@ -1,11 +1,7 @@
 import React from 'react';
 
 const site = props => (
-  <div>
-    <article onClick={props.clicked}>
-      <header>{props.site.properties.site_name}</header>
-    </article>
-  </div>
+  <div onClick={props.clicked}>{props.site.properties.site_name} ( click me! )</div>
 );
 
 export default site;

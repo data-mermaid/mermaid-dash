@@ -23,7 +23,7 @@ class MapCanvas extends Component {
   };
 
   render() {
-    return <div>MAP</div>;
+    return <h1 className="header">MAP</h1>;
   }
 }
 
