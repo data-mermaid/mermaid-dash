@@ -8,10 +8,17 @@ class SiteList extends Component {
     sites: []
   };
 
-  componentDidMount() {
-    summary.get('/sites').then(response => {
-      this.setState({ sites: response.data.features });
-    });
+  // componentDidMount() {
+  //   summary.get('/sites').then(response => {
+  //     this.setState({ sites: response.data.features });
+  //   });
+  // }
+
+  async componentDidMount() {
+    const {
+      data: { features: sites }
+    } = await summary.get('/sites');
+    this.setState({ sites });
   }
 
   siteSelectHandler(id) {
@@ -19,11 +26,11 @@ class SiteList extends Component {
   }
 
   render() {
-    let sites = this.state.sites.map(site => {
+    const sites = this.state.sites.map(site => {
       return (
         <div className="item" key={site.id}>
           <div className="header">
-            <SiteItem site={site} clicked={() => this.siteSelectHandler(site.id)} />
+            <SiteItem site={site} clickedFn={() => this.siteSelectHandler(site.id)} />
           </div>
           {site.properties.country_name}
         </div>

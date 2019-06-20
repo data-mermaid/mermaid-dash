@@ -25,6 +25,7 @@ class SiteDetail extends Component {
       }
     }
   }
+
   render() {
     return (
       <div>
