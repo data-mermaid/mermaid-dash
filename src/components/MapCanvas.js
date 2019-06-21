@@ -49,7 +49,7 @@ class MapCanvas extends Component {
     );
 
     return (
-      <div className="map-overlay">
+      <div className="MapOverlay">
         <ReactMapGL
           {...this.state.viewport}
           mapboxApiAccessToken={MAPBOX_TOKEN}

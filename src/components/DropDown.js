@@ -7,7 +7,7 @@ class DropDown extends Component {
     const siteList =
       this.props.siteList.length > 0 ? (
         <Dropdown
-          className="dropdown-style"
+          className="DropDown"
           placeholder="Select site"
           fluid
           selection
