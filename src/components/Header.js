@@ -1,18 +1,47 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Menu, Segment, Button } from 'semantic-ui-react';
 
-const Header = () => (
-  <div className="ui inverted pointing menu">
-    <div className="item">MERMAID</div>
-    <div className="right menu">
-      <div className="item">COLLECT</div>
-      <div className="item">ABOUT THESE DATA</div>
-      <div className="item">PRIVACY</div>
-      <div className="item">CONTACT</div>
-      <div className="item">
-        <button className="ui inverted button">Show Full Map</button>
-      </div>
-    </div>
-  </div>
-);
+class Header extends Component {
+  state = { activeItem: 'COLLECT' };
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
+  render() {
+    const { activeItem } = this.state;
+
+    return (
+      <Segment inverted>
+        <Menu inverted pointing secondary>
+          <Menu.Item name="MERMAID" />
+          <Menu.Menu position="right">
+            <Menu.Item
+              name="COLLECT"
+              active={activeItem === 'COLLECT'}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="ABOUT THESE DATA"
+              active={activeItem === 'ABOUT THESE DATA'}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="PRIVACY"
+              active={activeItem === 'PRIVACY'}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="CONTACT"
+              active={activeItem === 'CONTACT'}
+              onClick={this.handleItemClick}
+            />
+          </Menu.Menu>
+          <Menu.Item>
+            <Button inverted>Show Full Map</Button>
+          </Menu.Item>
+        </Menu>
+      </Segment>
+    );
+  }
+}
 
 export default Header;

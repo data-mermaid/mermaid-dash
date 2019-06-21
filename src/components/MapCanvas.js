@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Header } from 'semantic-ui-react';
 
 import summary from '../apis/summary';
 
@@ -20,7 +21,7 @@ class MapCanvas extends Component {
   }
 
   render() {
-    return <h1 className="header">MAP</h1>;
+    return <Header as="h1">MAP</Header>;
   }
 }
 

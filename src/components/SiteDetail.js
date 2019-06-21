@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
+
 class SiteDetail extends Component {
   state = {
     loadedSites: null
@@ -28,7 +29,7 @@ class SiteDetail extends Component {
   render() {
     return (
       <div>
-        <section>Site Detail View Page</section>
+        <p>Site Detail View Page</p>
       </div>
     );
   }

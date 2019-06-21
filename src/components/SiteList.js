@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
+import { Header, List } from 'semantic-ui-react';
 
 import SiteItem from './SiteItem';
 
@@ -22,21 +23,19 @@ class SiteList extends Component {
   render() {
     const sites = this.state.sites.map(site => {
       return (
-        <div className="item" key={site.id}>
-          <div className="header">
+        <List.Item key={site.id}>
+          <Header as="h3">
             <SiteItem site={site} clickedFn={() => this.siteSelectHandler(site.id)} />
-          </div>
+          </Header>
           {site.properties.country_name}
-        </div>
+        </List.Item>
       );
     });
 
     return (
       <div>
-        <section>
-          <h2 className="header">List of Sites:</h2>
-          <div className="ui list">{sites}</div>
-        </section>
+        <Header as="h1">List of Sites:</Header>
+        <List>{sites}</List>
       </div>
     );
   }
