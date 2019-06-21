@@ -10,12 +10,10 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
-          <Header />
-          <MapCanvas />
-          <Route path="/" exact component={SiteList} />
-          <Route path="/:id" component={SiteDetail} />
-        </div>
+        <Header />
+        <MapCanvas />
+        <Route path="/" exact component={SiteList} />
+        <Route path="/:id" component={SiteDetail} />
       </BrowserRouter>
     );
   }
