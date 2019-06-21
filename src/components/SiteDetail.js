@@ -13,15 +13,14 @@ class SiteDetail extends Component {
     this.loadSiteData();
   }
 
-  loadSiteData() {
-    if (this.props.match.params.id) {
-      if (
-        !this.state.loadedSites ||
-        (this.state.loadedSites && this.state.loadedSites.id !== this.props.match.params.id)
-      ) {
-        summary.get('/sites/' + this.props.match.params.id).then(response => {
-          this.setState({ loadedSites: response.data });
-        });
+  async loadSiteData() {
+    const { id: matchId } = this.props.match.params;
+    const { loadedSites } = this.state;
+
+    if (matchId) {
+      if (!loadedSites || (loadedSites && loadedSites.id !== matchId)) {
+        const { data: loadedSites } = await summary.get('/sites/' + matchId);
+        this.setState({ loadedSites });
       }
     }
   }

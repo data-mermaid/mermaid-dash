@@ -8,12 +8,6 @@ class SiteList extends Component {
     sites: []
   };
 
-  // componentDidMount() {
-  //   summary.get('/sites').then(response => {
-  //     this.setState({ sites: response.data.features });
-  //   });
-  // }
-
   async componentDidMount() {
     const {
       data: { features: sites }
