@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
-import { Header } from 'semantic-ui-react';
 
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
@@ -38,7 +37,6 @@ class SiteList extends Component {
 
     return (
       <div>
-        <Header as="h1">Summary</Header>
         <DropDown siteList={newSiteList} onSelectChange={this.onSelectChange} />
         <SiteDetail selectSite={this.state.selectSite} />
       </div>
