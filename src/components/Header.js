@@ -1,21 +1,47 @@
 import React, { Component } from 'react';
+import { Menu, Segment } from 'semantic-ui-react';
 
 import ToggleMap from './ToggleMap';
+
 class Header extends Component {
+  state = { activeItem: 'COLLECT' };
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
   render() {
+    const { activeItem } = this.state;
+
     return (
-      <div className="ui inverted pointing menu">
-        <div className="item">MERMAID</div>
-        <div className="right menu">
-          <div className="item">COLLECT</div>
-          <div className="item">ABOUT THESE DATA</div>
-          <div className="item">PRIVACY</div>
-          <div className="item">CONTACT</div>
-          <div className="item">
+      <Segment inverted>
+        <Menu inverted pointing secondary>
+          <Menu.Item name="MERMAID" />
+          <Menu.Menu position="right">
+            <Menu.Item
+              name="COLLECT"
+              active={activeItem === 'COLLECT'}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="ABOUT THESE DATA"
+              active={activeItem === 'ABOUT THESE DATA'}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="PRIVACY"
+              active={activeItem === 'PRIVACY'}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="CONTACT"
+              active={activeItem === 'CONTACT'}
+              onClick={this.handleItemClick}
+            />
+          </Menu.Menu>
+          <Menu.Item>
             <ToggleMap toggle={this.props.toggle} />
-          </div>
-        </div>
-      </div>
+          </Menu.Item>
+        </Menu>
+      </Segment>
     );
   }
 }

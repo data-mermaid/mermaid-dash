@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
+import { Grid } from 'semantic-ui-react';
 
 import SiteList from './SiteList';
 
 class DashBoard extends Component {
   render() {
     const dashboard = this.props.showFullMap ? (
-      <div className="ui grid">
-        <div className="row">
-          <div className="eight wide column" />
-          <div className="seven wide column">
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={8} />
+          <Grid.Column width={7}>
             <SiteList />
-          </div>
-        </div>
-      </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     ) : null;
 
     return <div>{dashboard}</div>;

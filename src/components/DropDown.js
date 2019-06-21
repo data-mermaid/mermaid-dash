@@ -4,9 +4,8 @@ import './DropDown.css';
 
 class DropDown extends Component {
   render() {
-    let siteList = <div>loading</div>;
-    if (this.props.siteList.length > 0) {
-      siteList = (
+    const siteList =
+      this.props.siteList.length > 0 ? (
         <Dropdown
           className="dropdown-style"
           placeholder="Select site"
@@ -15,9 +14,11 @@ class DropDown extends Component {
           onChange={this.props.onSelectChange}
           options={this.props.siteList}
         />
+      ) : (
+        <div>loading</div>
       );
-    }
-    return siteList;
+
+    return <div>{siteList}</div>;
   }
 }
 

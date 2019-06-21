@@ -1,29 +1,27 @@
 import React, { Component } from 'react';
+import { Header } from 'semantic-ui-react';
 
 import summary from '../apis/summary';
+
 class MapCanvas extends Component {
   state = {
     geometry: {}
   };
 
-  //here just test the onViewChange function for now
   componentDidMount() {
     this.onViewChange();
   }
 
-  onViewChange = () => {
-    const data = {
+  async onViewChange() {
+    const geoData = {
       geometry: this.state.geometry
     };
-
-    summary.post('/sites', data).then(response => {
-      //just inital set up, response will filter and return all geometry feature here.
-      // console.log(response);
-    });
-  };
+    const { data: result } = await summary.post('/sites', geoData);
+    console.log(result);
+  }
 
   render() {
-    return <h1 className="header">MAP</h1>;
+    return <Header as="h1">MAP</Header>;
   }
 }
 

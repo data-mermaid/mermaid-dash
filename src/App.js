@@ -17,13 +17,12 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
-          <Header toggle={this.toggle} />
-          <MapCanvas />
-          <DashBoard showFullMap={this.state.show} />
-        </div>
+        <Header toggle={this.toggle} />
+        <MapCanvas />
+        <DashBoard showFullMap={this.state.show} />
       </BrowserRouter>
     );
   }
 }
+
 export default App;
