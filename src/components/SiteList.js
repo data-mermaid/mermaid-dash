@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
 
-import SiteItem from './SiteItem';
+import SiteDetail from './SiteDetail';
+import DropDown from './DropDown';
 
 class SiteList extends Component {
   state = {
-    sites: []
+    sites: [],
+    selectSite: null,
+    selectDropdown: null
   };
-
-  // componentDidMount() {
-  //   summary.get('/sites').then(response => {
-  //     this.setState({ sites: response.data.features });
-  //   });
-  // }
 
   async componentDidMount() {
     const {
@@ -22,27 +19,30 @@ class SiteList extends Component {
   }
 
   siteSelectHandler(id) {
-    this.props.history.push({ pathname: '/' + id });
+    this.setState({ selectSite: id });
   }
 
+  onSelectChange = (e, data) => {
+    const getSite = data.options.find(site => (site.value === data.value ? site.key : null));
+    this.setState({ selectSite: getSite.key });
+  };
+
   render() {
-    const sites = this.state.sites.map(site => {
-      return (
-        <div className="item" key={site.id}>
-          <div className="header">
-            <SiteItem site={site} clickedFn={() => this.siteSelectHandler(site.id)} />
-          </div>
-          {site.properties.country_name}
-        </div>
-      );
+    const newSiteList = this.state.sites.map(site => {
+      return {
+        key: site.id,
+        text: site.properties.site_name,
+        value: site.properties.site_name
+      };
     });
 
     return (
       <div>
         <section>
-          <h2 className="header">List of Sites:</h2>
-          <div className="ui list">{sites}</div>
+          <h1 className="header">Summary</h1>
+          <DropDown siteList={newSiteList} onSelectChange={this.onSelectChange} />
         </section>
+        <SiteDetail selectSite={this.state.selectSite} />
       </div>
     );
   }

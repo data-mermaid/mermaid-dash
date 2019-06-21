@@ -18,7 +18,7 @@ class MapCanvas extends Component {
 
     summary.post('/sites', data).then(response => {
       //just inital set up, response will filter and return all geometry feature here.
-      console.log(response);
+      // console.log(response);
     });
   };
 

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
+
 class SiteDetail extends Component {
   state = {
-    loadedSites: null
+    loadedSite: null
   };
 
   componentDidMount() {
@@ -14,24 +15,29 @@ class SiteDetail extends Component {
   }
 
   loadSiteData() {
-    if (this.props.match.params.id) {
+    if (this.props.selectSite) {
       if (
-        !this.state.loadedSites ||
-        (this.state.loadedSites && this.state.loadedSites.id !== this.props.match.params.id)
+        !this.state.loadedSite ||
+        (this.state.loadedSite && this.state.loadedSite.id !== this.props.selectSite)
       ) {
-        summary.get('/sites/' + this.props.match.params.id).then(response => {
-          this.setState({ loadedSites: response.data });
+        summary.get('/sites/' + this.props.selectSite).then(response => {
+          this.setState({ loadedSite: response.data });
         });
       }
     }
   }
 
   render() {
-    return (
-      <div>
-        <section>Site Detail View Page</section>
+    const site = this.state.loadedSite ? (
+      <div className="ui segment">
+        <h2 className="header">{this.state.loadedSite.properties.site_name}</h2>
+        <p>Exposure: {this.state.loadedSite.properties.exposure}</p>
+        <p>Reef Type: {this.state.loadedSite.properties.reef_type}</p>
+        <p>Reef Zone: {this.state.loadedSite.properties.reef_zone}</p>
       </div>
-    );
+    ) : null;
+
+    return <div>{site}</div>;
   }
 }
 
