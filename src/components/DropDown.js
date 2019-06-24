@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
-import './DropDown.css';
+import styled from 'styled-components/macro';
+
+const SiteDropDown = styled.div`
+  margin: 10px 0 10px 0;
+`;
 
 class DropDown extends Component {
   render() {
     const siteList =
       this.props.siteList.length > 0 ? (
         <Dropdown
-          className="DropDown"
           placeholder="Select site"
           fluid
           selection
@@ -15,10 +18,10 @@ class DropDown extends Component {
           options={this.props.siteList}
         />
       ) : (
-        <div>loading</div>
+        <div>Loading</div>
       );
 
-    return <div>{siteList}</div>;
+    return <SiteDropDown>{siteList}</SiteDropDown>;
   }
 }
 
