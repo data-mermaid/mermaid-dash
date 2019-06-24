@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { Icon } from 'semantic-ui-react';
+import styled from 'styled-components/macro';
 
 import summary from '../apis/summary';
-import './MapCanvas.css';
 
 const MAPBOX_TOKEN =
   'pk.eyJ1Ijoibmlja2hvYW5nIiwiYSI6ImNqeDB3NzNzbjAzamg0Ym83aXZmcWEzbDcifQ.hvWWVoMPsWS2KVa8nFfOkA';
+
+const MapWrapper = styled.div`
+  position: absolute;
+`;
 
 class MapCanvas extends Component {
   state = {
@@ -49,7 +53,7 @@ class MapCanvas extends Component {
     );
 
     return (
-      <div className="MapOverlay">
+      <MapWrapper>
         <ReactMapGL
           {...this.state.viewport}
           mapboxApiAccessToken={MAPBOX_TOKEN}
@@ -58,7 +62,7 @@ class MapCanvas extends Component {
         >
           {siteLocations}
         </ReactMapGL>
-      </div>
+      </MapWrapper>
     );
   }
 }
