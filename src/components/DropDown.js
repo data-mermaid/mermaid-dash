@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import styled from 'styled-components/macro';
 
-const SiteDropDown = styled.div`
+const DropDownWrapper = styled.div`
   margin: 10px 0 10px 0;
 `;
 
@@ -21,7 +21,7 @@ class DropDown extends Component {
         <div>Loading</div>
       );
 
-    return <SiteDropDown>{siteList}</SiteDropDown>;
+    return <DropDownWrapper>{siteList}</DropDownWrapper>;
   }
 }
 
