@@ -26,15 +26,17 @@
     "lint": "eslint src/**/*"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
+    "semantic-ui-react": "^0.87.2",
     "styled-components": "^4.2.0"
   },
   "devDependencies": {
     "babel-plugin-macros": "^2.6.1",
     "husky": "^2.3.0",
-    "jest": "^24.8.0",
     "lint-staged": "^8.1.7",
     "prettier": "^1.17.1",
     "react-test-renderer": "^16.8.6"
