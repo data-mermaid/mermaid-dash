@@ -6,7 +6,7 @@ import styled from 'styled-components/macro';
 import summary from '../apis/summary';
 
 const MAPBOX_TOKEN =
-  'pk.eyJ1Ijoibmlja2hvYW5nIiwiYSI6ImNqeDB3NzNzbjAzamg0Ym83aXZmcWEzbDcifQ.hvWWVoMPsWS2KVa8nFfOkA';
+  'pk.eyJ1Ijoibmlja2hvYW5nIiwiYSI6ImNqeDB3NzNzbjAzamg0Ym83aXZmcWEzbDcifQ.hvWWVoMPsWS2KVa8nFfOkA'; //Will be moved to env file, leave here for testing
 
 const MapWrapper = styled.div`
   position: absolute;

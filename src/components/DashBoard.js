@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 import SiteList from './SiteList';
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1
+  },
+  containerBox: {
+    margin: '10px 0 0 0'
+  }
+});
+
 class DashBoard extends Component {
   render() {
+    const { classes } = this.props;
+
     const dashboard = this.props.showFullMap ? (
-      <Grid>
-        <Grid.Row>
-          <Grid.Column width={8} />
-          <Grid.Column width={7}>
-            <SiteList />
-          </Grid.Column>
-        </Grid.Row>
+      <Grid container className={classes.containerBox}>
+        <Grid item sm={6} />
+        <Grid item sm={5}>
+          <SiteList />
+        </Grid>
       </Grid>
     ) : null;
-
     return <div>{dashboard}</div>;
   }
 }
 
-export default DashBoard;
+export default withStyles(styles)(DashBoard);

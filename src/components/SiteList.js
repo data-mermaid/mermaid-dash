@@ -17,27 +17,26 @@ class SiteList extends Component {
     this.setState({ sites });
   }
 
-  siteSelectHandler(id) {
-    this.setState({ selectSite: id });
-  }
-
-  onSelectChange = (e, data) => {
-    const getSite = data.options.find(site => (site.value === data.value ? site.key : null));
-    this.setState({ selectSite: getSite.key });
+  siteSelectHandler = selectedOption => {
+    this.setState({ selectSite: selectedOption });
   };
 
   render() {
     const newSiteList = this.state.sites.map(site => {
       return {
         key: site.id,
-        text: site.properties.site_name,
+        label: site.properties.site_name,
         value: site.properties.site_name
       };
     });
 
     return (
       <div>
-        <DropDown siteList={newSiteList} onSelectChange={this.onSelectChange} />
+        <DropDown
+          selectSite={this.state.selectSite}
+          siteList={newSiteList}
+          siteSelectHandler={this.siteSelectHandler}
+        />
         <SiteDetail selectSite={this.state.selectSite} />
       </div>
     );

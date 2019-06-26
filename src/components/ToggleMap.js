@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components/macro';
 import { ButtonStyle } from './Button';
 
 const theme = {
-  fg: '#1B1C1D',
+  fg: '#2C3742',
   bg: 'white'
 };
 

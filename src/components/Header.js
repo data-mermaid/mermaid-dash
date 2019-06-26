@@ -1,49 +1,51 @@
-import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react';
-
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import ToggleMap from './ToggleMap';
 
-class Header extends Component {
-  state = { activeItem: 'COLLECT' };
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-
-  render() {
-    const { activeItem } = this.state;
-
-    return (
-      <div>
-        <Menu inverted>
-          <Menu.Item name="MERMAID" />
-          <Menu.Menu position="right">
-            <Menu.Item
-              name="COLLECT"
-              active={activeItem === 'COLLECT'}
-              onClick={this.handleItemClick}
-            />
-            <Menu.Item
-              name="ABOUT THESE DATA"
-              active={activeItem === 'ABOUT THESE DATA'}
-              onClick={this.handleItemClick}
-            />
-            <Menu.Item
-              name="PRIVACY"
-              active={activeItem === 'PRIVACY'}
-              onClick={this.handleItemClick}
-            />
-            <Menu.Item
-              name="CONTACT"
-              active={activeItem === 'CONTACT'}
-              onClick={this.handleItemClick}
-            />
-          </Menu.Menu>
-          <Menu.Item>
-            <ToggleMap toggle={this.props.toggle} />
-          </Menu.Item>
-        </Menu>
-      </div>
-    );
+const useStyles = makeStyles(theme => ({
+  menuItem: {
+    textAlign: 'center'
+  },
+  color: {
+    background: '#2C3742'
   }
-}
+}));
 
-export default Header;
+const HeaderMui = props => {
+  const classes = useStyles();
+
+  return (
+    <AppBar position="static" className={classes.color}>
+      <Toolbar>
+        <Grid container>
+          <Grid item xs={7}>
+            <Typography variant="h4">MERMAID</Typography>
+          </Grid>
+          <Grid container justify="flex-end" alignItems="flex-start" item xs={5}>
+            <Grid item xs={2} className={classes.menuItem}>
+              <Typography variant="overline">COLLECT</Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.menuItem}>
+              <Typography variant="overline">ABOUT THESE DATA</Typography>
+            </Grid>
+            <Grid item xs={2} className={classes.menuItem}>
+              <Typography variant="overline">PRIVACY</Typography>
+            </Grid>
+            <Grid item xs={2} className={classes.menuItem}>
+              <Typography variant="overline">CONTACT</Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.menuItem}>
+              <ToggleMap toggle={props.toggle}>Show Full Map</ToggleMap>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default HeaderMui;
