@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Header from './components/Header';
 import MapCanvas from './components/MapCanvas';

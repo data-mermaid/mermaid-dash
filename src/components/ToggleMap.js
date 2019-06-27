@@ -15,9 +15,7 @@ const invertTheme = ({ fg, bg }) => ({
 const toggleMap = props => (
   <ThemeProvider theme={theme}>
     <ThemeProvider theme={invertTheme}>
-      <ButtonStyle onClick={props.toggle} n>
-        Show Full Map{' '}
-      </ButtonStyle>
+      <ButtonStyle onClick={props.toggle}>Show Full Map</ButtonStyle>
     </ThemeProvider>
   </ThemeProvider>
 );

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
+import PropTypes from 'prop-types';
 
-class DropDownMui extends Component {
+class DropDown extends Component {
   render() {
     const siteList =
       this.props.siteList.length > 0 ? (
@@ -19,4 +20,10 @@ class DropDownMui extends Component {
   }
 }
 
-export default DropDownMui;
+DropDown.propTypes = {
+  selectSite: PropTypes.object,
+  siteList: PropTypes.array,
+  siteSelectHandler: PropTypes.func
+};
+
+export default DropDown;

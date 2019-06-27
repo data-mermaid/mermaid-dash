@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'https://summary-api.datamermaid.org/v1'
+  baseURL: `${process.env.REACT_APP_API_URL}/v1/`
 });

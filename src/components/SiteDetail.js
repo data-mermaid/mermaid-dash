@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
+import PropTypes from 'prop-types';
 
 import { Segment } from 'semantic-ui-react';
 import Typography from '@material-ui/core/Typography';
@@ -97,5 +98,11 @@ class SiteDetail extends Component {
     return <div>{site}</div>;
   }
 }
+
+SiteDetail.propTypes = {
+  selectSite: PropTypes.shape({
+    key: PropTypes.string.isRequired
+  })
+};
 
 export default SiteDetail;

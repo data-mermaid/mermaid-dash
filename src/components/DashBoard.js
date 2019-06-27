@@ -3,8 +3,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import SiteList from './SiteList';
+import PropTypes from 'prop-types';
 
-const styles = theme => ({
+const gridStyleProperties = theme => ({
   root: {
     flexGrow: 1
   },
@@ -15,9 +16,9 @@ const styles = theme => ({
 
 class DashBoard extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, showFullMap } = this.props;
 
-    const dashboard = this.props.showFullMap ? (
+    const dashboard = showFullMap ? (
       <Grid container className={classes.containerBox}>
         <Grid item sm={6} />
         <Grid item sm={5}>
@@ -29,4 +30,9 @@ class DashBoard extends Component {
   }
 }
 
-export default withStyles(styles)(DashBoard);
+DashBoard.propTypes = {
+  showFullMap: PropTypes.bool,
+  classes: PropTypes.object
+};
+
+export default withStyles(gridStyleProperties)(DashBoard);

@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
-import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components/macro';
+import LocationIcon from '@material-ui/icons/Lens';
 
 import summary from '../apis/summary';
 
-const MAPBOX_TOKEN =
-  'pk.eyJ1Ijoibmlja2hvYW5nIiwiYSI6ImNqeDB3NzNzbjAzamg0Ym83aXZmcWEzbDcifQ.hvWWVoMPsWS2KVa8nFfOkA'; //Will be moved to env file, leave here for testing
-
-const MapWrapper = styled.div`
+const MapWrapper = styled('div')`
   position: absolute;
 `;
 
 class MapCanvas extends Component {
   state = {
-    geometry: {},
     viewport: {
       width: '100vw',
       height: '100vh',
@@ -30,10 +26,7 @@ class MapCanvas extends Component {
   }
 
   async onViewChange() {
-    const geoData = {
-      geometry: this.state.geometry
-    };
-    const { data: result } = await summary.post('/sites', geoData);
+    const { data: result } = await summary.post('/sites/');
     this.setState({ geoObject: result });
   }
 
@@ -45,7 +38,7 @@ class MapCanvas extends Component {
           latitude={site.geometry.coordinates[1]}
           longitude={site.geometry.coordinates[0]}
         >
-          <Icon name="circle" color="red" />
+          <LocationIcon color="secondary" />
         </Marker>
       ))
     ) : (
@@ -56,7 +49,7 @@ class MapCanvas extends Component {
       <MapWrapper>
         <ReactMapGL
           {...this.state.viewport}
-          mapboxApiAccessToken={MAPBOX_TOKEN}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
           mapStyle="mapbox://styles/nickhoang/cjx6prmf703ev1cqz9qd1ykdr"
           onViewportChange={viewport => this.setState({ viewport })}
         >
