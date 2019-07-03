@@ -15,6 +15,15 @@ const gridStyleProperties = theme => ({
 });
 
 class DashBoard extends Component {
+  state = {
+    content: {
+      title: 'Summary Statistics',
+      body:
+        'Mermaid believes in coral reef conservation through collaboration. We use cutting edge technology to visualize, analyse and share data about coral reefs in near real time, and for free.',
+      type: 'text'
+    }
+  };
+
   render() {
     const { classes, showFullMap } = this.props;
 
@@ -22,7 +31,7 @@ class DashBoard extends Component {
       <Grid container className={classes.containerBox}>
         <Grid item sm={6} />
         <Grid item sm={5}>
-          <SiteList />
+          <SiteList content={this.state.content} />
         </Grid>
       </Grid>
     ) : null;
