@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
-import { Header, List } from 'semantic-ui-react';
 
-import SiteItem from './SiteItem';
+import SiteDetail from './SiteDetail';
+import DropDown from './DropDown';
 
 class SiteList extends Component {
   state = {
-    sites: []
+    sites: [],
+    selectSite: null
   };
 
   async componentDidMount() {
@@ -16,26 +17,27 @@ class SiteList extends Component {
     this.setState({ sites });
   }
 
-  siteSelectHandler(id) {
-    this.props.history.push({ pathname: '/' + id });
-  }
+  siteSelectHandler = selectedOption => {
+    this.setState({ selectSite: selectedOption });
+  };
 
   render() {
-    const sites = this.state.sites.map(site => {
-      return (
-        <List.Item key={site.id}>
-          <Header as="h3">
-            <SiteItem site={site} clickedFn={() => this.siteSelectHandler(site.id)} />
-          </Header>
-          {site.properties.country_name}
-        </List.Item>
-      );
+    const newSiteList = this.state.sites.map(site => {
+      return {
+        key: site.id,
+        label: site.properties.site_name,
+        value: site.properties.site_name
+      };
     });
 
     return (
       <div>
-        <Header as="h1">List of Sites:</Header>
-        <List>{sites}</List>
+        <DropDown
+          selectSite={this.state.selectSite}
+          siteList={newSiteList}
+          siteSelectHandler={this.siteSelectHandler}
+        />
+        <SiteDetail selectSite={this.state.selectSite} />
       </div>
     );
   }

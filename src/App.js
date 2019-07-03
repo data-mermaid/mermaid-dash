@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Header from './components/Header';
 import MapCanvas from './components/MapCanvas';
-import SiteList from './components/SiteList';
-import SiteDetail from './components/SiteDetail';
+import DashBoard from './components/DashBoard';
 
 class App extends Component {
+  state = {
+    show: true
+  };
+
+  toggle = () => {
+    this.setState({ show: !this.state.show });
+  };
+
   render() {
     return (
       <BrowserRouter>
-        <Header />
+        <Header toggle={this.toggle} />
         <MapCanvas />
-        <Route path="/" exact component={SiteList} />
-        <Route path="/:id" component={SiteDetail} />
+        <DashBoard showFullMap={this.state.show} />
       </BrowserRouter>
     );
   }
