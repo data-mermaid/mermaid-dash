@@ -3,7 +3,6 @@ import { BrowserRouter } from 'react-router-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Header from './components/Header';
-import MapCanvas from './components/MapCanvas';
 import DashBoard from './components/DashBoard';
 
 class App extends Component {
@@ -19,7 +18,6 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} />
-        <MapCanvas />
         <DashBoard showFullMap={this.state.show} />
       </BrowserRouter>
     );
