@@ -13,7 +13,6 @@
   "bugs": {
     "url": "https://github.com/data-mermaid/mermaid-dash/issues"
   },
-  "homepage": "https://github.com/data-mermaid/mermaid-dash#readme",
   "engines": {
     "node": ">=10.15.3 <11.00",
     "npm": "~6.8.0"
