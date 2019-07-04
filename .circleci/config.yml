@@ -33,8 +33,20 @@ jobs:
       - run:
           name: Build
           command: |
-              npm run build
+              export REACT_APP_API_URL=https://summary-api-dev.datamermaid.org;npm run build
               ./deploy.sh dev-dashboard.datamermaid.org
+              curl -X DELETE "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" -H "X-Auth-Email: $CF_EMAIL" -H "X-Auth-Key: $CF_KEY" -H "Content-Type: application/json" --data '{"purge_everything": true}'
+  deploy_prod:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *install_dependencies
+      - run:
+          name: Build
+          command: |
+              export REACT_APP_API_URL=https://summary-api.datamermaid.org;npm run build
+              ./deploy.sh dashboard.datamermaid.org
               curl -X DELETE "https://api.cloudflare.com/client/v4/zones/$CF_ZONE_ID/purge_cache" -H "X-Auth-Email: $CF_EMAIL" -H "X-Auth-Key: $CF_KEY" -H "Content-Type: application/json" --data '{"purge_everything": true}'
 workflows:
   version: 2
@@ -49,4 +61,13 @@ workflows:
           filters:
             branches:
               only: dev
+      - deploy_prod:
+          context: org-global
+          requires:
+            - test
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)+/
   
