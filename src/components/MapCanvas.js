@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
+import styled from 'styled-components/macro';
 import LocationIcon from '@material-ui/icons/Lens';
 
 import summary from '../apis/summary';
+
+const MapWrapper = styled('div')`
+  position: absolute;
+`;
 
 class MapCanvas extends Component {
   state = {
@@ -41,14 +46,16 @@ class MapCanvas extends Component {
     );
 
     return (
-      <ReactMapGL
-        {...this.state.viewport}
-        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/nickhoang/cjx6prmf703ev1cqz9qd1ykdr"
-        onViewportChange={viewport => this.setState({ viewport })}
-      >
-        {siteLocations}
-      </ReactMapGL>
+      <MapWrapper>
+        <ReactMapGL
+          {...this.state.viewport}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+          mapStyle="mapbox://styles/mapbox/satellite-v9"
+          onViewportChange={viewport => this.setState({ viewport })}
+        >
+          {siteLocations}
+        </ReactMapGL>
+      </MapWrapper>
     );
   }
 }
