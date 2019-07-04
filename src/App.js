@@ -4,6 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
+import MapCanvas from './components/MapCanvas';
 
 class App extends Component {
   state = {
@@ -18,6 +19,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} />
+        <MapCanvas />
         <DashBoard showFullMap={this.state.show} />
       </BrowserRouter>
     );
