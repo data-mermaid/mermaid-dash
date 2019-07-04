@@ -6,11 +6,9 @@ import SiteList from './SiteList';
 import PropTypes from 'prop-types';
 
 const gridStyleProperties = theme => ({
-  root: {
-    flexGrow: 1
-  },
   containerBox: {
-    margin: '10px 0 0 0'
+    margin: '10px 0 0 0',
+    position: 'absolute'
   }
 });
 
@@ -30,7 +28,7 @@ class DashBoard extends Component {
     const dashboard = showFullMap ? (
       <Grid container className={classes.containerBox}>
         <Grid item sm={6} />
-        <Grid item sm={5}>
+        <Grid item sm={5} className={classes.dashBox}>
           <SiteList content={this.state.content} />
         </Grid>
       </Grid>
