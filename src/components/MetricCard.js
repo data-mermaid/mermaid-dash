@@ -16,7 +16,7 @@ const cardStyle = makeStyles(theme => ({
   },
   body: {
     color: '#5080AD',
-    padding: theme.spacing(2, 2)
+    padding: theme.spacing(4, 1)
   }
 }));
 
@@ -29,7 +29,7 @@ const metricCard = props => {
   return (
     <Paper className={classes.root}>
       <Typography variant="h2">{contentItem}</Typography>
-      <Typography variant="body1" component="div">
+      <Typography variant="subtitle1" component="div">
         {titleItem}
       </Typography>
     </Paper>

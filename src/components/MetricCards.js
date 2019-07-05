@@ -19,7 +19,7 @@ class MetricCards extends Component {
       { title: 'Users', count: 20 },
       { title: 'Sites', count: null },
       { title: 'Transects', count: 5 },
-      { title: 'Avg Coral Coverage', count: 12 }
+      { title: 'Avg Coral Coverage', count: '12%' }
     ]
   };
 
