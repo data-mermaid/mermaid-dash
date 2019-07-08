@@ -11,7 +11,7 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const card = ({ content: { title, body, type } } = {}) => {
+const Card = ({ content: { title, body, type } } = {}) => {
   const { root: paperClasses } = cardStyle();
   const contentType =
     type === 'text' ? (
@@ -34,4 +34,4 @@ const card = ({ content: { title, body, type } } = {}) => {
   );
 };
 
-export default card;
+export default Card;
