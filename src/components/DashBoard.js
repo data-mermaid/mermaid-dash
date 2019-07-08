@@ -9,9 +9,11 @@ import Card from './Card';
 import PropTypes from 'prop-types';
 
 const gridStyleProperties = theme => ({
-  containerBox: {
-    margin: theme.spacing(2, 0),
-    position: 'absolute'
+  root: {
+    margin: theme.spacing(2, 0)
+  },
+  dashBoardProperty: {
+    position: 'relative'
   }
 });
 
@@ -29,9 +31,9 @@ class DashBoard extends Component {
     const { classes, showFullMap } = this.props;
 
     const dashboard = showFullMap ? (
-      <Grid container className={classes.containerBox}>
+      <Grid container className={classes.root}>
         <Grid item sm={6} />
-        <Grid item sm={5} className={classes.dashBox}>
+        <Grid item sm={5} className={classes.dashBoardProperty}>
           <Card content={this.state.content} />
           <MetricCards metrics={this.state.metrics} />
           <SiteList content={this.state.content} />
