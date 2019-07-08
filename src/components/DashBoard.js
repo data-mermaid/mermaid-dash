@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 
 const gridStyleProperties = theme => ({
   root: {
-    margin: theme.spacing(2, 0)
+    padding: theme.spacing(2, 2)
   },
   dashBoardProperty: {
     position: 'relative'
@@ -32,7 +32,7 @@ class DashBoard extends Component {
 
     const dashboard = showFullMap ? (
       <Grid container className={classes.root}>
-        <Grid item sm={6} />
+        <Grid item sm={7} />
         <Grid item sm={5} className={classes.dashBoardProperty}>
           <Card content={this.state.content} />
           <MetricCards metrics={this.state.metrics} />
