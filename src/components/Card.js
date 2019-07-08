@@ -12,7 +12,7 @@ const cardStyle = makeStyles(theme => ({
 }));
 
 const card = props => {
-  const classes = cardStyle();
+  const { root: paperClasses } = cardStyle();
   const { title, body, type } = props.content;
   const contentType =
     type === 'text' ? (
@@ -26,7 +26,7 @@ const card = props => {
     );
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={paperClasses}>
       <Typography variant="h4">
         <Box>{title}</Box>
       </Typography>
