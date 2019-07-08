@@ -3,6 +3,7 @@ import summary from '../apis/summary';
 
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
+import Card from './Card';
 
 class SiteList extends Component {
   state = {

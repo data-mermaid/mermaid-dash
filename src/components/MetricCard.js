@@ -20,9 +20,8 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const metricCard = props => {
+const MetricCard = ({ content: { title, count } } = {}) => {
   const classes = cardStyle();
-  const { title, count } = props.card;
   const contentItem = count ? <Box className={classes.body}>{count}</Box> : null;
   const titleItem = title ? <Box className={classes.title}>{title}</Box> : null;
 
@@ -36,4 +35,4 @@ const metricCard = props => {
   );
 };
 
-export default metricCard;
+export default MetricCard;

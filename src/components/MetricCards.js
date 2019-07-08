@@ -38,7 +38,7 @@ class MetricCards extends Component {
     const cardList = this.state.metrics.map((card, index) => {
       return (
         <Grid item xs={4} key={index}>
-          <MetricCard card={card} />
+          <MetricCard content={card} />
         </Grid>
       );
     });

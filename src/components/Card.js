@@ -7,25 +7,31 @@ import Box from '@material-ui/core/Box';
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(2, 1)
+    padding: theme.spacing(3, 2)
   }
 }));
 
-const card = props => {
-  const classes = cardStyle();
-  const { title, body, type } = props.content;
-  const contentType = type === 'text' ? <Box>{body}</Box> : <Box>CHART</Box>;
+const Card = ({ content: { title, body, type } } = {}) => {
+  const { root: paperClasses } = cardStyle();
+  const contentType =
+    type === 'text' ? (
+      <Typography component="div" variant="body1">
+        <Box>{body}</Box>
+      </Typography>
+    ) : (
+      <Typography component="div" variant="body1">
+        <Box>CHART</Box>
+      </Typography>
+    );
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={paperClasses}>
       <Typography variant="h4">
         <Box>{title}</Box>
       </Typography>
-      <Typography component="div" variant="body1">
-        {contentType}
-      </Typography>
+      {contentType}
     </Paper>
   );
 };
 
-export default card;
+export default Card;
