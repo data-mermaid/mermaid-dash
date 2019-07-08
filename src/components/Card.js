@@ -11,9 +11,8 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const card = props => {
+const card = ({ content: { title, body, type } } = {}) => {
   const { root: paperClasses } = cardStyle();
-  const { title, body, type } = props.content;
   const contentType =
     type === 'text' ? (
       <Typography component="div" variant="body1">
