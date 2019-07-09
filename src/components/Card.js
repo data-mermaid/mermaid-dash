@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box';
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(3, 2)
+    padding: theme.spacing(1, 1)
   }
 }));
 
@@ -16,18 +16,18 @@ const Card = ({ content: { title, body, type } } = {}) => {
   const contentType =
     type === 'text' ? (
       <Typography component="div" variant="body1">
-        <Box>{body}</Box>
+        <Box m={1}>{body}</Box>
       </Typography>
     ) : (
       <Typography component="div" variant="body1">
-        <Box>CHART</Box>
+        <Box m={1}>CHART</Box>
       </Typography>
     );
 
   return (
     <Paper className={paperClasses}>
       <Typography variant="h4">
-        <Box>{title}</Box>
+        <Box m={1}>{title}</Box>
       </Typography>
       {contentType}
     </Paper>
