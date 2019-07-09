@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
+
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import SiteList from './SiteList';
+import MetricCards from './MetricCards';
+import Card from './Card';
 import PropTypes from 'prop-types';
 
 const gridStyleProperties = theme => ({
-  containerBox: {
-    margin: '10px 0 0 0',
-    position: 'absolute'
+  root: {
+    padding: theme.spacing(2, 2)
+  },
+  dashBoardProperty: {
+    position: 'relative'
   }
 });
 
@@ -26,9 +31,11 @@ class DashBoard extends Component {
     const { classes, showFullMap } = this.props;
 
     const dashboard = showFullMap ? (
-      <Grid container className={classes.containerBox}>
-        <Grid item sm={6} />
-        <Grid item sm={5} className={classes.dashBox}>
+      <Grid container className={classes.root}>
+        <Grid item sm={7} />
+        <Grid item sm={5} className={classes.dashBoardProperty}>
+          <Card content={this.state.content} />
+          <MetricCards metrics={this.state.metrics} />
           <SiteList content={this.state.content} />
         </Grid>
       </Grid>

@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 
 const containerStyle = theme => ({
   root: {
-    padding: theme.spacing(3, 2)
+    padding: theme.spacing(2, 1)
   }
 });
 
