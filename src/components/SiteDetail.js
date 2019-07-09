@@ -110,7 +110,8 @@ class SiteDetail extends Component {
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
     key: PropTypes.string.isRequired
-  })
+  }),
+  classes: PropTypes.object
 };
 
 export default withStyles(containerStyle)(SiteDetail);
