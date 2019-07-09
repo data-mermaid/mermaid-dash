@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import summary from '../apis/summary';
 import PropTypes from 'prop-types';
 
-import { Segment } from 'semantic-ui-react';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+
+const containerStyle = theme => ({
+  root: {
+    padding: theme.spacing(3, 2)
+  }
+});
 
 class SiteDetail extends Component {
   state = {
@@ -34,9 +41,10 @@ class SiteDetail extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     const site = this.state.loadedSite ? (
-      // Have tried wraper from material ui, it doesn't play well with the map component I created. Stay with <Segment> for now, would love some advice as I refactor it again
-      <Segment>
+      <Paper className={classes.root}>
         <Grid container>
           <Grid item xs={6}>
             <Typography variant="h4">
@@ -92,7 +100,7 @@ class SiteDetail extends Component {
           suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
           dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
         </Typography>
-      </Segment>
+      </Paper>
     ) : null;
 
     return <div>{site}</div>;
@@ -105,4 +113,4 @@ SiteDetail.propTypes = {
   })
 };
 
-export default SiteDetail;
+export default withStyles(containerStyle)(SiteDetail);

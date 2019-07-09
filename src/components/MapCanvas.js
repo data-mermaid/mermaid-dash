@@ -50,7 +50,7 @@ class MapCanvas extends Component {
         <ReactMapGL
           {...this.state.viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-          mapStyle="mapbox://styles/nickhoang/cjx6prmf703ev1cqz9qd1ykdr"
+          mapStyle="mapbox://styles/mapbox/satellite-v9"
           onViewportChange={viewport => this.setState({ viewport })}
         >
           {siteLocations}
