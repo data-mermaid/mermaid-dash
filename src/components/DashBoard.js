@@ -6,11 +6,14 @@ import Grid from '@material-ui/core/Grid';
 import SiteList from './SiteList';
 import MetricCards from './MetricCards';
 import Card from './Card';
+
 import PropTypes from 'prop-types';
 
 const gridStyleProperties = theme => ({
   root: {
-    padding: theme.spacing(2, 2)
+    padding: theme.spacing(2, 2),
+    height: '100vh',
+    overflow: 'overlay'
   },
   dashBoardProperty: {
     position: 'relative'
@@ -29,6 +32,28 @@ class DashBoard extends Component {
 
   render() {
     const { classes, showFullMap } = this.props;
+    const chartContent = {
+      title: 'Live Coral Cover',
+      body: [
+        { hardCoral: 5, sites: 51 },
+        { hardCoral: 10, sites: 79 },
+        { hardCoral: 15, sites: 85 },
+        { hardCoral: 20, sites: 75 },
+        { hardCoral: 25, sites: 77 },
+        { hardCoral: 30, sites: 62 },
+        { hardCoral: 35, sites: 75 },
+        { hardCoral: 40, sites: 54 },
+        { hardCoral: 45, sites: 50 },
+        { hardCoral: 50, sites: 30 },
+        { hardCoral: 55, sites: 25 },
+        { hardCoral: 60, sites: 20 },
+        { hardCoral: 65, sites: 11 },
+        { hardCoral: 70, sites: 7 },
+        { hardCoral: 75, sites: 7 },
+        { hardCoral: 80, sites: 2 }
+      ],
+      type: 'chart'
+    };
 
     const dashboard = showFullMap ? (
       <Grid container className={classes.root}>
@@ -37,6 +62,7 @@ class DashBoard extends Component {
           <Card content={this.state.content} />
           <MetricCards metrics={this.state.metrics} />
           <SiteList content={this.state.content} />
+          <Card content={chartContent} />
         </Grid>
       </Grid>
     ) : null;
