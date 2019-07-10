@@ -3,11 +3,12 @@ import { VictoryBar, VictoryChart, VictoryAxis, VictoryTooltip } from 'victory';
 
 import PropTypes from 'prop-types';
 
-const BarChart = props => (
-  <VictoryChart domainPadding={{ x: 10 }} domain={{ x: [0, 100] }}>
+const BarChart = ({ chartContent }) => (
+  <VictoryChart domainPadding={9}>
     <VictoryAxis
       label="% Hard Coral Cover"
-      tickValues={[0, 25, 50, 75, 100]}
+      tickValues={[1, 5, 10, 15, 20]}
+      tickFormat={['0', '25', '50', '75', '100']}
       style={{
         tickLabels: { fontSize: 10, padding: 5 }
       }}
@@ -21,10 +22,9 @@ const BarChart = props => (
       }}
     />
     <VictoryBar
-      alignment="start"
-      barWidth={15}
+      data={chartContent}
+      barWidth={17}
       style={{ data: { fill: '#1E90FF' } }}
-      data={props.chartContent}
       labelComponent={
         <VictoryTooltip
           cornerRadius={10}
@@ -49,7 +49,7 @@ const BarChart = props => (
               return [
                 {
                   target: 'data',
-                  mutation: () => ({ style: { fill: 'tomato', width: 30 } })
+                  mutation: () => ({ style: { fill: 'tomato', width: 30, cursor: 'pointer' } })
                 },
                 {
                   target: 'labels',
@@ -72,7 +72,7 @@ const BarChart = props => (
           }
         }
       ]}
-      x="hardCoral"
+      x="hardCorals"
       y="sites"
     />
   </VictoryChart>
