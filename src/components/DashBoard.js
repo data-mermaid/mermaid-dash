@@ -6,11 +6,15 @@ import Grid from '@material-ui/core/Grid';
 import SiteList from './SiteList';
 import MetricCards from './MetricCards';
 import Card from './Card';
+import Samples from '../sample_data/sampleSummaryStatistic';
+
 import PropTypes from 'prop-types';
 
 const gridStyleProperties = theme => ({
   root: {
-    padding: theme.spacing(2, 2)
+    padding: theme.spacing(2, 2),
+    height: '100vh',
+    overflow: 'overlay'
   },
   dashBoardProperty: {
     position: 'relative'
@@ -18,15 +22,6 @@ const gridStyleProperties = theme => ({
 });
 
 class DashBoard extends Component {
-  state = {
-    content: {
-      title: 'Summary Statistics',
-      body:
-        'Mermaid believes in coral reef conservation through collaboration. We use cutting edge technology to visualize, analyse and share data about coral reefs in near real time, and for free.',
-      type: 'text'
-    }
-  };
-
   render() {
     const { classes, showFullMap } = this.props;
 
@@ -34,9 +29,10 @@ class DashBoard extends Component {
       <Grid container className={classes.root}>
         <Grid item sm={7} />
         <Grid item sm={5} className={classes.dashBoardProperty}>
-          <Card content={this.state.content} />
-          <MetricCards metrics={this.state.metrics} />
-          <SiteList content={this.state.content} />
+          <Card content={Samples.summary} />
+          <MetricCards />
+          <SiteList />
+          <Card content={Samples.chartData} />
         </Grid>
       </Grid>
     ) : null;

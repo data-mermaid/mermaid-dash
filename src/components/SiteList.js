@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import summary from '../apis/summary';
 
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
-import Card from './Card';
 
+const siteListStyle = theme => ({
+  root: {
+    padding: theme.spacing(1, 0)
+  }
+});
 class SiteList extends Component {
   state = {
     sites: [],
@@ -23,6 +30,7 @@ class SiteList extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     const newSiteList = this.state.sites.map(site => {
       return {
         key: site.id,
@@ -32,16 +40,16 @@ class SiteList extends Component {
     });
 
     return (
-      <div>
+      <Grid container className={classes.root}>
         <DropDown
           selectSite={this.state.selectSite}
           siteList={newSiteList}
           siteSelectHandler={this.siteSelectHandler}
         />
         <SiteDetail selectSite={this.state.selectSite} />
-      </div>
+      </Grid>
     );
   }
 }
 
-export default SiteList;
+export default withStyles(siteListStyle)(SiteList);

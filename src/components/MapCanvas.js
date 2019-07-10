@@ -31,19 +31,17 @@ class MapCanvas extends Component {
   }
 
   render() {
-    const siteLocations = this.state.geoObject ? (
-      this.state.geoObject.features.map(site => (
-        <Marker
-          key={site.id}
-          latitude={site.geometry.coordinates[1]}
-          longitude={site.geometry.coordinates[0]}
-        >
-          <LocationIcon color="secondary" />
-        </Marker>
-      ))
-    ) : (
-      <div>NOT FOUND</div>
-    );
+    const siteLocations = this.state.geoObject
+      ? this.state.geoObject.features.map(site => (
+          <Marker
+            key={site.id}
+            latitude={site.geometry.coordinates[1]}
+            longitude={site.geometry.coordinates[0]}
+          >
+            <LocationIcon color="secondary" />
+          </Marker>
+        ))
+      : null;
 
     return (
       <MapWrapper>

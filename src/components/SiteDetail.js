@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 
 const containerStyle = theme => ({
   root: {
-    padding: theme.spacing(2, 1)
+    padding: theme.spacing(2, 2)
   }
 });
 
@@ -110,7 +110,8 @@ class SiteDetail extends Component {
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
     key: PropTypes.string.isRequired
-  })
+  }),
+  classes: PropTypes.object
 };
 
 export default withStyles(containerStyle)(SiteDetail);
