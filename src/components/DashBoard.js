@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 const gridStyleProperties = theme => ({
   root: {
     padding: theme.spacing(2, 2),
-    height: '100vh',
+    height: 'calc(100vh - 64px)',
     overflow: 'overlay'
   },
   dashBoardProperty: {
