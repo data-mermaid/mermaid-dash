@@ -13,7 +13,7 @@ class MapCanvas extends Component {
   state = {
     viewport: {
       width: '100vw',
-      height: '100vh',
+      height: 'calc(100vh - 64px)',
       latitude: -12.287,
       longitude: 113.278,
       zoom: 3
