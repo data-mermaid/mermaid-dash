@@ -13,7 +13,7 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const Card = ({ content: { title, body, type } } = {}) => {
+const Card = ({ content: { title, body, type } }) => {
   const { root: paperClasses } = cardStyle();
   const contentType =
     type === 'text' ? (
