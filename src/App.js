@@ -8,11 +8,11 @@ import MapCanvas from './components/MapCanvas';
 
 class App extends Component {
   state = {
-    show: true
+    showFullMap: true
   };
 
   toggle = () => {
-    this.setState({ show: !this.state.show });
+    this.setState({ showFullMap: !this.state.showFullMap });
   };
 
   render() {
@@ -20,7 +20,7 @@ class App extends Component {
       <BrowserRouter>
         <Header toggle={this.toggle} />
         <MapCanvas />
-        <DashBoard showFullMap={this.state.show} />
+        <DashBoard showFullMap={this.state.showFullMap} />
       </BrowserRouter>
     );
   }
