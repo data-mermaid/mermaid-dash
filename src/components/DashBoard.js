@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import SiteList from './SiteList';
 import MetricCards from './MetricCards';
 import Card from './Card';
-import Samples from '../sample_data/Samples';
+import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
