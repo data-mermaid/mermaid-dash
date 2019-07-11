@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -19,12 +20,22 @@ const cardStyle = makeStyles(theme => ({
   body: {
     color: '#5080AD',
     padding: theme.spacing(4, 1)
+  },
+  progress: {
+    margin: theme.spacing(4.75, 1)
   }
 }));
 
 const MetricCard = ({ content: { title, count } }) => {
   const classes = cardStyle();
-  const contentItem = count ? <Box className={classes.body}>{count}</Box> : null;
+
+  const contentItem = count ? (
+    <Box className={classes.body}>{count}</Box>
+  ) : (
+    <div>
+      <CircularProgress className={classes.progress} />
+    </div>
+  );
   const titleItem = title ? <Box className={classes.title}>{title}</Box> : null;
 
   return (
