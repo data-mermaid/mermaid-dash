@@ -15,9 +15,6 @@ const ProgressBarContainer = styled('div')`
 const dropDownStyle = theme => ({
   root: {
     padding: theme.spacing(1, 0)
-  },
-  progressBarContainer: {
-    margin: '25px 0'
   }
 });
 class DropDown extends Component {
