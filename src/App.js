@@ -25,11 +25,11 @@ class App extends Component {
   async componentDidMount() {
     const {
       data: { features: sites }
-    } = await summary.get('/sites');
-    const metrics = [...this.state.metrics];
+    } = await summary.post('/sites/', { project_id: '2c56b92b-ba1c-491f-8b62-23b1dc728890' }); //this filter bases on this sample project id for the front end
+    const { metrics } = this.state;
     metrics[3].count = sites.length;
 
-    this.setState({ sites });
+    this.setState({ sites: sites });
     this.setState({ metrics });
   }
 
@@ -45,7 +45,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} />
-        <MapCanvas />
+        <MapCanvas geoObject={this.state.sites} />
         <DashBoard
           sites={this.state.sites}
           siteSelectHandler={this.siteSelectHandler}
