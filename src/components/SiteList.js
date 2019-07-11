@@ -1,55 +1,44 @@
-import React, { Component } from 'react';
-import summary from '../apis/summary';
+import React from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
 
-const siteListStyle = theme => ({
+import PropTypes from 'prop-types';
+
+const siteListStyle = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1, 0)
   }
-});
-class SiteList extends Component {
-  state = {
-    sites: [],
-    selectSite: null
-  };
+}));
 
-  async componentDidMount() {
-    const {
-      data: { features: sites }
-    } = await summary.get('/sites');
-    this.setState({ sites });
-  }
+const SiteList = ({ sites, siteSelectHandler, selectSite }) => {
+  const classes = siteListStyle();
+  const newSiteList = sites.map(site => {
+    return {
+      key: site.id,
+      label: site.properties.site_name,
+      value: site.properties.site_name
+    };
+  });
 
-  siteSelectHandler = selectedOption => {
-    this.setState({ selectSite: selectedOption });
-  };
+  return (
+    <Grid container className={classes.root}>
+      <DropDown
+        selectSite={selectSite}
+        siteList={newSiteList}
+        siteSelectHandler={siteSelectHandler}
+      />
+      <SiteDetail selectSite={selectSite} />
+    </Grid>
+  );
+};
 
-  render() {
-    const { classes } = this.props;
-    const newSiteList = this.state.sites.map(site => {
-      return {
-        key: site.id,
-        label: site.properties.site_name,
-        value: site.properties.site_name
-      };
-    });
-
-    return (
-      <Grid container className={classes.root}>
-        <DropDown
-          selectSite={this.state.selectSite}
-          siteList={newSiteList}
-          siteSelectHandler={this.siteSelectHandler}
-        />
-        <SiteDetail selectSite={this.state.selectSite} />
-      </Grid>
-    );
-  }
-}
-
-export default withStyles(siteListStyle)(SiteList);
+SiteList.propTypes = {
+  sites: PropTypes.array,
+  siteSelectHandler: PropTypes.func,
+  selectSite: PropTypes.object
+};
+export default SiteList;
