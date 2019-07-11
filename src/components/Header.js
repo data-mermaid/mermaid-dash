@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const HeaderMui = props => {
+const Header = ({ toggle }) => {
   const classes = useStyles();
 
   return (
@@ -39,7 +39,7 @@ const HeaderMui = props => {
               <Typography variant="overline">CONTACT</Typography>
             </Grid>
             <Grid item xs={3} className={classes.menuItem}>
-              <ToggleMap toggle={props.toggle}>Show Full Map</ToggleMap>
+              <ToggleMap toggle={toggle}>Show Full Map</ToggleMap>
             </Grid>
           </Grid>
         </Grid>
@@ -48,4 +48,4 @@ const HeaderMui = props => {
   );
 };
 
-export default HeaderMui;
+export default Header;

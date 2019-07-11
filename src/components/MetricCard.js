@@ -5,6 +5,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
+import PropTypes from 'prop-types';
+
 const cardStyle = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1, 0),
@@ -20,7 +22,7 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const MetricCard = ({ content: { title, count } } = {}) => {
+const MetricCard = ({ content: { title, count } }) => {
   const classes = cardStyle();
   const contentItem = count ? <Box className={classes.body}>{count}</Box> : null;
   const titleItem = title ? <Box className={classes.title}>{title}</Box> : null;
@@ -33,6 +35,11 @@ const MetricCard = ({ content: { title, count } } = {}) => {
       </Typography>
     </Paper>
   );
+};
+
+MetricCard.propTypes = {
+  title: PropTypes.string,
+  count: PropTypes.number
 };
 
 export default MetricCard;
