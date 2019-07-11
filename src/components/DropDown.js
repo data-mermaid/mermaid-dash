@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 
 import Select from 'react-select';
+import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 
+const ProgressBarContainer = styled('div')`
+  margin: 25px 0;
+`;
+
 const dropDownStyle = theme => ({
   root: {
     padding: theme.spacing(1, 0)
+  },
+  progressBarContainer: {
+    margin: '25px 0'
   }
 });
 class DropDown extends Component {
@@ -26,9 +34,9 @@ class DropDown extends Component {
           className={classes.root}
         />
       ) : (
-        <div>
+        <ProgressBarContainer>
           <LinearProgress />
-        </div>
+        </ProgressBarContainer>
       );
 
     return (
