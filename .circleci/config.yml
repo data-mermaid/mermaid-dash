@@ -1,9 +1,11 @@
 version: 2
 
+# Defaults object
 defaults: &defaults
   docker:
     - image: circleci/node:dubnium-stretch
 
+# Installing dependencies runs on each bit
 install_dependencies: &install_dependencies
     run:
       name: Install Dependencies
@@ -70,4 +72,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /v[0-9]+(\.[0-9]+)+/
-  
