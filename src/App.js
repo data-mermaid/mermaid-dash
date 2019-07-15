@@ -6,6 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
 import MapCanvas from './components/MapCanvas';
+import Map from './components/Map';
 
 class App extends Component {
   state = {
@@ -45,7 +46,8 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} />
-        <MapCanvas geoObject={this.state.sites} />
+        {/* <MapCanvas geoObject={this.state.sites} /> */}
+        <Map accessToken={process.env.REACT_APP_MAPBOX_TOKEN} />
         <DashBoard
           sites={this.state.sites}
           siteSelectHandler={this.siteSelectHandler}
