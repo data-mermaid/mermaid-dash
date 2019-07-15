@@ -5,7 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
-import MapCanvas from './components/MapCanvas';
+import LeafletMap from './components/LeafletMap';
 
 class App extends Component {
   state = {
@@ -45,7 +45,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} />
-        <MapCanvas geoObject={this.state.sites} />
+        <LeafletMap geoObject={this.state.sites} />
         <DashBoard
           sites={this.state.sites}
           siteSelectHandler={this.siteSelectHandler}
