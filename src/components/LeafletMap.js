@@ -21,13 +21,13 @@ const myCustomColour = '#A53434';
 
 const markerHtmlStyles = `
   background-color: ${myCustomColour};
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   display: block;
   left: -1rem;
   top: -1rem;
   position: relative;
-  border-radius: 2rem 2rem 0;
+  border-radius: 2rem;
   transform: rotate(45deg);
   border: 1px solid #FFFFFF`;
 
@@ -46,7 +46,18 @@ class LeafletMap extends Component {
       geoObject.map(site => {
         return L.marker([site.geometry.coordinates[1], site.geometry.coordinates[0]], {
           icon: icon
-        }).addTo(this.map);
+        })
+          .addTo(this.map)
+          .on('click', function(e) {
+            alert(
+              'you select this location: ' +
+                site.geometry.coordinates[1] +
+                ', ' +
+                site.geometry.coordinates[0] +
+                ', site name is ' +
+                site.properties.site_name
+            );
+          });
       });
     }
   }
@@ -65,7 +76,7 @@ class LeafletMap extends Component {
 
     this.map = L.map('map', {
       center: [38, 16],
-      zoom: 5,
+      zoom: 2,
       minZoom: 3,
       maxZoom: 11,
       zoomControl: true
@@ -82,9 +93,16 @@ class LeafletMap extends Component {
     new L.Control.MiniMap(miniMapLayer, {
       position: 'bottomleft',
       width: 260,
-      height: 180,
+      height: 160,
       zoomAnimation: true,
       aimingRectOptions: { color: '#91181A' },
+      shadowRectOptions: {
+        color: '#208FFF',
+        weight: 1,
+        interactive: false,
+        opacity: 0,
+        fillOpacity: 0
+      },
       zoomLevelOffset: -6
     }).addTo(this.map);
   }
