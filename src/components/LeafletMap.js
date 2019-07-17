@@ -50,7 +50,7 @@ class LeafletMap extends Component {
           .addTo(this.map)
           .on('click', function(e) {
             alert(
-              'you select this location: ' +
+              'you have selected this location: ' +
                 site.geometry.coordinates[1] +
                 ', ' +
                 site.geometry.coordinates[0] +
