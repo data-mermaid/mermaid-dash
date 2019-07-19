@@ -10,8 +10,10 @@ import LeafletMap from './components/LeafletMap';
 class App extends Component {
   state = {
     showFullMap: true,
+    showSiteDetail: false,
     sites: [],
     selectSite: null,
+    siteDetail: null,
     metrics: [
       { title: 'Countries', count: 10 },
       { title: 'Projects', count: 2 },
@@ -41,17 +43,25 @@ class App extends Component {
     this.setState({ selectSite: selectedOption });
   };
 
+  siteClickHandler = selectedSite => {
+    this.setState({ siteDetail: selectedSite, showSiteDetail: true });
+  };
+
+  backButtonHandler = () => {
+    this.setState({ showSiteDetail: false });
+  };
+
   render() {
     return (
       <BrowserRouter>
-        <Header toggle={this.toggle} />
-        <LeafletMap geoObject={this.state.sites} />
+        <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
+        <LeafletMap geoObject={this.state.sites} siteClickHandler={this.siteClickHandler} />
         <DashBoard
-          sites={this.state.sites}
-          siteSelectHandler={this.siteSelectHandler}
-          selectSite={this.state.selectSite}
+          siteDetail={this.state.siteDetail}
+          showSiteDetail={this.state.showSiteDetail}
           showFullMap={this.state.showFullMap}
           metrics={this.state.metrics}
+          backButtonHandler={this.backButtonHandler}
         />
       </BrowserRouter>
     );
