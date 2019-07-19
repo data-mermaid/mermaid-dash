@@ -9,12 +9,15 @@ import BarChart from './BarChart';
 
 const cardStyle = makeStyles(theme => ({
   root: {
+    padding: '0 0 16px 0'
+  },
+  cardProperty: {
     padding: theme.spacing(1, 1)
   }
 }));
 
 const Card = ({ content: { title, body, type } }) => {
-  const { root: paperClasses } = cardStyle();
+  const classes = cardStyle();
   const contentType =
     type === 'text' ? (
       <Typography component="div" variant="body1">
@@ -29,12 +32,14 @@ const Card = ({ content: { title, body, type } }) => {
     );
 
   return (
-    <Paper className={paperClasses}>
-      <Typography variant="h4">
-        <Box m={1}>{title}</Box>
-      </Typography>
-      {contentType}
-    </Paper>
+    <div className={classes.root}>
+      <Paper className={classes.cardProperty}>
+        <Typography variant="h4">
+          <Box m={1}>{title}</Box>
+        </Typography>
+        {contentType}
+      </Paper>
+    </div>
   );
 };
 

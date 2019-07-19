@@ -11,6 +11,9 @@ import Paper from '@material-ui/core/Paper';
 
 const containerStyle = theme => ({
   root: {
+    padding: '0 0 16px 0'
+  },
+  siteWrapper: {
     padding: theme.spacing(2, 2)
   }
 });
@@ -33,8 +36,8 @@ class SiteDetail extends Component {
     const { loadedSite } = this.state;
 
     if (selectSite) {
-      if (!loadedSite || (loadedSite && loadedSite.id !== selectSite.key)) {
-        const { data: loadedSite } = await summary.get('/sites/' + selectSite.key);
+      if (!loadedSite || (loadedSite && loadedSite.id !== selectSite.id)) {
+        const { data: loadedSite } = await summary.get('/sites/' + selectSite.id);
         this.setState({ loadedSite });
       }
     }
@@ -44,7 +47,7 @@ class SiteDetail extends Component {
     const { classes } = this.props;
 
     const site = this.state.loadedSite ? (
-      <Paper className={classes.root}>
+      <Paper className={classes.siteWrapper}>
         <Grid container>
           <Grid item xs={6}>
             <Typography variant="h4">
@@ -103,13 +106,13 @@ class SiteDetail extends Component {
       </Paper>
     ) : null;
 
-    return <div>{site}</div>;
+    return <div className={classes.root}>{site}</div>;
   }
 }
 
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
-    key: PropTypes.string.isRequired
+    id: PropTypes.string.isRequired
   }),
   classes: PropTypes.object
 };
