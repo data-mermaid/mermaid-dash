@@ -41,22 +41,15 @@ const icon = L.divIcon({
 
 class LeafletMap extends Component {
   componentDidUpdate() {
-    const { geoObject } = this.props;
+    const { geoObject, siteClickHandler } = this.props;
     if (geoObject.length > 0) {
       geoObject.map(site => {
         return L.marker([site.geometry.coordinates[1], site.geometry.coordinates[0]], {
           icon: icon
         })
           .addTo(this.map)
-          .on('click', function(e) {
-            alert(
-              'you have selected this location: ' +
-                site.geometry.coordinates[1] +
-                ', ' +
-                site.geometry.coordinates[0] +
-                ', site name is ' +
-                site.properties.site_name
-            );
+          .on('click', () => {
+            siteClickHandler(site);
           });
       });
     }

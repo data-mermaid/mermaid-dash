@@ -4,8 +4,8 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
 import Grid from '@material-ui/core/Grid';
+
 import PropTypes from 'prop-types';
 
 const ProgressBarContainer = styled('div')`
