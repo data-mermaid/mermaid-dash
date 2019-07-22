@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 const metricStyle = makeStyles(theme => ({
   root: {
-    padding: '0 0 16px 0'
+    paddingBottom: theme.spacing(2)
   }
 }));
 

@@ -1,10 +1,14 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 export const ButtonStyle = styled('button')`
   transform: translate(0%);
   transition: ${props => props.theme.transition};
   color: ${props => props.theme.fg};
-  border: ${props => (props.buttonBorder ? `1px solid ${props => props.theme.fg}` : 0)};
+  ${props =>
+    props.buttonBorder &&
+    css`
+      border: 1px solid ${props => props.theme.fg};
+    `}
   background: ${props => props.theme.bg};
   font-size: 1em;
   border-radius: 5px;

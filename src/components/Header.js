@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     background: '#2C3742'
   },
   checkBoxProperty: {
-    paddingTop: '8px'
+    paddingTop: theme.spacing(1)
   }
 }));
 

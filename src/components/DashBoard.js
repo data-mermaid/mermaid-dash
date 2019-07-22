@@ -1,17 +1,17 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { ThemeProvider } from 'styled-components/macro';
-
 import BackArrowIcon from '@material-ui/icons/ArrowBack';
+import { ReactComponent as SinglePointIcon } from '../Icons/circular-shape-silhouette.svg';
+import { ReactComponent as MultiPointsIcon } from '../Icons/four.svg';
+
+import { ThemeProvider } from 'styled-components/macro';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { ButtonStyle } from './Button';
-import { ReactComponent as SinglePointIcon } from '../Icons/circular-shape-silhouette.svg';
-import { ReactComponent as MultiPointsIcon } from '../Icons/four.svg';
 
+import { ButtonStyle } from './Button';
 import MetricCards from './MetricCards';
 import Card from './Card';
 import SiteDetail from './SiteDetail';

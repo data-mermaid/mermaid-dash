@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
+import PropTypes from 'prop-types';
+
 const GreenCheckbox = withStyles({
   root: {
     color: 'white',
@@ -25,6 +27,7 @@ const checkBoxProperty = makeStyles(theme => ({
 
 const CheckBoxFullMap = ({ toggle, showFullMap }) => {
   const classes = checkBoxProperty();
+
   return (
     <FormControlLabel
       className={classes.formProperty}
@@ -32,6 +35,11 @@ const CheckBoxFullMap = ({ toggle, showFullMap }) => {
       label="Show Full Map"
     />
   );
+};
+
+CheckBoxFullMap.propTypes = {
+  toggle: PropTypes.func,
+  showFullMap: PropTypes.bool
 };
 
 export default CheckBoxFullMap;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+
 import summary from '../apis/summary';
-import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -9,12 +9,19 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
+import { TextLoader } from './Loader';
+
+import PropTypes from 'prop-types';
+
 const containerStyle = theme => ({
   root: {
-    padding: '0 0 16px 0'
+    paddingBottom: theme.spacing(2)
   },
   siteWrapper: {
     padding: theme.spacing(2, 2)
+  },
+  adminProperty: {
+    paddingTop: theme.spacing(1)
   }
 });
 
@@ -75,7 +82,7 @@ class SiteDetail extends Component {
           </Grid>
         </Grid>
         <Typography component="div" variant="body2">
-          <Box borderTop={1}>
+          <Box borderTop={1} className={classes.adminProperty}>
             Admins:{' '}
             {this.state.loadedSite.properties.project_admins
               .map(admin => {
@@ -104,7 +111,11 @@ class SiteDetail extends Component {
           dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
         </Typography>
       </Paper>
-    ) : null;
+    ) : (
+      <Paper className={classes.siteWrapper}>
+        <TextLoader />
+      </Paper>
+    );
 
     return <div className={classes.root}>{site}</div>;
   }
