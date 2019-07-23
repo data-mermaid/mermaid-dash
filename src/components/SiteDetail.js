@@ -2,16 +2,27 @@ import React, { Component } from 'react';
 
 import summary from '../apis/summary';
 
+import ContactIcon from '@material-ui/icons/Email';
+import { ThemeProvider } from 'styled-components/macro';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
 import { TextLoader } from './Loader';
+import { ButtonStyle } from './Button';
 
 import PropTypes from 'prop-types';
+
+const theme = {
+  fg: 'white',
+  bg: '#468DAE',
+  border: '1px',
+  width: '150px',
+  padding: '1px',
+  shadow:
+    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
+};
 
 const containerStyle = theme => ({
   root: {
@@ -20,8 +31,11 @@ const containerStyle = theme => ({
   siteWrapper: {
     padding: theme.spacing(2, 2)
   },
-  adminProperty: {
-    paddingTop: theme.spacing(1)
+  reefProperty: {
+    padding: '8px 8px 8px 0'
+  },
+  iconProperty: {
+    paddingRight: '5px'
   }
 });
 
@@ -53,18 +67,33 @@ class SiteDetail extends Component {
   render() {
     const { classes } = this.props;
 
+    const contactButton = (
+      <ThemeProvider theme={theme}>
+        <ButtonStyle setHover={true}>
+          <Box p={1} display="flex" justifyContent="center">
+            <ContactIcon fontSize="small" className={classes.iconProperty} />
+            <Typography variant="body1" display="inline">
+              Contact Admins
+            </Typography>
+          </Box>
+        </ButtonStyle>
+      </ThemeProvider>
+    );
+
     const site = this.state.loadedSite ? (
       <Paper className={classes.siteWrapper}>
-        <Grid container>
-          <Grid item xs={6}>
-            <Typography variant="h4">
-              <Box>{this.state.loadedSite.properties.site_name}</Box>
-            </Typography>
-            <Typography component="div" variant="body1">
-              <Box>{this.state.loadedSite.properties.country_name}</Box>
-            </Typography>
-            <Typography component="div" variant="body1">
-              <Box>
+        <Box display="flex">
+          <Box flexGrow={1}>
+            <Box>
+              <Typography variant="h4">{this.state.loadedSite.properties.site_name}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
+                {this.state.loadedSite.properties.country_name}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1">
                 {this.state.loadedSite.properties.management_regimes
                   ? this.state.loadedSite.properties.management_regimes
                       .map(mr => {
@@ -72,38 +101,38 @@ class SiteDetail extends Component {
                       })
                       .join(', ')
                   : 'No managements'}
-              </Box>
-            </Typography>
-          </Grid>
-          <Grid item xs={6} align="right">
-            <Button variant="contained" color="primary">
-              Contact Admins
-            </Button>
-          </Grid>
-        </Grid>
-        <Typography component="div" variant="body2">
-          <Box borderTop={1} className={classes.adminProperty}>
+              </Typography>
+            </Box>
+          </Box>
+          <Box>{contactButton}</Box>
+        </Box>
+
+        <Box borderTop={1} pt={1}>
+          <Typography variant="body2">
             Admins:{' '}
             {this.state.loadedSite.properties.project_admins
               .map(admin => {
                 return admin.name;
               })
               .join(', ')}
+          </Typography>
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="flex-start"
+          className={classes.reefProperty}
+        >
+          <Box p={1} mr={1} border={1} borderRadius={13}>
+            Exposure: {this.state.loadedSite.properties.exposure}
           </Box>
-        </Typography>
-        <Typography component="div" variant="body2">
-          <Box display="flex" flexDirection="row" justifyContent="center">
-            <Box p={1} m={1} border={1} borderRadius={13}>
-              Exposure: {this.state.loadedSite.properties.exposure}
-            </Box>
-            <Box p={1} m={1} border={1} borderRadius={13}>
-              Reef Type: {this.state.loadedSite.properties.reef_type}
-            </Box>
-            <Box p={1} m={1} border={1} borderRadius={13}>
-              Reef Zone: {this.state.loadedSite.properties.reef_zone}
-            </Box>
+          <Box p={1} mr={1} border={1} borderRadius={13}>
+            Reef Type: {this.state.loadedSite.properties.reef_type}
           </Box>
-        </Typography>
+          <Box p={1} mr={1} border={1} borderRadius={13}>
+            Reef Zone: {this.state.loadedSite.properties.reef_zone}
+          </Box>
+        </Box>
         <Typography variant="h6">Notes</Typography>
         <Typography variant="body2">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
