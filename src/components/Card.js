@@ -1,21 +1,37 @@
 import React from 'react';
 
+import DownloadIcon from '@material-ui/icons/CloudDownload';
+import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextLoader, ChartLoader } from './Loader';
-import BarChart from './BarChart';
+import { ButtonStyle } from './Button';
+import Chart from './Chart';
 
 import PropTypes from 'prop-types';
+
+const theme = {
+  fg: 'white',
+  bg: '#468DAE',
+  border: '1px',
+  width: '150px',
+  padding: '1px',
+  shadow:
+    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
+};
 
 const cardStyle = makeStyles(theme => ({
   root: {
     paddingBottom: theme.spacing(2)
   },
-  cardProperty: {
-    padding: theme.spacing(1, 1)
+  cardWrapper: {
+    padding: theme.spacing(2, 2)
+  },
+  iconProperty: {
+    paddingRight: '5px'
   }
 }));
 
@@ -23,29 +39,59 @@ const Card = ({ content }) => {
   const classes = cardStyle();
 
   const loaderType = content.type === 'text' ? <TextLoader /> : <ChartLoader />;
+  const subItems =
+    content.type === 'pieChart' ? (
+      <Box>
+        <Typography m={1}>Data sharing: {content.dataPolicy}</Typography>
+        <Typography m={1}>Sample units: {content.sampleUnits} </Typography>
+      </Box>
+    ) : null;
+
+  const subTitle = content.subTitle ? (
+    <Typography variant="h6">{content.subTitle}</Typography>
+  ) : null;
+
+  const downLoadButton =
+    content.type === 'pieChart' ? (
+      <ThemeProvider theme={theme}>
+        <ButtonStyle setHover={true}>
+          <Box p={1} display="flex" justifyContent="center">
+            <DownloadIcon fontSize="small" className={classes.iconProperty} />
+            <Typography variant="body1" display="inline">
+              Download Data
+            </Typography>
+          </Box>
+        </ButtonStyle>
+      </ThemeProvider>
+    ) : null;
 
   const contentType =
     content.type === 'text' ? (
-      <Typography component="div" variant="body1">
-        <Box m={1}>{content.body}</Box>
-      </Typography>
+      <Box pt={1}>
+        {subTitle}
+        <Typography variant="body1">{content.body}</Typography>
+      </Box>
     ) : (
-      <Typography component="div" variant="body1">
-        <Box m={1}>
-          <BarChart chartContent={content.body} />
-        </Box>
-      </Typography>
+      <Box pt={1}>
+        <Chart chartType={content.type} chartContent={content.body} chartLegend={content.legend} />
+      </Box>
     );
 
   const contentAvailable = content ? (
-    <Paper className={classes.cardProperty}>
-      <Typography variant="h4">
-        <Box m={1}>{content.title}</Box>
-      </Typography>
+    <Paper className={classes.cardWrapper}>
+      <Box display="flex" borderBottom={1}>
+        <Box flexGrow={1}>
+          <Box>
+            <Typography variant="h4">{content.title}</Typography>
+          </Box>
+          {subItems}
+        </Box>
+        <Box>{downLoadButton}</Box>
+      </Box>
       {contentType}
     </Paper>
   ) : (
-    <Paper className={classes.cardProperty}>{loaderType}</Paper>
+    <Paper className={classes.cardWrapper}>{loaderType}</Paper>
   );
 
   return <div className={classes.root}>{contentAvailable}</div>;
