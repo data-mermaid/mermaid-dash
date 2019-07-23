@@ -83,8 +83,8 @@ const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail,
   const siteDashboard = siteDetail ? (
     <div>
       <SiteDetail selectSite={siteDetail} />
-      <Card content={Samples.chartData} />
-      <Card content={Samples.chartData} />
+      <Card content={Samples.benthicPieChartData} />
+      <Card content={Samples.fishBeltPieChartData} />
     </div>
   ) : null;
 
@@ -92,7 +92,7 @@ const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail,
     <div>
       <Card content={Samples.summary} />
       <MetricCards metrics={metrics} />
-      <Card content={Samples.chartData} />
+      <Card content={Samples.barChartData} />
     </div>
   ) : null;
 
