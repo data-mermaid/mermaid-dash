@@ -11,7 +11,7 @@ class MapCanvas extends Component {
   state = {
     viewport: {
       width: '100vw',
-      height: 'calc(100vh - 64px)',
+      height: 'calc(100vh - 49px)',
       latitude: -12.287,
       longitude: 113.278,
       zoom: 3
@@ -21,17 +21,17 @@ class MapCanvas extends Component {
   render() {
     const { geoObject } = this.props;
 
-    const siteLocations = geoObject
-      ? geoObject.map(site => (
-          <Marker
-            key={site.id}
-            latitude={site.geometry.coordinates[1]}
-            longitude={site.geometry.coordinates[0]}
-          >
-            <LocationIcon color="secondary" />
-          </Marker>
-        ))
-      : null;
+    const siteLocations =
+      geoObject &&
+      geoObject.map(site => (
+        <Marker
+          key={site.id}
+          latitude={site.geometry.coordinates[1]}
+          longitude={site.geometry.coordinates[0]}
+        >
+          <LocationIcon color="secondary" />
+        </Marker>
+      ));
 
     return (
       <MapWrapper>

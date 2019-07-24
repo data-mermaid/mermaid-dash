@@ -8,20 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextLoader, ChartLoader } from './Loader';
+import { cardButtonTheme } from './theme';
 import { ButtonStyle } from './Button';
 import Chart from './Chart';
 
 import PropTypes from 'prop-types';
-
-const theme = {
-  fg: 'white',
-  bg: '#468DAE',
-  border: '1px',
-  width: '150px',
-  padding: '1px',
-  shadow:
-    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
-};
 
 const cardStyle = makeStyles(theme => ({
   root: {
@@ -39,31 +30,28 @@ const Card = ({ content }) => {
   const classes = cardStyle();
 
   const loaderType = content.type === 'text' ? <TextLoader /> : <ChartLoader />;
-  const subItems =
-    content.type === 'pieChart' ? (
-      <Box>
-        <Typography m={1}>Data sharing: {content.dataPolicy}</Typography>
-        <Typography m={1}>Sample units: {content.sampleUnits} </Typography>
-      </Box>
-    ) : null;
 
-  const subTitle = content.subTitle ? (
-    <Typography variant="h6">{content.subTitle}</Typography>
-  ) : null;
+  const subItems = content.type === 'pieChart' && (
+    <Box>
+      <Typography m={1}>Data sharing: {content.dataPolicy}</Typography>
+      <Typography m={1}>Sample units: {content.sampleUnits} </Typography>
+    </Box>
+  );
 
-  const downLoadButton =
-    content.type === 'pieChart' ? (
-      <ThemeProvider theme={theme}>
-        <ButtonStyle setHover={true}>
-          <Box p={1} display="flex" justifyContent="center">
-            <DownloadIcon fontSize="small" className={classes.iconProperty} />
-            <Typography variant="body1" display="inline">
-              Download Data
-            </Typography>
-          </Box>
-        </ButtonStyle>
-      </ThemeProvider>
-    ) : null;
+  const subTitle = content.subTitle && <Typography variant="h6">{content.subTitle}</Typography>;
+
+  const downLoadButton = content.type === 'pieChart' && (
+    <ThemeProvider theme={cardButtonTheme}>
+      <ButtonStyle setHover={true}>
+        <Box p={1} display="flex" justifyContent="center">
+          <DownloadIcon fontSize="small" className={classes.iconProperty} />
+          <Typography variant="body1" display="inline">
+            Download Data
+          </Typography>
+        </Box>
+      </ButtonStyle>
+    </ThemeProvider>
+  );
 
   const contentType =
     content.type === 'text' ? (

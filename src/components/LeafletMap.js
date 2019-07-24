@@ -101,7 +101,7 @@ class LeafletMap extends Component {
   }
 
   render() {
-    return <Wrapper width="100vw" height="calc(100vh - 64px)" id="map" />;
+    return <Wrapper width="100vw" height="calc(100vh - 49px)" id="map" />;
   }
 }
 export default LeafletMap;

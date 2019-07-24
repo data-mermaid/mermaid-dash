@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { ButtonStyle } from './Button';
+import { backButtonTheme } from './theme';
 import MetricCards from './MetricCards';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
@@ -19,22 +20,10 @@ import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
-const theme = {
-  fg: '#2C3742',
-  border: '0px',
-  position: 'fixed',
-  width: '70px',
-  padding: '5px',
-  transition: '0.3s ease-out',
-  transform: 'translate(-5%, 0%)',
-  shadow:
-    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
-};
-
 const gridStyleProperties = makeStyles(theme => ({
   root: {
     padding: theme.spacing(2, 2),
-    height: 'calc(100vh - 64px)',
+    height: 'calc(100vh - 49px)',
     overflow: 'overlay'
   },
   dashBoardProperty: {
@@ -71,42 +60,42 @@ const gridStyleProperties = makeStyles(theme => ({
 const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail, metrics }) => {
   const classes = gridStyleProperties();
 
-  const backButton = showSiteDetail ? (
-    <ThemeProvider theme={theme}>
+  const backButton = showSiteDetail && (
+    <ThemeProvider theme={backButtonTheme}>
       <ButtonStyle setHover={true} onClick={backButtonHandler}>
         <BackArrowIcon />
         <Typography variant="h6">Back</Typography>
       </ButtonStyle>
     </ThemeProvider>
-  ) : null;
+  );
 
-  const siteDashboard = siteDetail ? (
+  const siteDashboard = siteDetail && (
     <div>
       <SiteDetail selectSite={siteDetail} />
       <Card content={Samples.benthicPieChartData} />
       <Card content={Samples.fishBeltPieChartData} />
     </div>
-  ) : null;
+  );
 
-  const dashboard = showFullMap ? (
+  const dashboard = showFullMap && (
     <div>
       <Card content={Samples.summary} />
       <MetricCards metrics={metrics} />
       <Card content={Samples.barChartData} />
     </div>
-  ) : null;
+  );
 
-  const backButtonControl = showFullMap ? (
+  const backButtonControl = showFullMap && (
     <Box display="flex" justifyContent="flex-end" className={classes.backButtonWrapperProperty}>
       {backButton}
     </Box>
-  ) : null;
+  );
 
-  const dashboardControl = showFullMap ? (
+  const dashboardControl = showFullMap && (
     <Grid item sm={5} className={classes.dashBoardProperty}>
       {showSiteDetail ? siteDashboard : dashboard}
     </Grid>
-  ) : null;
+  );
 
   return (
     <Grid container className={classes.root}>

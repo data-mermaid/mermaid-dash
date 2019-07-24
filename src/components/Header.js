@@ -7,11 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import CheckBoxFullMap from './CheckBoxFullMap';
 
 const useStyles = makeStyles(theme => ({
-  menuProperty: {
-    width: '100vw'
-  },
   appBarProperty: {
-    background: '#2C3742'
+    background: '#2C3742',
+    height: 49,
+    justifyContent: 'center'
+  },
+  toolBarProperty: {
+    padding: 0
   }
 }));
 
@@ -19,30 +21,26 @@ const Header = ({ toggle }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static" className={classes.appBarProperty} style={{ minHeight: 49 }}>
-      <Toolbar>
-        <div className={classes.menuProperty}>
-          <Box display="flex" alignItems="center">
-            <Box p={1} flexGrow={1}>
-              <Typography variant="h4">MERMAID</Typography>
-            </Box>
-            <Box p={2}>
-              <Typography variant="overline">COLLECT</Typography>
-            </Box>
-            <Box p={2}>
-              <Typography variant="overline">ABOUT THIS DATA</Typography>
-            </Box>
-            <Box p={2}>
-              <Typography variant="overline">PRIVACY</Typography>
-            </Box>
-            <Box p={2}>
-              <Typography variant="overline">CONTACT</Typography>
-            </Box>
-            <Box>
-              <CheckBoxFullMap toggle={toggle} />
-            </Box>
-          </Box>
-        </div>
+    <AppBar position="static" className={classes.appBarProperty}>
+      <Toolbar className={classes.toolBarProperty}>
+        <Box p={1} flexGrow={1}>
+          <Typography variant="h4">MERMAID</Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">COLLECT</Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">ABOUT THIS DATA</Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">PRIVACY</Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">CONTACT</Typography>
+        </Box>
+        <Box>
+          <CheckBoxFullMap toggle={toggle} />
+        </Box>
       </Toolbar>
     </AppBar>
   );
