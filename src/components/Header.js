@@ -12,9 +12,6 @@ const useStyles = makeStyles(theme => ({
   },
   appBarProperty: {
     background: '#2C3742'
-  },
-  checkBoxProperty: {
-    paddingTop: theme.spacing(1)
   }
 }));
 
@@ -22,10 +19,10 @@ const Header = ({ toggle }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static" className={classes.appBarProperty}>
+    <AppBar position="static" className={classes.appBarProperty} style={{ minHeight: 49 }}>
       <Toolbar>
         <div className={classes.menuProperty}>
-          <Box display="flex">
+          <Box display="flex" alignItems="center">
             <Box p={1} flexGrow={1}>
               <Typography variant="h4">MERMAID</Typography>
             </Box>
@@ -41,7 +38,7 @@ const Header = ({ toggle }) => {
             <Box p={2}>
               <Typography variant="overline">CONTACT</Typography>
             </Box>
-            <Box className={classes.checkBoxProperty}>
+            <Box>
               <CheckBoxFullMap toggle={toggle} />
             </Box>
           </Box>
