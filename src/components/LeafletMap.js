@@ -66,7 +66,7 @@ class LeafletMap extends Component {
       center: [38, 16],
       zoom: 2,
       minZoom: 3,
-      maxZoom: 14,
+      maxZoom: 17,
       zoomControl: true,
       layers: [
         L.tileLayer(
