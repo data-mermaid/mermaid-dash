@@ -27,7 +27,7 @@ class App extends Component {
   async componentDidMount() {
     const {
       data: { features: sites }
-    } = await summary.post('/sites/', { project_id: '2c56b92b-ba1c-491f-8b62-23b1dc728890' }); //this filter bases on this sample project id for the front end
+    } = await summary.post('/sites/'); //this filter bases on this sample project id for the front end
     const { metrics } = this.state;
     metrics[3].count = sites.length;
 
@@ -55,7 +55,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
-        <LeafletMap geoObject={this.state.sites} siteClickHandler={this.siteClickHandler} />
+        <LeafletMap markersData={this.state.sites} siteClickHandler={this.siteClickHandler} />
         <DashBoard
           siteDetail={this.state.siteDetail}
           showSiteDetail={this.state.showSiteDetail}

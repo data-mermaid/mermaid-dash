@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import L from 'leaflet';
-import MiniMap from 'leaflet-minimap';
+import 'leaflet-minimap';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
 
@@ -40,20 +43,12 @@ const icon = L.divIcon({
 });
 
 class LeafletMap extends Component {
-  componentDidUpdate() {
-    const { geoObject, siteClickHandler } = this.props;
-    if (geoObject.length > 0) {
-      geoObject.map(site => {
-        return L.marker([site.geometry.coordinates[1], site.geometry.coordinates[0]], {
-          icon: icon
-        })
-          .addTo(this.map)
-          .on('click', () => {
-            siteClickHandler(site);
-          });
-      });
+  componentDidUpdate({ markersData: prevMarkersData }) {
+    if (this.props.markersData !== prevMarkersData) {
+      this.updateMarkers(this.props.markersData);
     }
   }
+
   componentDidMount() {
     const miniMapLayer = L.tileLayer(
       'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
@@ -62,7 +57,7 @@ class LeafletMap extends Component {
           'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         subdomains: 'abcd',
         minZoom: 0,
-        maxZoom: 10,
+        maxZoom: 13,
         ext: 'png'
       }
     );
@@ -71,17 +66,18 @@ class LeafletMap extends Component {
       center: [38, 16],
       zoom: 2,
       minZoom: 3,
-      maxZoom: 11,
-      zoomControl: true
+      maxZoom: 17,
+      zoomControl: true,
+      layers: [
+        L.tileLayer(
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+          {
+            attribution:
+              'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+          }
+        )
+      ]
     });
-
-    L.tileLayer(
-      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-      {
-        attribution:
-          'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
-      }
-    ).addTo(this.map);
 
     new L.Control.MiniMap(miniMapLayer, {
       position: 'bottomleft',
@@ -98,6 +94,30 @@ class LeafletMap extends Component {
       },
       zoomLevelOffset: -6
     }).addTo(this.map);
+
+    this.layer = L.layerGroup().addTo(this.map);
+    this.updateMarkers(this.props.markersData);
+  }
+
+  updateMarkers(markersData) {
+    const markersCluster = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      spiderfyOnMaxZoom: false
+    });
+
+    this.layer.clearLayers();
+    markersData.forEach(marker => {
+      markersCluster.addLayer(
+        L.marker([marker.geometry.coordinates[1], marker.geometry.coordinates[0]], { icon }).on(
+          'click',
+          () => {
+            this.props.siteClickHandler(marker);
+          }
+        )
+      );
+    });
+
+    this.map.addLayer(markersCluster);
   }
 
   render() {
