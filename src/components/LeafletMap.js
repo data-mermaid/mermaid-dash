@@ -43,8 +43,8 @@ const icon = L.divIcon({
 });
 
 class LeafletMap extends Component {
-  componentDidUpdate({ markersData }) {
-    if (this.props.markersData !== markersData) {
+  componentDidUpdate({ markersData: prevMarkersData }) {
+    if (this.props.markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
     }
   }
@@ -57,7 +57,7 @@ class LeafletMap extends Component {
           'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         subdomains: 'abcd',
         minZoom: 0,
-        maxZoom: 11,
+        maxZoom: 13,
         ext: 'png'
       }
     );
@@ -66,7 +66,7 @@ class LeafletMap extends Component {
       center: [38, 16],
       zoom: 2,
       minZoom: 3,
-      maxZoom: 16,
+      maxZoom: 14,
       zoomControl: true,
       layers: [
         L.tileLayer(
