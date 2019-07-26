@@ -24,7 +24,7 @@ const PieChart = ({ chartContent, chartLegend }) => (
       gutter={20}
       title={chartLegend.title}
       centerTitle
-      style={{ border: { stroke: 'black' } }}
+      style={{ border: { stroke: 'salmon' } }}
       data={chartLegend.data}
     />
     <VictoryPie
