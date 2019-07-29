@@ -47,6 +47,7 @@ class LeafletMap extends Component {
     if (this.props.markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
     }
+    this.zoomFullMap();
   }
 
   componentDidMount() {
@@ -97,6 +98,7 @@ class LeafletMap extends Component {
 
     this.layer = L.layerGroup().addTo(this.map);
     this.updateMarkers(this.props.markersData);
+    this.zoomFullMap();
   }
 
   updateMarkers(markersData) {
@@ -112,12 +114,19 @@ class LeafletMap extends Component {
           'click',
           () => {
             this.props.siteClickHandler(marker);
+            this.map.flyTo([marker.geometry.coordinates[1], marker.geometry.coordinates[0]]);
           }
         )
       );
     });
 
     this.map.addLayer(markersCluster);
+  }
+
+  zoomFullMap() {
+    if (this.props.zoomFullMap) {
+      this.map.setView([38, 16], 2);
+    }
   }
 
   render() {

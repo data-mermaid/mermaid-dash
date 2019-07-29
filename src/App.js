@@ -21,7 +21,8 @@ class App extends Component {
       { title: 'Sites', count: null },
       { title: 'Transects', count: 5 },
       { title: 'Avg Coral Coverage', count: 12 }
-    ]
+    ],
+    zoomFullMap: false
   };
 
   async componentDidMount() {
@@ -44,24 +45,33 @@ class App extends Component {
   };
 
   siteClickHandler = selectedSite => {
-    this.setState({ siteDetail: selectedSite, showSiteDetail: true });
+    this.setState({ siteDetail: selectedSite, showSiteDetail: true, zoomFullMap: false });
   };
 
   backButtonHandler = () => {
-    this.setState({ showSiteDetail: false });
+    this.setState({ showSiteDetail: false, zoomFullMap: false });
+  };
+
+  fullMapZoomHandler = () => {
+    this.setState({ zoomFullMap: true });
   };
 
   render() {
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
-        <LeafletMap markersData={this.state.sites} siteClickHandler={this.siteClickHandler} />
+        <LeafletMap
+          markersData={this.state.sites}
+          siteClickHandler={this.siteClickHandler}
+          zoomFullMap={this.state.zoomFullMap}
+        />
         <DashBoard
           siteDetail={this.state.siteDetail}
           showSiteDetail={this.state.showSiteDetail}
           showFullMap={this.state.showFullMap}
           metrics={this.state.metrics}
           backButtonHandler={this.backButtonHandler}
+          fullMapZoomHandler={this.fullMapZoomHandler}
         />
       </BrowserRouter>
     );

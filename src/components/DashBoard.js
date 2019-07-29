@@ -1,6 +1,7 @@
 import React from 'react';
 
 import BackArrowIcon from '@material-ui/icons/ArrowBack';
+import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import { ReactComponent as SinglePointIcon } from '../Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../Icons/four.svg';
 
@@ -12,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { ButtonStyle } from './Button';
-import { backButtonTheme } from './theme';
+import { backButtonTheme, fullZoomTheme } from './theme';
 import MetricCards from './MetricCards';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
@@ -37,6 +38,12 @@ const gridStyleProperties = makeStyles(theme => ({
   backIconProperty: {
     marginRight: theme.spacing(1)
   },
+  zoomOutIconWrapperProperty: {
+    position: 'fixed',
+    bottom: 41,
+    left: 11,
+    opacity: 0.7
+  },
   legendProperty: {
     position: 'fixed',
     width: 210,
@@ -57,7 +64,14 @@ const gridStyleProperties = makeStyles(theme => ({
   }
 }));
 
-const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail, metrics }) => {
+const DashBoard = ({
+  showFullMap,
+  showSiteDetail,
+  backButtonHandler,
+  siteDetail,
+  metrics,
+  fullMapZoomHandler
+}) => {
   const classes = gridStyleProperties();
 
   const backButton = showSiteDetail && (
@@ -65,6 +79,14 @@ const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail,
       <ButtonStyle setHover={true} onClick={backButtonHandler}>
         <BackArrowIcon />
         <Typography variant="h6">Back</Typography>
+      </ButtonStyle>
+    </ThemeProvider>
+  );
+
+  const fullMapToggle = (
+    <ThemeProvider theme={fullZoomTheme}>
+      <ButtonStyle setHover={true} onClick={fullMapZoomHandler}>
+        <ZoomOutIcon />
       </ButtonStyle>
     </ThemeProvider>
   );
@@ -91,6 +113,8 @@ const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail,
     </Box>
   );
 
+  const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
+
   const dashboardControl = showFullMap && (
     <Grid item sm={5} className={classes.dashBoardProperty}>
       {showSiteDetail ? siteDashboard : dashboard}
@@ -101,6 +125,7 @@ const DashBoard = ({ showFullMap, showSiteDetail, backButtonHandler, siteDetail,
     <Grid container className={classes.root}>
       <Grid item sm={7}>
         {backButtonControl}
+        {fullMapControl}
         <Paper className={classes.legendProperty}>
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
             <Box display="flex" m={1}>
