@@ -11,18 +11,9 @@ import Paper from '@material-ui/core/Paper';
 
 import { TextLoader } from './Loader';
 import { ButtonStyle } from './Button';
+import { theme } from './theme';
 
 import PropTypes from 'prop-types';
-
-const theme = {
-  fg: 'white',
-  bg: '#468DAE',
-  border: '1px',
-  width: '150px',
-  padding: '1px',
-  shadow:
-    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
-};
 
 const containerStyle = theme => ({
   root: {
@@ -68,7 +59,7 @@ class SiteDetail extends Component {
     const { classes } = this.props;
 
     const contactButton = (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme.cardButton}>
         <ButtonStyle setHover={true}>
           <Box p={1} display="flex" justifyContent="center">
             <ContactIcon fontSize="small" className={classes.iconProperty} />

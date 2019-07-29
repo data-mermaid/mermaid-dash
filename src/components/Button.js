@@ -3,16 +3,16 @@ import styled, { css } from 'styled-components/macro';
 export const ButtonStyle = styled('button')`
   transform: translate(0%);
   transition: ${props => props.theme.transition};
-  color: ${props => props.theme.fg};
+  color: ${props => props.theme.color};
   ${props =>
     props.buttonBorder
       ? css`
-          border: 5px solid ${props => props.theme.fg};
+          border: 5px solid ${props => props.theme.color};
         `
       : css`
           border: none;
         `}
-  background: ${props => props.theme.bg};
+  background: ${props => props.theme.bgColor};
   font-size: 1em;
   border-radius: 4px;
   position: ${props => props.theme.position};

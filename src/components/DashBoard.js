@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { ButtonStyle } from './Button';
-import { backButtonTheme, fullZoomTheme } from './theme';
+import { theme } from './theme';
 import MetricCards from './MetricCards';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
@@ -41,8 +41,7 @@ const gridStyleProperties = makeStyles(theme => ({
   zoomOutIconWrapperProperty: {
     position: 'fixed',
     bottom: 41,
-    left: 11,
-    opacity: 0.7
+    left: 11
   },
   legendProperty: {
     position: 'fixed',
@@ -51,7 +50,7 @@ const gridStyleProperties = makeStyles(theme => ({
     bottom: 10,
     left: 270,
     color: 'white',
-    opacity: 0.7,
+    opacity: 0.8,
     backgroundColor: 'black',
     borderRadius: 0
   },
@@ -75,7 +74,7 @@ const DashBoard = ({
   const classes = gridStyleProperties();
 
   const backButton = showSiteDetail && (
-    <ThemeProvider theme={backButtonTheme}>
+    <ThemeProvider theme={theme.backButton}>
       <ButtonStyle setHover={true} onClick={backButtonHandler}>
         <BackArrowIcon />
         <Typography variant="h6">Back</Typography>
@@ -84,9 +83,9 @@ const DashBoard = ({
   );
 
   const fullMapToggle = (
-    <ThemeProvider theme={fullZoomTheme}>
+    <ThemeProvider theme={theme.fullZoom}>
       <ButtonStyle setHover={true} onClick={fullMapZoomHandler}>
-        <ZoomOutIcon />
+        <ZoomOutIcon className={classes.zoomIconProperty} />
       </ButtonStyle>
     </ThemeProvider>
   );
