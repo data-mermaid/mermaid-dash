@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { ButtonStyle } from './Button';
-import { theme } from './theme';
 import MetricCards from './MetricCards';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
