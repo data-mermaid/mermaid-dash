@@ -5,7 +5,7 @@ const color = {
   mermaidBlack: 'black'
 };
 
-export const theme = {
+const theme = {
   backButton: {
     color: color.mermaidDark,
     position: 'fixed',
@@ -32,3 +32,5 @@ export const theme = {
     padding: '2px'
   }
 };
+
+export default theme;

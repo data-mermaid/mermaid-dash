@@ -51,6 +51,9 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "nohoist": [
+    "**/babel-preset-react-app/@babel/runtime"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",

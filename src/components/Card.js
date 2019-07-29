@@ -1,14 +1,12 @@
 import React from 'react';
 
 import DownloadIcon from '@material-ui/icons/CloudDownload';
-import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextLoader, ChartLoader } from './Loader';
-import { theme } from './theme';
 import { ButtonStyle } from './Button';
 import Chart from './Chart';
 
@@ -41,16 +39,14 @@ const Card = ({ content }) => {
   const subTitle = content.subTitle && <Typography variant="h6">{content.subTitle}</Typography>;
 
   const downLoadButton = content.type === 'pieChart' && (
-    <ThemeProvider theme={theme.cardButton}>
-      <ButtonStyle setHover={true}>
-        <Box p={1} display="flex" justifyContent="center">
-          <DownloadIcon fontSize="small" className={classes.iconProperty} />
-          <Typography variant="body1" display="inline">
-            Download Data
-          </Typography>
-        </Box>
-      </ButtonStyle>
-    </ThemeProvider>
+    <ButtonStyle setHover={true}>
+      <Box p={1} display="flex" justifyContent="center">
+        <DownloadIcon fontSize="small" className={classes.iconProperty} />
+        <Typography variant="body1" display="inline">
+          Download Data
+        </Typography>
+      </Box>
+    </ButtonStyle>
   );
 
   const contentType =

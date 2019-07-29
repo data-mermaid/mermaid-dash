@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components/macro';
+
+import { theme, Header, DashBoard, LeafletMap } from './components';
 import summary from '../src/apis/summary';
 import 'mapbox-gl/dist/mapbox-gl.css';
-
-import Header from './components/Header';
-import DashBoard from './components/DashBoard';
-import LeafletMap from './components/LeafletMap';
 
 class App extends Component {
   state = {
@@ -59,20 +58,24 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
-        <LeafletMap
-          markersData={this.state.sites}
-          siteClickHandler={this.siteClickHandler}
-          zoomFullMap={this.state.zoomFullMap}
-        />
-        <DashBoard
-          siteDetail={this.state.siteDetail}
-          showSiteDetail={this.state.showSiteDetail}
-          showFullMap={this.state.showFullMap}
-          metrics={this.state.metrics}
-          backButtonHandler={this.backButtonHandler}
-          fullMapZoomHandler={this.fullMapZoomHandler}
-        />
+        <ThemeProvider theme={theme}>
+          <>
+            <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
+            <LeafletMap
+              markersData={this.state.sites}
+              siteClickHandler={this.siteClickHandler}
+              zoomFullMap={this.state.zoomFullMap}
+            />
+            <DashBoard
+              siteDetail={this.state.siteDetail}
+              showSiteDetail={this.state.showSiteDetail}
+              showFullMap={this.state.showFullMap}
+              metrics={this.state.metrics}
+              backButtonHandler={this.backButtonHandler}
+              fullMapZoomHandler={this.fullMapZoomHandler}
+            />
+          </>
+        </ThemeProvider>
       </BrowserRouter>
     );
   }

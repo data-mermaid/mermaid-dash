@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import summary from '../apis/summary';
 
 import ContactIcon from '@material-ui/icons/Email';
-import { ThemeProvider } from 'styled-components/macro';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -11,7 +10,6 @@ import Paper from '@material-ui/core/Paper';
 
 import { TextLoader } from './Loader';
 import { ButtonStyle } from './Button';
-import { theme } from './theme';
 
 import PropTypes from 'prop-types';
 
@@ -59,16 +57,14 @@ class SiteDetail extends Component {
     const { classes } = this.props;
 
     const contactButton = (
-      <ThemeProvider theme={theme.cardButton}>
-        <ButtonStyle setHover={true}>
-          <Box p={1} display="flex" justifyContent="center">
-            <ContactIcon fontSize="small" className={classes.iconProperty} />
-            <Typography variant="body1" display="inline">
-              Contact Admins
-            </Typography>
-          </Box>
-        </ButtonStyle>
-      </ThemeProvider>
+      <ButtonStyle setHover={true}>
+        <Box p={1} display="flex" justifyContent="center">
+          <ContactIcon fontSize="small" className={classes.iconProperty} />
+          <Typography variant="body1" display="inline">
+            Contact Admins
+          </Typography>
+        </Box>
+      </ButtonStyle>
     );
 
     const site = this.state.loadedSite ? (

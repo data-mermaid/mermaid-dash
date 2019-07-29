@@ -5,7 +5,6 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import { ReactComponent as SinglePointIcon } from '../Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../Icons/four.svg';
 
-import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -74,20 +73,16 @@ const DashBoard = ({
   const classes = gridStyleProperties();
 
   const backButton = showSiteDetail && (
-    <ThemeProvider theme={theme.backButton}>
-      <ButtonStyle setHover={true} onClick={backButtonHandler}>
-        <BackArrowIcon />
-        <Typography variant="h6">Back</Typography>
-      </ButtonStyle>
-    </ThemeProvider>
+    <ButtonStyle setHover={true} onClick={backButtonHandler}>
+      <BackArrowIcon />
+      <Typography variant="h6">Back</Typography>
+    </ButtonStyle>
   );
 
   const fullMapToggle = (
-    <ThemeProvider theme={theme.fullZoom}>
-      <ButtonStyle setHover={true} onClick={fullMapZoomHandler}>
-        <ZoomOutIcon className={classes.zoomIconProperty} />
-      </ButtonStyle>
-    </ThemeProvider>
+    <ButtonStyle setHover={true} onClick={fullMapZoomHandler}>
+      <ZoomOutIcon className={classes.zoomIconProperty} />
+    </ButtonStyle>
   );
 
   const siteDashboard = siteDetail && (
