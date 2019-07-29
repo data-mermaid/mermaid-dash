@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextLoader, ChartLoader } from './Loader';
-import { cardButtonTheme } from './theme';
+import { theme } from './theme';
 import { ButtonStyle } from './Button';
 import Chart from './Chart';
 
@@ -41,7 +41,7 @@ const Card = ({ content }) => {
   const subTitle = content.subTitle && <Typography variant="h6">{content.subTitle}</Typography>;
 
   const downLoadButton = content.type === 'pieChart' && (
-    <ThemeProvider theme={cardButtonTheme}>
+    <ThemeProvider theme={theme.cardButton}>
       <ButtonStyle setHover={true}>
         <Box p={1} display="flex" justifyContent="center">
           <DownloadIcon fontSize="small" className={classes.iconProperty} />
