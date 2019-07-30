@@ -63,7 +63,6 @@ const PieChart = ({ chartContent, chartLegend }) => (
                 {
                   target: 'labels',
                   mutation: props => {
-                    // console.log(props);
                     const labelCLicked = props.datum.x + '\n' + props.datum.y;
                     return { active: true, text: labelCLicked };
                   }
