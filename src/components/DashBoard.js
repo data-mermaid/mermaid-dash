@@ -2,8 +2,8 @@ import React from 'react';
 
 import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
-import { ReactComponent as SinglePointIcon } from '../styles/Icons//circular-shape-silhouette.svg';
-import { ReactComponent as MultiPointsIcon } from '../styles/Icons//four.svg';
+import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
+import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
 
 import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
