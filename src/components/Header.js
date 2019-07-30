@@ -6,6 +6,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import CheckBoxFullMap from './CheckBoxFullMap';
 
+import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+
 const useStyles = makeStyles(theme => ({
   appBarProperty: {
     background: '#2C3742',
@@ -24,7 +26,7 @@ const Header = ({ toggle }) => {
     <AppBar position="static" className={classes.appBarProperty}>
       <Toolbar className={classes.toolBarProperty}>
         <Box p={1} flexGrow={1}>
-          <Typography variant="h4">MERMAID</Typography>
+          <MermaidLogo height="38px" />
         </Box>
         <Box p={2}>
           <Typography variant="overline">
