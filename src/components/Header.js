@@ -27,10 +27,28 @@ const Header = ({ toggle }) => {
           <Typography variant="h4">MERMAID</Typography>
         </Box>
         <Box p={2}>
-          <Typography variant="overline">COLLECT</Typography>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://collect.datamermaid.org"
+              rel="noopener noreferrer"
+            >
+              COLLECT
+            </a>
+          </Typography>
         </Box>
         <Box p={2}>
-          <Typography variant="overline">ABOUT THIS DATA</Typography>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://datamermaid.org/about/"
+              rel="noopener noreferrer"
+            >
+              ABOUT THIS DATA
+            </a>
+          </Typography>
         </Box>
         <Box p={2}>
           <Typography variant="overline">PRIVACY</Typography>
