@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { VictoryPie, VictoryLegend } from 'victory';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components';
 
 // import PropTypes from 'prop-types';
 const LabelContainer = styled('div')`
   position: relative;
-  top: 190px;
-  left: 100px;
+  top: ${props => (props.smallScreen ? '155px' : '190px')};
+  left: ${props => (props.smallScreen ? '40px' : '100px')};
   width: 180px;
+  height: 50px;
 `;
-
-const LabelProperty = styled('p')`
+const Label = styled('div')`
+  opacity: ${props => (props.content ? 1 : 0)};
+  transition: opacity 0.5s ease-in-out;
   text-align: center;
   font-size: 16px;
-`;
-
-const NoLabelProperty = styled('p')`
-  visibility: hidden;
-  font-size: 16px;
+  &::before {
+    content: '${props => props.content}';
+  }
 `;
 
 const defaultColorScale = [
@@ -35,25 +36,22 @@ const defaultColorScale = [
 
 const PieChart = ({ chartContent, chartLegend }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null });
-  const labelControl =
-    centerLabel.number || centerLabel.label ? (
-      <LabelContainer>
-        <LabelProperty>{centerLabel.label}</LabelProperty>
-        <LabelProperty>{centerLabel.number}</LabelProperty>
-      </LabelContainer>
-    ) : (
-      <LabelContainer>
-        <NoLabelProperty>no label</NoLabelProperty>
-        <NoLabelProperty>no label</NoLabelProperty>
-      </LabelContainer>
-    );
+  const legendResponsive = useMediaQuery('(min-width:1600px)');
+  const pieChartResponsive = useMediaQuery('(max-width:1000px)');
+
+  const labelControl = (
+    <LabelContainer smallScreen={pieChartResponsive}>
+      <Label content={centerLabel.label} />
+      <Label content={centerLabel.number} />
+    </LabelContainer>
+  );
 
   return (
     <>
       {labelControl}
-      <svg width="100%" height={360}>
+      <svg width="100%" height={pieChartResponsive ? 300 : 360}>
         <VictoryLegend
-          standalone={false}
+          standalone={!legendResponsive}
           colorScale={defaultColorScale}
           x={430}
           title={chartLegend.title}
@@ -66,8 +64,8 @@ const PieChart = ({ chartContent, chartLegend }) => {
         <VictoryPie
           standalone={false}
           innerRadius={120}
-          height={300}
-          width={430}
+          height={pieChartResponsive ? 250 : 300}
+          width={pieChartResponsive ? 300 : 430}
           padding={{
             right: 80,
             left: 40
@@ -96,7 +94,12 @@ const PieChart = ({ chartContent, chartLegend }) => {
                     {
                       target: 'data',
                       mutation: () => ({
-                        style: { fill: 'smoke', opacity: 0.6, cursor: 'pointer' }
+                        style: {
+                          fill: 'smoke',
+                          opacity: 0.6,
+                          cursor: 'pointer',
+                          transition: '0.25s ease-in-out'
+                        }
                       })
                     }
                   ];
@@ -105,7 +108,7 @@ const PieChart = ({ chartContent, chartLegend }) => {
                   return [
                     {
                       target: 'data',
-                      mutation: data => {
+                      mutation: () => {
                         setCenterLabel({
                           number: null,
                           label: null
