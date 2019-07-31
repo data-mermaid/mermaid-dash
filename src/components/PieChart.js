@@ -6,8 +6,8 @@ import styled from 'styled-components';
 // import PropTypes from 'prop-types';
 const LabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.smallScreen ? '155px' : '190px')};
-  left: ${props => (props.smallScreen ? '40px' : '100px')};
+  top: ${props => (props.smallScreen ? '180px' : '190px')};
+  left: ${props => (props.smallScreen ? '115px' : props.midScreen ? '190px' : '100px')};
   width: 180px;
   height: 50px;
 `;
@@ -36,11 +36,13 @@ const defaultColorScale = [
 
 const PieChart = ({ chartContent, chartLegend }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null });
-  const legendResponsive = useMediaQuery('(min-width:1600px)');
-  const pieChartResponsive = useMediaQuery('(max-width:1000px)');
+  const mediaMax1600 = useMediaQuery('(max-width:1600px)');
+  const mediaMax1050 = useMediaQuery('(max-width:1050px)');
+  const mediaMin1350 = useMediaQuery('(min-width:1350px)');
+  const mediaMin1350Max1600 = mediaMin1350 && mediaMax1600;
 
   const labelControl = (
-    <LabelContainer smallScreen={pieChartResponsive}>
+    <LabelContainer smallScreen={mediaMax1050} midScreen={mediaMin1350Max1600}>
       <Label content={centerLabel.label} />
       <Label content={centerLabel.number} />
     </LabelContainer>
@@ -49,9 +51,9 @@ const PieChart = ({ chartContent, chartLegend }) => {
   return (
     <>
       {labelControl}
-      <svg width="100%" height={pieChartResponsive ? 300 : 360}>
+      <svg width="100%" height={mediaMax1050 ? 330 : 360}>
         <VictoryLegend
-          standalone={!legendResponsive}
+          standalone={mediaMax1600}
           colorScale={defaultColorScale}
           x={430}
           title={chartLegend.title}
@@ -64,11 +66,11 @@ const PieChart = ({ chartContent, chartLegend }) => {
         <VictoryPie
           standalone={false}
           innerRadius={120}
-          height={pieChartResponsive ? 250 : 300}
-          width={pieChartResponsive ? 300 : 430}
+          height={mediaMax1050 ? 300 : 300}
+          width={mediaMax1050 ? 450 : 430}
           padding={{
-            right: 80,
-            left: 40
+            right: mediaMin1350Max1600 ? 0 : 80,
+            left: mediaMin1350Max1600 ? 130 : 40
           }}
           labels={() => null}
           colorScale={defaultColorScale}
