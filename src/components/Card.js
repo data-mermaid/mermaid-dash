@@ -31,10 +31,17 @@ const Card = ({ content }) => {
 
   const loaderType = content.type === 'text' ? <TextLoader /> : <ChartLoader />;
 
+  const subAttributeItem = content.hardCoralCovers ? (
+    <Typography m={1}>Hard coral cover: {content.hardCoralCovers} %</Typography>
+  ) : (
+    <Typography m={1}>Reef fish biomass: {content.reefFishBiomass} kg/ha</Typography>
+  );
+
   const subItems = content.type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {content.dataPolicy}</Typography>
       <Typography m={1}>Sample units: {content.sampleUnits} </Typography>
+      {subAttributeItem}
     </Box>
   );
 
