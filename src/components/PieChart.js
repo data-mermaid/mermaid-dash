@@ -3,7 +3,8 @@ import { VictoryPie, VictoryLegend } from 'victory';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components';
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+
 const LabelContainer = styled('div')`
   position: relative;
   top: ${props => (props.smallScreen ? '180px' : '190px')};
@@ -11,6 +12,7 @@ const LabelContainer = styled('div')`
   width: 180px;
   height: 50px;
 `;
+
 const Label = styled('div')`
   opacity: ${props => (props.content ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
@@ -44,7 +46,7 @@ const PieChart = ({ chartContent, chartLegend }) => {
   const labelControl = (
     <LabelContainer smallScreen={mediaMax1050} midScreen={mediaMin1350Max1600}>
       <Label content={centerLabel.label} />
-      <Label content={centerLabel.number} />
+      <Label content={centerLabel.number ? `${centerLabel.number}%` : centerLabel.number} />
     </LabelContainer>
   );
 
@@ -130,6 +132,14 @@ const PieChart = ({ chartContent, chartLegend }) => {
       </svg>
     </>
   );
+};
+
+PieChart.propTypes = {
+  chartContent: PropTypes.array,
+  chartLegend: PropTypes.shape({
+    title: PropTypes.string,
+    data: PropTypes.array
+  })
 };
 
 export default PieChart;
