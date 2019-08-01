@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import summary from '../apis/summary';
 
 import ContactIcon from '@material-ui/icons/Email';
+import AdminIcon from '@material-ui/icons/Person';
+
 import { ThemeProvider } from 'styled-components/macro';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import { TextLoader } from './Loader';
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
+import CoralAttributes from './CoralAttributes';
 
 import PropTypes from 'prop-types';
 
@@ -57,6 +60,7 @@ class SiteDetail extends Component {
 
   render() {
     const { classes } = this.props;
+    console.log(this.state.loadedSite);
 
     const contactButton = (
       <ThemeProvider theme={theme.cardButton}>
@@ -98,8 +102,9 @@ class SiteDetail extends Component {
           <Box>{contactButton}</Box>
         </Box>
 
-        <Box borderTop={1} pt={1}>
-          <Typography variant="body2">
+        <Box borderTop={1} pt={1} display="flex" alignItems="center">
+          <AdminIcon />
+          <Typography variant="body1">
             Admins:{' '}
             {this.state.loadedSite.properties.project_admins
               .map(admin => {
@@ -108,22 +113,7 @@ class SiteDetail extends Component {
               .join(', ')}
           </Typography>
         </Box>
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="flex-start"
-          className={classes.reefProperty}
-        >
-          <Box p={1} mr={1} border={1} borderRadius={13}>
-            Exposure: {this.state.loadedSite.properties.exposure}
-          </Box>
-          <Box p={1} mr={1} border={1} borderRadius={13}>
-            Reef Type: {this.state.loadedSite.properties.reef_type}
-          </Box>
-          <Box p={1} mr={1} border={1} borderRadius={13}>
-            Reef Zone: {this.state.loadedSite.properties.reef_zone}
-          </Box>
-        </Box>
+        <CoralAttributes loadedSiteProperties={this.state.loadedSite.properties} />
         <Typography variant="h6">Notes</Typography>
         <Typography variant="body2">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
