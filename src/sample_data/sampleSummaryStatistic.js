@@ -49,6 +49,7 @@ const Samples = {
     ],
     dataPolicy: 'Public Summary',
     sampleUnits: 21,
+    hardCoralCovers: 6.8,
     legend: {
       title: 'Benthic category',
       data: [
@@ -79,6 +80,7 @@ const Samples = {
     ],
     dataPolicy: 'Public Summary',
     sampleUnits: 10,
+    reefFishBiomass: 688.5,
     legend: {
       title: 'Tropic group',
       data: [
