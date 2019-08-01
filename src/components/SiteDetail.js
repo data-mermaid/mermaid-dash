@@ -15,6 +15,7 @@ import { TextLoader } from './Loader';
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
 import CoralAttributes from './CoralAttributes';
+import SiteNote from './SiteNote';
 
 import PropTypes from 'prop-types';
 
@@ -60,7 +61,6 @@ class SiteDetail extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.loadedSite);
 
     const contactButton = (
       <ThemeProvider theme={theme.cardButton}>
@@ -101,8 +101,7 @@ class SiteDetail extends Component {
           </Box>
           <Box>{contactButton}</Box>
         </Box>
-
-        <Box borderTop={1} pt={1} display="flex" alignItems="center">
+        <Box borderTop={1} pt={1} display="flex">
           <AdminIcon />
           <Typography variant="body1">
             Admins:{' '}
@@ -114,12 +113,7 @@ class SiteDetail extends Component {
           </Typography>
         </Box>
         <CoralAttributes loadedSiteProperties={this.state.loadedSite.properties} />
-        <Typography variant="h6">Notes</Typography>
-        <Typography variant="body2">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-          suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-          dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-        </Typography>
+        <SiteNote loadedSiteNote={this.state.loadedSite.site_notes} />
       </Paper>
     ) : (
       <Paper className={classes.siteWrapper}>

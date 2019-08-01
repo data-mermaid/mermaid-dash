@@ -31,7 +31,7 @@ const CoralAttributes = ({ loadedSiteProperties }) => {
       <Box p={1} mr={1} border={1} borderRadius={13} display="flex" alignItems="center">
         <Coral className={classes.coralIconProperty} />
         <Typography variant="body1">
-          Exposure: <strong>{loadedSiteProperties.exposure}</strong>
+          Reef Zone: <strong>{loadedSiteProperties.reef_zone}</strong>
         </Typography>
       </Box>
       <Box p={1} mr={1} border={1} borderRadius={13} display="flex" alignItems="center">
@@ -43,7 +43,7 @@ const CoralAttributes = ({ loadedSiteProperties }) => {
       <Box p={1} mr={1} border={1} borderRadius={13} display="flex" alignItems="center">
         <Coral className={classes.coralIconProperty} />
         <Typography variant="body1">
-          Reef Zone: <strong>{loadedSiteProperties.reef_zone}</strong>
+          Exposure: <strong>{loadedSiteProperties.exposure}</strong>
         </Typography>
       </Box>
     </Box>
