@@ -135,10 +135,10 @@ const PieChart = ({ chartContent, chartLegend }) => {
 };
 
 PieChart.propTypes = {
-  chartContent: PropTypes.object,
+  chartContent: PropTypes.array,
   chartLegend: PropTypes.shape({
     title: PropTypes.string,
-    data: PropTypes.object
+    data: PropTypes.array
   })
 };
 
