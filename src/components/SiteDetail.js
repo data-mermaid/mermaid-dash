@@ -113,7 +113,8 @@ class SiteDetail extends Component {
           </Typography>
         </Box>
         <CoralAttributes loadedSiteProperties={this.state.loadedSite.properties} />
-        <SiteNote loadedSiteNote={this.state.loadedSite.site_notes} />
+        {/* <SiteNote loadedSiteProperties={this.state.loadedSite.properties} /> */}
+        <SiteNote loadedSiteNote={this.state.loadedSite.properties.site_notes} />
       </Paper>
     ) : (
       <Paper className={classes.siteWrapper}>
