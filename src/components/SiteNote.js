@@ -4,17 +4,16 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 const MAX_CHAR = 240;
+const tempNote = `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
+suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
+dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.`;
 
 const ellipsisHelper = note => {
   return note.length > MAX_CHAR ? note.substr(0, MAX_CHAR) + '...' : note;
 };
 
-const SiteNote = ({ loadedSiteNote }) => {
-  const tempNote = `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-  suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-  dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.`;
-
-  const siteNote = loadedSiteNote ? ellipsisHelper(loadedSiteNote) : ellipsisHelper(tempNote);
+const SiteNote = ({ loadedSiteNote = tempNote }) => {
+  const siteNote = ellipsisHelper(loadedSiteNote);
 
   return (
     <Box>
