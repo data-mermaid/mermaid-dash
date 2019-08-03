@@ -8,13 +8,16 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import Typography from '@material-ui/core/Typography';
 
+import PropTypes from 'prop-types';
+
 const tempProjectNote = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas finibus mattis orci, molestie suscipit nunc tempus in. Cras pharetra est quis lobortis egestas. Etiam ut risus ut diam vulputate elementum ac in massa. Proin imperdiet nulla nibh, sit amet suscipit tellus tempor ut. Quisque eget ex bibendum, elementum velit a, consectetur felis. Donec ac tincidunt libero. Praesent sed accumsan est. Nam dictum elit vel porta aliquam. Phasellus erat ligula, aliquet ut ante condimentum, pulvinar pellentesque erat. Donec vehicula, metus scelerisque maximus efficitur, sem lorem elementum dui, quis ullamcorper nunc quam quis sem. Suspendisse consectetur, libero sed facilisis dictum, mauris felis hendrerit nulla, feugiat sodales massa libero quis enim.`;
 
 const tempSiteNote = `Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed. Nisl magna, et faucibus arcu condimentum sed. Aliquam erat volutpat. Donec placerat nisl magna.`;
 
 const modalStyles = makeStyles(theme => ({
   modalContainer: {
-    display: 'inline'
+    display: 'inline',
+    marginLeft: 5
   },
   titleProperty: {
     margin: 0,
@@ -34,16 +37,18 @@ const NoteBody = ({ children }) => {
   const classes = modalStyles();
   return (
     <Typography gutterBottom className={classes.titleProperty}>
-      {children}
+      {children.length > 0 ? (
+        children
+      ) : (
+        <span className={classes.emptyNoteProperty}>No notes available</span>
+      )}
     </Typography>
   );
 };
 
-// const emptyNoteContent = <>
-
 const SiteModal = ({ loadedSiteProperties }) => {
   const classes = modalStyles();
-  // const { projectNote}
+  const { site_notes, project_notes } = loadedSiteProperties;
   const [open, setModalStage] = useState(false);
 
   const modalCloseHandler = () => {
@@ -66,25 +71,11 @@ const SiteModal = ({ loadedSiteProperties }) => {
         </MuiDialogTitle>
         <MuiDialogContent dividers>
           <Typography variant="h6">Project Notes</Typography>
-          <NoteBody>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas finibus mattis orci,
-            molestie suscipit nunc tempus in. Cras pharetra est quis lobortis egestas. Etiam ut
-            risus ut diam vulputate elementum ac in massa. Proin imperdiet nulla nibh, sit amet
-            suscipit tellus tempor ut. Quisque eget ex bibendum, elementum velit a, consectetur
-            felis. Donec ac tincidunt libero. Praesent sed accumsan est. Nam dictum elit vel porta
-            aliquam. Phasellus erat ligula, aliquet ut ante condimentum, pulvinar pellentesque erat.
-            Donec vehicula, metus scelerisque maximus efficitur, sem lorem elementum dui, quis
-            ullamcorper nunc quam quis sem. Suspendisse consectetur, libero sed facilisis dictum,
-            mauris felis hendrerit nulla, feugiat sodales massa libero quis enim.
-          </NoteBody>
+          <NoteBody>{project_notes.length > 0 ? project_notes : tempProjectNote}</NoteBody>
           <Typography variant="h6">Site Notes</Typography>
-          <NoteBody>
-            Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed. Nisl
-            magna, et faucibus arcu condimentum sed. Aliquam erat volutpat. Donec placerat nisl
-            magna.
-          </NoteBody>
+          <NoteBody>{site_notes.length > 0 ? site_notes : tempSiteNote}</NoteBody>
           <Typography variant="h6">Management Regime Notes</Typography>
-          <NoteBody>No notes available</NoteBody>
+          <NoteBody>{''}</NoteBody>
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={modalCloseHandler} color="primary">
@@ -94,6 +85,13 @@ const SiteModal = ({ loadedSiteProperties }) => {
       </Dialog>
     </div>
   );
+};
+
+SiteModal.propTypes = {
+  loadedSiteProperties: PropTypes.shape({
+    site_notes: PropTypes.string,
+    project_notes: PropTypes.string
+  })
 };
 
 export default SiteModal;

@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import SiteModal from './SiteModal';
 
+import PropTypes from 'prop-types';
+
 const MAX_CHAR = 240;
 const tempNote = `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
 suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
@@ -12,14 +14,13 @@ suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate n
 dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam`;
 
 const ellipsisHelper = note => {
-  return note.length > MAX_CHAR ? note.substr(0, MAX_CHAR) + '...' : note;
+  const newNote = note.length !== 0 ? note : tempNote;
+  return newNote.length > MAX_CHAR ? newNote.substr(0, MAX_CHAR) + '...' : newNote;
 };
 
-const SiteNote = ({ loadedSiteProperties = tempNote }) => {
-  // const { site_notes } = loadedSiteProperties;
-  console.log(loadedSiteProperties);
-  // const { site_notes = tempNote } = loadedSiteProperties;
-  const siteNote = ellipsisHelper(loadedSiteProperties);
+const SiteNote = ({ loadedSiteProperties }) => {
+  const { site_notes } = loadedSiteProperties;
+  const siteNote = ellipsisHelper(site_notes);
 
   return (
     <Box>
@@ -27,9 +28,15 @@ const SiteNote = ({ loadedSiteProperties = tempNote }) => {
       <Typography variant="body2" display="inline">
         {siteNote}
       </Typography>
-      {/* <SiteModal loadedSiteProperties={loadedSiteProperties}/> */}
+      <SiteModal loadedSiteProperties={loadedSiteProperties} />
     </Box>
   );
+};
+
+SiteNote.propTypes = {
+  loadedSiteProperties: PropTypes.shape({
+    site_notes: PropTypes.string
+  })
 };
 
 export default SiteNote;
