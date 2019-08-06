@@ -20,29 +20,52 @@ const Wrapper = styled.div`
   width: ${props => props.width};
   height: ${props => props.height};
 `;
-const myCustomColour = '#A53434';
+const defaultMarkerColor = '#A53434';
 
 const markerHtmlStyles = `
-  background-color: ${myCustomColour};
-  width: 1.5rem;
-  height: 1.5rem;
+  background-color: ${defaultMarkerColor};
+  width: 1rem;
+  height: 1rem;
   display: block;
-  left: -1rem;
-  top: -1rem;
   position: relative;
-  border-radius: 2rem;
+  border-radius: 1.5rem;
+  border: 1px solid #FFFFFF`;
+
+const activeMarkerHtmlStyles = `
+  background-color: ${defaultMarkerColor};
+  width: 1.4rem;
+  height: 1.4rem;
+  display: block;
+  position: relative;
+  border-radius: 1rem 1rem 0;
   transform: rotate(45deg);
   border: 1px solid #FFFFFF`;
 
+const activeInnerMarkerHtmlStyles = `
+  background-color: white;
+  width: 0.7rem;
+  height: 0.7rem;
+  position: absolute;
+  border-radius: 1rem;
+  top: 20%;
+  left: 20%;
+`;
+
 const icon = L.divIcon({
-  className: 'my-custom-pin',
-  iconAnchor: [0, 24],
-  labelAnchor: [-6, 0],
-  popupAnchor: [0, -36],
-  html: `<span style="${markerHtmlStyles}" />`
+  className: 'my-default-pin',
+  html: `<div style="${markerHtmlStyles}" />`
+});
+
+const activeIcon = L.divIcon({
+  className: 'my-active-pin',
+  html: `<div style="${activeMarkerHtmlStyles}"><div style="${activeInnerMarkerHtmlStyles}"></div></div>`
 });
 
 class LeafletMap extends Component {
+  state = {
+    highlightMarker: null
+  };
+
   componentDidUpdate({ markersData: prevMarkersData }) {
     if (this.props.markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
@@ -101,6 +124,13 @@ class LeafletMap extends Component {
     this.zoomFullMap();
   }
 
+  removeHighlight() {
+    if (this.state.highlightMarker !== null) {
+      this.state.highlightMarker.setIcon(icon);
+      this.setState({ highlightMarker: null });
+    }
+  }
+
   updateMarkers(markersData) {
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -109,14 +139,19 @@ class LeafletMap extends Component {
 
     this.layer.clearLayers();
     markersData.forEach(marker => {
+      const markerPoint = L.marker(
+        [marker.geometry.coordinates[1], marker.geometry.coordinates[0]],
+        { icon }
+      );
+
       markersCluster.addLayer(
-        L.marker([marker.geometry.coordinates[1], marker.geometry.coordinates[0]], { icon }).on(
-          'click',
-          () => {
-            this.props.siteClickHandler(marker);
-            this.map.flyTo([marker.geometry.coordinates[1], marker.geometry.coordinates[0]]);
-          }
-        )
+        markerPoint.on('click', () => {
+          this.removeHighlight();
+          markerPoint.setIcon(activeIcon);
+          this.setState({ highlightMarker: markerPoint });
+          this.props.siteClickHandler(marker);
+          this.map.flyTo([marker.geometry.coordinates[1], marker.geometry.coordinates[0]]);
+        })
       );
     });
 
