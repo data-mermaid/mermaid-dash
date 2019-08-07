@@ -37,11 +37,7 @@ class App extends Component {
   }
 
   toggle = () => {
-    this.setState({ showFullMap: !this.state.showFullMap });
-  };
-
-  siteSelectHandler = selectedOption => {
-    this.setState({ selectSite: selectedOption });
+    this.setState({ showFullMap: !this.state.showFullMap, zoomFullMap: false });
   };
 
   siteClickHandler = selectedSite => {
@@ -52,8 +48,9 @@ class App extends Component {
     this.setState({ showSiteDetail: false, zoomFullMap: false });
   };
 
-  fullMapZoomHandler = () => {
-    this.setState({ zoomFullMap: true });
+  fullMapZoomHandler = zoomOffOption => {
+    const zoomFullMap = zoomOffOption ? true : false;
+    this.setState({ zoomFullMap });
   };
 
   render() {
@@ -64,6 +61,7 @@ class App extends Component {
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           zoomFullMap={this.state.zoomFullMap}
+          fullMapZoomHandler={this.fullMapZoomHandler}
         />
         <DashBoard
           siteDetail={this.state.siteDetail}

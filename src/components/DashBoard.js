@@ -88,7 +88,7 @@ const DashBoard = ({
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.fullZoom}>
-      <ButtonStyle setHover={true} onClick={fullMapZoomHandler}>
+      <ButtonStyle setHover={true} onClick={() => fullMapZoomHandler(true)}>
         <ZoomOutIcon className={classes.zoomIconProperty} />
       </ButtonStyle>
     </ThemeProvider>

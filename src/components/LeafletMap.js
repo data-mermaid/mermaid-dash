@@ -119,7 +119,6 @@ class LeafletMap extends Component {
       zoomLevelOffset: -6
     }).addTo(this.map);
 
-    this.layer = L.layerGroup().addTo(this.map);
     this.updateMarkers(this.props.markersData);
     this.zoomFullMap();
   }
@@ -131,13 +130,30 @@ class LeafletMap extends Component {
     }
   }
 
+  setIconActive(marker) {
+    marker.setIcon(activeIcon);
+    this.setState({ highlightMarker: marker });
+  }
+
+  panToOffCenter(latlng, offset, options) {
+    const x = latlng.containerPoint.x + offset[0],
+      y = latlng.containerPoint.y - offset[1],
+      currentZoom = this.map._zoom,
+      newLatlng = this.map.containerPointToLatLng([x, y]);
+
+    return this.map.setView(newLatlng, currentZoom, { pan: options });
+  }
+
   updateMarkers(markersData) {
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: false
     });
 
-    this.layer.clearLayers();
+    markersCluster.on('clusterclick', () => {
+      this.props.fullMapZoomHandler(false);
+    });
+
     markersData.forEach(marker => {
       const markerPoint = L.marker(
         [marker.geometry.coordinates[1], marker.geometry.coordinates[0]],
@@ -145,12 +161,11 @@ class LeafletMap extends Component {
       );
 
       markersCluster.addLayer(
-        markerPoint.on('click', () => {
+        markerPoint.on('click', e => {
           this.removeHighlight();
-          markerPoint.setIcon(activeIcon);
-          this.setState({ highlightMarker: markerPoint });
+          this.setIconActive(markerPoint);
           this.props.siteClickHandler(marker);
-          this.map.flyTo([marker.geometry.coordinates[1], marker.geometry.coordinates[0]]);
+          this.panToOffCenter(e, [350, 0], { animate: true });
         })
       );
     });
