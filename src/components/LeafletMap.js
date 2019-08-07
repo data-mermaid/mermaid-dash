@@ -33,22 +33,23 @@ const markerHtmlStyles = `
 
 const activeMarkerHtmlStyles = `
   background-color: ${defaultMarkerColor};
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.5rem;
+  height: 1.5rem;
   display: block;
   position: relative;
-  border-radius: 1rem 1rem 0;
-  transform: rotate(45deg);
-  border: 1px solid #FFFFFF`;
+  border-radius: 1rem 1rem 1rem 0;
+  transform: rotate(-45deg);
+  border: 1px solid #FFFFFF
+  `;
 
 const activeInnerMarkerHtmlStyles = `
   background-color: white;
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
   position: absolute;
   border-radius: 1rem;
-  top: 20%;
-  left: 20%;
+  top: 30%;
+  left: 24%;
 `;
 
 const icon = L.divIcon({
