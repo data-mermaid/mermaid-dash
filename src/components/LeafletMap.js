@@ -32,24 +32,27 @@ const markerHtmlStyles = `
   border: 1px solid #FFFFFF`;
 
 const activeMarkerHtmlStyles = `
-  background-color: ${defaultMarkerColor};
-  width: 1.5rem;
-  height: 1.5rem;
-  display: block;
-  position: relative;
-  border-radius: 1rem 1rem 1rem 0;
-  transform: rotate(-45deg);
-  border: 1px solid #FFFFFF
+  position: absolute;
+  border-radius: 50%;
+  top: -200%;
+  border: 6px solid ${defaultMarkerColor};
+  width: 1.6rem;
+  height: 1.6rem;
+  background-color: white;
+  animation-name: bounce;
+  animation-fill-mode: both;
+  animation-duration: 1s;
   `;
 
 const activeInnerMarkerHtmlStyles = `
-  background-color: white;
-  width: 0.6rem;
-  height: 0.6rem;
   position: absolute;
-  border-radius: 1rem;
-  top: 30%;
-  left: 24%;
+  content: '';
+  width: 0px;
+  height: 0px;
+  bottom: -26px;
+  left: -3px;
+  border: 8px solid transparent;
+  border-top: 15px solid ${defaultMarkerColor};
 `;
 
 const icon = L.divIcon({
@@ -61,6 +64,9 @@ const activeIcon = L.divIcon({
   className: 'my-active-pin',
   html: `<div style="${activeMarkerHtmlStyles}"><div style="${activeInnerMarkerHtmlStyles}"></div></div>`
 });
+
+const windowWidth = () => (window ? window.innerWidth : 1800);
+const offsetX = w => 0.2 * w;
 
 class LeafletMap extends Component {
   state = {
@@ -163,10 +169,11 @@ class LeafletMap extends Component {
 
       markersCluster.addLayer(
         markerPoint.on('click', e => {
+          const responsiveOffSetX = offsetX(windowWidth());
           this.removeHighlight();
           this.setIconActive(markerPoint);
           this.props.siteClickHandler(marker);
-          this.panToOffCenter(e, [350, 0], { animate: true });
+          this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
         })
       );
     });
