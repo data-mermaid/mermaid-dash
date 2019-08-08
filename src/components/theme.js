@@ -8,6 +8,7 @@ const color = {
 export const theme = {
   backButton: {
     color: color.mermaidDark,
+    bgColor: color.mermaidWhite,
     position: 'fixed',
     width: '70px',
     padding: '5px',
