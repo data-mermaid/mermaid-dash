@@ -20,29 +20,59 @@ const Wrapper = styled.div`
   width: ${props => props.width};
   height: ${props => props.height};
 `;
-const myCustomColour = '#A53434';
+const defaultMarkerColor = '#A53434';
 
 const markerHtmlStyles = `
-  background-color: ${myCustomColour};
-  width: 1.5rem;
-  height: 1.5rem;
+  background-color: ${defaultMarkerColor};
+  width: 1rem;
+  height: 1rem;
   display: block;
-  left: -1rem;
-  top: -1rem;
   position: relative;
-  border-radius: 2rem;
-  transform: rotate(45deg);
+  border-radius: 1.5rem;
   border: 1px solid #FFFFFF`;
 
+const activeMarkerHtmlStyles = `
+  position: absolute;
+  border-radius: 50%;
+  top: -200%;
+  border: 6px solid ${defaultMarkerColor};
+  width: 1.6rem;
+  height: 1.6rem;
+  background-color: white;
+  animation-name: bounce;
+  animation-fill-mode: both;
+  animation-duration: 1s;
+  `;
+
+const activeInnerMarkerHtmlStyles = `
+  position: absolute;
+  content: '';
+  width: 0px;
+  height: 0px;
+  bottom: -26px;
+  left: -3px;
+  border: 8px solid transparent;
+  border-top: 15px solid ${defaultMarkerColor};
+`;
+
 const icon = L.divIcon({
-  className: 'my-custom-pin',
-  iconAnchor: [0, 24],
-  labelAnchor: [-6, 0],
-  popupAnchor: [0, -36],
-  html: `<span style="${markerHtmlStyles}" />`
+  className: 'my-default-pin',
+  html: `<div style="${markerHtmlStyles}" />`
 });
 
+const activeIcon = L.divIcon({
+  className: 'my-active-pin',
+  html: `<div style="${activeMarkerHtmlStyles}"><div style="${activeInnerMarkerHtmlStyles}"></div></div>`
+});
+
+const windowWidth = () => (window ? window.innerWidth : 1800);
+const offsetX = w => 0.2 * w;
+
 class LeafletMap extends Component {
+  state = {
+    highlightMarker: null
+  };
+
   componentDidUpdate({ markersData: prevMarkersData }) {
     if (this.props.markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
@@ -73,8 +103,7 @@ class LeafletMap extends Component {
         L.tileLayer(
           'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
           {
-            attribution:
-              'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+            attribution: 'Tiles &copy; Esri '
           }
         )
       ]
@@ -96,9 +125,29 @@ class LeafletMap extends Component {
       zoomLevelOffset: -6
     }).addTo(this.map);
 
-    this.layer = L.layerGroup().addTo(this.map);
     this.updateMarkers(this.props.markersData);
     this.zoomFullMap();
+  }
+
+  removeHighlight() {
+    if (this.state.highlightMarker !== null) {
+      this.state.highlightMarker.setIcon(icon);
+      this.setState({ highlightMarker: null });
+    }
+  }
+
+  setIconActive(marker) {
+    marker.setIcon(activeIcon);
+    this.setState({ highlightMarker: marker });
+  }
+
+  panToOffCenter(latlng, offset, options) {
+    const x = latlng.containerPoint.x + offset[0],
+      y = latlng.containerPoint.y - offset[1],
+      currentZoom = this.map._zoom,
+      newLatlng = this.map.containerPointToLatLng([x, y]);
+
+    return this.map.setView(newLatlng, currentZoom, { pan: options });
   }
 
   updateMarkers(markersData) {
@@ -107,16 +156,24 @@ class LeafletMap extends Component {
       spiderfyOnMaxZoom: false
     });
 
-    this.layer.clearLayers();
+    markersCluster.on('clusterclick', () => {
+      this.props.fullMapZoomHandler(false);
+    });
+
     markersData.forEach(marker => {
+      const markerPoint = L.marker(
+        [marker.geometry.coordinates[1], marker.geometry.coordinates[0]],
+        { icon }
+      );
+
       markersCluster.addLayer(
-        L.marker([marker.geometry.coordinates[1], marker.geometry.coordinates[0]], { icon }).on(
-          'click',
-          () => {
-            this.props.siteClickHandler(marker);
-            this.map.flyTo([marker.geometry.coordinates[1], marker.geometry.coordinates[0]]);
-          }
-        )
+        markerPoint.on('click', e => {
+          const responsiveOffSetX = offsetX(windowWidth());
+          this.removeHighlight();
+          this.setIconActive(markerPoint);
+          this.props.siteClickHandler(marker);
+          this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
+        })
       );
     });
 

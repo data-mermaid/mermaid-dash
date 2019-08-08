@@ -4,6 +4,7 @@ import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
+import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
@@ -45,7 +46,7 @@ const gridStyleProperties = makeStyles(theme => ({
   },
   legendProperty: {
     position: 'fixed',
-    width: 210,
+    width: 220,
     height: 160,
     bottom: 10,
     left: 270,
@@ -55,11 +56,14 @@ const gridStyleProperties = makeStyles(theme => ({
     borderRadius: 0
   },
   legendItemProperty: {
-    padding: '35px 0 10px 0px'
+    padding: '15px 0 10px 0px'
   },
   legendIconProperty: {
-    color: '#A53434',
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
+    marginLeft: '4px'
+  },
+  legendMarkerIconProperty: {
+    marginRight: '4px'
   }
 }));
 
@@ -84,7 +88,7 @@ const DashBoard = ({
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.fullZoom}>
-      <ButtonStyle setHover={true} onClick={fullMapZoomHandler}>
+      <ButtonStyle setHover={true} onClick={() => fullMapZoomHandler(true)}>
         <ZoomOutIcon className={classes.zoomIconProperty} />
       </ButtonStyle>
     </ThemeProvider>
@@ -127,6 +131,14 @@ const DashBoard = ({
         {fullMapControl}
         <Paper className={classes.legendProperty}>
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
+            <Box display="flex" m={1}>
+              <SelectMarkerIcon
+                width="33px"
+                height="33px"
+                className={classes.legendMarkerIconProperty}
+              />
+              <Typography variant="h6">Select Marker</Typography>
+            </Box>
             <Box display="flex" m={1}>
               <SinglePointIcon width="25px" height="25px" className={classes.legendIconProperty} />
               <Typography variant="h6">Data Location</Typography>
