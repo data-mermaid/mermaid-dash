@@ -28,28 +28,40 @@ const cardStyle = makeStyles(theme => ({
 
 const Card = ({ content }) => {
   const classes = cardStyle();
+  const {
+    type,
+    dataPolicy,
+    body,
+    legend,
+    sampleUnits,
+    title,
+    hardCoralCovers,
+    reefFishBiomass,
+    header
+  } = content;
+  const privatePolicyCheck = type === 'pieChart' && dataPolicy.name === 'Private';
 
-  const loaderType = content.type === 'text' ? <TextLoader /> : <ChartLoader />;
+  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
 
-  const subAttributeItem = content.hardCoralCovers ? (
-    <Typography m={1}>Hard coral cover: {content.hardCoralCovers} %</Typography>
+  const subAttributeItem = hardCoralCovers ? (
+    <Typography m={1}>Hard coral cover: {hardCoralCovers} %</Typography>
   ) : (
-    <Typography m={1}>Reef fish biomass: {content.reefFishBiomass} kg/ha</Typography>
+    <Typography m={1}>Reef fish biomass: {reefFishBiomass} kg/ha</Typography>
   );
 
-  const subItems = content.type === 'pieChart' && (
+  const subItems = type === 'pieChart' && (
     <Box>
-      <Typography m={1}>Data sharing: {content.dataPolicy}</Typography>
-      <Typography m={1}>Sample units: {content.sampleUnits} </Typography>
+      <Typography m={1}>Data sharing: {dataPolicy.name}</Typography>
+      <Typography m={1}>Sample units: {sampleUnits} </Typography>
       {subAttributeItem}
     </Box>
   );
 
-  const subTitle = content.subTitle && <Typography variant="h6">{content.subTitle}</Typography>;
+  const subTitle = header && <Typography variant="h6">{header}</Typography>;
 
-  const downLoadButton = content.type === 'pieChart' && (
+  const downLoadButton = type === 'pieChart' && (
     <ThemeProvider theme={theme.cardButton}>
-      <ButtonStyle setHover={true}>
+      <ButtonStyle setHover={true} notAllowed={privatePolicyCheck}>
         <Box p={1} display="flex" justifyContent="center">
           <DownloadIcon fontSize="small" className={classes.iconProperty} />
           <Typography variant="body1" display="inline">
@@ -61,14 +73,14 @@ const Card = ({ content }) => {
   );
 
   const contentType =
-    content.type === 'text' ? (
+    type === 'text' ? (
       <Box pt={1}>
         {subTitle}
-        <Typography variant="body1">{content.body}</Typography>
+        <Typography variant="body1">{body}</Typography>
       </Box>
     ) : (
       <Box pt={1}>
-        <Chart chartType={content.type} chartContent={content.body} chartLegend={content.legend} />
+        <Chart chartType={type} chartContent={body} chartLegend={legend} chartPolicy={dataPolicy} />
       </Box>
     );
 
@@ -77,7 +89,7 @@ const Card = ({ content }) => {
       <Box display="flex" borderBottom={1}>
         <Box flexGrow={1}>
           <Box>
-            <Typography variant="h4">{content.title}</Typography>
+            <Typography variant="h4">{title}</Typography>
           </Box>
           {subItems}
         </Box>
@@ -94,9 +106,17 @@ const Card = ({ content }) => {
 
 Card.propTypes = {
   content: PropTypes.shape({
+    type: PropTypes.string,
     title: PropTypes.string,
     // body: PropTypes.array || PropTypes.string, //there are 2 data types for content body now
-    type: PropTypes.string
+    dataPolicy: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    legend: PropTypes.object,
+    sampleUnits: PropTypes.number,
+    header: PropTypes.string,
+    hardCoralCovers: PropTypes.number,
+    reefFishBiomass: PropTypes.number
   })
 };
 

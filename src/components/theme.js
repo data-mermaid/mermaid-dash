@@ -2,7 +2,8 @@ const color = {
   mermaidDark: '#2C3742',
   mermaidWhite: 'white',
   mermaidBlue: '#468DAE',
-  mermaidBlack: 'black'
+  mermaidBlack: 'black',
+  mermaidNotAllowed: '#9C9C9C'
 };
 
 export const theme = {
@@ -20,6 +21,7 @@ export const theme = {
   cardButton: {
     color: color.mermaidWhite,
     bgColor: color.mermaidBlue,
+    notAllowedBgColor: color.mermaidNotAllowed,
     width: '150px',
     padding: '1px',
     shadow:
