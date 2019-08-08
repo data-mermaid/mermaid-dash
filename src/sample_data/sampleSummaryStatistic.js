@@ -1,7 +1,7 @@
 const Samples = {
   summary: {
     title: 'Summary Statistics',
-    subTitle: 'Data is more powerful when shared',
+    header: 'Data is more powerful when shared',
     body:
       'Mermaid believes in coral reef conservation through collaboration. We use cutting edge technology to visualize, analyse and share data about coral reefs in near real time, and for free.',
     type: 'text'
@@ -47,7 +47,11 @@ const Samples = {
       { x: 'Soft coral', y: 4 },
       { x: 'Turf algae', y: 3 }
     ],
-    dataPolicy: 'Public Summary',
+    dataPolicy: {
+      name: 'Public Summary',
+      privateLabel:
+        'This data is unavailable because Benthic: PIT, LIT and Habitat Complexity are set to Private for this project.'
+    },
     sampleUnits: 21,
     hardCoralCovers: 6.8,
     legend: {
@@ -78,7 +82,11 @@ const Samples = {
       { x: 'Piscivore', y: 14 },
       { x: 'Planktivore', y: 30 }
     ],
-    dataPolicy: 'Public Summary',
+    dataPolicy: {
+      name: 'Private',
+      privateLabel:
+        'This data is unavailable because Fish Belt Sample Units are set to Private for this project.'
+    },
     sampleUnits: 10,
     reefFishBiomass: 688.5,
     legend: {
