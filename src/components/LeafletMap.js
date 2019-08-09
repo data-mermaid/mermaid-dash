@@ -89,6 +89,7 @@ class LeafletMap extends Component {
         subdomains: 'abcd',
         minZoom: 0,
         maxZoom: 13,
+        opacity: 0.6,
         ext: 'png'
       }
     );
@@ -111,9 +112,10 @@ class LeafletMap extends Component {
 
     new L.Control.MiniMap(miniMapLayer, {
       position: 'bottomleft',
-      width: 260,
-      height: 160,
+      width: 240,
+      height: 140,
       zoomAnimation: true,
+      toggleDisplay: true,
       aimingRectOptions: { color: '#91181A' },
       shadowRectOptions: {
         color: '#208FFF',
