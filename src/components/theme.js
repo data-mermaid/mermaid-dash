@@ -3,7 +3,8 @@ const color = {
   mermaidWhite: 'white',
   mermaidBlue: '#468DAE',
   mermaidBlack: 'black',
-  mermaidNotAllowed: '#9C9C9C'
+  mermaidNotAllowed: '#9C9C9C',
+  mermaidGray: '#585858'
 };
 
 export const theme = {
@@ -29,9 +30,9 @@ export const theme = {
   },
   fullZoom: {
     color: color.mermaidWhite,
-    bgColor: color.mermaidBlack,
+    bgColor: color.mermaidGray,
     position: 'fixed',
-    width: '27px',
-    padding: '2px'
+    width: '18px',
+    padding: '1px'
   }
 };
