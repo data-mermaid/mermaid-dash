@@ -24,7 +24,8 @@ const containerStyle = theme => ({
     paddingBottom: theme.spacing(2)
   },
   siteWrapper: {
-    padding: theme.spacing(2, 2)
+    padding: theme.spacing(2, 2),
+    borderRadius: 0
   },
   reefProperty: {
     padding: '8px 8px 8px 0'

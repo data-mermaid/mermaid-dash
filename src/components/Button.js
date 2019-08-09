@@ -14,7 +14,6 @@ export const ButtonStyle = styled('button')`
         `}
   background: ${props => (props.notAllowed ? props.theme.notAllowedBgColor : props.theme.bgColor)};
   font-size: 1em;
-  border-radius: 4px;
   position: ${props => props.theme.position};
   padding: ${props => props.theme.padding};
   width: ${props => props.theme.width};
