@@ -53,7 +53,8 @@ const gridStyleProperties = makeStyles(theme => ({
     color: 'white',
     opacity: 0.9,
     backgroundColor: '#585858',
-    borderRadius: 0
+    borderRadius: 0,
+    boxShadow: 'none'
   },
   legendItemProperty: {
     padding: '5px 0 10px 0px'
