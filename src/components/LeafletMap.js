@@ -55,6 +55,20 @@ const activeInnerMarkerHtmlStyles = `
   border-top: 15px solid ${defaultMarkerColor};
 `;
 
+const clusterIconStyles = `
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid white;
+  background-color: ${defaultMarkerColor};
+`;
+
+const clusterIconNumberStyles = `
+  color: white;
+  font-size: 14px;
+`;
+
 const icon = L.divIcon({
   className: 'my-default-pin',
   html: `<div style="${markerHtmlStyles}" />`
@@ -152,10 +166,23 @@ class LeafletMap extends Component {
     return this.map.setView(newLatlng, currentZoom, { pan: options });
   }
 
+  zoomFullMap() {
+    if (this.props.zoomFullMap) {
+      this.map.setView([38, 16], 2);
+    }
+  }
+
   updateMarkers(markersData) {
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
-      spiderfyOnMaxZoom: false
+      spiderfyOnMaxZoom: false,
+      iconCreateFunction: function(cluster) {
+        const childCount = cluster.getChildCount();
+        return new L.DivIcon({
+          html: `<div style="${clusterIconStyles}"><span style="${clusterIconNumberStyles}"> ${childCount} </span></div>`,
+          className: 'marker-cluster-icon'
+        });
+      }
     });
 
     markersCluster.on('clusterclick', () => {
@@ -180,12 +207,6 @@ class LeafletMap extends Component {
     });
 
     this.map.addLayer(markersCluster);
-  }
-
-  zoomFullMap() {
-    if (this.props.zoomFullMap) {
-      this.map.setView([38, 16], 2);
-    }
   }
 
   render() {
