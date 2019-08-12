@@ -41,29 +41,33 @@ const gridStyleProperties = makeStyles(theme => ({
   },
   zoomOutIconWrapperProperty: {
     position: 'fixed',
-    bottom: 41,
-    left: 11
+    bottom: 30,
+    left: 10
   },
   legendProperty: {
     position: 'fixed',
     width: 220,
-    height: 160,
+    height: 140,
     bottom: 10,
-    left: 270,
+    left: 250,
     color: 'white',
-    opacity: 0.8,
-    backgroundColor: 'black',
-    borderRadius: 0
+    opacity: 0.9,
+    backgroundColor: '#585858',
+    borderRadius: 0,
+    boxShadow: 'none'
   },
   legendItemProperty: {
-    padding: '15px 0 10px 0px'
+    padding: '5px 0 10px 0px'
   },
   legendIconProperty: {
-    marginRight: theme.spacing(1),
-    marginLeft: '4px'
+    margin: '3px 8px 0 3px'
   },
   legendMarkerIconProperty: {
-    marginRight: '4px'
+    marginRight: '3px'
+  },
+  zoomOutIconProperty: {
+    width: '15px',
+    height: '15px'
   }
 }));
 
@@ -89,7 +93,7 @@ const DashBoard = ({
   const fullMapToggle = (
     <ThemeProvider theme={theme.fullZoom}>
       <ButtonStyle setHover={true} onClick={() => fullMapZoomHandler(true)}>
-        <ZoomOutIcon className={classes.zoomIconProperty} />
+        <ZoomOutIcon className={classes.zoomOutIconProperty} />
       </ButtonStyle>
     </ThemeProvider>
   );
@@ -133,18 +137,18 @@ const DashBoard = ({
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
             <Box display="flex" m={1}>
               <SelectMarkerIcon
-                width="33px"
-                height="33px"
+                width="30px"
+                height="30px"
                 className={classes.legendMarkerIconProperty}
               />
               <Typography variant="h6">Select Marker</Typography>
             </Box>
             <Box display="flex" m={1}>
-              <SinglePointIcon width="25px" height="25px" className={classes.legendIconProperty} />
+              <SinglePointIcon width="22px" height="22px" className={classes.legendIconProperty} />
               <Typography variant="h6">Data Location</Typography>
             </Box>
             <Box display="flex" m={1}>
-              <MultiPointsIcon width="25px" height="25px" className={classes.legendIconProperty} />
+              <MultiPointsIcon width="22px" height="22px" className={classes.legendIconProperty} />
               <Typography variant="h6">Multiple Data Points</Typography>
             </Box>
           </Box>

@@ -19,7 +19,8 @@ const cardStyle = makeStyles(theme => ({
     paddingBottom: theme.spacing(2)
   },
   cardWrapper: {
-    padding: theme.spacing(2, 2)
+    padding: theme.spacing(2, 2),
+    borderRadius: 0
   },
   iconProperty: {
     paddingRight: '5px'
