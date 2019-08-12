@@ -41,8 +41,8 @@ const gridStyleProperties = makeStyles(theme => ({
   },
   zoomOutIconWrapperProperty: {
     position: 'fixed',
-    bottom: 30,
-    left: 10
+    top: 130,
+    left: 11
   },
   legendProperty: {
     position: 'fixed',
@@ -60,14 +60,14 @@ const gridStyleProperties = makeStyles(theme => ({
     padding: '5px 0 10px 0px'
   },
   legendIconProperty: {
-    margin: '3px 8px 0 3px'
+    margin: '3px 8px 0 4px'
   },
   legendMarkerIconProperty: {
     marginRight: '3px'
   },
   zoomOutIconProperty: {
-    width: '15px',
-    height: '15px'
+    width: '16px',
+    height: '16px'
   }
 }));
 
@@ -83,7 +83,7 @@ const DashBoard = ({
 
   const backButton = showSiteDetail && (
     <ThemeProvider theme={theme.backButton}>
-      <ButtonStyle setHover={true} onClick={backButtonHandler}>
+      <ButtonStyle translateHover={true} onClick={backButtonHandler}>
         <BackArrowIcon />
         <Typography variant="h6">Back</Typography>
       </ButtonStyle>
@@ -92,7 +92,11 @@ const DashBoard = ({
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.fullZoom}>
-      <ButtonStyle setHover={true} onClick={() => fullMapZoomHandler(true)}>
+      <ButtonStyle
+        buttonBorder={true}
+        growScaleHover={true}
+        onClick={() => fullMapZoomHandler(true)}
+      >
         <ZoomOutIcon className={classes.zoomOutIconProperty} />
       </ButtonStyle>
     </ThemeProvider>
@@ -141,15 +145,15 @@ const DashBoard = ({
                 height="30px"
                 className={classes.legendMarkerIconProperty}
               />
-              <Typography variant="h6">Select Marker</Typography>
+              <Typography variant="h6">Selected Project Site</Typography>
             </Box>
             <Box display="flex" m={1}>
               <SinglePointIcon width="22px" height="22px" className={classes.legendIconProperty} />
-              <Typography variant="h6">Data Location</Typography>
+              <Typography variant="h6">Project Site</Typography>
             </Box>
             <Box display="flex" m={1}>
               <MultiPointsIcon width="22px" height="22px" className={classes.legendIconProperty} />
-              <Typography variant="h6">Multiple Data Points</Typography>
+              <Typography variant="h6">Multiple Project Sites</Typography>
             </Box>
           </Box>
         </Paper>
