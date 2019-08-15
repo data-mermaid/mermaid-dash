@@ -4,6 +4,7 @@ const color = {
   mermaidBlue: '#468DAE',
   mermaidBlack: 'black',
   mermaidNotAllowed: '#9C9C9C',
+  mermaidQuiteGray: 'rgba(0,0,0,0.2)',
   mermaidGray: '#585858'
 };
 
@@ -14,25 +15,22 @@ export const theme = {
     position: 'fixed',
     width: '70px',
     padding: '5px',
-    transition: '0.3s ease-out',
-    transform: 'translate(-5%, 0%)',
-    shadow:
-      '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
+    initialTranslate: 'translate(0%)',
+    hoverTranslate: 'translate(-5%, 0%)'
   },
   cardButton: {
     color: color.mermaidWhite,
     bgColor: color.mermaidBlue,
     notAllowedBgColor: color.mermaidNotAllowed,
     width: '150px',
-    padding: '1px',
-    shadow:
-      '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'
+    padding: '1px'
   },
   fullZoom: {
-    color: color.mermaidWhite,
-    bgColor: color.mermaidGray,
+    color: color.mermaidGray,
+    bgColor: color.mermaidWhite,
+    borderColor: color.mermaidQuiteGray,
     position: 'fixed',
-    width: '18px',
-    padding: '1px'
+    width: '34px',
+    height: '32px'
   }
 };

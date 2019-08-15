@@ -55,6 +55,41 @@ const activeInnerMarkerHtmlStyles = `
   border-top: 15px solid ${defaultMarkerColor};
 `;
 
+const clusterIconNumberStyles = `
+  color: white;
+  font-size: 14px;
+`;
+
+const generateClusterIconStyle = ({
+  baseRadius,
+  basePadding,
+  numberMarkers,
+  defaultMarkerColor
+}) => {
+  const radius = String(numberMarkers).length * baseRadius + basePadding;
+  let backgroundColor;
+  switch (numberMarkers.length) {
+    case 1:
+      backgroundColor = 'red';
+      break;
+    case 2:
+      backgroundColor = 'yellow';
+      break;
+    default:
+      backgroundColor = defaultMarkerColor;
+  }
+  return `
+    width: ${radius}px;
+    height: ${radius}px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid white;
+    background-color: ${backgroundColor};
+  `;
+};
+
 const icon = L.divIcon({
   className: 'my-default-pin',
   html: `<div style="${markerHtmlStyles}" />`
@@ -152,10 +187,30 @@ class LeafletMap extends Component {
     return this.map.setView(newLatlng, currentZoom, { pan: options });
   }
 
+  zoomFullMap() {
+    if (this.props.zoomFullMap) {
+      this.map.setView([38, 16], 2);
+    }
+  }
+
   updateMarkers(markersData) {
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
-      spiderfyOnMaxZoom: false
+      spiderfyOnMaxZoom: false,
+      iconCreateFunction: function(cluster) {
+        const childCount = cluster.getChildCount();
+        const clusterStyle = generateClusterIconStyle({
+          baseRadius: 10,
+          basePadding: 10,
+          numberMarkers: childCount,
+          defaultMarkerColor
+        });
+
+        return new L.DivIcon({
+          html: `<div style="${clusterStyle}"><span style="${clusterIconNumberStyles}"> ${childCount} </span></div>`,
+          className: 'marker-cluster-icon'
+        });
+      }
     });
 
     markersCluster.on('clusterclick', () => {
@@ -180,12 +235,6 @@ class LeafletMap extends Component {
     });
 
     this.map.addLayer(markersCluster);
-  }
-
-  zoomFullMap() {
-    if (this.props.zoomFullMap) {
-      this.map.setView([38, 16], 2);
-    }
   }
 
   render() {

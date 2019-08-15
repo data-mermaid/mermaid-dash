@@ -1,13 +1,12 @@
 import styled, { css } from 'styled-components/macro';
 
 export const ButtonStyle = styled('button')`
-  transform: translate(0%);
-  transition: ${props => props.theme.transition};
   color: ${props => props.theme.color};
   ${props =>
     props.buttonBorder
       ? css`
-          border: 5px solid ${props => props.theme.color};
+          border: 2px solid ${props => props.theme.borderColor};
+          border-radius: 4px;
         `
       : css`
           border: none;
@@ -17,13 +16,20 @@ export const ButtonStyle = styled('button')`
   position: ${props => props.theme.position};
   padding: ${props => props.theme.padding};
   width: ${props => props.theme.width};
-  box-shadow: ${props => props.theme.shadow};
+  height: ${props => props.theme.height};
+  box-shadow: ${props =>
+    props.boxShadow &&
+    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'};
+  transform: ${props => props.theme.initialTranslate};
+  transition: 0.2s ease-out;
   cursor: ${props => (props.notAllowed ? 'not-allowed' : 'pointer')};
   &:hover {
-    box-shadow: ${props =>
-      props.setHover ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)' : null};
-    transform: ${props => props.theme.transform};
-    transition: ${props => props.theme.transition};
+    transform: ${props => props.theme.hoverTranslate};
+  };
+  &:hover {
+    -webkit-transform: ${props => props.growScaleHover && 'scale(1.1)'} ;
+    -ms-transform: ${props => props.growScaleHover && 'scale(1.1)'};
+    transform: ${props => props.growScaleHover && 'scale(1.1)'};
   }
   &:focus {
     outline: none;

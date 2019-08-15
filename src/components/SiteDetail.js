@@ -65,7 +65,7 @@ class SiteDetail extends Component {
 
     const contactButton = (
       <ThemeProvider theme={theme.cardButton}>
-        <ButtonStyle setHover={true}>
+        <ButtonStyle setHover={true} boxShadow={true}>
           <Box p={1} display="flex" justifyContent="center">
             <ContactIcon fontSize="small" className={classes.iconProperty} />
             <Typography variant="body1" display="inline">
