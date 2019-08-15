@@ -42,7 +42,7 @@ const gridStyleProperties = makeStyles(theme => ({
   zoomOutIconWrapperProperty: {
     position: 'fixed',
     top: 130,
-    left: 11
+    left: 10
   },
   legendProperty: {
     position: 'fixed',
@@ -67,7 +67,10 @@ const gridStyleProperties = makeStyles(theme => ({
   },
   zoomOutIconProperty: {
     width: '16px',
-    height: '16px'
+    height: '16px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }));
 
@@ -83,7 +86,7 @@ const DashBoard = ({
 
   const backButton = showSiteDetail && (
     <ThemeProvider theme={theme.backButton}>
-      <ButtonStyle translateHover={true} onClick={backButtonHandler}>
+      <ButtonStyle translateHover={true} boxShadow={true} onClick={backButtonHandler}>
         <BackArrowIcon />
         <Typography variant="h6">Back</Typography>
       </ButtonStyle>

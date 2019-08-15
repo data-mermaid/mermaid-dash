@@ -5,8 +5,8 @@ export const ButtonStyle = styled('button')`
   ${props =>
     props.buttonBorder
       ? css`
-          border: 1px solid ${props => props.theme.borderColor};
-          border-radius: 2px;
+          border: 2px solid ${props => props.theme.borderColor};
+          border-radius: 4px;
         `
       : css`
           border: none;
@@ -17,7 +17,9 @@ export const ButtonStyle = styled('button')`
   padding: ${props => props.theme.padding};
   width: ${props => props.theme.width};
   height: ${props => props.theme.height};
-  box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: ${props =>
+    props.boxShadow &&
+    '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'};
   transform: ${props => props.theme.initialTranslate};
   transition: 0.2s ease-out;
   cursor: ${props => (props.notAllowed ? 'not-allowed' : 'pointer')};

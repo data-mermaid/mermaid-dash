@@ -62,7 +62,7 @@ const Card = ({ content }) => {
 
   const downLoadButton = type === 'pieChart' && (
     <ThemeProvider theme={theme.cardButton}>
-      <ButtonStyle notAllowed={privatePolicyCheck}>
+      <ButtonStyle notAllowed={privatePolicyCheck} boxShadow={true}>
         <Box p={1} display="flex" justifyContent="center">
           <DownloadIcon fontSize="small" className={classes.iconProperty} />
           <Typography variant="body1" display="inline">

@@ -4,7 +4,7 @@ const color = {
   mermaidBlue: '#468DAE',
   mermaidBlack: 'black',
   mermaidNotAllowed: '#9C9C9C',
-  mermaidQuiteGray: '#BCCAD2',
+  mermaidQuiteGray: 'rgba(0,0,0,0.2)',
   mermaidGray: '#585858'
 };
 
@@ -30,8 +30,7 @@ export const theme = {
     bgColor: color.mermaidWhite,
     borderColor: color.mermaidQuiteGray,
     position: 'fixed',
-    width: '32px',
-    height: '30px',
-    padding: '6px'
+    width: '34px',
+    height: '32px'
   }
 };
