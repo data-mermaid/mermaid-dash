@@ -94,7 +94,8 @@ const Card = ({ content }) => {
           </Box>
           {subItems}
         </Box>
-        <Box>{downLoadButton}</Box>
+        {/* temporarily Hide download data buttons */}
+        {/* <Box>{downLoadButton}</Box> */}
       </Box>
       {contentType}
     </Paper>
