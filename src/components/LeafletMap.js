@@ -117,17 +117,26 @@ class LeafletMap extends Component {
 
   componentDidMount() {
     const miniMapLayer = L.tileLayer(
-      'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
-      {
-        attribution:
-          'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        subdomains: 'abcd',
-        minZoom: 0,
-        maxZoom: 13,
-        opacity: 0.6,
-        ext: 'png'
-      }
-    );
+        'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
+        {
+          attribution:
+            'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          subdomains: 'abcd',
+          minZoom: 0,
+          maxZoom: 13,
+          ext: 'png'
+        }
+      ),
+      imageryMapLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+          attribution:
+            'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        }
+      ),
+      mapLabelLayer = L.tileLayer(
+        'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x} '
+      );
 
     this.map = L.map('map', {
       center: [38, 16],
@@ -135,14 +144,7 @@ class LeafletMap extends Component {
       minZoom: 3,
       maxZoom: 17,
       zoomControl: true,
-      layers: [
-        L.tileLayer(
-          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-          {
-            attribution: 'Tiles &copy; Esri '
-          }
-        )
-      ]
+      layers: [imageryMapLayer, mapLabelLayer]
     });
 
     new L.Control.MiniMap(miniMapLayer, {
