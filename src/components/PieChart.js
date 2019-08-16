@@ -139,7 +139,6 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
                           style: {
                             fill: 'smoke',
                             opacity: 0.6,
-                            cursor: 'pointer',
                             transition: '0.25s ease-in-out'
                           }
                         })
