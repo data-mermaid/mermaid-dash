@@ -49,7 +49,7 @@ const BarChart = ({ chartContent }) => (
               return [
                 {
                   target: 'data',
-                  mutation: () => ({ style: { fill: 'tomato', width: 30, cursor: 'pointer' } })
+                  mutation: () => ({ style: { fill: 'tomato', width: 30 } })
                 },
                 {
                   target: 'labels',

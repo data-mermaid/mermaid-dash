@@ -51,8 +51,8 @@ const gridStyleProperties = makeStyles(theme => ({
     bottom: 10,
     left: 250,
     color: 'white',
-    opacity: 0.9,
-    backgroundColor: '#585858',
+    opacity: 0.6,
+    backgroundColor: '#000000',
     borderRadius: 0,
     boxShadow: 'none'
   },

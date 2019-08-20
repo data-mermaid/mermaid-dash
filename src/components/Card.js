@@ -60,6 +60,7 @@ const Card = ({ content }) => {
 
   const subTitle = header && <Typography variant="h6">{header}</Typography>;
 
+  // eslint-disable-next-line
   const downLoadButton = type === 'pieChart' && (
     <ThemeProvider theme={theme.cardButton}>
       <ButtonStyle notAllowed={privatePolicyCheck} boxShadow={true}>
@@ -94,7 +95,8 @@ const Card = ({ content }) => {
           </Box>
           {subItems}
         </Box>
-        <Box>{downLoadButton}</Box>
+        {/* temporarily Hide download data buttons */}
+        {/* <Box>{downLoadButton}</Box> */}
       </Box>
       {contentType}
     </Paper>

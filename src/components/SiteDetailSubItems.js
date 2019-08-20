@@ -15,8 +15,9 @@ const subItemStyles = makeStyles(theme => ({
     paddingRight: '5px'
   }
 }));
-const SiteDetailSubItems = loadedSite => {
+const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const classes = subItemStyles();
+  const siteYear = loadedSiteProperties.date_max && loadedSiteProperties.date_max.substring(0, 4);
 
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
@@ -35,15 +36,15 @@ const SiteDetailSubItems = loadedSite => {
     <Box display="flex">
       <Box flexGrow={1}>
         <Box>
-          <Typography variant="h4">{loadedSite.properties.site_name}</Typography>
+          <Typography variant="h4">{loadedSiteProperties.site_name}</Typography>
         </Box>
         <Box>
-          <Typography variant="body1">{loadedSite.properties.country_name}</Typography>
+          <Typography variant="body1">{loadedSiteProperties.country_name}</Typography>
         </Box>
         <Box>
           <Typography variant="body1">
-            {loadedSite.properties.management_regimes
-              ? loadedSite.properties.management_regimes
+            {loadedSiteProperties.management_regimes
+              ? loadedSiteProperties.management_regimes
                   .map(mr => {
                     return mr.name;
                   })
@@ -52,7 +53,7 @@ const SiteDetailSubItems = loadedSite => {
           </Typography>
         </Box>
         <Box>
-          <Typography variant="body1">{loadedSite.properties.date_max}</Typography>
+          <Typography variant="body1">{siteYear}</Typography>
         </Box>
       </Box>
       <Box>{contactButton}</Box>
