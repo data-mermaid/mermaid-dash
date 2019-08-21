@@ -139,10 +139,10 @@ class LeafletMap extends Component {
       );
 
     this.map = L.map('map', {
-      center: [38, 16],
+      center: [-5, 150],
       zoom: 2,
-      minZoom: 3,
-      maxZoom: 17,
+      minZoom: 2,
+      maxZoom: 16,
       zoomControl: true,
       layers: [imageryMapLayer, mapLabelLayer]
     });
@@ -155,13 +155,13 @@ class LeafletMap extends Component {
       toggleDisplay: true,
       aimingRectOptions: { color: '#91181A' },
       shadowRectOptions: {
-        color: '#208FFF',
+        color: '#2CBB4D',
         weight: 1,
         interactive: false,
         opacity: 0,
         fillOpacity: 0
       },
-      zoomLevelOffset: -6
+      zoomLevelOffset: -7
     }).addTo(this.map);
 
     this.updateMarkers(this.props.markersData);
@@ -191,7 +191,7 @@ class LeafletMap extends Component {
 
   zoomFullMap() {
     if (this.props.zoomFullMap) {
-      this.map.setView([38, 16], 2);
+      this.map.setView([-5, 150], 2);
     }
   }
 
