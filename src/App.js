@@ -28,11 +28,11 @@ class App extends Component {
   async componentDidMount() {
     const {
       data: { features: sites }
-    } = await summary.post('/sites/'); //this filter bases on this sample project id for the front end
+    } = await summary.get('/sites/?limit=1000'); //this filter bases on this sample project id for the front end
     const { metrics } = this.state;
     metrics[3].count = sites.length;
 
-    this.setState({ sites: sites });
+    this.setState({ sites });
     this.setState({ metrics });
   }
 
