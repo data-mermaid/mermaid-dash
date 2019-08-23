@@ -22,8 +22,11 @@ class App extends Component {
       { title: 'Transects', count: 5 },
       { title: 'Avg Coral Coverage', count: 12 }
     ],
+    bbox: null,
     zoomFullMap: false
   };
+
+  componentDidUpdate(prevProps, prevState) {}
 
   async componentDidMount() {
     const {
@@ -53,6 +56,14 @@ class App extends Component {
     this.setState({ zoomFullMap });
   };
 
+  getMapBounds = newBox => {
+    this.setState({ bbox: newBox });
+  };
+
+  getRawBBox = rawBox => {
+    this.setState({ bboxRaw: rawBox });
+  };
+
   render() {
     return (
       <BrowserRouter>
@@ -62,6 +73,10 @@ class App extends Component {
           siteClickHandler={this.siteClickHandler}
           zoomFullMap={this.state.zoomFullMap}
           fullMapZoomHandler={this.fullMapZoomHandler}
+          getMapBounds={this.getMapBounds}
+          getRawBBox={this.getRawBBox}
+          bbox={this.state.bbox}
+          bboxRaw={this.state.bboxRaw}
         />
         <DashBoard
           siteDetail={this.state.siteDetail}
