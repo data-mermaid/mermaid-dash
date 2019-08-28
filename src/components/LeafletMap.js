@@ -126,8 +126,8 @@ const miniMapLayer = L.tileLayer(
   );
 
 const mapProperty = {
-  center: [-5, 150],
-  zoom: 2,
+  center: [10, 170],
+  zoom: 3,
   minZoom: 2,
   maxZoom: 16,
   zoomControl: true,
@@ -219,7 +219,7 @@ class LeafletMap extends Component {
 
   zoomFullMap() {
     if (this.props.zoomFullMap) {
-      this.map.setView([-5, 150], 2);
+      this.map.setView([10, 170], 3);
       this.props.fullMapZoomHandler(false);
     }
   }
@@ -266,7 +266,7 @@ class LeafletMap extends Component {
     const { mapBoundingBoxCorner } = this.state;
     const { getMapBounds } = this.props;
 
-    this.map.on('dragend', e => {
+    this.map.once('dragend', e => {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
