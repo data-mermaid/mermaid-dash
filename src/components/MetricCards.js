@@ -12,12 +12,13 @@ const metricStyle = makeStyles(theme => ({
   }
 }));
 
-const MetricCards = ({ metrics }) => {
+const MetricCards = ({ metrics, showFullMap }) => {
   const classes = metricStyle();
+
   const cardList = metrics.map((card, index) => {
     return (
       <Grid item xs={4} key={index}>
-        <MetricCard content={card} />
+        <MetricCard content={card} showFullMap={showFullMap} />
       </Grid>
     );
   });

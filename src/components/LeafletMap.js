@@ -166,12 +166,15 @@ class LeafletMap extends Component {
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
     const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
+
     if (markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
     }
+
     if (mapZoomLevel !== prevMapZoomLevel) {
       this.updateBoundingBoxFromZoom();
     }
+
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
     }
@@ -183,12 +186,12 @@ class LeafletMap extends Component {
     const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
     const initMapBounds = this.map.getBounds();
     const initBbox = this.createBoundingBox(initMapBounds);
-    const initBboxSouth = initMapBounds.getSouth();
+    const initSouthBbox = initMapBounds.getSouth();
 
     miniMapControl.addTo(this.map);
 
     this.setState({ mapZoomLevel: this.map.getZoom() });
-    this.setState({ mapBoundingBoxCorner: initBboxSouth });
+    this.setState({ mapBoundingBoxCorner: initSouthBbox });
     this.props.getMapBounds(initBbox);
     this.updateBoundingBoxFromZoom();
   }
@@ -239,7 +242,6 @@ class LeafletMap extends Component {
     const seArr = [east, south];
     const neArr = [east, north];
     const nwArr = [west, north];
-
     const bbox = [swArr, seArr, neArr, nwArr, swArr];
     return bbox;
   }
@@ -264,7 +266,7 @@ class LeafletMap extends Component {
     const { mapBoundingBoxCorner } = this.state;
     const { getMapBounds } = this.props;
 
-    this.map.once('dragend', e => {
+    this.map.on('dragend', e => {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
@@ -277,6 +279,8 @@ class LeafletMap extends Component {
   }
 
   updateMarkers(markersData) {
+    const { siteClickHandler, fullMapZoomHandler } = this.props;
+
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: false,
@@ -297,7 +301,7 @@ class LeafletMap extends Component {
     });
 
     markersCluster.on('clusterclick', () => {
-      this.props.fullMapZoomHandler(false);
+      fullMapZoomHandler(false);
     });
 
     markersData.forEach(marker => {
@@ -311,7 +315,7 @@ class LeafletMap extends Component {
           const responsiveOffSetX = offsetX(windowWidth());
           this.removeHighlight();
           this.setIconActive(markerPoint);
-          this.props.siteClickHandler(marker);
+          siteClickHandler(marker);
           this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
         })
       );
