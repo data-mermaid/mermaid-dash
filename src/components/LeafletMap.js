@@ -248,7 +248,7 @@ class LeafletMap extends Component {
 
   updateBoundingBoxFromZoom() {
     const { mapZoomLevel } = this.state;
-    const { getMapBounds } = this.props;
+    const { getMapBounds, contentLoadHandler } = this.props;
 
     this.map.once('zoomend', e => {
       const currBounds = e.target.getBounds();
@@ -259,22 +259,24 @@ class LeafletMap extends Component {
         this.setState({ mapZoomLevel: currZoom });
         getMapBounds(currBbox);
       }
+      contentLoadHandler(true);
     });
   }
 
   updateBoundingBoxFromPan() {
     const { mapBoundingBoxCorner } = this.state;
-    const { getMapBounds } = this.props;
+    const { getMapBounds, contentLoadHandler } = this.props;
 
     this.map.once('dragend', e => {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
-      const viewDiff = mapBoundingBoxCorner.toFixed(3) - southBound.toFixed(3);
+      const viewDiff = mapBoundingBoxCorner.toFixed(5) - southBound.toFixed(5);
       if (viewDiff !== 0) {
         this.setState({ mapBoundingBoxCorner: southBound });
         getMapBounds(currBbox);
       }
+      contentLoadHandler(true);
     });
   }
 

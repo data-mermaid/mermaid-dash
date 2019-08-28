@@ -27,7 +27,7 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const MetricCard = ({ content: { title, count, isLoading } }) => {
+const MetricCard = ({ content: { title, count }, isLoading }) => {
   const classes = cardStyle();
 
   const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;

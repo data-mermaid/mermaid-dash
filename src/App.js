@@ -15,12 +15,12 @@ class App extends Component {
     selectSite: null,
     siteDetail: null,
     metrics: [
-      { title: 'Countries', count: null, isLoading: false },
-      { title: 'Projects', count: null, isLoading: false },
-      { title: 'Users', count: null, isLoading: false },
-      { title: 'Sites', count: null, isLoading: false },
-      { title: 'Transects', count: null, isLoading: false },
-      { title: 'Avg Coral Coverage', count: null, isLoading: false }
+      { title: 'Countries', count: null },
+      { title: 'Projects', count: null },
+      { title: 'Users', count: null },
+      { title: 'Sites', count: null },
+      { title: 'Transects', count: null },
+      { title: 'Avg Coral Coverage', count: null }
     ],
     bbox: null,
     zoomFullMap: false,
@@ -37,94 +37,52 @@ class App extends Component {
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
 
-    const {
-      data: { features: sites }
-    } = await summary.get('sites/', {
-      params: {
-        limit: 1000,
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: [[bbox]]
+    if (bbox !== prevBbox) {
+      const {
+        data: { features: sites }
+      } = await summary.get('sites/', {
+        params: {
+          limit: 1000,
+          geometry: {
+            type: 'MultiPolygon',
+            coordinates: [[bbox]]
+          }
         }
+      });
+
+      this.setState({ isLoading: false });
+      if (prevMetricCountriesCount !== this.getCount(sites, 'country_name')) {
+        metrics[0].count = this.getCount(sites, 'country_name');
+        this.setState({ metrics });
       }
-    });
-
-    // if (bbox !== prevBbox) {
-    //   console.log('bbox changes')
-    //   this.contentLoadingHandler(true);
-    // }
-
-    // if (bbox !== prevBbox && prevMetricCountriesCount === this.getCount(sites, 'country_name')) {
-    //   metrics[0].isLoading = false;
-    //   this.setState({ metrics })
-    // }
-
-    // if (bbox !== prevBbox && prevMetricProjectsCount === this.getCount(sites, 'project_id')) {
-    //   metrics[1].isLoading = false;
-    //   this.setState({ metrics })
-    // }
-
-    // if (bbox !== prevBbox && prevMetricUsersCount === this.getCount(sites, 'project_admins')) {
-    //   metrics[2].isLoading = false;
-    //   this.setState({ metrics })
-    // }
-
-    // if (bbox !== prevBbox && prevMetricSitesCount === sites.length) {
-    //   metrics[3].isLoading = false;
-    //   this.setState({ metrics })
-    // }
-
-    // if (bbox !== prevBbox && prevMetricTransectsCount === this.getTransectCount(sites, 'protocols')) {
-    //   metrics[4].isLoading = false;
-    //   this.setState({ metrics })
-    // }
-
-    // if (bbox !== prevBbox && prevMetricAvgCoralCoverCount === this.getAvgCoralCount(sites, 'protocols')) {
-    //   metrics[5].isLoading = false;
-    //   this.setState({ metrics })
-    // }
-
-    if (prevMetricCountriesCount !== this.getCount(sites, 'country_name')) {
-      metrics[0].count = this.getCount(sites, 'country_name');
-      metrics[0].isLoading = false;
-      this.setState({ metrics });
-    }
-
-    if (prevMetricProjectsCount !== this.getCount(sites, 'project_id')) {
-      metrics[1].count = this.getCount(sites, 'project_id');
-      metrics[1].isLoading = false;
-      this.setState({ metrics });
-    }
-
-    if (prevMetricUsersCount !== this.getCount(sites, 'project_admins')) {
-      metrics[2].count = this.getCount(sites, 'project_admins');
-      metrics[2].isLoading = false;
-      this.setState({ metrics });
-    }
-
-    if (prevMetricSitesCount !== sites.length) {
-      metrics[3].count = sites.length;
-      metrics[3].isLoading = false;
-      this.setState({ metrics });
-    }
-
-    if (prevMetricTransectsCount !== this.getTransectCount(sites, 'protocols')) {
-      metrics[4].count = this.getTransectCount(sites, 'protocols');
-      metrics[4].isLoading = false;
-      this.setState({ metrics });
-    }
-
-    if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(sites, 'protocols')) {
-      metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
-      metrics[5].isLoading = false;
-      this.setState({ metrics });
+      if (prevMetricProjectsCount !== this.getCount(sites, 'project_id')) {
+        metrics[1].count = this.getCount(sites, 'project_id');
+        metrics[1].isLoading = false;
+        this.setState({ metrics });
+      }
+      if (prevMetricUsersCount !== this.getCount(sites, 'project_admins')) {
+        metrics[2].count = this.getCount(sites, 'project_admins');
+        this.setState({ metrics });
+      }
+      if (prevMetricSitesCount !== sites.length) {
+        metrics[3].count = sites.length;
+        this.setState({ metrics });
+      }
+      if (prevMetricTransectsCount !== this.getTransectCount(sites, 'protocols')) {
+        metrics[4].count = this.getTransectCount(sites, 'protocols');
+        this.setState({ metrics });
+      }
+      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(sites, 'protocols')) {
+        metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
+        this.setState({ metrics });
+      }
     }
   }
 
   async componentDidMount() {
     const {
       data: { features: sites }
-    } = await summary.get('/sites/?limit=1000'); //this filter bases on this sample project id for the front end
+    } = await summary.get('/sites/?limit=1000');
 
     const { metrics } = this.state;
     metrics[0].count = this.getCount(sites, 'country_name');
@@ -215,13 +173,9 @@ class App extends Component {
     return protocolCount.toFixed(0);
   }
 
-  // contentLoadingHandler(option) {
-  //   const {metrics} = this.state;
-  //   for (let i = 0; i < metrics.length; i++) {
-  //     metrics[i].isLoading = option;
-  //   }
-  //   this.setState({ metrics })
-  // }
+  contentLoadHandler = option => {
+    this.setState({ isLoading: option });
+  };
 
   render() {
     return (
@@ -235,7 +189,7 @@ class App extends Component {
           getMapBounds={this.getMapBounds}
           getRawBBox={this.getRawBBox}
           bbox={this.state.bbox}
-          bboxRaw={this.state.bboxRaw}
+          contentLoadHandler={this.contentLoadHandler}
         />
         <DashBoard
           siteDetail={this.state.siteDetail}
@@ -245,6 +199,7 @@ class App extends Component {
           backButtonHandler={this.backButtonHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomAnimate={this.state.zoomAnimate}
+          isLoading={this.state.isLoading}
         />
       </BrowserRouter>
     );

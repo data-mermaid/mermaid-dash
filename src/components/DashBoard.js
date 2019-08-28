@@ -80,7 +80,8 @@ const DashBoard = ({
   backButtonHandler,
   siteDetail,
   metrics,
-  fullMapZoomHandler
+  fullMapZoomHandler,
+  isLoading
 }) => {
   const classes = gridStyleProperties();
 
@@ -116,7 +117,7 @@ const DashBoard = ({
   const dashboard = showFullMap && (
     <div>
       <Card content={Samples.summary} />
-      <MetricCards metrics={metrics} />
+      <MetricCards metrics={metrics} isLoading={isLoading} />
       <Card content={Samples.barChartData} />
     </div>
   );
