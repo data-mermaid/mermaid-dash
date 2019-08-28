@@ -15,7 +15,7 @@ import Box from '@material-ui/core/Box';
 
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
-import MetricCards from './MetricCards';
+import MetricCards from './MetricCardsContainer';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
 import Samples from '../sample_data/sampleSummaryStatistic';
@@ -80,7 +80,8 @@ const DashBoard = ({
   backButtonHandler,
   siteDetail,
   metrics,
-  fullMapZoomHandler
+  fullMapZoomHandler,
+  isLoading
 }) => {
   const classes = gridStyleProperties();
 
@@ -116,7 +117,7 @@ const DashBoard = ({
   const dashboard = showFullMap && (
     <div>
       <Card content={Samples.summary} />
-      <MetricCards metrics={metrics} />
+      <MetricCards metrics={metrics} isLoading={isLoading} />
       <Card content={Samples.barChartData} />
     </div>
   );

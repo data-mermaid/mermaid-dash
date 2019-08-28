@@ -27,16 +27,19 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const MetricCard = ({ content: { title, count } }) => {
+const MetricCard = ({ content: { title, count }, isLoading }) => {
   const classes = cardStyle();
 
-  const contentItem = count ? (
-    <Box className={classes.body}>{count}</Box>
-  ) : (
-    <div>
-      <CircularProgress className={classes.progress} />
-    </div>
-  );
+  const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;
+
+  const contentItem =
+    count !== null && count >= 0 && !isLoading ? (
+      <Box className={classes.body}>{countContent}</Box>
+    ) : (
+      <div>
+        <CircularProgress className={classes.progress} />
+      </div>
+    );
   const titleItem = title ? <Box className={classes.title}>{title}</Box> : null;
 
   return (

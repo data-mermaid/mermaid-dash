@@ -20,7 +20,10 @@ const Wrapper = styled.div`
   width: ${props => props.width};
   height: ${props => props.height};
 `;
+
 const defaultMarkerColor = '#A53434';
+const windowWidth = () => (window ? window.innerWidth : 1800);
+const offsetX = w => 0.2 * w;
 
 const markerHtmlStyles = `
   background-color: ${defaultMarkerColor};
@@ -100,72 +103,97 @@ const activeIcon = L.divIcon({
   html: `<div style="${activeMarkerHtmlStyles}"><div style="${activeInnerMarkerHtmlStyles}"></div></div>`
 });
 
-const windowWidth = () => (window ? window.innerWidth : 1800);
-const offsetX = w => 0.2 * w;
+const miniMapLayer = L.tileLayer(
+    'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
+    {
+      attribution:
+        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 13,
+      ext: 'png'
+    }
+  ),
+  worldImageryMapLayer = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+      attribution:
+        'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }
+  ),
+  labelLayer = L.tileLayer(
+    'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x} '
+  );
+
+const mapProperty = {
+  center: [10, 170],
+  zoom: 3,
+  minZoom: 2,
+  maxZoom: 16,
+  zoomControl: true,
+  layers: [worldImageryMapLayer, labelLayer]
+};
+
+const miniMapProperty = {
+  position: 'bottomleft',
+  width: 240,
+  height: 140,
+  zoomAnimation: true,
+  toggleDisplay: true,
+  aimingRectOptions: { color: '#91181A' },
+  shadowRectOptions: {
+    color: '#2CBB4D',
+    weight: 1,
+    interactive: false,
+    opacity: 0,
+    fillOpacity: 0
+  },
+  zoomLevelOffset: -7
+};
 
 class LeafletMap extends Component {
   state = {
-    highlightMarker: null
+    highlightMarker: null,
+    mapZoomLevel: mapProperty.zoom,
+    mapBoundingBoxCorner: null
   };
 
-  componentDidUpdate({ markersData: prevMarkersData }) {
-    if (this.props.markersData !== prevMarkersData) {
+  componentDidUpdate(prevProps, prevState) {
+    const { markersData: prevMarkersData } = prevProps;
+    const { markersData } = this.props;
+    const {
+      mapZoomLevel: prevMapZoomLevel,
+      mapBoundingBoxCorner: prevMapBoundingBoxCorner
+    } = prevState;
+    const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
+
+    if (markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
+    }
+
+    if (mapZoomLevel !== prevMapZoomLevel) {
+      this.updateBoundingBoxFromZoom();
+    }
+
+    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
+      this.updateBoundingBoxFromPan();
     }
     this.zoomFullMap();
   }
 
   componentDidMount() {
-    const miniMapLayer = L.tileLayer(
-        'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
-        {
-          attribution:
-            'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          subdomains: 'abcd',
-          minZoom: 0,
-          maxZoom: 13,
-          ext: 'png'
-        }
-      ),
-      imageryMapLayer = L.tileLayer(
-        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        {
-          attribution:
-            'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-        }
-      ),
-      mapLabelLayer = L.tileLayer(
-        'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x} '
-      );
+    this.map = L.map('map', mapProperty);
+    const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
+    const initMapBounds = this.map.getBounds();
+    const initBbox = this.createBoundingBox(initMapBounds);
+    const initSouthBbox = initMapBounds.getSouth();
 
-    this.map = L.map('map', {
-      center: [-5, 150],
-      zoom: 2,
-      minZoom: 2,
-      maxZoom: 16,
-      zoomControl: true,
-      layers: [imageryMapLayer, mapLabelLayer]
-    });
+    miniMapControl.addTo(this.map);
 
-    new L.Control.MiniMap(miniMapLayer, {
-      position: 'bottomleft',
-      width: 240,
-      height: 140,
-      zoomAnimation: true,
-      toggleDisplay: true,
-      aimingRectOptions: { color: '#91181A' },
-      shadowRectOptions: {
-        color: '#2CBB4D',
-        weight: 1,
-        interactive: false,
-        opacity: 0,
-        fillOpacity: 0
-      },
-      zoomLevelOffset: -7
-    }).addTo(this.map);
-
-    this.updateMarkers(this.props.markersData);
-    this.zoomFullMap();
+    this.setState({ mapZoomLevel: this.map.getZoom() });
+    this.setState({ mapBoundingBoxCorner: initSouthBbox });
+    this.props.getMapBounds(initBbox);
+    this.updateBoundingBoxFromZoom();
   }
 
   removeHighlight() {
@@ -191,11 +219,70 @@ class LeafletMap extends Component {
 
   zoomFullMap() {
     if (this.props.zoomFullMap) {
-      this.map.setView([-5, 150], 2);
+      this.map.setView([10, 170], 3);
+      this.props.fullMapZoomHandler(false);
     }
   }
 
+  checkSimilarBoundingBox(box1, box2) {
+    const boxLat1 = box1 && box1.lat;
+    const boxLat2 = box2 && box2.lat;
+    if (boxLat1 === boxLat2) {
+      return true;
+    }
+    return false;
+  }
+
+  createBoundingBox(boundingBox) {
+    const south = boundingBox.getSouth(),
+      west = boundingBox.getWest(),
+      north = boundingBox.getNorth(),
+      east = boundingBox.getEast();
+    const swArr = [west, south];
+    const seArr = [east, south];
+    const neArr = [east, north];
+    const nwArr = [west, north];
+    const bbox = [swArr, seArr, neArr, nwArr, swArr];
+    return bbox;
+  }
+
+  updateBoundingBoxFromZoom() {
+    const { mapZoomLevel } = this.state;
+    const { getMapBounds, contentLoadHandler } = this.props;
+
+    this.map.once('zoomend', e => {
+      const currBounds = e.target.getBounds();
+      const currZoom = e.target.getZoom();
+      const currBbox = this.createBoundingBox(currBounds);
+      const zoomDiff = mapZoomLevel - currZoom;
+      if (zoomDiff !== 0) {
+        this.setState({ mapZoomLevel: currZoom });
+        getMapBounds(currBbox);
+      }
+      contentLoadHandler(true);
+    });
+  }
+
+  updateBoundingBoxFromPan() {
+    const { mapBoundingBoxCorner } = this.state;
+    const { getMapBounds, contentLoadHandler } = this.props;
+
+    this.map.on('dragend', e => {
+      const currBounds = e.target.getBounds();
+      const southBound = currBounds.getSouth();
+      const currBbox = this.createBoundingBox(currBounds);
+      const viewDiff = mapBoundingBoxCorner.toFixed(5) - southBound.toFixed(5);
+      if (viewDiff !== 0) {
+        this.setState({ mapBoundingBoxCorner: southBound });
+        getMapBounds(currBbox);
+      }
+      contentLoadHandler(true);
+    });
+  }
+
   updateMarkers(markersData) {
+    const { siteClickHandler, fullMapZoomHandler } = this.props;
+
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: false,
@@ -216,7 +303,7 @@ class LeafletMap extends Component {
     });
 
     markersCluster.on('clusterclick', () => {
-      this.props.fullMapZoomHandler(false);
+      fullMapZoomHandler(false);
     });
 
     markersData.forEach(marker => {
@@ -230,7 +317,7 @@ class LeafletMap extends Component {
           const responsiveOffSetX = offsetX(windowWidth());
           this.removeHighlight();
           this.setIconActive(markerPoint);
-          this.props.siteClickHandler(marker);
+          siteClickHandler(marker);
           this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
         })
       );
