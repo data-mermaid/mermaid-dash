@@ -15,7 +15,7 @@ import Box from '@material-ui/core/Box';
 
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
-import MetricCards from './MetricCards';
+import MetricCards from './MetricCardsContainer';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
 import Samples from '../sample_data/sampleSummaryStatistic';
