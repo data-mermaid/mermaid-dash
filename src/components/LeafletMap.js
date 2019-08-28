@@ -267,7 +267,7 @@ class LeafletMap extends Component {
     const { mapBoundingBoxCorner } = this.state;
     const { getMapBounds, contentLoadHandler } = this.props;
 
-    this.map.once('dragend', e => {
+    this.map.on('dragend', e => {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
