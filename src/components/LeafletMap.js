@@ -270,7 +270,7 @@ class LeafletMap extends Component {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
-      const viewDiff = mapBoundingBoxCorner - southBound;
+      const viewDiff = mapBoundingBoxCorner.toFixed(3) - southBound.toFixed(3);
       if (viewDiff !== 0) {
         this.setState({ mapBoundingBoxCorner: southBound });
         getMapBounds(currBbox);
