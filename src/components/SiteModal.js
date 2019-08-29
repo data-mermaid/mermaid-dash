@@ -10,10 +10,6 @@ import Typography from '@material-ui/core/Typography';
 
 import PropTypes from 'prop-types';
 
-const tempProjectNote = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas finibus mattis orci, molestie suscipit nunc tempus in. Cras pharetra est quis lobortis egestas. Etiam ut risus ut diam vulputate elementum ac in massa. Proin imperdiet nulla nibh, sit amet suscipit tellus tempor ut. Quisque eget ex bibendum, elementum velit a, consectetur felis. Donec ac tincidunt libero. Praesent sed accumsan est. Nam dictum elit vel porta aliquam. Phasellus erat ligula, aliquet ut ante condimentum, pulvinar pellentesque erat. Donec vehicula, metus scelerisque maximus efficitur, sem lorem elementum dui, quis ullamcorper nunc quam quis sem. Suspendisse consectetur, libero sed facilisis dictum, mauris felis hendrerit nulla, feugiat sodales massa libero quis enim.`;
-
-const tempSiteNote = `Aliquam erat volutpat. Donec placerat nisl magna, et faucibus arcu condimentum sed. Nisl magna, et faucibus arcu condimentum sed. Aliquam erat volutpat. Donec placerat nisl magna.`;
-
 const modalStyles = makeStyles(theme => ({
   modalContainer: {
     display: 'inline',
@@ -33,20 +29,43 @@ const modalStyles = makeStyles(theme => ({
   }
 }));
 
-const NoteBody = ({ children }) => {
+const Note = ({ children, content }) => {
   const classes = modalStyles();
-  return (
+
+  const noteTitle = content.length > 0 && <Typography variant="h6">{children}</Typography>;
+
+  const noteBody = content.length > 0 && (
     <Typography gutterBottom className={classes.titleProperty}>
-      {children.length > 0 ? (
-        children
-      ) : (
-        <span className={classes.emptyNoteProperty}>No notes available</span>
-      )}
+      {content}
     </Typography>
+  );
+
+  return (
+    <>
+      {noteTitle}
+      {noteBody}
+    </>
   );
 };
 
-const SiteModal = ({ loadedSiteProperties }) => {
+const ReadMore = ({ modalCloseHandler, readMoreAvailability }) => {
+  const classes = modalStyles();
+
+  const readMoreContent = readMoreAvailability && (
+    <Typography
+      variant="body2"
+      display="inline"
+      className={classes.readMoreProperty}
+      onClick={modalCloseHandler}
+    >
+      read more
+    </Typography>
+  );
+
+  return <>{readMoreContent}</>;
+};
+
+const SiteModal = ({ loadedSiteProperties, readMoreAvailability }) => {
   const classes = modalStyles();
   const { site_notes, project_notes } = loadedSiteProperties;
   const [open, setModalStage] = useState(false);
@@ -57,25 +76,14 @@ const SiteModal = ({ loadedSiteProperties }) => {
 
   return (
     <div className={classes.modalContainer}>
-      <Typography
-        variant="body2"
-        display="inline"
-        className={classes.readMoreProperty}
-        onClick={modalCloseHandler}
-      >
-        read more
-      </Typography>
+      <ReadMore modalCloseHandler={modalCloseHandler} readMoreAvailability={readMoreAvailability} />
       <Dialog onClose={modalCloseHandler} aria-labelledby="customized-dialog-title" open={open}>
         <MuiDialogTitle disableTypography>
           <Typography variant="h5">Notes</Typography>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
-          <Typography variant="h6">Project Notes</Typography>
-          <NoteBody>{project_notes.length > 0 ? project_notes : tempProjectNote}</NoteBody>
-          <Typography variant="h6">Site Notes</Typography>
-          <NoteBody>{site_notes.length > 0 ? site_notes : tempSiteNote}</NoteBody>
-          <Typography variant="h6">Management Regime Notes</Typography>
-          <NoteBody>{''}</NoteBody>
+          <Note content={project_notes}>{'Project Notes'}</Note>
+          <Note content={site_notes}>{'Site Notes'}</Note>
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={modalCloseHandler} color="primary">

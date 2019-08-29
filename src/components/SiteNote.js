@@ -6,12 +6,8 @@ import SiteModal from './SiteModal';
 
 import PropTypes from 'prop-types';
 
-const MAX_CHAR = 240;
-const tempNote = `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam, consectetur adipisicing elit. Quos blanditiis tenetur unde
-suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam`;
+const MAX_CHAR = 200;
+const tempNote = `No notes available`;
 
 const ellipsisHelper = note => {
   const newNote = note.length !== 0 ? note : tempNote;
@@ -19,16 +15,24 @@ const ellipsisHelper = note => {
 };
 
 const SiteNote = ({ loadedSiteProperties }) => {
-  const { site_notes } = loadedSiteProperties;
-  const siteNote = ellipsisHelper(site_notes);
+  const { site_notes, project_notes } = loadedSiteProperties;
+  const moreThanOneNote = site_notes.length > 0 && project_notes.length > 0;
+  const availableNote =
+    project_notes.length > 0 ? project_notes : site_notes.length > 0 ? site_notes : tempNote;
+  const readMoreAvailability =
+    availableNote === tempNote || availableNote.length > MAX_CHAR || moreThanOneNote;
+  const note = ellipsisHelper(availableNote);
 
   return (
     <Box>
       <Typography variant="h6">Notes</Typography>
       <Typography variant="body2" display="inline">
-        {siteNote}
+        {note}
       </Typography>
-      <SiteModal loadedSiteProperties={loadedSiteProperties} />
+      <SiteModal
+        readMoreAvailability={readMoreAvailability}
+        loadedSiteProperties={loadedSiteProperties}
+      />
     </Box>
   );
 };
