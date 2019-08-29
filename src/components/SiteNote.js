@@ -16,11 +16,11 @@ const ellipsisHelper = note => {
 
 const SiteNote = ({ loadedSiteProperties }) => {
   const { site_notes, project_notes } = loadedSiteProperties;
-  const moreThanOneNote = site_notes.length > 0 && project_notes.length > 0;
+  const moreThanOneCombinedNote = [...site_notes, ...project_notes].length > 1;
   const availableNote =
     project_notes.length > 0 ? project_notes : site_notes.length > 0 ? site_notes : tempNote;
   const readMoreAvailability =
-    availableNote === tempNote || availableNote.length > MAX_CHAR || moreThanOneNote;
+    availableNote === tempNote || availableNote.length > MAX_CHAR || moreThanOneCombinedNote;
   const note = ellipsisHelper(availableNote);
 
   return (
