@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import summary from '../src/apis/summary';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import './custom-leaflet.css';
 
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
