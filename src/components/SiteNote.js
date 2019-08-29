@@ -16,7 +16,7 @@ const ellipsisHelper = note => {
 
 const SiteNote = ({ loadedSiteProperties }) => {
   const { site_notes, project_notes } = loadedSiteProperties;
-  const moreThanOneCombinedNote = [...site_notes, ...project_notes].length > 1;
+  const moreThanOneCombinedNote = site_notes.length > 0 && project_notes.length > 0;
   const availableNote =
     project_notes.length > 0 ? project_notes : site_notes.length > 0 ? site_notes : tempNote;
   const readMoreAvailability =
