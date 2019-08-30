@@ -15,10 +15,32 @@ const ellipsisHelper = note => {
 };
 
 const SiteNote = ({ loadedSiteProperties }) => {
-  const { site_notes, project_notes } = loadedSiteProperties;
-  const moreThanOneCombinedNote = site_notes.length > 0 && project_notes.length > 0;
-  const availableNote =
-    project_notes.length > 0 ? project_notes : site_notes.length > 0 ? site_notes : tempNote;
+  const { site_notes, project_notes, management_regimes } = loadedSiteProperties;
+  const management_regime_notes_length =
+    management_regimes &&
+    management_regimes
+      .map(mr => {
+        return mr.notes ? mr.notes.length : 0;
+      })
+      .reduce((acc, val) => acc + val, 0);
+  const siteNoteLengthCheck = site_notes.length > 0,
+    projectNoteLengthCheck = project_notes.length > 0,
+    mrNoteLengthCheck = management_regime_notes_length > 0;
+  const moreThanOneCombinedNote =
+    (siteNoteLengthCheck && projectNoteLengthCheck) ||
+    (mrNoteLengthCheck && projectNoteLengthCheck) ||
+    (siteNoteLengthCheck && mrNoteLengthCheck);
+  const availableNote = projectNoteLengthCheck
+    ? project_notes
+    : siteNoteLengthCheck
+    ? site_notes
+    : mrNoteLengthCheck
+    ? management_regimes
+        .map(mr => {
+          return mr.notes;
+        })
+        .join(', ')
+    : tempNote;
   const readMoreAvailability =
     availableNote === tempNote || availableNote.length > MAX_CHAR || moreThanOneCombinedNote;
   const note = ellipsisHelper(availableNote);
@@ -39,7 +61,9 @@ const SiteNote = ({ loadedSiteProperties }) => {
 
 SiteNote.propTypes = {
   loadedSiteProperties: PropTypes.shape({
-    site_notes: PropTypes.string
+    site_notes: PropTypes.string,
+    project_notes: PropTypes.string,
+    management_regimes: PropTypes.array
   })
 };
 
