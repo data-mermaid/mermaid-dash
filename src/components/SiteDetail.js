@@ -49,7 +49,7 @@ class SiteDetail extends Component {
 
     if (selectSite) {
       if (!loadedSite || (loadedSite && loadedSite.id !== selectSite.id)) {
-        const { data: loadedSite } = await summary.get('/sites/' + selectSite.id);
+        const { data: loadedSite } = await summary.get(`/sites/${selectSite.id}/`);
         this.setState({ loadedSite });
       }
     }
