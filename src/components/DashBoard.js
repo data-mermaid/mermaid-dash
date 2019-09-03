@@ -80,6 +80,7 @@ const DashBoard = ({
   backButtonHandler,
   siteDetail,
   metrics,
+  histogram,
   fullMapZoomHandler,
   isLoading
 }) => {
@@ -118,7 +119,7 @@ const DashBoard = ({
     <div>
       <Card content={Samples.summary} />
       <MetricCards metrics={metrics} isLoading={isLoading} />
-      <Card content={Samples.barChartData} />
+      <Card content={Samples.barChartData} histogram={histogram} />
     </div>
   );
 

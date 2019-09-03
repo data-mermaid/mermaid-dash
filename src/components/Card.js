@@ -27,7 +27,7 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const Card = ({ content }) => {
+const Card = ({ content, histogram }) => {
   const classes = cardStyle();
   const {
     type,
@@ -82,7 +82,13 @@ const Card = ({ content }) => {
       </Box>
     ) : (
       <Box pt={1}>
-        <Chart chartType={type} chartContent={body} chartLegend={legend} chartPolicy={dataPolicy} />
+        <Chart
+          chartType={type}
+          chartContent={body}
+          chartLegend={legend}
+          chartPolicy={dataPolicy}
+          histogram={histogram}
+        />
       </Box>
     );
 

@@ -12,7 +12,6 @@ class App extends Component {
     showFullMap: true,
     showSiteDetail: false,
     sites: [],
-    selectSite: null,
     siteDetail: null,
     metrics: [
       { title: 'Countries', count: null },
@@ -22,13 +21,35 @@ class App extends Component {
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
     ],
+    histogram: [
+      { x: 0.05, y: 0, label: 0 },
+      { x: 0.1, y: 0, label: 0 },
+      { x: 0.15, y: 0, label: 0 },
+      { x: 0.2, y: 0, label: 0 },
+      { x: 0.25, y: 0, label: 0 },
+      { x: 0.3, y: 0, label: 0 },
+      { x: 0.35, y: 0, label: 0 },
+      { x: 0.4, y: 0, label: 0 },
+      { x: 0.45, y: 0, label: 0 },
+      { x: 0.5, y: 0, label: 0 },
+      { x: 0.55, y: 0, label: 0 },
+      { x: 0.6, y: 0, label: 0 },
+      { x: 0.65, y: 0, label: 0 },
+      { x: 0.7, y: 0, label: 0 },
+      { x: 0.75, y: 0, label: 0 },
+      { x: 0.8, y: 0, label: 0 },
+      { x: 0.85, y: 0, label: 0 },
+      { x: 0.9, y: 0, label: 0 },
+      { x: 0.95, y: 0, label: 0 },
+      { x: 1, y: 0, label: 0 }
+    ],
     bbox: null,
     zoomFullMap: false,
     isLoading: false
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { bbox, metrics } = this.state;
+    const { bbox, metrics, histogram } = this.state;
     const { metrics: prevMetrics, bbox: prevBbox } = prevState;
     const prevMetricCountriesCount = prevMetrics[0].count;
     const prevMetricProjectsCount = prevMetrics[1].count;
@@ -76,6 +97,13 @@ class App extends Component {
         metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
         this.setState({ metrics });
       }
+
+      const barchartResult = this.histogramCount(sites, histogram);
+      for (let i = 0; i < barchartResult.length; i++) {
+        histogram[i].y = barchartResult[i];
+        histogram[i].label = barchartResult[i];
+      }
+      this.setState({ histogram });
     }
   }
 
@@ -84,13 +112,22 @@ class App extends Component {
       data: { features: sites }
     } = await summary.get('/sites/?limit=1000');
 
-    const { metrics } = this.state;
+    const { metrics, histogram } = this.state;
+    const barchartResult = this.histogramCount(sites, histogram);
+
     metrics[0].count = this.getCount(sites, 'country_name');
     metrics[1].count = this.getCount(sites, 'project_id');
     metrics[2].count = this.getCount(sites, 'project_admins');
     metrics[3].count = sites.length;
     metrics[4].count = this.getTransectCount(sites, 'protocols');
     metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
+
+    for (let i = 0; i < barchartResult.length; i++) {
+      histogram[i].y = barchartResult[i];
+      histogram[i].label = barchartResult[i];
+    }
+
+    this.setState({ histogram });
     this.setState({ sites });
     this.setState({ metrics });
   }
@@ -147,30 +184,84 @@ class App extends Component {
     return protocolCount;
   }
 
+  getHardCoralValue(benthiclit, benthicpit) {
+    let hardCoralValue;
+
+    if (benthicpit && benthiclit) {
+      const benthicpitCoralCover = benthicpit.coral_cover;
+      const benthiclitCoralCover = benthiclit.coral_cover;
+      const benthicpitHardCoral = benthicpitCoralCover
+        .map(coralItem => {
+          return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
+        })
+        .reduce((acc, val) => acc + val, 0);
+      const benthiclitHardCoral = benthiclitCoralCover
+        .map(coralItem => {
+          return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
+        })
+        .reduce((acc, val) => acc + val, 0);
+      hardCoralValue = (benthicpitHardCoral + benthiclitHardCoral) / 2;
+    } else {
+      const benthicCoralCover = benthicpit ? benthicpit.coral_cover : benthiclit.coral_cover;
+      hardCoralValue = benthicCoralCover
+        .map(coralItem => {
+          return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
+        })
+        .reduce((acc, val) => acc + val, 0);
+    }
+    return hardCoralValue;
+  }
+
   getAvgCoralCount(array, key) {
     const protocols = array.map(item => {
       return item.properties[key];
     });
 
-    const protocolCount = protocols
-      .map(protocol => {
-        const hasProtocols = Object.getOwnPropertyNames(protocol).length !== 0;
-        if (hasProtocols && (protocol.benthiclit || protocol.benthicpit)) {
-          const benthicProtocol = protocol.benthicpit ? protocol.benthicpit : protocol.benthiclit;
-          const benthicCorals = benthicProtocol.coral_cover;
-          const hardCoral = benthicCorals
-            .map(coralItem => {
-              return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
-            })
-            .reduce((acc, val) => acc + val, 0);
-          return hardCoral;
-        } else {
-          return 0;
-        }
-      })
-      .reduce((acc, val) => acc + val, 0);
+    const protocolCount = protocols.map(protocol => {
+      const hasProtocols = Object.getOwnPropertyNames(protocol).length !== 0;
+      const result =
+        hasProtocols && (protocol.benthiclit || protocol.benthicpit)
+          ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
+          : 0;
+      return result;
+    });
+    const sumOfCoralCover = protocolCount.reduce((acc, val) => acc + val, 0);
+    const avgCoralCover = sumOfCoralCover
+      ? (sumOfCoralCover / protocolCount.length) * 100
+      : sumOfCoralCover;
+    return avgCoralCover.toFixed(0);
+  }
 
-    return protocolCount.toFixed(0);
+  histogramCount(array, histogramData) {
+    const histogramArr = histogramData.map(data => {
+      return data.x;
+    });
+
+    const protocols = array.map(item => {
+      return item.properties.protocols;
+    });
+
+    const protocolArr = protocols.map(protocol => {
+      const hasProtocols = Object.getOwnPropertyNames(protocol).length !== 0;
+      const result =
+        hasProtocols && (protocol.benthiclit || protocol.benthicpit)
+          ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
+          : null;
+      return result;
+    });
+
+    const histogramResult = histogramArr.map(item => {
+      let count = 0;
+      for (let i = 0; i < protocolArr.length; i++) {
+        const calDiff = item - protocolArr[i];
+        if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 0.05)) {
+          count += 1;
+        }
+      }
+      return count;
+    });
+
+    return histogramResult;
   }
 
   contentLoadHandler = option => {
@@ -196,6 +287,7 @@ class App extends Component {
           showSiteDetail={this.state.showSiteDetail}
           showFullMap={this.state.showFullMap}
           metrics={this.state.metrics}
+          histogram={this.state.histogram}
           backButtonHandler={this.backButtonHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomAnimate={this.state.zoomAnimate}
