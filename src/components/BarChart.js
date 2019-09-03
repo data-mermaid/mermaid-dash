@@ -7,16 +7,18 @@ const BarChart = ({ chartContent }) => (
   <VictoryChart domainPadding={9}>
     <VictoryAxis
       label="% Hard Coral Cover"
-      tickValues={[1, 5, 10, 15, 20]}
-      tickFormat={['0', '25', '50', '75', '100']}
+      tickValues={[0.05, 0.25, 0.5, 0.75, 1]}
+      tickFormat={['5', '25', '50', '75', '100']}
       style={{
         tickLabels: { fontSize: 10, padding: 5 }
       }}
     />
+
     <VictoryAxis
       dependentAxis
       label="Number of Sites"
-      tickFormat={x => `${x}`}
+      tickValues={[0, 5, 10, 21]}
+      tickFormat={['0', '5', '10', '> 20']}
       style={{
         tickLabels: { fontSize: 10, padding: 5 }
       }}
@@ -25,6 +27,11 @@ const BarChart = ({ chartContent }) => (
       data={chartContent}
       barWidth={17}
       style={{ data: { fill: '#1E90FF' } }}
+      animate={{
+        duration: 1000,
+        onLoad: { duration: 500 },
+        onEnter: { duration: 400, before: () => ({ y: 0 }) }
+      }}
       labelComponent={
         <VictoryTooltip
           cornerRadius={10}
@@ -72,8 +79,8 @@ const BarChart = ({ chartContent }) => (
           }
         }
       ]}
-      x="hardCorals"
-      y="sites"
+      x="x"
+      y="y"
     />
   </VictoryChart>
 );

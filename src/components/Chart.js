@@ -5,10 +5,10 @@ import Box from '@material-ui/core/Box';
 import BarChart from './BarChart';
 import PieChart from './PieChart';
 
-const Chart = ({ chartType, chartContent, chartLegend, chartPolicy }) => {
+const Chart = ({ chartType, chartContent, chartLegend, chartPolicy, histogram }) => {
   const chart =
     chartType === 'barChart' ? (
-      <BarChart chartContent={chartContent} />
+      <BarChart chartContent={histogram} />
     ) : (
       <PieChart chartContent={chartContent} chartLegend={chartLegend} chartPolicy={chartPolicy} />
     );
