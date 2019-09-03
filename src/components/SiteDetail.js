@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import summary from '../apis/summary';
-
 import AdminIcon from '@material-ui/icons/Person';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -43,14 +41,13 @@ class SiteDetail extends Component {
     this.loadSiteData();
   }
 
-  async loadSiteData() {
+  loadSiteData() {
     const { selectSite } = this.props;
     const { loadedSite } = this.state;
 
     if (selectSite) {
       if (!loadedSite || (loadedSite && loadedSite.id !== selectSite.id)) {
-        const { data: loadedSite } = await summary.get(`/sites/${selectSite.id}/`);
-        this.setState({ loadedSite });
+        this.setState({ loadedSite: selectSite });
       }
     }
   }

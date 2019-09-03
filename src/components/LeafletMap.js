@@ -302,15 +302,16 @@ class LeafletMap extends Component {
       }
     });
 
-    markersCluster.on('clusterclick', () => {
+    markersCluster.on('clusterclick', e => {
       fullMapZoomHandler(false);
     });
 
     markersData.forEach(marker => {
       const markerPoint = L.marker(
         [marker.geometry.coordinates[1], marker.geometry.coordinates[0]],
-        { icon }
+        { icon, marker }
       );
+      markerPoint._leaflet_id = marker.id;
 
       markersCluster.addLayer(
         markerPoint.on('click', e => {
