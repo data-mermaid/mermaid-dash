@@ -17,8 +17,8 @@ const BarChart = ({ chartContent }) => (
     <VictoryAxis
       dependentAxis
       label="Number of Sites"
-      tickValues={[0, 10, 20, 30]}
-      tickFormat={['0', '10', '20', '> 30']}
+      tickValues={[0, 5, 10, 21]}
+      tickFormat={['0', '5', '10', '> 20']}
       style={{
         tickLabels: { fontSize: 10, padding: 5 }
       }}
