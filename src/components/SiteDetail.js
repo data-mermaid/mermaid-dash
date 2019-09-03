@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 import AdminIcon from '@material-ui/icons/Person';
 
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
@@ -15,7 +15,7 @@ import SiteNote from './SiteNote';
 
 import PropTypes from 'prop-types';
 
-const containerStyle = theme => ({
+const containerStyle = makeStyles(theme => ({
   root: {
     paddingBottom: theme.spacing(2)
   },
@@ -26,66 +26,45 @@ const containerStyle = theme => ({
   reefProperty: {
     padding: '8px 8px 8px 0'
   }
-});
+}));
 
-class SiteDetail extends Component {
-  state = {
-    loadedSite: null
-  };
+const SiteDetail = ({ selectSite }) => {
+  const classes = containerStyle();
+  const [loadedSite, setLoadedSite] = useState(null);
 
-  componentDidMount() {
-    this.loadSiteData();
+  if (selectSite && (!loadedSite || loadedSite.id !== selectSite.id)) {
+    setLoadedSite(selectSite);
   }
 
-  componentDidUpdate() {
-    this.loadSiteData();
-  }
+  const siteAdmins = loadedSite && (
+    <Box borderTop={1} pt={1} display="flex">
+      <AdminIcon />
+      <Typography variant="body1">
+        Admins:{' '}
+        {loadedSite.properties.project_admins
+          .map(admin => {
+            return admin.name;
+          })
+          .join(', ')}
+      </Typography>
+    </Box>
+  );
 
-  loadSiteData() {
-    const { selectSite } = this.props;
-    const { loadedSite } = this.state;
+  const site = loadedSite ? (
+    <Paper className={classes.siteWrapper}>
+      <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+      {siteAdmins}
+      <CoralAttributes loadedSiteProperties={loadedSite.properties} />
+      <SiteNote loadedSiteProperties={loadedSite.properties} />
+    </Paper>
+  ) : (
+    <Paper className={classes.siteWrapper}>
+      <TextLoader />
+    </Paper>
+  );
 
-    if (selectSite) {
-      if (!loadedSite || (loadedSite && loadedSite.id !== selectSite.id)) {
-        this.setState({ loadedSite: selectSite });
-      }
-    }
-  }
-
-  render() {
-    const { classes } = this.props;
-    const { loadedSite } = this.state;
-
-    const siteAdmins = loadedSite && (
-      <Box borderTop={1} pt={1} display="flex">
-        <AdminIcon />
-        <Typography variant="body1">
-          Admins:{' '}
-          {loadedSite.properties.project_admins
-            .map(admin => {
-              return admin.name;
-            })
-            .join(', ')}
-        </Typography>
-      </Box>
-    );
-
-    const site = loadedSite ? (
-      <Paper className={classes.siteWrapper}>
-        <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
-        {siteAdmins}
-        <CoralAttributes loadedSiteProperties={loadedSite.properties} />
-        <SiteNote loadedSiteProperties={loadedSite.properties} />
-      </Paper>
-    ) : (
-      <Paper className={classes.siteWrapper}>
-        <TextLoader />
-      </Paper>
-    );
-
-    return <div className={classes.root}>{site}</div>;
-  }
-}
+  return <div className={classes.root}>{site}</div>;
+};
 
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
@@ -94,4 +73,4 @@ SiteDetail.propTypes = {
   classes: PropTypes.object
 };
 
-export default withStyles(containerStyle)(SiteDetail);
+export default SiteDetail;
