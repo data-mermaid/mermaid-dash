@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2)
+    paddingTop: theme.spacing(2)
   },
   cardWrapper: {
     padding: theme.spacing(2, 2),
@@ -27,20 +27,11 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const Card = ({ content, histogram }) => {
+// const Card = ({ content, histogram }) => {
+const Card = ({ content, dataPolicy, protocols, sampleUnits, histogram }) => {
   const classes = cardStyle();
-  const {
-    type,
-    dataPolicy,
-    body,
-    legend,
-    sampleUnits,
-    title,
-    hardCoralCovers,
-    reefFishBiomass,
-    header
-  } = content;
-  const privatePolicyCheck = type === 'pieChart' && dataPolicy.name === 'Private';
+  const { type, body, legend, title, hardCoralCovers, reefFishBiomass, header } = content;
+  const privatePolicyCheck = type === 'pieChart' && dataPolicy === 'private';
 
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
 
@@ -52,7 +43,7 @@ const Card = ({ content, histogram }) => {
 
   const subItems = type === 'pieChart' && (
     <Box>
-      <Typography m={1}>Data sharing: {dataPolicy.name}</Typography>
+      <Typography m={1}>Data sharing: {dataPolicy}</Typography>
       <Typography m={1}>Sample units: {sampleUnits} </Typography>
       {subAttributeItem}
     </Box>
@@ -118,9 +109,6 @@ Card.propTypes = {
     type: PropTypes.string,
     title: PropTypes.string,
     // body: PropTypes.array || PropTypes.string, //there are 2 data types for content body now
-    dataPolicy: PropTypes.shape({
-      name: PropTypes.string
-    }),
     legend: PropTypes.object,
     sampleUnits: PropTypes.number,
     header: PropTypes.string,

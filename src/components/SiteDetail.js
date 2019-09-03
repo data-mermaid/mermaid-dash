@@ -12,6 +12,8 @@ import { TextLoader } from './Loader';
 import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
+import Card from './Card';
+import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
@@ -50,21 +52,91 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
+  const benthicCard = loadedSite &&
+    (loadedSite.properties.protocols.benthiclit || loadedSite.properties.protocols.benthicpit) && (
+      <Card
+        content={Samples.benthicPieChartData}
+        dataPolicy={loadedSite.properties.data_policy_benthiclit}
+        protocols={loadedSite.properties.protocols}
+      />
+    );
+
+  const fishbeltCard = loadedSite && loadedSite.properties.protocols.beltfish && (
+    <Card
+      content={Samples.fishBeltPieChartData}
+      dataPolicy={loadedSite.properties.data_policy_beltfish}
+      protocols={loadedSite.properties.protocols}
+      sampleUnits={loadedSite.properties.protocols.beltfish.sample_unit_count}
+    />
+  );
+
   const site = loadedSite ? (
-    <Paper className={classes.siteWrapper}>
-      <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
-      {siteAdmins}
-      <CoralAttributes loadedSiteProperties={loadedSite.properties} />
-      <SiteNote loadedSiteProperties={loadedSite.properties} />
-    </Paper>
+    <>
+      <Paper className={classes.siteWrapper}>
+        <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+        {siteAdmins}
+        <CoralAttributes loadedSiteProperties={loadedSite.properties} />
+        <SiteNote loadedSiteProperties={loadedSite.properties} />
+      </Paper>
+      {benthicCard}
+      {fishbeltCard}
+    </>
   ) : (
     <Paper className={classes.siteWrapper}>
       <TextLoader />
     </Paper>
   );
 
-  return <div className={classes.root}>{site}</div>;
+  return <div>{site}</div>;
 };
+// render() {
+//   const { classes } = this.props;
+//   const { loadedSite } = this.state;
+//   console.log(loadedSite)
+//   const siteAdmins = loadedSite && (
+//     <Box borderTop={1} pt={1} display="flex">
+//       <AdminIcon />
+//       <Typography variant="body1">
+//         Admins:{' '}
+//         {loadedSite.properties.project_admins
+//           .map(admin => {
+//             return admin.name;
+//           })
+//           .join(', ')}
+//       </Typography>
+//     </Box>
+//   );
+
+//   const benthicCard = (loadedSite && (loadedSite.properties.protocols.benthiclit || loadedSite.properties.protocols.benthicpit)) &&
+//   (
+//     <Card content={Samples.benthicPieChartData} dataPolicy={loadedSite.properties.data_policy_benthiclit} protocols={loadedSite.properties.protocols}/>
+//   )
+
+//   const fishbeltCard = (loadedSite && loadedSite.properties.protocols.beltfish) &&
+//   (
+//     <Card content={Samples.fishBeltPieChartData} dataPolicy={loadedSite.properties.data_policy_beltfish} protocols={loadedSite.properties.protocols} sampleUnits={loadedSite.properties.protocols.beltfish.sample_unit_count} />
+//   )
+
+//   const site = loadedSite ? (
+//     <>
+//     <Paper className={classes.siteWrapper}>
+//       <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+//       {siteAdmins}
+//       <CoralAttributes loadedSiteProperties={loadedSite.properties} />
+//       <SiteNote loadedSiteProperties={loadedSite.properties} />
+//     </Paper>
+//     {benthicCard}
+//     {fishbeltCard}
+//     </>
+//   ) : (
+//     <Paper className={classes.siteWrapper}>
+//       <TextLoader />
+//     </Paper>
+//   );
+
+//   return <div>{site}</div>;
+// }
+// }
 
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({

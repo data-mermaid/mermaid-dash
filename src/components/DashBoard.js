@@ -110,8 +110,6 @@ const DashBoard = ({
   const siteDashboard = siteDetail && (
     <div>
       <SiteDetail selectSite={siteDetail} />
-      <Card content={Samples.benthicPieChartData} />
-      <Card content={Samples.fishBeltPieChartData} />
     </div>
   );
 
