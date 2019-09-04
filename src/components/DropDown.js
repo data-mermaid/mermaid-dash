@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Select from 'react-select';
+import { default as ReactSelect } from 'react-select';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -18,7 +18,11 @@ const dropDownStyle = makeStyles(theme => ({
   }
 }));
 
-const customStyles = {};
+const Select = styled(ReactSelect)`
+  div {
+    border-radius: 0px !important;
+  }
+`;
 
 const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
   const classes = dropDownStyle();
@@ -48,7 +52,6 @@ const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
       placeholder="Select Site"
       onChange={siteClickHandler}
       options={loadedSiteList}
-      styles={customStyles}
       className={classes.root}
     />
   ) : (
