@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import summary from '../src/apis/summary';
-import './custom-leaflet.css';
+import './customStyles.css';
 
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
@@ -11,8 +11,10 @@ class App extends Component {
   state = {
     showFullMap: true,
     showSiteDetail: false,
+    showDropDown: false,
     sites: [],
     siteDetail: null,
+    siteDropDownData: [],
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
@@ -137,7 +139,23 @@ class App extends Component {
   };
 
   siteClickHandler = selectedSite => {
+    if (selectedSite.key) {
+      selectedSite = this.siteLookup(selectedSite);
+    }
     this.setState({ siteDetail: selectedSite, showSiteDetail: true, zoomFullMap: false });
+  };
+
+  siteDropDownHandler = selectedSites => {
+    this.setState({
+      siteDetail: selectedSites[0],
+      siteDropDownData: selectedSites,
+      showSiteDetail: true,
+      zoomFullMap: false
+    });
+  };
+
+  sitesDropDownToggle = option => {
+    this.setState({ showDropDown: option });
   };
 
   backButtonHandler = () => {
@@ -268,6 +286,17 @@ class App extends Component {
     this.setState({ isLoading: option });
   };
 
+  siteLookup(site) {
+    const { sites } = this.state;
+    if (sites) {
+      for (let i = 0; i < sites.length; i++) {
+        if (site.key === sites[i].id) {
+          return sites[i];
+        }
+      }
+    }
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -275,6 +304,8 @@ class App extends Component {
         <LeafletMap
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
+          siteDropDownHandler={this.siteDropDownHandler}
+          sitesDropDownToggle={this.sitesDropDownToggle}
           zoomFullMap={this.state.zoomFullMap}
           fullMapZoomHandler={this.fullMapZoomHandler}
           getMapBounds={this.getMapBounds}
@@ -284,8 +315,11 @@ class App extends Component {
         />
         <DashBoard
           siteDetail={this.state.siteDetail}
+          siteDropDownData={this.state.siteDropDownData}
+          siteClickHandler={this.siteClickHandler}
           showSiteDetail={this.state.showSiteDetail}
           showFullMap={this.state.showFullMap}
+          showDropDown={this.state.showDropDown}
           metrics={this.state.metrics}
           histogram={this.state.histogram}
           backButtonHandler={this.backButtonHandler}

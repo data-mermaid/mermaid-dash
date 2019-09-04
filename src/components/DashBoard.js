@@ -18,6 +18,7 @@ import { theme } from './theme';
 import MetricCards from './MetricCardsContainer';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
+import DropDown from './DropDown';
 import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
@@ -77,8 +78,11 @@ const gridStyleProperties = makeStyles(theme => ({
 const DashBoard = ({
   showFullMap,
   showSiteDetail,
+  showDropDown,
+  siteClickHandler,
   backButtonHandler,
   siteDetail,
+  siteDropDownData,
   metrics,
   histogram,
   fullMapZoomHandler,
@@ -107,10 +111,21 @@ const DashBoard = ({
     </ThemeProvider>
   );
 
-  const siteDashboard = siteDetail && (
+  const dropDownSites = siteDropDownData.length > 0 && showDropDown && (
+    <DropDown
+      siteList={siteDropDownData}
+      selectSite={siteDetail}
+      siteClickHandler={siteClickHandler}
+    />
+  );
+
+  const siteDashboard = siteDetail ? (
     <div>
+      {dropDownSites}
       <SiteDetail selectSite={siteDetail} />
     </div>
+  ) : (
+    <div />
   );
 
   const dashboard = showFullMap && (

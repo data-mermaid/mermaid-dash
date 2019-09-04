@@ -233,6 +233,30 @@ class LeafletMap extends Component {
     return false;
   }
 
+  toFixedNoRounding = function(number, n) {
+    const reg = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
+    const a = number.toString().match(reg)[0];
+    const dot = a.indexOf('.');
+    if (dot === -1) {
+      return a + '.' + '0'.repeat(n);
+    }
+    const b = n - (a.length - dot) + 1;
+    return b > 0 ? a + '0'.repeat(b) : a;
+  };
+
+  checkSameSiteInACluster(arr) {
+    const markersArr = arr.map(item => {
+      return item.options.marker;
+    });
+    const coordinatesArr = markersArr.map(marker => {
+      const latStr = `${this.toFixedNoRounding(marker.geometry.coordinates[0], 3)}`;
+      const lngStr = `${this.toFixedNoRounding(marker.geometry.coordinates[1], 3)}`;
+      return `${latStr},${lngStr}`;
+    });
+    const result = new Set(coordinatesArr);
+    return result.size === 1;
+  }
+
   createBoundingBox(boundingBox) {
     const south = boundingBox.getSouth(),
       west = boundingBox.getWest(),
@@ -281,7 +305,12 @@ class LeafletMap extends Component {
   }
 
   updateMarkers(markersData) {
-    const { siteClickHandler, fullMapZoomHandler } = this.props;
+    const {
+      siteClickHandler,
+      fullMapZoomHandler,
+      siteDropDownHandler,
+      sitesDropDownToggle
+    } = this.props;
 
     const markersCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
@@ -303,7 +332,16 @@ class LeafletMap extends Component {
     });
 
     markersCluster.on('clusterclick', e => {
+      const markerCluster = e.layer.getAllChildMarkers();
       fullMapZoomHandler(false);
+
+      if (this.checkSameSiteInACluster(markerCluster)) {
+        const markersData = markerCluster.map(item => {
+          return item.options.marker;
+        });
+        siteDropDownHandler(markersData);
+        sitesDropDownToggle(true);
+      }
     });
 
     markersData.forEach(marker => {
@@ -319,6 +357,7 @@ class LeafletMap extends Component {
           this.removeHighlight();
           this.setIconActive(markerPoint);
           siteClickHandler(marker);
+          sitesDropDownToggle(false);
           this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
         })
       );
