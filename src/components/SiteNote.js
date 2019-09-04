@@ -7,16 +7,15 @@ import SiteModal from './SiteModal';
 import PropTypes from 'prop-types';
 
 const MAX_CHAR = 200;
-const tempNote = `No notes available`;
 
 const ellipsisHelper = note => {
-  const newNote = note.length !== 0 ? note : tempNote;
+  const newNote = note.length !== 0 ? note : '';
   return newNote.length > MAX_CHAR ? newNote.substr(0, MAX_CHAR) + '...' : newNote;
 };
 
 const SiteNote = ({ loadedSiteProperties }) => {
   const { site_notes, project_notes, management_regimes } = loadedSiteProperties;
-  let availableNote = tempNote;
+  let availableNote = '';
   const management_regime_notes_length =
     management_regimes &&
     management_regimes
@@ -44,8 +43,7 @@ const SiteNote = ({ loadedSiteProperties }) => {
       .join(', ');
   }
 
-  const readMoreAvailability =
-    availableNote === tempNote || availableNote.length > MAX_CHAR || moreThanOneCombinedNote;
+  const readMoreAvailability = availableNote.length > MAX_CHAR || moreThanOneCombinedNote;
   const note = ellipsisHelper(availableNote);
 
   return (

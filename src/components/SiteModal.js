@@ -24,9 +24,6 @@ const modalStyles = makeStyles(theme => ({
     cursor: 'pointer',
     color: '#2614AF',
     textDecoration: 'underline'
-  },
-  emptyNoteProperty: {
-    fontStyle: 'italic'
   }
 }));
 
