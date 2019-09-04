@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    paddingTop: theme.spacing(2)
+    paddingBottom: theme.spacing(2)
   },
   cardWrapper: {
     padding: theme.spacing(2, 2),
@@ -27,7 +27,6 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-// const Card = ({ content, histogram }) => {
 const Card = ({ content, dataPolicy, protocols, sampleUnits, histogram }) => {
   const classes = cardStyle();
   const { type, body, legend, title, hardCoralCovers, reefFishBiomass, header } = content;
