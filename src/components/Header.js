@@ -53,10 +53,28 @@ const Header = ({ toggle }) => {
           </Typography>
         </Box>
         <Box p={2}>
-          <Typography variant="overline">PRIVACY</Typography>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://datamermaid.org/terms-of-service/"
+              rel="noopener noreferrer"
+            >
+              PRIVACY
+            </a>
+          </Typography>
         </Box>
         <Box p={2}>
-          <Typography variant="overline">CONTACT</Typography>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://datamermaid.org/contact/"
+              rel="noopener noreferrer"
+            >
+              CONTACT
+            </a>
+          </Typography>
         </Box>
         <Box>
           <CheckBoxFullMap toggle={toggle} />
