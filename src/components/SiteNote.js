@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 const MAX_CHAR = 200;
 
 const ellipsisHelper = note => {
-  const newNote = note.length !== 0 ? note : '';
+  const newNote = note || '';
   return newNote.length > MAX_CHAR ? newNote.substr(0, MAX_CHAR) + '...' : newNote;
 };
 

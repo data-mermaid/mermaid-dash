@@ -150,6 +150,7 @@ class App extends Component {
       siteDetail: selectedSites[0],
       siteDropDownData: selectedSites,
       showSiteDetail: true,
+      showDropDown: true,
       zoomFullMap: false
     });
   };
@@ -286,15 +287,9 @@ class App extends Component {
     this.setState({ isLoading: option });
   };
 
-  siteLookup(site) {
+  siteLookup({ key: siteId }) {
     const { sites } = this.state;
-    if (sites) {
-      for (let i = 0; i < sites.length; i++) {
-        if (site.key === sites[i].id) {
-          return sites[i];
-        }
-      }
-    }
+    return sites.filter(site => site.id === siteId)[0];
   }
 
   render() {

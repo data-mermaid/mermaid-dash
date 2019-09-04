@@ -233,9 +233,10 @@ class LeafletMap extends Component {
     return false;
   }
 
+  //returns a stringified number similar to toFixed
   toFixedNoRounding = function(number, n) {
-    const reg = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
-    const a = number.toString().match(reg)[0];
+    const regToSetSignificant = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
+    const a = number.toString().match(regToSetSignificant)[0];
     const dot = a.indexOf('.');
     if (dot === -1) {
       return a + '.' + '0'.repeat(n);
@@ -340,7 +341,6 @@ class LeafletMap extends Component {
           return item.options.marker;
         });
         siteDropDownHandler(markersData);
-        sitesDropDownToggle(true);
       }
     });
 
