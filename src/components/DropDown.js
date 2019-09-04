@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-import Select from 'react-select';
+import { default as ReactSelect } from 'react-select';
 import styled from 'styled-components';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Grid from '@material-ui/core/Grid';
 
@@ -12,37 +12,60 @@ const ProgressBarContainer = styled('div')`
   margin: 25px 0;
 `;
 
-const dropDownStyle = theme => ({
+const dropDownStyle = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(1, 0)
+    paddingBottom: theme.spacing(2)
   }
-});
-class DropDown extends Component {
-  render() {
-    const { classes } = this.props;
+}));
 
-    const siteList =
-      this.props.siteList.length > 0 ? (
-        <Select
-          value={this.props.selectSite}
-          placeholder="Select Site"
-          onChange={this.props.siteSelectHandler}
-          options={this.props.siteList}
-          className={classes.root}
-        />
-      ) : (
-        <ProgressBarContainer>
-          <LinearProgress />
-        </ProgressBarContainer>
-      );
-
-    return (
-      <Grid item xs={12}>
-        {siteList}
-      </Grid>
-    );
+const Select = styled(ReactSelect)`
+  div {
+    border-radius: 0px !important;
   }
-}
+`;
+
+const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
+  const classes = dropDownStyle();
+  const [loadedSiteList, setLoadedSiteList] = useState([]);
+
+  if (siteList && (!loadedSiteList[0] || siteList[0].id !== loadedSiteList[0].key)) {
+    const loadedList = siteList.map(site => {
+      return {
+        key: site.id,
+        value: `${site.properties.site_name} - ${site.properties.project_name}`,
+        label: `${site.properties.site_name} - ${site.properties.project_name}`
+      };
+    });
+    setLoadedSiteList(loadedList);
+  }
+
+  const valueForSelect = site => {
+    if (site.id) {
+      site.label = `${site.properties.site_name} - ${site.properties.project_name}`;
+      return site;
+    }
+  };
+
+  const siteListComponent = loadedSiteList ? (
+    <Select
+      value={valueForSelect(selectSite)}
+      placeholder="Select Site"
+      onChange={siteClickHandler}
+      options={loadedSiteList}
+      className={classes.root}
+    />
+  ) : (
+    <ProgressBarContainer>
+      <LinearProgress />
+    </ProgressBarContainer>
+  );
+
+  return (
+    <Grid item xs={12}>
+      {siteListComponent}
+    </Grid>
+  );
+};
 
 DropDown.propTypes = {
   selectSite: PropTypes.object,
@@ -50,4 +73,4 @@ DropDown.propTypes = {
   siteSelectHandler: PropTypes.func
 };
 
-export default withStyles(dropDownStyle)(DropDown);
+export default DropDown;

@@ -39,7 +39,7 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
           <Typography variant="h4">{loadedSiteProperties.site_name}</Typography>
         </Box>
         <Box>
-          <Typography variant="body1">{loadedSiteProperties.country_name}</Typography>
+          <Typography variant="body1">{loadedSiteProperties.project_name}</Typography>
         </Box>
         <Box>
           <Typography variant="body1">

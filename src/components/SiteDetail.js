@@ -12,15 +12,18 @@ import { TextLoader } from './Loader';
 import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
+import Card from './Card';
+import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
 const containerStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(10)
   },
   siteWrapper: {
     padding: theme.spacing(2, 2),
+    marginBottom: theme.spacing(2),
     borderRadius: 0
   },
   reefProperty: {
@@ -50,20 +53,42 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
+  const benthicCard = loadedSite &&
+    (loadedSite.properties.protocols.benthiclit || loadedSite.properties.protocols.benthicpit) && (
+      <Card
+        content={Samples.benthicPieChartData}
+        dataPolicy={loadedSite.properties.data_policy_benthiclit}
+        protocols={loadedSite.properties.protocols}
+      />
+    );
+
+  const fishbeltCard = loadedSite && loadedSite.properties.protocols.beltfish && (
+    <Card
+      content={Samples.fishBeltPieChartData}
+      dataPolicy={loadedSite.properties.data_policy_beltfish}
+      protocols={loadedSite.properties.protocols}
+      sampleUnits={loadedSite.properties.protocols.beltfish.sample_unit_count}
+    />
+  );
+
   const site = loadedSite ? (
-    <Paper className={classes.siteWrapper}>
-      <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
-      {siteAdmins}
-      <CoralAttributes loadedSiteProperties={loadedSite.properties} />
-      <SiteNote loadedSiteProperties={loadedSite.properties} />
-    </Paper>
+    <div className={classes.root}>
+      <Paper className={classes.siteWrapper}>
+        <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+        {siteAdmins}
+        <CoralAttributes loadedSiteProperties={loadedSite.properties} />
+        <SiteNote loadedSiteProperties={loadedSite.properties} />
+      </Paper>
+      {benthicCard}
+      {fishbeltCard}
+    </div>
   ) : (
     <Paper className={classes.siteWrapper}>
       <TextLoader />
     </Paper>
   );
 
-  return <div className={classes.root}>{site}</div>;
+  return <div>{site}</div>;
 };
 
 SiteDetail.propTypes = {
