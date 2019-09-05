@@ -15,9 +15,12 @@ const subItemStyles = makeStyles(theme => ({
     paddingRight: '5px'
   }
 }));
+
 const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const classes = subItemStyles();
-  const siteYear = loadedSiteProperties.date_max && loadedSiteProperties.date_max.substring(0, 4);
+  const dateMin = loadedSiteProperties.date_min.substring(0, 4);
+  const dateMax = loadedSiteProperties.date_max.substring(0, 4);
+  const siteYear = dateMax === dateMin ? dateMax : `${dateMin} - ${dateMax}`;
 
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
