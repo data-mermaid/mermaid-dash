@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import summary from '../src/apis/summary';
 import './customStyles.css';
+import * as leafletProperty from './leaflet_property';
 
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
@@ -47,6 +48,7 @@ class App extends Component {
     ],
     bbox: null,
     zoomFullMap: false,
+    highlightMarker: null,
     isLoading: false
   };
 
@@ -160,12 +162,30 @@ class App extends Component {
   };
 
   backButtonHandler = () => {
+    const { highlightMarker } = this.state;
+    if (highlightMarker !== null) {
+      highlightMarker.setIcon(leafletProperty.icon);
+      this.setState({ highlightMarker: null });
+    }
     this.setState({ showSiteDetail: false, zoomFullMap: false });
   };
 
   fullMapZoomHandler = zoomOffOption => {
     const zoomFullMap = zoomOffOption ? true : false;
     this.setState({ zoomFullMap });
+  };
+
+  removeHighlight = () => {
+    const { highlightMarker } = this.state;
+    if (highlightMarker !== null) {
+      highlightMarker.setIcon(leafletProperty.icon);
+      this.setState({ highlightMarker: null });
+    }
+  };
+
+  setIconActive = marker => {
+    marker.setIcon(leafletProperty.activeIcon);
+    this.setState({ highlightMarker: marker });
   };
 
   getMapBounds = bbox => {
@@ -307,6 +327,9 @@ class App extends Component {
           getRawBBox={this.getRawBBox}
           bbox={this.state.bbox}
           contentLoadHandler={this.contentLoadHandler}
+          removeHighlight={this.removeHighlight}
+          setIconActive={this.setIconActive}
+          highlightMarker={this.state.highlightMarker}
         />
         <DashBoard
           siteDetail={this.state.siteDetail}

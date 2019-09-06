@@ -5,6 +5,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
+import * as leafletProperty from '../leaflet_property';
 import styled from 'styled-components';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -21,47 +22,8 @@ const Wrapper = styled.div`
   height: ${props => props.height};
 `;
 
-const defaultMarkerColor = '#A53434';
 const windowWidth = () => (window ? window.innerWidth : 1800);
 const offsetX = w => 0.2 * w;
-
-const markerHtmlStyles = `
-  background-color: ${defaultMarkerColor};
-  width: 1rem;
-  height: 1rem;
-  display: block;
-  position: relative;
-  border-radius: 1.5rem;
-  border: 1px solid #FFFFFF`;
-
-const activeMarkerHtmlStyles = `
-  position: absolute;
-  border-radius: 50%;
-  top: -200%;
-  border: 6px solid ${defaultMarkerColor};
-  width: 1.6rem;
-  height: 1.6rem;
-  background-color: white;
-  animation-name: bounce;
-  animation-fill-mode: both;
-  animation-duration: 1s;
-  `;
-
-const activeInnerMarkerHtmlStyles = `
-  position: absolute;
-  content: '';
-  width: 0px;
-  height: 0px;
-  bottom: -26px;
-  left: -3px;
-  border: 8px solid transparent;
-  border-top: 15px solid ${defaultMarkerColor};
-`;
-
-const clusterIconNumberStyles = `
-  color: white;
-  font-size: 14px;
-`;
 
 const generateClusterIconStyle = ({
   baseRadius,
@@ -92,16 +54,6 @@ const generateClusterIconStyle = ({
     background-color: ${backgroundColor};
   `;
 };
-
-const icon = L.divIcon({
-  className: 'my-default-pin',
-  html: `<div style="${markerHtmlStyles}" />`
-});
-
-const activeIcon = L.divIcon({
-  className: 'my-active-pin',
-  html: `<div style="${activeMarkerHtmlStyles}"><div style="${activeInnerMarkerHtmlStyles}"></div></div>`
-});
 
 const miniMapLayer = L.tileLayer(
     'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
@@ -153,7 +105,6 @@ const miniMapProperty = {
 
 class LeafletMap extends Component {
   state = {
-    highlightMarker: null,
     mapZoomLevel: mapProperty.zoom,
     mapBoundingBoxCorner: null
   };
@@ -194,18 +145,6 @@ class LeafletMap extends Component {
     this.setState({ mapBoundingBoxCorner: initSouthBbox });
     this.props.getMapBounds(initBbox);
     this.updateBoundingBoxFromZoom();
-  }
-
-  removeHighlight() {
-    if (this.state.highlightMarker !== null) {
-      this.state.highlightMarker.setIcon(icon);
-      this.setState({ highlightMarker: null });
-    }
-  }
-
-  setIconActive(marker) {
-    marker.setIcon(activeIcon);
-    this.setState({ highlightMarker: marker });
   }
 
   panToOffCenter(latlng, offset, options) {
@@ -310,7 +249,9 @@ class LeafletMap extends Component {
       siteClickHandler,
       fullMapZoomHandler,
       siteDropDownHandler,
-      sitesDropDownToggle
+      sitesDropDownToggle,
+      removeHighlight,
+      setIconActive
     } = this.props;
 
     const markersCluster = L.markerClusterGroup({
@@ -322,11 +263,13 @@ class LeafletMap extends Component {
           baseRadius: 10,
           basePadding: 10,
           numberMarkers: childCount,
-          defaultMarkerColor
+          defaultMarkerColor: leafletProperty.defaultMarkerColor
         });
 
         return new L.DivIcon({
-          html: `<div style="${clusterStyle}"><span style="${clusterIconNumberStyles}"> ${childCount} </span></div>`,
+          html: `<div style="${clusterStyle}"><span style="${
+            leafletProperty.clusterIconNumberStyles
+          }"> ${childCount} </span></div>`,
           className: 'marker-cluster-icon'
         });
       }
@@ -347,15 +290,15 @@ class LeafletMap extends Component {
     markersData.forEach(marker => {
       const markerPoint = L.marker(
         [marker.geometry.coordinates[1], marker.geometry.coordinates[0]],
-        { icon, marker }
+        { icon: leafletProperty.icon, marker }
       );
       markerPoint._leaflet_id = marker.id;
 
       markersCluster.addLayer(
         markerPoint.on('click', e => {
           const responsiveOffSetX = offsetX(windowWidth());
-          this.removeHighlight();
-          this.setIconActive(markerPoint);
+          removeHighlight();
+          setIconActive(markerPoint);
           siteClickHandler(marker);
           sitesDropDownToggle(false);
           this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
