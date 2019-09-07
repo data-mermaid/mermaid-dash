@@ -30,7 +30,8 @@ const gridStyleProperties = makeStyles(theme => ({
     overflow: 'overlay'
   },
   dashBoardProperty: {
-    position: 'relative'
+    position: 'relative',
+    height: 0
   },
   backButtonWrapperProperty: {
     padding: '0 10px 0 0',
