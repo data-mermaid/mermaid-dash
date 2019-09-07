@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import AdminIcon from '@material-ui/icons/Person';
+import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -19,7 +20,7 @@ import PropTypes from 'prop-types';
 
 const containerStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(10)
+    paddingBottom: theme.spacing(2)
   },
   siteWrapper: {
     padding: theme.spacing(2, 2),
@@ -53,6 +54,20 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
+  const siteOrganizations = loadedSite && (
+    <Box pt={1} display="flex">
+      <OrganizationIcon width="20px" height="20px" />
+      <Typography variant="body1">
+        Organizations:{' '}
+        {loadedSite.properties.tags
+          .map(organization => {
+            return organization.name;
+          })
+          .join(', ')}
+      </Typography>
+    </Box>
+  );
+
   const benthicCard = loadedSite &&
     (loadedSite.properties.protocols.benthiclit || loadedSite.properties.protocols.benthicpit) && (
       <Card
@@ -76,6 +91,7 @@ const SiteDetail = ({ selectSite }) => {
       <Paper className={classes.siteWrapper}>
         <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
         {siteAdmins}
+        {siteOrganizations}
         <CoralAttributes loadedSiteProperties={loadedSite.properties} />
         <SiteNote loadedSiteProperties={loadedSite.properties} />
       </Paper>
