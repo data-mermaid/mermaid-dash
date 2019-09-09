@@ -26,15 +26,6 @@ import Samples from '../sample_data/sampleSummaryStatistic';
 import PropTypes from 'prop-types';
 
 const RootGrid = styled(Grid)`
-  /* ${props =>
-    props.scrollbaractive
-      ? css`
-          overflow-y: scroll;
-        `
-      : css`
-          overflow-y: hidden;
-        `} */ 
-  /* overflow-y: ${props => (props.scrollbaractive ? `scroll` : `hidden`)}; */
   overflow-y: scroll;
   height: calc(100vh - 49px);
 `;
@@ -166,16 +157,8 @@ const DashBoard = ({
     </Slide>
   );
 
-  console.log(showFullMap);
-  const setScrollBar = showFullMap ? 'true' : 'false';
-
   return (
-    <RootGrid
-      container
-      className={classes.root}
-      scrollbaractive={setScrollBar}
-      id="dashboard-scrollbar"
-    >
+    <RootGrid container className={classes.root} id="dashboard-scrollbar">
       <Grid item sm={7}>
         {backButtonControl}
         {fullMapControl}

@@ -18,10 +18,8 @@ L.Icon.Default.mergeOptions({
 
 const Wrapper = styled.div`
   position: fixed;
-  width: ${props => (props.setScrollBar ? 'calc(100vw - 11px)' : '100vw')};
-  /* width: 100vw; */
+  width: calc(100vw - 12px);
   height: calc(100vh - 49px);
-  /* display: none; */
 `;
 
 const windowWidth = () => (window ? window.innerWidth : 1800);

@@ -16,7 +16,6 @@ class App extends Component {
     sites: [],
     siteDetail: null,
     siteDropDownData: [],
-    scrollbarVisible: true,
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
@@ -51,10 +50,6 @@ class App extends Component {
     zoomFullMap: false,
     highlightMarker: null,
     isLoading: false
-  };
-
-  setScrollbar = scrollbarVisible => {
-    this.setState({ scrollbarVisible });
   };
 
   async componentDidUpdate(prevProps, prevState) {
