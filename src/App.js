@@ -49,7 +49,8 @@ class App extends Component {
     bbox: null,
     zoomFullMap: false,
     highlightMarker: null,
-    isLoading: false
+    isLoading: false,
+    dashBoardHeight: 0
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -130,6 +131,8 @@ class App extends Component {
       histogram[i].y = barchartResult[i];
       histogram[i].label = barchartResult[i];
     }
+    const height = document.getElementById('dashboard-scrollbar').clientHeight;
+    this.setState({ dashBoardHeight: height });
 
     this.setState({ histogram });
     this.setState({ sites });
@@ -313,6 +316,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('Dash board width => ', this.state.dashBoardHeight);
     return (
       <BrowserRouter>
         <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />

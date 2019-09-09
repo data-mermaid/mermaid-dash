@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   position: fixed;
   width: ${props => props.width};
   height: ${props => props.height};
+  /* display: none; */
 `;
 
 const windowWidth = () => (window ? window.innerWidth : 1800);
@@ -310,7 +311,7 @@ class LeafletMap extends Component {
   }
 
   render() {
-    return <Wrapper width="100vw" height="calc(100vh - 49px)" id="map" />;
+    return <Wrapper width="calc(100vw - 11px)" height="calc(100vh - 49px)" id="map" />;
   }
 }
 export default LeafletMap;
