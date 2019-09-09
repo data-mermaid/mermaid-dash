@@ -25,36 +25,23 @@ import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
-const scrollbarActive = true;
-
 const RootGrid = styled(Grid)`
-  ${() =>
-    scrollbarActive &&
-    css`
-      &::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        border-radius: 10px;
-        background-color: #f5f5f5;
-      }
-
-      &::-webkit-scrollbar {
-        width: 12px;
-        background-color: #f5f5f5;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border-radius: 10px;
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-        background-color: #2d3641;
-      }
-    `}
+  /* ${props =>
+    props.scrollbaractive
+      ? css`
+          overflow-y: scroll;
+        `
+      : css`
+          overflow-y: hidden;
+        `} */ 
+  /* overflow-y: ${props => (props.scrollbaractive ? `scroll` : `hidden`)}; */
+  overflow-y: scroll;
+  height: calc(100vh - 49px);
 `;
 
 const gridStyleProperties = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(2, 2),
-    height: 'calc(100vh - 49px)',
-    overflow: scrollbarActive ? 'overlay' : 'default'
+    padding: theme.spacing(2, 2)
   },
   dashBoardProperty: {
     position: 'relative',
@@ -179,8 +166,16 @@ const DashBoard = ({
     </Slide>
   );
 
+  console.log(showFullMap);
+  const setScrollBar = showFullMap ? 'true' : 'false';
+
   return (
-    <RootGrid container className={classes.root}>
+    <RootGrid
+      container
+      className={classes.root}
+      scrollbaractive={setScrollBar}
+      id="dashboard-scrollbar"
+    >
       <Grid item sm={7}>
         {backButtonControl}
         {fullMapControl}

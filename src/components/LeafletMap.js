@@ -10,8 +10,6 @@ import styled from 'styled-components/macro';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
-const scrollbarActive = true;
-
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
@@ -20,7 +18,8 @@ L.Icon.Default.mergeOptions({
 
 const Wrapper = styled.div`
   position: fixed;
-  width: ${() => (scrollbarActive ? 'calc(100vw - 11px)' : '100vw')};
+  width: ${props => (props.setScrollBar ? 'calc(100vw - 11px)' : '100vw')};
+  /* width: 100vw; */
   height: calc(100vh - 49px);
   /* display: none; */
 `;
@@ -270,7 +269,9 @@ class LeafletMap extends Component {
         });
 
         return new L.DivIcon({
-          html: `<div style="${clusterStyle}"><span style="${leafletProperty.clusterIconNumberStyles}"> ${childCount} </span></div>`,
+          html: `<div style="${clusterStyle}"><span style="${
+            leafletProperty.clusterIconNumberStyles
+          }"> ${childCount} </span></div>`,
           className: 'marker-cluster-icon'
         });
       }
@@ -311,7 +312,8 @@ class LeafletMap extends Component {
   }
 
   render() {
-    return <Wrapper id="map" />;
+    const setScrollBar = this.props.showFullMap;
+    return <Wrapper id="map" setScrollBar={setScrollBar} />;
   }
 }
 export default LeafletMap;
