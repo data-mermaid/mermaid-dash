@@ -16,6 +16,7 @@ class App extends Component {
     sites: [],
     siteDetail: null,
     siteDropDownData: [],
+    scrollbarVisible: true,
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
@@ -51,6 +52,10 @@ class App extends Component {
     highlightMarker: null,
     isLoading: false,
     dashBoardHeight: 0
+  };
+
+  setScrollbar = scrollbarVisible => {
+    this.setState({ scrollbarVisible });
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -131,8 +136,8 @@ class App extends Component {
       histogram[i].y = barchartResult[i];
       histogram[i].label = barchartResult[i];
     }
-    const height = document.getElementById('dashboard-scrollbar').clientHeight;
-    this.setState({ dashBoardHeight: height });
+    // const height = document.getElementById('dashboard-scrollbar').clientHeight;
+    // this.setState({ dashBoardHeight: height });
 
     this.setState({ histogram });
     this.setState({ sites });

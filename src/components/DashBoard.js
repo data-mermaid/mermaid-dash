@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Slide from '@material-ui/core/Slide';
+import styled, { css } from 'styled-components';
 
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
@@ -24,11 +25,36 @@ import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
+const scrollbarActive = true;
+
+const RootGrid = styled(Grid)`
+  ${() =>
+    scrollbarActive &&
+    css`
+      &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        background-color: #f5f5f5;
+      }
+
+      &::-webkit-scrollbar {
+        width: 12px;
+        background-color: #f5f5f5;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #2d3641;
+      }
+    `}
+`;
+
 const gridStyleProperties = makeStyles(theme => ({
   root: {
     padding: theme.spacing(2, 2),
     height: 'calc(100vh - 49px)',
-    overflow: 'overlay'
+    overflow: scrollbarActive ? 'overlay' : 'default'
   },
   dashBoardProperty: {
     position: 'relative',
@@ -154,7 +180,7 @@ const DashBoard = ({
   );
 
   return (
-    <Grid container className={classes.root} id="dashboard-scrollbar">
+    <RootGrid container className={classes.root}>
       <Grid item sm={7}>
         {backButtonControl}
         {fullMapControl}
@@ -180,7 +206,7 @@ const DashBoard = ({
         </Paper>
       </Grid>
       {dashboardControl}
-    </Grid>
+    </RootGrid>
   );
 };
 
