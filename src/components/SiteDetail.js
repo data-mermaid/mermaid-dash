@@ -20,7 +20,8 @@ import PropTypes from 'prop-types';
 
 const containerStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(1)
   },
   siteWrapper: {
     padding: theme.spacing(2, 2),
