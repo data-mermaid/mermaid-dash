@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Slide from '@material-ui/core/Slide';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
@@ -106,7 +106,7 @@ const DashBoard = ({
 
   const backButton = showSiteDetail && (
     <ThemeProvider theme={theme.backButton}>
-      <ButtonStyle translateHover={true} boxShadow={true} onClick={() => backButtonHandler()}>
+      <ButtonStyle translateHover={true} boxShadow={true} onClick={backButtonHandler}>
         <BackArrowIcon />
         <Typography variant="h6">Back</Typography>
       </ButtonStyle>
@@ -171,7 +171,7 @@ const DashBoard = ({
   );
 
   return (
-    <RootGrid container className={classes.root} id="dashboard-scrollbar">
+    <RootGrid container className={classes.root}>
       <Grid item sm={8}>
         {backButtonControl}
         {fullMapControl}
