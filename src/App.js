@@ -8,6 +8,7 @@ import Header from './components/Header';
 import DashBoard from './components/DashBoard';
 import LeafletMap from './components/LeafletMap';
 
+console.log(process.env.REACT_APP_API_URL);
 class App extends Component {
   state = {
     showFullMap: true,

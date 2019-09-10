@@ -18,6 +18,21 @@ import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
+const protocolsArray = [
+  {
+    name: 'benthiclit',
+    title: 'Benthic[LIT] Condition, % Cover',
+    type: 'pieChart',
+    sample: Samples.benthicPieChartData
+  },
+  {
+    name: 'benthicpit',
+    title: 'Benthic[PIT] Condition, % Cover',
+    type: 'pieChart',
+    sample: Samples.benthicPieChartData
+  },
+  { name: 'beltfish', title: 'Fish Belt', type: 'pieChart', sample: Samples.fishBeltPieChartData }
+];
 const containerStyle = makeStyles(theme => ({
   root: {
     paddingBottom: theme.spacing(2)
@@ -68,23 +83,66 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
-  const benthicCard = loadedSite &&
-    (loadedSite.properties.protocols.benthiclit || loadedSite.properties.protocols.benthicpit) && (
+  const SiteDetailCards = protocolsArray.map(protocol => {
+    const checkLoadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
+    const loadedSiteProtocol =
+      checkLoadedSiteProtocol && loadedSite.properties.protocols[protocol.name];
+    const pieChartContent =
+      checkLoadedSiteProtocol && loadedSite.properties.protocols[protocol.name].coral_cover;
+    const defaultBody = [
+      { x: 'Herbivore-detritivore', y: 6 },
+      { x: 'Herbivore-macroalgae', y: 8 },
+      { x: 'Invertivore-mobile', y: 12 },
+      { x: 'Invertivore-sessile', y: 10 },
+      { x: 'Omnivore', y: 20 },
+      { x: 'Piscivore', y: 14 },
+      { x: 'Planktivore', y: 30 }
+    ];
+
+    const defaultLegend = [
+      { name: 'Herbivore-detritivore' },
+      { name: 'Herbivore-macroalgae' },
+      { name: 'Invertivore-mobile' },
+      { name: 'Invertivore-sessile' },
+      { name: 'Omnivore' },
+      { name: 'Piscivore' },
+      { name: 'Planktivore' }
+    ];
+
+    const pieContent = pieChartContent
+      ? pieChartContent.map(item => {
+          const attribute = Object.keys(item)[0];
+          const value = (Object.values(item)[0] * 100).toFixed(2);
+          return { x: attribute, y: value };
+        })
+      : defaultBody;
+
+    const legendData =
+      pieChartContent &&
+      pieChartContent.map(item => {
+        const attribute = Object.keys(item)[0];
+        return { name: attribute };
+      });
+
+    const legendContent = pieChartContent
+      ? { title: 'Benthic category', data: legendData }
+      : { title: 'Tropic group', data: defaultLegend };
+
+    const cardsComponent = checkLoadedSiteProtocol && (
       <Card
-        content={Samples.benthicPieChartData}
-        dataPolicy={loadedSite.properties.data_policy_benthiclit}
-        protocols={loadedSite.properties.protocols}
+        dataPolicy={loadedSite.properties[`data_policy_${protocol.name}`]}
+        protocol={loadedSiteProtocol}
+        protocolName={protocol.name}
+        pieContent={pieContent}
+        legendContent={legendContent}
+        sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
+        title={protocol.title}
+        type={protocol.type}
       />
     );
 
-  const fishbeltCard = loadedSite && loadedSite.properties.protocols.beltfish && (
-    <Card
-      content={Samples.fishBeltPieChartData}
-      dataPolicy={loadedSite.properties.data_policy_beltfish}
-      protocols={loadedSite.properties.protocols}
-      sampleUnits={loadedSite.properties.protocols.beltfish.sample_unit_count}
-    />
-  );
+    return <div key={protocol.name}>{cardsComponent}</div>;
+  });
 
   const site = loadedSite ? (
     <div className={classes.root}>
@@ -95,8 +153,7 @@ const SiteDetail = ({ selectSite }) => {
         <CoralAttributes loadedSiteProperties={loadedSite.properties} />
         <SiteNote loadedSiteProperties={loadedSite.properties} />
       </Paper>
-      {benthicCard}
-      {fishbeltCard}
+      {SiteDetailCards}
     </div>
   ) : (
     <Paper className={classes.siteWrapper}>

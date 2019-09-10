@@ -73,6 +73,9 @@ const gridStyleProperties = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  divProperty: {
+    // overflow: 'overlay'
   }
 }));
 
@@ -130,10 +133,10 @@ const DashBoard = ({
   );
 
   const dashboard = showFullMap && (
-    <div>
-      <Card content={Samples.summary} />
+    <div className={classes.divProperty}>
+      <Card title={'Summary Statistics'} type={'text'} body={Samples.summary.body} />
       <MetricCards metrics={metrics} isLoading={isLoading} />
-      <Card content={Samples.barChartData} histogram={histogram} />
+      <Card histogram={histogram} title={'Live Coral Cover'} type={'barChart'} />
     </div>
   );
 
@@ -146,13 +149,13 @@ const DashBoard = ({
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
 
   const dashboardControl = showFullMap && (
-    <Grid item sm={5} className={classes.dashBoardProperty}>
+    <Grid item sm={5} className={classes.dashBoardProperty} id="dashboard">
       {showSiteDetail ? siteDashboard : dashboard}
     </Grid>
   );
 
   return (
-    <Grid container className={classes.root}>
+    <Grid container className={classes.root} id="grid-dashboard">
       <Grid item sm={7}>
         {backButtonControl}
         {fullMapControl}

@@ -14,6 +14,8 @@ import Chart from './Chart';
 
 import PropTypes from 'prop-types';
 
+const HEADER = 'Data is more powerful when shared';
+
 const cardStyle = makeStyles(theme => ({
   root: {
     paddingBottom: theme.spacing(2)
@@ -27,44 +29,9 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const Card = ({ content, dataPolicy, protocols, sampleUnits, histogram }) => {
-  const classes = cardStyle();
-  const { type, body, legend, title, hardCoralCovers, reefFishBiomass, header } = content;
-  const privatePolicyCheck = type === 'pieChart' && dataPolicy === 'private';
-
-  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
-
-  const subAttributeItem = hardCoralCovers ? (
-    <Typography m={1}>Hard coral cover: {hardCoralCovers} %</Typography>
-  ) : (
-    <Typography m={1}>Reef fish biomass: {reefFishBiomass} kg/ha</Typography>
-  );
-
-  const subItems = type === 'pieChart' && (
-    <Box>
-      <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      <Typography m={1}>Sample units: {sampleUnits} </Typography>
-      {subAttributeItem}
-    </Box>
-  );
-
-  const subTitle = header && <Typography variant="h6">{header}</Typography>;
-
-  // eslint-disable-next-line
-  const downLoadButton = type === 'pieChart' && (
-    <ThemeProvider theme={theme.cardButton}>
-      <ButtonStyle notAllowed={privatePolicyCheck} boxShadow={true}>
-        <Box p={1} display="flex" justifyContent="center">
-          <DownloadIcon fontSize="small" className={classes.iconProperty} />
-          <Typography variant="body1" display="inline">
-            Download Data
-          </Typography>
-        </Box>
-      </ButtonStyle>
-    </ThemeProvider>
-  );
-
-  const contentType =
+const CardContent = ({ type, body, legend, dataPolicy, histogram, pieContent }) => {
+  const subTitle = type === 'text' && <Typography variant="h6">{HEADER}</Typography>;
+  const content =
     type === 'text' ? (
       <Box pt={1}>
         {subTitle}
@@ -74,7 +41,7 @@ const Card = ({ content, dataPolicy, protocols, sampleUnits, histogram }) => {
       <Box pt={1}>
         <Chart
           chartType={type}
-          chartContent={body}
+          chartContent={pieContent}
           chartLegend={legend}
           chartPolicy={dataPolicy}
           histogram={histogram}
@@ -82,23 +49,91 @@ const Card = ({ content, dataPolicy, protocols, sampleUnits, histogram }) => {
       </Box>
     );
 
-  const contentAvailable = content ? (
-    <Paper className={classes.cardWrapper}>
-      <Box display="flex" borderBottom={1}>
-        <Box flexGrow={1}>
-          <Box>
-            <Typography variant="h4">{title}</Typography>
-          </Box>
-          {subItems}
-        </Box>
-        {/* temporarily Hide download data buttons */}
-        {/* <Box>{downLoadButton}</Box> */}
-      </Box>
-      {contentType}
-    </Paper>
-  ) : (
-    <Paper className={classes.cardWrapper}>{loaderType}</Paper>
+  return <>{content}</>;
+};
+
+const Card = ({
+  dataPolicy,
+  protocol,
+  protocolName,
+  histogram,
+  title,
+  type,
+  sampleUnitCounts,
+  pieContent,
+  legendContent,
+  body
+}) => {
+  const classes = cardStyle();
+  const privatePolicyCheck = type === 'pieChart' && dataPolicy === 'private';
+
+  const findHardCoralValue = coral => {
+    const hardCoralResult = coral
+      .map(item => {
+        return item['Hard coral'] ? item['Hard coral'] : 0;
+      })
+      .reduce((acc, val) => acc + val, 0);
+    const hardCoralPercentage = hardCoralResult * 100;
+
+    return hardCoralPercentage.toFixed(2);
+  };
+
+  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
+
+  const subAttributeItem =
+    protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
+      <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
+    ) : (
+      <Typography m={1}>Reef fish biomass: {'sampleUnitCounts'} kg/ha</Typography>
+    );
+
+  const subItems = type === 'pieChart' && (
+    <Box>
+      <Typography m={1}>Data sharing: {dataPolicy}</Typography>
+      <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+      {subAttributeItem}
+    </Box>
   );
+
+  // eslint-disable-next-line
+  // const downLoadButton = type === 'pieChart' && (
+  //   <ThemeProvider theme={theme.cardButton}>
+  //     <ButtonStyle notAllowed={privatePolicyCheck} boxShadow={true}>
+  //       <Box p={1} display="flex" justifyContent="center">
+  //         <DownloadIcon fontSize="small" className={classes.iconProperty} />
+  //         <Typography variant="body1" display="inline">
+  //           Download Data
+  //         </Typography>
+  //       </Box>
+  //     </ButtonStyle>
+  //   </ThemeProvider>
+  // );
+
+  const contentAvailable =
+    histogram || pieContent || body ? (
+      <Paper className={classes.cardWrapper}>
+        <Box display="flex" borderBottom={1}>
+          <Box flexGrow={1}>
+            <Box>
+              <Typography variant="h4">{title}</Typography>
+            </Box>
+            {subItems}
+          </Box>
+          {/* temporarily Hide download data buttons */}
+          {/* <Box>{downLoadButton}</Box> */}
+        </Box>
+        <CardContent
+          type={type}
+          pieContent={pieContent}
+          legend={legendContent}
+          dataPolicy={dataPolicy}
+          histogram={histogram}
+          body={body}
+        />
+      </Paper>
+    ) : (
+      <Paper className={classes.cardWrapper}>{loaderType}</Paper>
+    );
 
   return <div className={classes.root}>{contentAvailable}</div>;
 };
