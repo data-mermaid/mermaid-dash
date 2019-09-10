@@ -164,7 +164,7 @@ const DashBoard = ({
 
   const dashboardControl = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
-      <Grid item sm={5} className={classes.dashBoardProperty}>
+      <Grid item sm={4} className={classes.dashBoardProperty}>
         {showSiteDetail ? siteDashboard : dashboard}
       </Grid>
     </Slide>
@@ -172,7 +172,7 @@ const DashBoard = ({
 
   return (
     <RootGrid container className={classes.root}>
-      <Grid item sm={7}>
+      <Grid item sm={8}>
         {backButtonControl}
         {fullMapControl}
         <Paper className={classes.legendProperty}>

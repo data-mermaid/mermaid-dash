@@ -28,23 +28,32 @@ const CoralAttributes = ({ loadedSiteProperties }) => {
       justifyContent="flex-start"
       className={classes.reefProperty}
     >
-      <Box p={1} mr={1} border={1} borderRadius={13} display="flex" alignItems="center">
+      <Box p={1} mr={2} border={1} borderRadius={10} display="flex" alignItems="center">
         <Coral className={classes.coralIconProperty} />
-        <Typography variant="body1">
-          Reef Zone: <strong>{loadedSiteProperties.reef_zone}</strong>
-        </Typography>
+        <Box display="flex" alignItems="left" flexDirection="column">
+          <Typography variant="body1">Reef Zone</Typography>
+          <Typography variant="body1">
+            <strong>{loadedSiteProperties.reef_zone}</strong>
+          </Typography>
+        </Box>
       </Box>
-      <Box p={1} mr={1} border={1} borderRadius={13} display="flex" alignItems="center">
+      <Box p={1} mr={2} border={1} borderRadius={10} display="flex" alignItems="center">
         <Coral className={classes.coralIconProperty} />
-        <Typography variant="body1">
-          Reef Type: <strong>{loadedSiteProperties.reef_type}</strong>
-        </Typography>
+        <Box display="flex" alignItems="left" flexDirection="column">
+          <Typography variant="body1">Reef Type</Typography>
+          <Typography variant="body1">
+            <strong>{loadedSiteProperties.reef_type}</strong>
+          </Typography>
+        </Box>
       </Box>
-      <Box p={1} mr={1} border={1} borderRadius={13} display="flex" alignItems="center">
+      <Box p={1} mr={2} border={1} borderRadius={10} display="flex" alignItems="center">
         <Coral className={classes.coralIconProperty} />
-        <Typography variant="body1">
-          Exposure: <strong>{loadedSiteProperties.exposure}</strong>
-        </Typography>
+        <Box display="flex" alignItems="left" flexDirection="column">
+          <Typography variant="body1">Exposure</Typography>
+          <Typography variant="body1">
+            <strong>{loadedSiteProperties.exposure}</strong>
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
