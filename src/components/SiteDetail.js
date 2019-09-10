@@ -40,7 +40,7 @@ const SiteDetail = ({ selectSite }) => {
     setLoadedSite(selectSite);
   }
 
-  const siteAdmins = loadedSite && (
+  const siteAdmins = loadedSite && loadedSite.properties.project_admins && (
     <Box borderTop={1} pt={1} display="flex">
       <AdminIcon />
       <Typography variant="body1">
@@ -54,7 +54,7 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
-  const siteOrganizations = loadedSite && (
+  const siteOrganizations = loadedSite && loadedSite.properties.tags && (
     <Box pt={1} display="flex">
       <OrganizationIcon width="20px" height="20px" />
       <Typography variant="body1">
