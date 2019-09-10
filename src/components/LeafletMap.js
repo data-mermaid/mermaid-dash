@@ -18,7 +18,7 @@ L.Icon.Default.mergeOptions({
 
 const Wrapper = styled.div`
   position: fixed;
-  width: calc(100vw - 12px);
+  width: calc(100vw - 10px);
   height: calc(100vh - 49px);
 `;
 
