@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Slide from '@material-ui/core/Slide';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
