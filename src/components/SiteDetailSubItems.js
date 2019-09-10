@@ -18,8 +18,8 @@ const subItemStyles = makeStyles(theme => ({
 
 const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const classes = subItemStyles();
-  const startDate = loadedSiteProperties.date_min.substring(0, 4);
-  const endDate = loadedSiteProperties.date_max.substring(0, 4);
+  const startDate = loadedSiteProperties.date_min && loadedSiteProperties.date_min.substring(0, 4);
+  const endDate = loadedSiteProperties.date_max && loadedSiteProperties.date_max.substring(0, 4);
   const siteYear = endDate === startDate ? endDate : `${startDate} - ${endDate}`;
 
   const contactButton = (
