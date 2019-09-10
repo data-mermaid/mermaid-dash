@@ -14,7 +14,8 @@ const ProgressBarContainer = styled('div')`
 
 const dropDownStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(1)
   }
 }));
 

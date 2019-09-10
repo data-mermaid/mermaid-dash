@@ -6,7 +6,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
 import * as leafletProperty from '../leaflet_property';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -18,8 +18,8 @@ L.Icon.Default.mergeOptions({
 
 const Wrapper = styled.div`
   position: fixed;
-  width: ${props => props.width};
-  height: ${props => props.height};
+  width: calc(100vw - 10px);
+  height: calc(100vh - 49px);
 `;
 
 const windowWidth = () => (window ? window.innerWidth : 1800);
@@ -310,7 +310,8 @@ class LeafletMap extends Component {
   }
 
   render() {
-    return <Wrapper width="100vw" height="calc(100vh - 49px)" id="map" />;
+    const setScrollBar = this.props.showFullMap;
+    return <Wrapper id="map" setScrollBar={setScrollBar} />;
   }
 }
 export default LeafletMap;

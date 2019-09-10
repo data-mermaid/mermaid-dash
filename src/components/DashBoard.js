@@ -12,6 +12,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Slide from '@material-ui/core/Slide';
+import styled from 'styled-components/macro';
 
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
@@ -23,20 +25,31 @@ import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
+const RootGrid = styled(Grid)`
+  overflow-y: overlay;
+  height: calc(100vh - 49px);
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: #ffffff;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #2d3641;
+  }
+`;
+
 const gridStyleProperties = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(2, 2),
-    height: 'calc(100vh - 49px)',
-    overflow: 'overlay'
+    padding: theme.spacing(2, 2)
   },
   dashBoardProperty: {
     position: 'relative',
     height: 0
-  },
-  backButtonWrapperProperty: {
-    padding: '0 10px 0 0',
-    height: 40,
-    background: 'white'
   },
   backIconProperty: {
     marginRight: theme.spacing(1)
@@ -129,30 +142,36 @@ const DashBoard = ({
     <div />
   );
 
-  const dashboard = showFullMap && (
-    <div>
-      <Card content={Samples.summary} />
-      <MetricCards metrics={metrics} isLoading={isLoading} />
-      <Card content={Samples.barChartData} histogram={histogram} />
-    </div>
+  const dashboard = (
+    <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
+      <div>
+        <Card content={Samples.summary} />
+        <MetricCards metrics={metrics} isLoading={isLoading} />
+        <Card content={Samples.barChartData} histogram={histogram} />
+      </div>
+    </Slide>
   );
 
-  const backButtonControl = showFullMap && (
-    <Box display="flex" justifyContent="flex-end" className={classes.backButtonWrapperProperty}>
-      {backButton}
-    </Box>
+  const backButtonControl = (
+    <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
+      <Box display="flex" justifyContent="flex-end">
+        {backButton}
+      </Box>
+    </Slide>
   );
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
 
-  const dashboardControl = showFullMap && (
-    <Grid item sm={5} className={classes.dashBoardProperty}>
-      {showSiteDetail ? siteDashboard : dashboard}
-    </Grid>
+  const dashboardControl = (
+    <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
+      <Grid item sm={5} className={classes.dashBoardProperty}>
+        {showSiteDetail ? siteDashboard : dashboard}
+      </Grid>
+    </Slide>
   );
 
   return (
-    <Grid container className={classes.root}>
+    <RootGrid container className={classes.root}>
       <Grid item sm={7}>
         {backButtonControl}
         {fullMapControl}
@@ -178,7 +197,7 @@ const DashBoard = ({
         </Paper>
       </Grid>
       {dashboardControl}
-    </Grid>
+    </RootGrid>
   );
 };
 
