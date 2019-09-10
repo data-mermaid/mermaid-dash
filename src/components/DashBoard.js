@@ -31,12 +31,12 @@ const RootGrid = styled(Grid)`
   &::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
   }
 
   &::-webkit-scrollbar {
     width: 12px;
-    background-color: #f5f5f5;
+    background-color: #ffffff;
   }
 
   &::-webkit-scrollbar-thumb {
