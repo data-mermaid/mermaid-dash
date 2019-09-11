@@ -188,13 +188,21 @@ class LeafletMap extends Component {
     const markersArr = arr.map(item => {
       return item.options.marker;
     });
+
     const coordinatesArr = markersArr.map(marker => {
       const latStr = `${this.toFixedNoRounding(marker.geometry.coordinates[0], 3)}`;
       const lngStr = `${this.toFixedNoRounding(marker.geometry.coordinates[1], 3)}`;
       return `${latStr},${lngStr}`;
     });
-    const result = new Set(coordinatesArr);
-    return result.size === 1;
+
+    const siteNamesArr = markersArr.map(marker => {
+      return marker.properties.site_name;
+    });
+
+    const coordinatesSizeResult = new Set(coordinatesArr).size;
+    const siteNamesSizeResult = new Set(siteNamesArr).size;
+
+    return coordinatesSizeResult === 1 || siteNamesSizeResult === 1;
   }
 
   createBoundingBox(boundingBox) {
