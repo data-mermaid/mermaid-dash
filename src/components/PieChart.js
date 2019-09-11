@@ -68,7 +68,7 @@ const privateColorScale = [
 const privateLabel = `This data is unavailable because Benthic: PIT, LIT and Habitat Complexity are set to Private for this project.`;
 
 const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
-  const [centerLabel, setCenterLabel] = useState({ number: null, label: null });
+  const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax1299 = useMediaQuery('(max-width:1299px)');
   const mediaMin1300 = useMediaQuery('(min-width:1300px)');
   const mediaMax1600 = useMediaQuery('(max-width:1600px)');
@@ -78,7 +78,11 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
   const labelControl = (
     <LabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
       <Label content={centerLabel.label} />
-      <Label content={centerLabel.number ? `${centerLabel.number}%` : centerLabel.number} />
+      {centerLabel.category !== 'Tropic group' ? (
+        <Label content={centerLabel.number && `${centerLabel.number}%`} />
+      ) : (
+        <Label content={centerLabel.number && `${centerLabel.number}kg/ha`} />
+      )}
     </LabelContainer>
   );
 
@@ -130,6 +134,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
                             datum: { x: label, y: number }
                           } = data;
                           setCenterLabel({
+                            category: chartLegend.title,
                             number,
                             label
                           });
@@ -153,6 +158,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
                         target: 'data',
                         mutation: () => {
                           setCenterLabel({
+                            category: null,
                             number: null,
                             label: null
                           });

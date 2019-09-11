@@ -22,16 +22,24 @@ const protocolsArray = [
   {
     name: 'benthiclit',
     title: 'Benthic[LIT] Condition, % Cover',
+    property: 'coral_cover',
     type: 'pieChart',
     sample: Samples.benthicPieChartData
   },
   {
     name: 'benthicpit',
     title: 'Benthic[PIT] Condition, % Cover',
+    property: 'coral_cover',
     type: 'pieChart',
     sample: Samples.benthicPieChartData
   },
-  { name: 'beltfish', title: 'Fish Belt', type: 'pieChart', sample: Samples.fishBeltPieChartData }
+  {
+    name: 'beltfish',
+    title: 'Fish Belt',
+    property: 'biomass_kgha_tg',
+    type: 'pieChart',
+    sample: Samples.fishBeltPieChartData
+  }
 ];
 const containerStyle = makeStyles(theme => ({
   root: {
@@ -85,19 +93,17 @@ const SiteDetail = ({ selectSite }) => {
   );
 
   const SiteDetailCards = protocolsArray.map(protocol => {
-    const checkLoadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
-    const loadedSiteProtocol =
-      checkLoadedSiteProtocol && loadedSite.properties.protocols[protocol.name];
-    const pieChartContent =
-      checkLoadedSiteProtocol && loadedSite.properties.protocols[protocol.name].coral_cover;
+    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
+    const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
+    const privatePolicy = dataPolicy === 'private';
+
     const defaultBody = [
-      { x: 'Herbivore-detritivore', y: 0 },
-      { x: 'Herbivore-macroalgae', y: 14 },
-      { x: 'Invertivore-mobile', y: 12 },
-      { x: 'Invertivore-sessile', y: 10 },
-      { x: 'Omnivore', y: 20 },
-      { x: 'Piscivore', y: 14 },
-      { x: 'Planktivore', y: 30 }
+      { x: 'Herbivore-detritivore', y: 77.9 },
+      { x: 'Herbivore-macroalgae', y: 24.1 },
+      { x: 'Invertivore-mobile', y: 193.0 },
+      { x: 'Invertivore-sessile', y: 34.6 },
+      { x: 'Omnivore', y: 74.5 },
+      { x: 'Piscivore', y: 177.4 }
     ];
 
     const defaultLegend = [
@@ -106,36 +112,50 @@ const SiteDetail = ({ selectSite }) => {
       { name: 'Invertivore-mobile' },
       { name: 'Invertivore-sessile' },
       { name: 'Omnivore' },
-      { name: 'Piscivore' },
-      { name: 'Planktivore' }
+      { name: 'Piscivore' }
     ];
 
-    const pieContent = pieChartContent
-      ? pieChartContent.map(item => {
+    const convertContent = (content, protocol) => {
+      return (
+        content &&
+        content.map(item => {
           const attribute = Object.keys(item)[0];
-          const value = Object.values(item)[0] * 100;
+          const value =
+            protocol === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
           return { x: attribute, y: value };
         })
-      : defaultBody;
+      );
+    };
 
-    const legendData =
-      pieChartContent &&
-      pieChartContent.map(item => {
-        const attribute = Object.keys(item)[0];
-        return { name: attribute };
-      });
+    const convertLegend = (content, protocol) => {
+      const title = protocol === 'beltfish' ? 'Tropic group' : 'Benthic category';
+      const data =
+        content &&
+        content.map(item => {
+          const attribute = Object.keys(item)[0];
+          return { name: attribute };
+        });
 
-    const legendContent = pieChartContent
-      ? { title: 'Benthic category', data: legendData }
-      : { title: 'Tropic group', data: defaultLegend };
+      return { title, data };
+    };
 
-    const cardsComponent = checkLoadedSiteProtocol && (
+    const protocolContent =
+      loadedSiteProtocol && loadedSite.properties.protocols[protocol.name][protocol.property];
+    const sourceContent = privatePolicy
+      ? defaultBody
+      : convertContent(protocolContent, protocol.name);
+    const sourceLegendData = privatePolicy
+      ? { title: 'Private Group', data: defaultLegend }
+      : convertLegend(protocolContent, protocol.name);
+
+    const cardsComponent = loadedSiteProtocol && (
       <Card
-        dataPolicy={loadedSite.properties[`data_policy_${protocol.name}`]}
+        dataPolicy={dataPolicy}
         protocol={loadedSiteProtocol}
         protocolName={protocol.name}
-        pieContent={pieContent}
-        legendContent={legendContent}
+        pieContent={sourceContent}
+        legendContent={sourceLegendData}
+        privatePolicy={privatePolicy}
         sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
         title={protocol.title}
         type={protocol.type}

@@ -1,15 +1,15 @@
 import React from 'react';
 
-import DownloadIcon from '@material-ui/icons/CloudDownload';
-import { ThemeProvider } from 'styled-components/macro';
+// import DownloadIcon from '@material-ui/icons/CloudDownload';
+// import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextLoader, ChartLoader } from './Loader';
-import { theme } from './theme';
-import { ButtonStyle } from './Button';
+// import { theme } from './theme';
+// import { ButtonStyle } from './Button';
 import Chart from './Chart';
 
 import PropTypes from 'prop-types';
@@ -56,6 +56,7 @@ const Card = ({
   dataPolicy,
   protocol,
   protocolName,
+  privatePolicy,
   histogram,
   title,
   type,
@@ -65,7 +66,7 @@ const Card = ({
   body
 }) => {
   const classes = cardStyle();
-  const privatePolicyCheck = type === 'pieChart' && dataPolicy === 'private';
+  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
 
   const findHardCoralValue = coral => {
     const hardCoralResult = coral
@@ -78,19 +79,24 @@ const Card = ({
     return hardCoralPercentage.toFixed(2);
   };
 
-  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
+  const sampleUnitResult = !privatePolicy && (
+    <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+  );
 
   const subAttributeItem =
-    protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
+    !privatePolicy &&
+    (protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
       <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
     ) : (
-      <Typography m={1}>Reef fish biomass: {'sampleUnitCounts'} kg/ha</Typography>
-    );
+      <Typography m={1}>
+        Reef fish biomass: {protocolName === 'beltfish' && protocol.biomass_kgha} kg/ha
+      </Typography>
+    ));
 
   const subItems = type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+      {sampleUnitResult}
       {subAttributeItem}
     </Box>
   );
@@ -98,7 +104,7 @@ const Card = ({
   // eslint-disable-next-line
   // const downLoadButton = type === 'pieChart' && (
   //   <ThemeProvider theme={theme.cardButton}>
-  //     <ButtonStyle notAllowed={privatePolicyCheck} boxShadow={true}>
+  //     <ButtonStyle notAllowed={privatePolicy} boxShadow={true}>
   //       <Box p={1} display="flex" justifyContent="center">
   //         <DownloadIcon fontSize="small" className={classes.iconProperty} />
   //         <Typography variant="body1" display="inline">
