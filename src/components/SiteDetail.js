@@ -91,8 +91,8 @@ const SiteDetail = ({ selectSite }) => {
     const pieChartContent =
       checkLoadedSiteProtocol && loadedSite.properties.protocols[protocol.name].coral_cover;
     const defaultBody = [
-      { x: 'Herbivore-detritivore', y: 6 },
-      { x: 'Herbivore-macroalgae', y: 8 },
+      { x: 'Herbivore-detritivore', y: 0 },
+      { x: 'Herbivore-macroalgae', y: 14 },
       { x: 'Invertivore-mobile', y: 12 },
       { x: 'Invertivore-sessile', y: 10 },
       { x: 'Omnivore', y: 20 },
@@ -113,7 +113,7 @@ const SiteDetail = ({ selectSite }) => {
     const pieContent = pieChartContent
       ? pieChartContent.map(item => {
           const attribute = Object.keys(item)[0];
-          const value = (Object.values(item)[0] * 100).toFixed(2);
+          const value = Object.values(item)[0] * 100;
           return { x: attribute, y: value };
         })
       : defaultBody;
