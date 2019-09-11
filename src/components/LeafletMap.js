@@ -278,6 +278,7 @@ class LeafletMap extends Component {
     markersCluster.on('clusterclick', e => {
       const markerCluster = e.layer.getAllChildMarkers();
       fullMapZoomHandler(false);
+      removeHighlight();
 
       if (this.checkSameSiteInACluster(markerCluster)) {
         const markersData = markerCluster.map(item => {
