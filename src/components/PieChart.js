@@ -7,15 +7,15 @@ import PropTypes from 'prop-types';
 
 const LabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.smallScreen ? '180px' : '190px')};
-  left: ${props => (props.smallScreen ? '110px' : props.midScreen ? '190px' : '100px')};
-  width: 180px;
-  height: 50px;
+  top: ${props => (props.smallScreen ? '150px' : '160px')};
+  left: ${props => (props.midScreen ? '145px' : '75px')};
+  width: 160px;
+  height: 40px;
 `;
 const PrivateLabelContainer = styled('div')`
   position: relative;
   top: 200px;
-  left: ${props => (props.smallScreen ? '80px' : props.midScreen ? '130px' : '150px')};
+  left: ${props => (props.smallScreen ? '80px' : props.midScreen ? '90px' : '150px')};
   width: 60%;
   z-index: 1;
 `;
@@ -97,22 +97,22 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
           <VictoryLegend
             standalone={mediaMax1600}
             colorScale={privatePolicyCheck ? privateColorScale : defaultColorScale}
-            x={430}
+            x={310}
             title={chartLegend.title}
             centerTitle
             style={{
-              title: { fontSize: 20 }
+              title: { fontSize: 18 }
             }}
             data={chartLegend.data}
           />
           <VictoryPie
             standalone={false}
-            innerRadius={120}
-            height={mediaMax1299 ? 300 : 300}
-            width={mediaMax1299 ? 450 : 430}
+            innerRadius={90}
+            height={mediaMax1299 ? 250 : 280}
+            width={mediaMax1299 ? 350 : 350}
             padding={{
               right: mediaMin1300Max1600 ? 0 : 80,
-              left: mediaMin1300Max1600 ? 130 : 40
+              left: mediaMin1300Max1600 ? 100 : 40
             }}
             labels={() => null}
             colorScale={privatePolicyCheck ? privateColorScale : defaultColorScale}
