@@ -80,7 +80,7 @@ const miniMapLayer = L.tileLayer(
 const mapProperty = {
   center: [10, 170],
   zoom: 3,
-  minZoom: 2,
+  minZoom: 3,
   maxZoom: 16,
   zoomControl: true,
   layers: [worldImageryMapLayer, labelLayer]
