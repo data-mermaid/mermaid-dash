@@ -330,6 +330,7 @@ class App extends Component {
           removeHighlight={this.removeHighlight}
           setIconActive={this.setIconActive}
           highlightMarker={this.state.highlightMarker}
+          showFullMap={this.state.showFullMap}
         />
         <DashBoard
           siteDetail={this.state.siteDetail}
