@@ -29,7 +29,15 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const CardContent = ({ type, body, legend, dataPolicy, histogram, pieContent }) => {
+const CardContent = ({
+  type,
+  body,
+  legend,
+  privatePolicy,
+  privateLabel,
+  histogram,
+  pieContent
+}) => {
   const subTitle = type === 'text' && <Typography variant="h6">{HEADER}</Typography>;
   const content =
     type === 'text' ? (
@@ -43,7 +51,8 @@ const CardContent = ({ type, body, legend, dataPolicy, histogram, pieContent }) 
           chartType={type}
           chartContent={pieContent}
           chartLegend={legend}
-          chartPolicy={dataPolicy}
+          privatePolicy={privatePolicy}
+          privateLabel={privateLabel}
           histogram={histogram}
         />
       </Box>
@@ -57,6 +66,7 @@ const Card = ({
   protocol,
   protocolName,
   privatePolicy,
+  privateLabel,
   histogram,
   title,
   type,
@@ -132,7 +142,8 @@ const Card = ({
           type={type}
           pieContent={pieContent}
           legend={legendContent}
-          dataPolicy={dataPolicy}
+          privatePolicy={privatePolicy}
+          privateLabel={privateLabel}
           histogram={histogram}
           body={body}
         />

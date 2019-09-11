@@ -14,7 +14,6 @@ import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
 import Card from './Card';
-import Samples from '../sample_data/sampleSummaryStatistic';
 
 import PropTypes from 'prop-types';
 
@@ -23,24 +22,22 @@ const protocolsArray = [
     name: 'benthiclit',
     title: 'Benthic[LIT] Condition, % Cover',
     property: 'coral_cover',
-    type: 'pieChart',
-    sample: Samples.benthicPieChartData
+    type: 'pieChart'
   },
   {
     name: 'benthicpit',
     title: 'Benthic[PIT] Condition, % Cover',
     property: 'coral_cover',
-    type: 'pieChart',
-    sample: Samples.benthicPieChartData
+    type: 'pieChart'
   },
   {
     name: 'beltfish',
     title: 'Fish Belt',
     property: 'biomass_kgha_tg',
-    type: 'pieChart',
-    sample: Samples.fishBeltPieChartData
+    type: 'pieChart'
   }
 ];
+
 const containerStyle = makeStyles(theme => ({
   root: {
     paddingBottom: theme.spacing(2),
@@ -96,6 +93,11 @@ const SiteDetail = ({ selectSite }) => {
     const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
     const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
     const privatePolicy = dataPolicy === 'private';
+    const generatePrivateLabel = protocol => {
+      const protocolName =
+        protocol === 'beltfish' ? 'Fish Belt' : 'Benthic: PIT, LIT and Habitat Complexity';
+      return `This data is unavailable because ${protocolName} Sample Units are set to Private for this project.`;
+    };
 
     const defaultBody = [
       { x: 'Herbivore-detritivore', y: 77.9 },
@@ -156,6 +158,7 @@ const SiteDetail = ({ selectSite }) => {
         pieContent={sourceContent}
         legendContent={sourceLegendData}
         privatePolicy={privatePolicy}
+        privateLabel={generatePrivateLabel(protocol.name)}
         sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
         title={protocol.title}
         type={protocol.type}

@@ -65,15 +65,14 @@ const privateColorScale = [
   '#708090'
 ];
 
-const privateLabel = `This data is unavailable because Benthic: PIT, LIT and Habitat Complexity are set to Private for this project.`;
+// const privateLabel = `This data is unavailable because Benthic: PIT, LIT and Habitat Complexity are set to Private for this project.`;
 
-const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
+const PieChart = ({ chartContent, chartLegend, privatePolicy, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax1299 = useMediaQuery('(max-width:1299px)');
   const mediaMin1300 = useMediaQuery('(min-width:1300px)');
   const mediaMax1600 = useMediaQuery('(max-width:1600px)');
   const mediaMin1300Max1600 = mediaMin1300 && mediaMax1600;
-  const privatePolicyCheck = chartPolicy === 'private';
 
   const labelControl = (
     <LabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
@@ -86,7 +85,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
     </LabelContainer>
   );
 
-  const privateLabelControl = privatePolicyCheck && (
+  const privateLabelControl = privatePolicy && (
     <PrivateLabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
       <PrivateLabel content={privateLabel} />
     </PrivateLabelContainer>
@@ -95,12 +94,12 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
   return (
     <>
       {privateLabelControl}
-      <ImageStyle policy={privatePolicyCheck}>
+      <ImageStyle policy={privatePolicy}>
         {labelControl}
         <svg width="100%" height={mediaMax1299 ? 330 : 360}>
           <VictoryLegend
             standalone={mediaMax1600}
-            colorScale={privatePolicyCheck ? privateColorScale : defaultColorScale}
+            colorScale={privatePolicy ? privateColorScale : defaultColorScale}
             x={310}
             title={chartLegend.title}
             centerTitle
@@ -119,7 +118,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
               left: mediaMin1300Max1600 ? 100 : 40
             }}
             labels={() => null}
-            colorScale={privatePolicyCheck ? privateColorScale : defaultColorScale}
+            colorScale={privatePolicy ? privateColorScale : defaultColorScale}
             data={chartContent}
             events={[
               {
