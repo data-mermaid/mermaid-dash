@@ -9,7 +9,7 @@ const CardChartContent = ({
   chartType,
   pieChartContent,
   pieChartLegend,
-  privatePolicy,
+  setToPrivate,
   privateLabel,
   histogram
 }) => {
@@ -20,7 +20,7 @@ const CardChartContent = ({
       <PieChart
         chartContent={pieChartContent}
         chartLegend={pieChartLegend}
-        privatePolicy={privatePolicy}
+        setToPrivate={setToPrivate}
         privateLabel={privateLabel}
       />
     );

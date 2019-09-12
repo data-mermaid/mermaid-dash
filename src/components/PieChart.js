@@ -65,9 +65,7 @@ const privateColorScale = [
   '#708090'
 ];
 
-// const privateLabel = `This data is unavailable because Benthic: PIT, LIT and Habitat Complexity are set to Private for this project.`;
-
-const PieChart = ({ chartContent, chartLegend, privatePolicy, privateLabel }) => {
+const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax1299 = useMediaQuery('(max-width:1299px)');
   const mediaMin1300 = useMediaQuery('(min-width:1300px)');
@@ -85,7 +83,7 @@ const PieChart = ({ chartContent, chartLegend, privatePolicy, privateLabel }) =>
     </LabelContainer>
   );
 
-  const privateLabelControl = privatePolicy && (
+  const privateLabelControl = setToPrivate && (
     <PrivateLabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
       <PrivateLabel content={privateLabel} />
     </PrivateLabelContainer>
@@ -94,12 +92,12 @@ const PieChart = ({ chartContent, chartLegend, privatePolicy, privateLabel }) =>
   return (
     <>
       {privateLabelControl}
-      <ImageStyle policy={privatePolicy}>
+      <ImageStyle policy={setToPrivate}>
         {labelControl}
         <svg width="100%" height={mediaMax1299 ? 330 : 360}>
           <VictoryLegend
             standalone={mediaMax1600}
-            colorScale={privatePolicy ? privateColorScale : defaultColorScale}
+            colorScale={setToPrivate ? privateColorScale : defaultColorScale}
             x={310}
             title={chartLegend.title}
             centerTitle
@@ -118,7 +116,7 @@ const PieChart = ({ chartContent, chartLegend, privatePolicy, privateLabel }) =>
               left: mediaMin1300Max1600 ? 100 : 40
             }}
             labels={() => null}
-            colorScale={privatePolicy ? privateColorScale : defaultColorScale}
+            colorScale={setToPrivate ? privateColorScale : defaultColorScale}
             data={chartContent}
             events={[
               {

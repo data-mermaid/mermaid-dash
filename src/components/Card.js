@@ -32,7 +32,7 @@ const Card = ({
   dataPolicy,
   protocol,
   protocolName,
-  privatePolicy,
+  setToPrivate,
   privateLabel,
   histogram,
   title,
@@ -56,12 +56,12 @@ const Card = ({
     return hardCoralPercentage.toFixed(2);
   };
 
-  const sampleUnitResult = !privatePolicy && (
+  const sampleUnitResult = !setToPrivate && (
     <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
   );
 
   const subAttributeItem =
-    !privatePolicy &&
+    !setToPrivate &&
     (protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
       <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
     ) : (
@@ -81,7 +81,7 @@ const Card = ({
   // eslint-disable-next-line
   // const downLoadButton = type === 'pieChart' && (
   //   <ThemeProvider theme={theme.cardButton}>
-  //     <ButtonStyle notAllowed={privatePolicy} boxShadow={true}>
+  //     <ButtonStyle notAllowed={setToPrivate} boxShadow={true}>
   //       <Box p={1} display="flex" justifyContent="center">
   //         <DownloadIcon fontSize="small" className={classes.iconProperty} />
   //         <Typography variant="body1" display="inline">
@@ -99,7 +99,7 @@ const Card = ({
         chartType={type}
         pieChartContent={pieChartContent}
         pieChartLegend={pieChartLegend}
-        privatePolicy={privatePolicy}
+        setToPrivate={setToPrivate}
         privateLabel={privateLabel}
         histogram={histogram}
       />
@@ -131,7 +131,7 @@ Card.propTypes = {
   dataPolicy: PropTypes.string,
   protocol: PropTypes.object,
   protocolName: PropTypes.string,
-  privatePolicy: PropTypes.bool,
+  setToPrivate: PropTypes.bool,
   privateLabel: PropTypes.string,
   histogram: PropTypes.array,
   title: PropTypes.string,

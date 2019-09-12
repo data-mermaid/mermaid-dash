@@ -94,7 +94,7 @@ const SiteDetail = ({ selectSite }) => {
   const SiteDetailCards = protocolsArray.map(protocol => {
     const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
     const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
-    const privatePolicy = dataPolicy === 'private';
+    const setToPrivate = dataPolicy === 'private';
 
     const generatePrivateLabel = protocol => {
       const protocolName =
@@ -128,10 +128,10 @@ const SiteDetail = ({ selectSite }) => {
 
     const protocolContent =
       loadedSiteProtocol && loadedSite.properties.protocols[protocol.name][protocol.property];
-    const sourceContent = privatePolicy
+    const sourceContent = setToPrivate
       ? pieChartDefault.body
       : convertContent(protocolContent, protocol.name);
-    const sourceLegendData = privatePolicy
+    const sourceLegendData = setToPrivate
       ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
       : convertLegend(protocolContent, protocol.name);
 
@@ -142,7 +142,7 @@ const SiteDetail = ({ selectSite }) => {
         protocolName={protocol.name}
         pieChartContent={sourceContent}
         pieChartLegend={sourceLegendData}
-        privatePolicy={privatePolicy}
+        setToPrivate={setToPrivate}
         privateLabel={generatePrivateLabel(protocol.name)}
         sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
         title={protocol.title}
