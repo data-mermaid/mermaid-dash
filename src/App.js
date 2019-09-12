@@ -259,13 +259,13 @@ class App extends Component {
     const protocolCount = protocols.map(protocol => {
       const hasProtocols = Object.getOwnPropertyNames(protocol).length !== 0;
       const result =
-        hasProtocols && (protocol.benthiclit || protocol.benthicpit)
-          ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
-          : null;
+        hasProtocols &&
+        (protocol.benthiclit || protocol.benthicpit) &&
+        this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit);
       return result;
     });
 
-    const filteredProtocol = protocolCount.filter(val => val !== null);
+    const filteredProtocol = protocolCount.filter(val => val !== undefined);
 
     const sumOfCoralCover = filteredProtocol.reduce((acc, val) => acc + val, 0);
     const avgCoralCover = (sumOfCoralCover / filteredProtocol.length) * 100;
