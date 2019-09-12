@@ -12,7 +12,6 @@ If you've been onboarded, or have worked with a Node-based project that uses NPM
 A .env file is required in the root, with these vars defined:
 SKIP_PREFLIGHT_CHECK=true
 REACT_APP_API_URL=
-REACT_APP_MAPBOX_TOKEN=
 
 #### Node
 

@@ -1,108 +1,182 @@
-import React, { Component } from 'react';
-import summary from '../apis/summary';
+import React, { useState } from 'react';
+
+import AdminIcon from '@material-ui/icons/Person';
+import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg';
+
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+
+import { TextLoader } from './Loader';
+
+import SiteDetailSubItems from './SiteDetailSubItems';
+import CoralAttributes from './CoralAttributes';
+import SiteNote from './SiteNote';
+import InformationCard from './InformationCard';
+import { pieChartDefault } from '../constants/sample-data';
+
 import PropTypes from 'prop-types';
 
-import { Segment } from 'semantic-ui-react';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
+const protocolsArray = [
+  {
+    name: 'benthiclit',
+    title: 'Benthic[LIT] Condition, % Cover',
+    property: 'coral_cover',
+    type: 'pieChart'
+  },
+  {
+    name: 'benthicpit',
+    title: 'Benthic[PIT] Condition, % Cover',
+    property: 'coral_cover',
+    type: 'pieChart'
+  },
+  {
+    name: 'beltfish',
+    title: 'Fish Belt',
+    property: 'biomass_kgha_tg',
+    type: 'pieChart'
+  }
+];
 
-class SiteDetail extends Component {
-  state = {
-    loadedSite: null
-  };
+const containerStyle = makeStyles(theme => ({
+  root: {
+    paddingBottom: theme.spacing(2),
+    paddingLeft: theme.spacing(1)
+  },
+  siteWrapper: {
+    padding: theme.spacing(2, 2),
+    marginBottom: theme.spacing(2),
+    borderRadius: 0
+  },
+  reefProperty: {
+    padding: '8px 8px 8px 0'
+  }
+}));
 
-  componentDidMount() {
-    this.loadSiteData();
+const SiteDetail = ({ selectSite }) => {
+  const classes = containerStyle();
+  const [loadedSite, setLoadedSite] = useState(null);
+
+  if (selectSite && (!loadedSite || loadedSite.id !== selectSite.id)) {
+    setLoadedSite(selectSite);
   }
 
-  componentDidUpdate() {
-    this.loadSiteData();
-  }
+  const siteAdmins = loadedSite && loadedSite.properties.project_admins && (
+    <Box borderTop={1} pt={1} display="flex">
+      <AdminIcon />
+      <Typography variant="body1">
+        Admins:{' '}
+        {loadedSite.properties.project_admins
+          .map(admin => {
+            return admin.name;
+          })
+          .join(', ')}
+      </Typography>
+    </Box>
+  );
 
-  async loadSiteData() {
-    const { selectSite } = this.props;
-    const { loadedSite } = this.state;
+  const siteOrganizations = loadedSite && loadedSite.properties.tags && (
+    <Box pt={1} display="flex">
+      <OrganizationIcon width="20px" height="20px" />
+      <Typography variant="body1">
+        Organizations:{' '}
+        {loadedSite.properties.tags
+          .map(organization => {
+            return organization.name;
+          })
+          .join(', ')}
+      </Typography>
+    </Box>
+  );
 
-    if (selectSite) {
-      if (!loadedSite || (loadedSite && loadedSite.id !== selectSite.key)) {
-        const { data: loadedSite } = await summary.get('/sites/' + selectSite.key);
-        this.setState({ loadedSite });
-      }
-    }
-  }
+  const SiteDetailCards = protocolsArray.map(protocol => {
+    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
+    const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
+    const setToPrivate = dataPolicy === 'private';
 
-  render() {
-    const site = this.state.loadedSite ? (
-      // Have tried wraper from material ui, it doesn't play well with the map component I created. Stay with <Segment> for now, would love some advice as I refactor it again
-      <Segment>
-        <Grid container>
-          <Grid item xs={6}>
-            <Typography variant="h4">
-              <Box>{this.state.loadedSite.properties.site_name}</Box>
-            </Typography>
-            <Typography component="div" variant="body1">
-              <Box>{this.state.loadedSite.properties.country_name}</Box>
-            </Typography>
-            <Typography component="div" variant="body1">
-              <Box>
-                {this.state.loadedSite.properties.management_regimes
-                  ? this.state.loadedSite.properties.management_regimes
-                      .map(mr => {
-                        return mr.name;
-                      })
-                      .join(', ')
-                  : 'No managements'}
-              </Box>
-            </Typography>
-          </Grid>
-          <Grid item xs={6} align="right">
-            <Button variant="contained" color="primary">
-              Contact Admins
-            </Button>
-          </Grid>
-        </Grid>
-        <Typography component="div" variant="body2">
-          <Box borderTop={1}>
-            Admins:{' '}
-            {this.state.loadedSite.properties.project_admins
-              .map(admin => {
-                return admin.name;
-              })
-              .join(', ')}
-          </Box>
-        </Typography>
-        <Typography component="div" variant="body2">
-          <Box display="flex" flexDirection="row" justifyContent="center">
-            <Box p={1} m={1} border={1} borderRadius={13}>
-              Exposure: {this.state.loadedSite.properties.exposure}
-            </Box>
-            <Box p={1} m={1} border={1} borderRadius={13}>
-              Reef Type: {this.state.loadedSite.properties.reef_type}
-            </Box>
-            <Box p={1} m={1} border={1} borderRadius={13}>
-              Reef Zone: {this.state.loadedSite.properties.reef_zone}
-            </Box>
-          </Box>
-        </Typography>
-        <Typography variant="h6">Notes</Typography>
-        <Typography variant="body2">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde
-          suscipit, quam beatae rerum inventore consectetur, neque doloribus, cupiditate numquam
-          dignissimos laborum fugiat deleniti? Eum quasi quidem quibusdam.
-        </Typography>
-      </Segment>
-    ) : null;
+    const generatePrivateLabel = protocol => {
+      const protocolName =
+        protocol === 'beltfish' ? 'Fish Belt' : 'Benthic: PIT, LIT and Habitat Complexity';
+      return `This data is unavailable because ${protocolName} Sample Units are set to Private for this project.`;
+    };
 
-    return <div>{site}</div>;
-  }
-}
+    const convertContent = (content, protocol) => {
+      return (
+        content &&
+        content.map(item => {
+          const attribute = Object.keys(item)[0];
+          const value =
+            protocol === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
+          return { x: attribute, y: value };
+        })
+      );
+    };
+
+    const convertLegend = (content, protocol) => {
+      const title = protocol === 'beltfish' ? 'Tropic group' : 'Benthic category';
+      const data =
+        content &&
+        content.map(item => {
+          const attribute = Object.keys(item)[0];
+          return { name: attribute };
+        });
+
+      return { title, data };
+    };
+
+    const protocolContent =
+      loadedSiteProtocol && loadedSite.properties.protocols[protocol.name][protocol.property];
+    const sourceContent = setToPrivate
+      ? pieChartDefault.body
+      : convertContent(protocolContent, protocol.name);
+    const sourceLegendData = setToPrivate
+      ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
+      : convertLegend(protocolContent, protocol.name);
+
+    const cardsComponent = loadedSiteProtocol && (
+      <InformationCard
+        dataPolicy={dataPolicy}
+        protocol={loadedSiteProtocol}
+        protocolName={protocol.name}
+        pieChartContent={sourceContent}
+        pieChartLegend={sourceLegendData}
+        setToPrivate={setToPrivate}
+        privateLabel={generatePrivateLabel(protocol.name)}
+        sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
+        title={protocol.title}
+        type={protocol.type}
+      />
+    );
+
+    return <div key={protocol.name}>{cardsComponent}</div>;
+  });
+
+  const site = loadedSite ? (
+    <div className={classes.root}>
+      <Paper className={classes.siteWrapper}>
+        <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+        {siteAdmins}
+        {siteOrganizations}
+        <CoralAttributes loadedSiteProperties={loadedSite.properties} />
+        <SiteNote loadedSiteProperties={loadedSite.properties} />
+      </Paper>
+      {SiteDetailCards}
+    </div>
+  ) : (
+    <Paper className={classes.siteWrapper}>
+      <TextLoader />
+    </Paper>
+  );
+
+  return <div>{site}</div>;
+};
 
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
-    key: PropTypes.string.isRequired
-  })
+    id: PropTypes.string.isRequired
+  }),
+  classes: PropTypes.object
 };
 
 export default SiteDetail;

@@ -2,50 +2,86 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import ToggleMap from './ToggleMap';
+import CheckBoxFullMap from './CheckBoxFullMap';
+
+import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
 
 const useStyles = makeStyles(theme => ({
-  menuItem: {
-    textAlign: 'center'
+  appBarProperty: {
+    background: '#2C3742',
+    height: 49,
+    justifyContent: 'center'
   },
-  color: {
-    background: '#2C3742'
+  toolBarProperty: {
+    padding: 0
   }
 }));
 
-const HeaderMui = props => {
+const Header = ({ toggle }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static" className={classes.color}>
-      <Toolbar>
-        <Grid container>
-          <Grid item xs={7}>
-            <Typography variant="h4">MERMAID</Typography>
-          </Grid>
-          <Grid container justify="flex-end" alignItems="flex-start" item xs={5}>
-            <Grid item xs={2} className={classes.menuItem}>
-              <Typography variant="overline">COLLECT</Typography>
-            </Grid>
-            <Grid item xs={3} className={classes.menuItem}>
-              <Typography variant="overline">ABOUT THESE DATA</Typography>
-            </Grid>
-            <Grid item xs={2} className={classes.menuItem}>
-              <Typography variant="overline">PRIVACY</Typography>
-            </Grid>
-            <Grid item xs={2} className={classes.menuItem}>
-              <Typography variant="overline">CONTACT</Typography>
-            </Grid>
-            <Grid item xs={3} className={classes.menuItem}>
-              <ToggleMap toggle={props.toggle}>Show Full Map</ToggleMap>
-            </Grid>
-          </Grid>
-        </Grid>
+    <AppBar position="static" className={classes.appBarProperty}>
+      <Toolbar className={classes.toolBarProperty}>
+        <Box p={1} flexGrow={1}>
+          <MermaidLogo height="38px" />
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://collect.datamermaid.org"
+              rel="noopener noreferrer"
+            >
+              COLLECT
+            </a>
+          </Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://datamermaid.org/about/"
+              rel="noopener noreferrer"
+            >
+              ABOUT THIS DATA
+            </a>
+          </Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://datamermaid.org/terms-of-service/"
+              rel="noopener noreferrer"
+            >
+              PRIVACY
+            </a>
+          </Typography>
+        </Box>
+        <Box p={2}>
+          <Typography variant="overline">
+            <a
+              target="_blank"
+              style={{ color: 'white' }}
+              href="https://datamermaid.org/contact/"
+              rel="noopener noreferrer"
+            >
+              CONTACT
+            </a>
+          </Typography>
+        </Box>
+        <Box>
+          <CheckBoxFullMap toggle={toggle} />
+        </Box>
       </Toolbar>
     </AppBar>
   );
 };
 
-export default HeaderMui;
+export default Header;
