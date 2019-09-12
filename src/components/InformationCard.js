@@ -1,17 +1,14 @@
 import React from 'react';
 
-// import DownloadIcon from '@material-ui/icons/CloudDownload';
-// import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 import { TextLoader, ChartLoader } from './Loader';
-// import { theme } from './theme';
-// import { ButtonStyle } from './Button';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
+import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
 
@@ -28,7 +25,7 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const Card = ({
+const InformationCard = ({
   dataPolicy,
   protocol,
   protocolName,
@@ -80,17 +77,11 @@ const Card = ({
 
   // eslint-disable-next-line
   // const downLoadButton = type === 'pieChart' && (
-  //   <ThemeProvider theme={theme.cardButton}>
-  //     <ButtonStyle notAllowed={setToPrivate} boxShadow={true}>
-  //       <Box p={1} display="flex" justifyContent="center">
-  //         <DownloadIcon fontSize="small" className={classes.iconProperty} />
-  //         <Typography variant="body1" display="inline">
-  //           Download Data
-  //         </Typography>
-  //       </Box>
-  //     </ButtonStyle>
-  //   </ThemeProvider>
+  //   <Box>
+  //     <DownloadButton setToPrivate={setToPrivate}/>
+  //   </Box>
   // );
+
   const contentItem =
     type === 'text' ? (
       <CartTextContent textContent={textContent} />
@@ -116,7 +107,7 @@ const Card = ({
             {subItems}
           </Box>
           {/* temporarily Hide download data buttons */}
-          {/* <Box>{downLoadButton}</Box> */}
+          {/* {downLoadButton} */}
         </Box>
         {contentItem}
       </Paper>
@@ -127,7 +118,7 @@ const Card = ({
   return <div className={classes.root}>{cardContent}</div>;
 };
 
-Card.propTypes = {
+InformationCard.propTypes = {
   dataPolicy: PropTypes.string,
   protocol: PropTypes.object,
   protocolName: PropTypes.string,
@@ -142,4 +133,4 @@ Card.propTypes = {
   textContent: PropTypes.object
 };
 
-export default Card;
+export default InformationCard;

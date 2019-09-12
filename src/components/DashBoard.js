@@ -18,7 +18,7 @@ import styled from 'styled-components/macro';
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
 import MetricCards from './MetricCardsContainer';
-import Card from './Card';
+import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
 import Constants from '../sample_data/constants';
@@ -145,13 +145,13 @@ const DashBoard = ({
   const dashboard = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
       <div>
-        <Card
+        <InformationCard
           title={Constants.summary.title}
           type={Constants.summary.type}
           textContent={Constants.summary}
         />
         <MetricCards metrics={metrics} isLoading={isLoading} />
-        <Card
+        <InformationCard
           title={Constants.histogram.title}
           type={Constants.histogram.type}
           histogram={histogram}

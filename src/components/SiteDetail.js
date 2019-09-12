@@ -13,7 +13,7 @@ import { TextLoader } from './Loader';
 import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
-import Card from './Card';
+import InformationCard from './InformationCard';
 import Constants from '../sample_data/constants';
 
 import PropTypes from 'prop-types';
@@ -136,7 +136,7 @@ const SiteDetail = ({ selectSite }) => {
       : convertLegend(protocolContent, protocol.name);
 
     const cardsComponent = loadedSiteProtocol && (
-      <Card
+      <InformationCard
         dataPolicy={dataPolicy}
         protocol={loadedSiteProtocol}
         protocolName={protocol.name}
