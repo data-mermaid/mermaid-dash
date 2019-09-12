@@ -181,9 +181,9 @@ class LeafletMap extends Component {
       return item.options.marker;
     });
 
-    const coordinatesArr = markersArr.map(marker => {
-      const latStr = `${this.toFixedNoRounding(marker.geometry.coordinates[0], 3)}`;
-      const lngStr = `${this.toFixedNoRounding(marker.geometry.coordinates[1], 3)}`;
+    const coordinatesArr = markersArr.map(({ geometry }) => {
+      const latStr = `${this.toFixedNoRounding(geometry.coordinates[0], 3)}`;
+      const lngStr = `${this.toFixedNoRounding(geometry.coordinates[1], 3)}`;
       return `${latStr},${lngStr}`;
     });
     const siteNamesArr = markersArr.map(({ properties }) => properties.site_name);
@@ -192,7 +192,7 @@ class LeafletMap extends Component {
     const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
 
     //if all sites property are the same (equals to 1), return true
-    return coordinatesSizeResult || siteNamesSizeResult;
+    return coordinatesSizeResult && siteNamesSizeResult;
   }
 
   checkSimilarBoundingBox(box1, box2) {
