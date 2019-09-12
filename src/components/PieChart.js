@@ -65,24 +65,25 @@ const privateColorScale = [
   '#708090'
 ];
 
-const privateLabel = `This data is unavailable because Benthic: PIT, LIT and Habitat Complexity are set to Private for this project.`;
-
-const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
-  const [centerLabel, setCenterLabel] = useState({ number: null, label: null });
+const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => {
+  const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax1299 = useMediaQuery('(max-width:1299px)');
   const mediaMin1300 = useMediaQuery('(min-width:1300px)');
   const mediaMax1600 = useMediaQuery('(max-width:1600px)');
   const mediaMin1300Max1600 = mediaMin1300 && mediaMax1600;
-  const privatePolicyCheck = chartPolicy === 'private';
 
   const labelControl = (
     <LabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
       <Label content={centerLabel.label} />
-      <Label content={centerLabel.number ? `${centerLabel.number}%` : centerLabel.number} />
+      {centerLabel.category !== 'Tropic group' ? (
+        <Label content={centerLabel.number && `${centerLabel.number}%`} />
+      ) : (
+        <Label content={centerLabel.number && `${centerLabel.number}kg/ha`} />
+      )}
     </LabelContainer>
   );
 
-  const privateLabelControl = privatePolicyCheck && (
+  const privateLabelControl = setToPrivate && (
     <PrivateLabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
       <PrivateLabel content={privateLabel} />
     </PrivateLabelContainer>
@@ -91,12 +92,12 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
   return (
     <>
       {privateLabelControl}
-      <ImageStyle policy={privatePolicyCheck}>
+      <ImageStyle policy={setToPrivate}>
         {labelControl}
         <svg width="100%" height={mediaMax1299 ? 330 : 360}>
           <VictoryLegend
             standalone={mediaMax1600}
-            colorScale={privatePolicyCheck ? privateColorScale : defaultColorScale}
+            colorScale={setToPrivate ? privateColorScale : defaultColorScale}
             x={310}
             title={chartLegend.title}
             centerTitle
@@ -115,7 +116,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
               left: mediaMin1300Max1600 ? 100 : 40
             }}
             labels={() => null}
-            colorScale={privatePolicyCheck ? privateColorScale : defaultColorScale}
+            colorScale={setToPrivate ? privateColorScale : defaultColorScale}
             data={chartContent}
             events={[
               {
@@ -130,6 +131,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
                             datum: { x: label, y: number }
                           } = data;
                           setCenterLabel({
+                            category: chartLegend.title,
                             number,
                             label
                           });
@@ -153,6 +155,7 @@ const PieChart = ({ chartContent, chartLegend, chartPolicy }) => {
                         target: 'data',
                         mutation: () => {
                           setCenterLabel({
+                            category: null,
                             number: null,
                             label: null
                           });

@@ -340,7 +340,7 @@ class App extends Component {
           showFullMap={this.state.showFullMap}
           showDropDown={this.state.showDropDown}
           metrics={this.state.metrics}
-          histogram={this.state.histogram}
+          histogramContent={this.state.histogram}
           backButtonHandler={this.backButtonHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomAnimate={this.state.zoomAnimate}

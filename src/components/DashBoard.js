@@ -18,10 +18,10 @@ import styled from 'styled-components/macro';
 import { ButtonStyle } from './Button';
 import { theme } from './theme';
 import MetricCards from './MetricCardsContainer';
-import Card from './Card';
+import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
-import Samples from '../sample_data/sampleSummaryStatistic';
+import { summary, histogram } from '../constants/summary-information';
 
 import PropTypes from 'prop-types';
 
@@ -98,7 +98,7 @@ const DashBoard = ({
   siteDetail,
   siteDropDownData,
   metrics,
-  histogram,
+  histogramContent,
   fullMapZoomHandler,
   isLoading
 }) => {
@@ -145,9 +145,13 @@ const DashBoard = ({
   const dashboard = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
       <div>
-        <Card content={Samples.summary} />
+        <InformationCard title={summary.title} type={summary.type} textContent={summary} />
         <MetricCards metrics={metrics} isLoading={isLoading} />
-        <Card content={Samples.barChartData} histogram={histogram} />
+        <InformationCard
+          title={histogram.title}
+          type={histogram.type}
+          histogramContent={histogramContent}
+        />
       </div>
     </Slide>
   );

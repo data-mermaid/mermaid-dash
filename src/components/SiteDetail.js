@@ -13,10 +13,31 @@ import { TextLoader } from './Loader';
 import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
-import Card from './Card';
-import Samples from '../sample_data/sampleSummaryStatistic';
+import InformationCard from './InformationCard';
+import { pieChartDefault } from '../constants/sample-data';
 
 import PropTypes from 'prop-types';
+
+const protocolsArray = [
+  {
+    name: 'benthiclit',
+    title: 'Benthic[LIT] Condition, % Cover',
+    property: 'coral_cover',
+    type: 'pieChart'
+  },
+  {
+    name: 'benthicpit',
+    title: 'Benthic[PIT] Condition, % Cover',
+    property: 'coral_cover',
+    type: 'pieChart'
+  },
+  {
+    name: 'beltfish',
+    title: 'Fish Belt',
+    property: 'biomass_kgha_tg',
+    type: 'pieChart'
+  }
+];
 
 const containerStyle = makeStyles(theme => ({
   root: {
@@ -69,23 +90,67 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
-  const benthicCard = loadedSite &&
-    (loadedSite.properties.protocols.benthiclit || loadedSite.properties.protocols.benthicpit) && (
-      <Card
-        content={Samples.benthicPieChartData}
-        dataPolicy={loadedSite.properties.data_policy_benthiclit}
-        protocols={loadedSite.properties.protocols}
+  const SiteDetailCards = protocolsArray.map(protocol => {
+    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
+    const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
+    const setToPrivate = dataPolicy === 'private';
+
+    const generatePrivateLabel = protocol => {
+      const protocolName =
+        protocol === 'beltfish' ? 'Fish Belt' : 'Benthic: PIT, LIT and Habitat Complexity';
+      return `This data is unavailable because ${protocolName} Sample Units are set to Private for this project.`;
+    };
+
+    const convertContent = (content, protocol) => {
+      return (
+        content &&
+        content.map(item => {
+          const attribute = Object.keys(item)[0];
+          const value =
+            protocol === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
+          return { x: attribute, y: value };
+        })
+      );
+    };
+
+    const convertLegend = (content, protocol) => {
+      const title = protocol === 'beltfish' ? 'Tropic group' : 'Benthic category';
+      const data =
+        content &&
+        content.map(item => {
+          const attribute = Object.keys(item)[0];
+          return { name: attribute };
+        });
+
+      return { title, data };
+    };
+
+    const protocolContent =
+      loadedSiteProtocol && loadedSite.properties.protocols[protocol.name][protocol.property];
+    const sourceContent = setToPrivate
+      ? pieChartDefault.body
+      : convertContent(protocolContent, protocol.name);
+    const sourceLegendData = setToPrivate
+      ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
+      : convertLegend(protocolContent, protocol.name);
+
+    const cardsComponent = loadedSiteProtocol && (
+      <InformationCard
+        dataPolicy={dataPolicy}
+        protocol={loadedSiteProtocol}
+        protocolName={protocol.name}
+        pieChartContent={sourceContent}
+        pieChartLegend={sourceLegendData}
+        setToPrivate={setToPrivate}
+        privateLabel={generatePrivateLabel(protocol.name)}
+        sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
+        title={protocol.title}
+        type={protocol.type}
       />
     );
 
-  const fishbeltCard = loadedSite && loadedSite.properties.protocols.beltfish && (
-    <Card
-      content={Samples.fishBeltPieChartData}
-      dataPolicy={loadedSite.properties.data_policy_beltfish}
-      protocols={loadedSite.properties.protocols}
-      sampleUnits={loadedSite.properties.protocols.beltfish.sample_unit_count}
-    />
-  );
+    return <div key={protocol.name}>{cardsComponent}</div>;
+  });
 
   const site = loadedSite ? (
     <div className={classes.root}>
@@ -96,8 +161,7 @@ const SiteDetail = ({ selectSite }) => {
         <CoralAttributes loadedSiteProperties={loadedSite.properties} />
         <SiteNote loadedSiteProperties={loadedSite.properties} />
       </Paper>
-      {benthicCard}
-      {fishbeltCard}
+      {SiteDetailCards}
     </div>
   ) : (
     <Paper className={classes.siteWrapper}>
