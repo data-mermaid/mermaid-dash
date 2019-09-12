@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +18,7 @@ const cardStyle = makeStyles(theme => ({
   },
   title: {
     borderTop: '1px solid',
-    padding: theme.spacing(1, 1)
+    padding: '12px 4px 4px 4px'
   },
   body: {
     color: '#5080AD',
@@ -29,6 +31,7 @@ const cardStyle = makeStyles(theme => ({
 
 const MetricCard = ({ content: { title, count }, isLoading }) => {
   const classes = cardStyle();
+  const mediaMin1800 = useMediaQuery('(min-width:1800px)');
 
   const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;
 
@@ -45,9 +48,11 @@ const MetricCard = ({ content: { title, count }, isLoading }) => {
   return (
     <Paper className={classes.root}>
       <Typography variant="h2">{contentItem}</Typography>
-      <Typography variant="subtitle1" component="div">
-        {titleItem}
-      </Typography>
+      {mediaMin1800 ? (
+        <Typography variant="h5">{titleItem}</Typography>
+      ) : (
+        <Typography variant="h6">{titleItem}</Typography>
+      )}
     </Paper>
   );
 };
