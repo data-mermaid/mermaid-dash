@@ -76,9 +76,9 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
     <LabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
       <Label content={centerLabel.label} />
       {centerLabel.category !== 'Tropic group' ? (
-        <Label content={centerLabel.number && `${centerLabel.number}%`} />
+        <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}%`} />
       ) : (
-        <Label content={centerLabel.number && `${centerLabel.number}kg/ha`} />
+        <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}kg/ha`} />
       )}
     </LabelContainer>
   );

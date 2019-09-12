@@ -21,13 +21,13 @@ import PropTypes from 'prop-types';
 const protocolsArray = [
   {
     name: 'benthiclit',
-    title: 'Benthic[LIT] Condition, % Cover',
+    title: 'Benthic[LIT] % Cover',
     property: 'coral_cover',
     type: 'pieChart'
   },
   {
     name: 'benthicpit',
-    title: 'Benthic[PIT] Condition, % Cover',
+    title: 'Benthic[PIT] % Cover',
     property: 'coral_cover',
     type: 'pieChart'
   },
