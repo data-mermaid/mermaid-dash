@@ -163,15 +163,6 @@ class LeafletMap extends Component {
     }
   }
 
-  checkSimilarBoundingBox(box1, box2) {
-    const boxLat1 = box1 && box1.lat;
-    const boxLat2 = box2 && box2.lat;
-    if (boxLat1 === boxLat2) {
-      return true;
-    }
-    return false;
-  }
-
   //returns a stringified number similar to toFixed
   toFixedNoRounding = function(number, n) {
     const regToSetSignificant = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
@@ -185,6 +176,7 @@ class LeafletMap extends Component {
   };
 
   checkSameSiteInACluster(arr) {
+    //check sites in cluster by their coordinates and names
     const markersArr = arr.map(item => {
       return item.options.marker;
     });
@@ -194,15 +186,22 @@ class LeafletMap extends Component {
       const lngStr = `${this.toFixedNoRounding(marker.geometry.coordinates[1], 3)}`;
       return `${latStr},${lngStr}`;
     });
+    const siteNamesArr = markersArr.map(({ properties }) => properties.site_name);
 
-    const siteNamesArr = markersArr.map(marker => {
-      return marker.properties.site_name;
-    });
+    const coordinatesSizeResult = new Set(coordinatesArr).size === 1;
+    const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
 
-    const coordinatesSizeResult = new Set(coordinatesArr).size;
-    const siteNamesSizeResult = new Set(siteNamesArr).size;
+    //if all sites property are the same (equals to 1), return true
+    return coordinatesSizeResult || siteNamesSizeResult;
+  }
 
-    return coordinatesSizeResult === 1 || siteNamesSizeResult === 1;
+  checkSimilarBoundingBox(box1, box2) {
+    const boxLat1 = box1 && box1.lat;
+    const boxLat2 = box2 && box2.lat;
+    if (boxLat1 === boxLat2) {
+      return true;
+    }
+    return false;
   }
 
   createBoundingBox(boundingBox) {
@@ -285,15 +284,18 @@ class LeafletMap extends Component {
 
     markersCluster.on('clusterclick', e => {
       const markerCluster = e.layer.getAllChildMarkers();
-      fullMapZoomHandler(false);
-      removeHighlight();
+      const currentZoom = e.layer._zoom;
 
-      if (this.checkSameSiteInACluster(markerCluster)) {
+      //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
+      if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
         const markersData = markerCluster.map(item => {
           return item.options.marker;
         });
         siteDropDownHandler(markersData);
       }
+
+      fullMapZoomHandler(false);
+      removeHighlight();
     });
 
     markersData.forEach(marker => {
