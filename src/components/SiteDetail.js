@@ -14,11 +14,10 @@ import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
-import Constants from '../sample_data/constants';
+import { pieChartDefault } from '../constants/sample-data';
 
 import PropTypes from 'prop-types';
 
-const pieChartDefault = Constants.pieChartDefault;
 const protocolsArray = [
   {
     name: 'benthiclit',

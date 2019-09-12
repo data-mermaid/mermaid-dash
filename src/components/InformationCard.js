@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
-import DownloadButton from './DownloadButton';
+// import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
 
@@ -31,7 +31,7 @@ const InformationCard = ({
   protocolName,
   setToPrivate,
   privateLabel,
-  histogram,
+  histogramContent,
   title,
   type,
   sampleUnitCounts,
@@ -92,12 +92,12 @@ const InformationCard = ({
         pieChartLegend={pieChartLegend}
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
-        histogram={histogram}
+        histogramContent={histogramContent}
       />
     );
 
   const cardContent =
-    histogram || pieChartContent || textContent ? (
+    histogramContent || pieChartContent || textContent ? (
       <Paper className={classes.cardWrapper}>
         <Box display="flex" borderBottom={1}>
           <Box flexGrow={1}>
@@ -124,7 +124,7 @@ InformationCard.propTypes = {
   protocolName: PropTypes.string,
   setToPrivate: PropTypes.bool,
   privateLabel: PropTypes.string,
-  histogram: PropTypes.array,
+  histogramContent: PropTypes.array,
   title: PropTypes.string,
   type: PropTypes.string,
   sampleUnitCounts: PropTypes.number,

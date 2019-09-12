@@ -11,11 +11,11 @@ const CardChartContent = ({
   pieChartLegend,
   setToPrivate,
   privateLabel,
-  histogram
+  histogramContent
 }) => {
   const chart =
     chartType === 'histogramChart' ? (
-      <BarChart chartContent={histogram} />
+      <BarChart chartContent={histogramContent} />
     ) : (
       <PieChart
         chartContent={pieChartContent}

@@ -21,7 +21,7 @@ import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
-import Constants from '../sample_data/constants';
+import { summary, histogram } from '../constants/summary-information';
 
 import PropTypes from 'prop-types';
 
@@ -98,7 +98,7 @@ const DashBoard = ({
   siteDetail,
   siteDropDownData,
   metrics,
-  histogram,
+  histogramContent,
   fullMapZoomHandler,
   isLoading
 }) => {
@@ -145,16 +145,12 @@ const DashBoard = ({
   const dashboard = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
       <div>
-        <InformationCard
-          title={Constants.summary.title}
-          type={Constants.summary.type}
-          textContent={Constants.summary}
-        />
+        <InformationCard title={summary.title} type={summary.type} textContent={summary} />
         <MetricCards metrics={metrics} isLoading={isLoading} />
         <InformationCard
-          title={Constants.histogram.title}
-          type={Constants.histogram.type}
-          histogram={histogram}
+          title={histogram.title}
+          type={histogram.type}
+          histogramContent={histogramContent}
         />
       </div>
     </Slide>
