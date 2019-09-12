@@ -54,6 +54,9 @@ workflows:
     jobs:
       - test:
           context: org-global
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)+/
       - deploy_dev:
           context: org-global
           requires:
