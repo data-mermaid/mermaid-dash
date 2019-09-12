@@ -5,21 +5,21 @@ import Box from '@material-ui/core/Box';
 import BarChart from './BarChart';
 import PieChart from './PieChart';
 
-const Chart = ({
+const CardChartContent = ({
   chartType,
-  chartContent,
-  chartLegend,
+  pieChartContent,
+  pieChartLegend,
   privatePolicy,
   privateLabel,
   histogram
 }) => {
   const chart =
-    chartType === 'barChart' ? (
+    chartType === 'histogramChart' ? (
       <BarChart chartContent={histogram} />
     ) : (
       <PieChart
-        chartContent={chartContent}
-        chartLegend={chartLegend}
+        chartContent={pieChartContent}
+        chartLegend={pieChartLegend}
         privatePolicy={privatePolicy}
         privateLabel={privateLabel}
       />
@@ -28,4 +28,4 @@ const Chart = ({
   return <Box m={1}>{chart}</Box>;
 };
 
-export default Chart;
+export default CardChartContent;

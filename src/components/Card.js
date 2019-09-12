@@ -10,11 +10,10 @@ import Box from '@material-ui/core/Box';
 import { TextLoader, ChartLoader } from './Loader';
 // import { theme } from './theme';
 // import { ButtonStyle } from './Button';
-import Chart from './Chart';
+import CardChartContent from './CardChartContent';
+import CartTextContent from './CardTextContent';
 
 import PropTypes from 'prop-types';
-
-const HEADER = 'Data is more powerful when shared';
 
 const cardStyle = makeStyles(theme => ({
   root: {
@@ -29,38 +28,6 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const CardContent = ({
-  type,
-  body,
-  legend,
-  privatePolicy,
-  privateLabel,
-  histogram,
-  pieContent
-}) => {
-  const subTitle = type === 'text' && <Typography variant="h6">{HEADER}</Typography>;
-  const content =
-    type === 'text' ? (
-      <Box pt={1}>
-        {subTitle}
-        <Typography variant="body1">{body}</Typography>
-      </Box>
-    ) : (
-      <Box pt={1}>
-        <Chart
-          chartType={type}
-          chartContent={pieContent}
-          chartLegend={legend}
-          privatePolicy={privatePolicy}
-          privateLabel={privateLabel}
-          histogram={histogram}
-        />
-      </Box>
-    );
-
-  return <>{content}</>;
-};
-
 const Card = ({
   dataPolicy,
   protocol,
@@ -71,9 +38,9 @@ const Card = ({
   title,
   type,
   sampleUnitCounts,
-  pieContent,
-  legendContent,
-  body
+  pieChartContent,
+  pieChartLegend,
+  textContent
 }) => {
   const classes = cardStyle();
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
@@ -124,9 +91,22 @@ const Card = ({
   //     </ButtonStyle>
   //   </ThemeProvider>
   // );
+  const contentItem =
+    type === 'text' ? (
+      <CartTextContent textContent={textContent} />
+    ) : (
+      <CardChartContent
+        chartType={type}
+        pieChartContent={pieChartContent}
+        pieChartLegend={pieChartLegend}
+        privatePolicy={privatePolicy}
+        privateLabel={privateLabel}
+        histogram={histogram}
+      />
+    );
 
-  const contentAvailable =
-    histogram || pieContent || body ? (
+  const cardContent =
+    histogram || pieChartContent || textContent ? (
       <Paper className={classes.cardWrapper}>
         <Box display="flex" borderBottom={1}>
           <Box flexGrow={1}>
@@ -138,34 +118,28 @@ const Card = ({
           {/* temporarily Hide download data buttons */}
           {/* <Box>{downLoadButton}</Box> */}
         </Box>
-        <CardContent
-          type={type}
-          pieContent={pieContent}
-          legend={legendContent}
-          privatePolicy={privatePolicy}
-          privateLabel={privateLabel}
-          histogram={histogram}
-          body={body}
-        />
+        {contentItem}
       </Paper>
     ) : (
       <Paper className={classes.cardWrapper}>{loaderType}</Paper>
     );
 
-  return <div className={classes.root}>{contentAvailable}</div>;
+  return <div className={classes.root}>{cardContent}</div>;
 };
 
 Card.propTypes = {
-  content: PropTypes.shape({
-    type: PropTypes.string,
-    title: PropTypes.string,
-    // body: PropTypes.array || PropTypes.string, //there are 2 data types for content body now
-    legend: PropTypes.object,
-    sampleUnits: PropTypes.number,
-    header: PropTypes.string,
-    hardCoralCovers: PropTypes.number,
-    reefFishBiomass: PropTypes.number
-  })
+  dataPolicy: PropTypes.string,
+  protocol: PropTypes.object,
+  protocolName: PropTypes.string,
+  privatePolicy: PropTypes.bool,
+  privateLabel: PropTypes.string,
+  histogram: PropTypes.array,
+  title: PropTypes.string,
+  type: PropTypes.string,
+  sampleUnitCounts: PropTypes.number,
+  pieChartContent: PropTypes.array,
+  pieChartLegend: PropTypes.object,
+  textContent: PropTypes.object
 };
 
 export default Card;

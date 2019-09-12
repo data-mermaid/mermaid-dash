@@ -14,9 +14,11 @@ import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
 import Card from './Card';
+import Constants from '../sample_data/constants';
 
 import PropTypes from 'prop-types';
 
+const pieChartDefault = Constants.pieChartDefault;
 const protocolsArray = [
   {
     name: 'benthiclit',
@@ -93,29 +95,12 @@ const SiteDetail = ({ selectSite }) => {
     const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
     const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
     const privatePolicy = dataPolicy === 'private';
+
     const generatePrivateLabel = protocol => {
       const protocolName =
         protocol === 'beltfish' ? 'Fish Belt' : 'Benthic: PIT, LIT and Habitat Complexity';
       return `This data is unavailable because ${protocolName} Sample Units are set to Private for this project.`;
     };
-
-    const defaultBody = [
-      { x: 'Herbivore-detritivore', y: 77.9 },
-      { x: 'Herbivore-macroalgae', y: 24.1 },
-      { x: 'Invertivore-mobile', y: 193.0 },
-      { x: 'Invertivore-sessile', y: 34.6 },
-      { x: 'Omnivore', y: 74.5 },
-      { x: 'Piscivore', y: 177.4 }
-    ];
-
-    const defaultLegend = [
-      { name: 'Herbivore-detritivore' },
-      { name: 'Herbivore-macroalgae' },
-      { name: 'Invertivore-mobile' },
-      { name: 'Invertivore-sessile' },
-      { name: 'Omnivore' },
-      { name: 'Piscivore' }
-    ];
 
     const convertContent = (content, protocol) => {
       return (
@@ -144,10 +129,10 @@ const SiteDetail = ({ selectSite }) => {
     const protocolContent =
       loadedSiteProtocol && loadedSite.properties.protocols[protocol.name][protocol.property];
     const sourceContent = privatePolicy
-      ? defaultBody
+      ? pieChartDefault.body
       : convertContent(protocolContent, protocol.name);
     const sourceLegendData = privatePolicy
-      ? { title: 'Private Group', data: defaultLegend }
+      ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
       : convertLegend(protocolContent, protocol.name);
 
     const cardsComponent = loadedSiteProtocol && (
@@ -155,8 +140,8 @@ const SiteDetail = ({ selectSite }) => {
         dataPolicy={dataPolicy}
         protocol={loadedSiteProtocol}
         protocolName={protocol.name}
-        pieContent={sourceContent}
-        legendContent={sourceLegendData}
+        pieChartContent={sourceContent}
+        pieChartLegend={sourceLegendData}
         privatePolicy={privatePolicy}
         privateLabel={generatePrivateLabel(protocol.name)}
         sampleUnitCounts={loadedSiteProtocol.sample_unit_count}

@@ -21,7 +21,7 @@ import MetricCards from './MetricCardsContainer';
 import Card from './Card';
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
-import Samples from '../sample_data/sampleSummaryStatistic';
+import Constants from '../sample_data/constants';
 
 import PropTypes from 'prop-types';
 
@@ -145,9 +145,17 @@ const DashBoard = ({
   const dashboard = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
       <div>
-        <Card title={'Summary Statistics'} type={'text'} body={Samples.summary.body} />
+        <Card
+          title={Constants.summary.title}
+          type={Constants.summary.type}
+          textContent={Constants.summary}
+        />
         <MetricCards metrics={metrics} isLoading={isLoading} />
-        <Card histogram={histogram} title={'Live Coral Cover'} type={'barChart'} />
+        <Card
+          title={Constants.histogram.title}
+          type={Constants.histogram.type}
+          histogram={histogram}
+        />
       </div>
     </Slide>
   );
