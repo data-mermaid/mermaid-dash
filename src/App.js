@@ -261,14 +261,16 @@ class App extends Component {
       const result =
         hasProtocols && (protocol.benthiclit || protocol.benthicpit)
           ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
-          : 0;
+          : null;
       return result;
     });
-    const sumOfCoralCover = protocolCount.reduce((acc, val) => acc + val, 0);
-    const avgCoralCover = sumOfCoralCover
-      ? (sumOfCoralCover / protocolCount.length) * 100
-      : sumOfCoralCover;
-    return avgCoralCover.toFixed(0);
+
+    const filteredProtocol = protocolCount.filter(val => val !== null);
+
+    const sumOfCoralCover = filteredProtocol.reduce((acc, val) => acc + val, 0);
+    const avgCoralCover = (sumOfCoralCover / filteredProtocol.length) * 100;
+
+    return Math.round(avgCoralCover);
   }
 
   histogramCount(array, histogramData) {
@@ -286,13 +288,15 @@ class App extends Component {
         hasProtocols && (protocol.benthiclit || protocol.benthicpit)
           ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
           : null;
+
       return result;
     });
 
     const histogramResult = histogramArr.map(item => {
       let count = 0;
       for (let i = 0; i < protocolArr.length; i++) {
-        const calDiff = item - protocolArr[i];
+        const calDiff = Math.round((item - protocolArr[i]) * 100) / 100;
+
         if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 0.05)) {
           count += 1;
         }
