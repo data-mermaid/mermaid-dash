@@ -268,7 +268,9 @@ class App extends Component {
     const filteredProtocol = protocolCount.filter(val => val !== undefined);
 
     const sumOfCoralCover = filteredProtocol.reduce((acc, val) => acc + val, 0);
-    const avgCoralCover = (sumOfCoralCover / filteredProtocol.length) * 100;
+    const avgCoralCover = sumOfCoralCover
+      ? (sumOfCoralCover / filteredProtocol.length) * 100
+      : sumOfCoralCover;
 
     return Math.round(avgCoralCover);
   }
@@ -295,12 +297,13 @@ class App extends Component {
     const histogramResult = histogramArr.map(item => {
       let count = 0;
       for (let i = 0; i < protocolArr.length; i++) {
-        const calDiff = Math.round((item - protocolArr[i]) * 100) / 100;
+        const calDiff = parseFloat((item - protocolArr[i]).toFixed(3));
 
         if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 0.05)) {
           count += 1;
         }
       }
+
       return count;
     });
 
