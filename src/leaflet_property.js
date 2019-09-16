@@ -1,6 +1,7 @@
 import L from 'leaflet';
 
 export const defaultMarkerColor = '#A53434';
+export const selectMarkerColor = '#FF6347';
 
 export const markerHtmlStyles = `
   background-color: ${defaultMarkerColor};
@@ -42,7 +43,12 @@ export const icon = L.divIcon({
 
 export const activeIcon = L.divIcon({
   className: 'my-active-pin',
-  html: `<div style="${activeMarkerHtmlStyles}"><div style="${activeInnerMarkerHtmlStyles}"></div></div>`
+  html: `
+    <div style="${activeMarkerHtmlStyles}">
+      <div style="${activeInnerMarkerHtmlStyles}">
+        </div>
+      </div>
+    </div>`
 });
 
 export const clusterIconNumberStyles = `
