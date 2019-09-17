@@ -25,7 +25,7 @@ export const theme = {
     width: '150px',
     padding: '1px'
   },
-  fullZoom: {
+  mapControl: {
     color: color.mermaidGray,
     bgColor: color.mermaidWhite,
     borderColor: color.mermaidQuiteGray,

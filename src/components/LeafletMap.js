@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 `;
 
 const windowWidth = () => (window ? window.innerWidth : 1800);
-const offsetX = w => 0.2 * w;
+const offsetX = w => 0.15 * w;
 
 const generateClusterIconStyle = ({
   baseRadius,
@@ -129,6 +129,8 @@ class LeafletMap extends Component {
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
     }
+
+    this.zoomToSelectedSite();
     this.zoomFullMap();
   }
 
@@ -157,10 +159,21 @@ class LeafletMap extends Component {
   }
 
   zoomFullMap() {
-    if (this.props.zoomFullMap) {
+    const { zoomFullMap, fullMapZoomHandler } = this.props;
+    if (zoomFullMap) {
       this.map.setView([10, 170], 3);
-      this.props.fullMapZoomHandler(false);
+      fullMapZoomHandler(false);
     }
+  }
+
+  zoomToSelectedSite() {
+    const { highlightMarker, zoomToSite, zoomToSiteHandler } = this.props;
+    if (zoomToSite && highlightMarker) {
+      const markerLatlng = highlightMarker._latlng;
+      this.map.setView([markerLatlng.lat, markerLatlng.lng], 13);
+      zoomToSiteHandler(false);
+    }
+    this.zoomFullMap();
   }
 
   //returns a stringified number similar to toFixed
@@ -192,7 +205,7 @@ class LeafletMap extends Component {
     const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
 
     //if all sites property are the same (equals to 1), return true
-    return coordinatesSizeResult && siteNamesSizeResult;
+    return coordinatesSizeResult || siteNamesSizeResult;
   }
 
   checkSimilarBoundingBox(box1, box2) {
@@ -291,11 +304,11 @@ class LeafletMap extends Component {
         const markersData = markerCluster.map(item => {
           return item.options.marker;
         });
+        removeHighlight();
         siteDropDownHandler(markersData);
       }
 
       fullMapZoomHandler(false);
-      removeHighlight();
     });
 
     markersData.forEach(marker => {

@@ -60,7 +60,7 @@ const gridStyleProperties = makeStyles(theme => ({
     top: 130,
     left: 10
   },
-  flyToIconWrapperProperty: {
+  zoomToIconWrapperProperty: {
     position: 'fixed',
     top: 170,
     left: 10
@@ -106,6 +106,7 @@ const DashBoard = ({
   metrics,
   histogramContent,
   fullMapZoomHandler,
+  zoomToSiteHandler,
   isLoading
 }) => {
   const classes = gridStyleProperties();
@@ -120,7 +121,7 @@ const DashBoard = ({
   );
 
   const fullMapToggle = (
-    <ThemeProvider theme={theme.fullZoom}>
+    <ThemeProvider theme={theme.mapControl}>
       <ButtonStyle
         buttonBorder={true}
         growScaleHover={true}
@@ -131,9 +132,9 @@ const DashBoard = ({
     </ThemeProvider>
   );
 
-  const flyToSelectSite = (
-    <ThemeProvider theme={theme.fullZoom}>
-      <ButtonStyle buttonBorder={true} onClick={() => fullMapZoomHandler(true)}>
+  const zoomToSelectSite = (
+    <ThemeProvider theme={theme.mapControl}>
+      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
         <CurrentSelectLocationIcon className={classes.zoomOutIconProperty} />
       </ButtonStyle>
     </ThemeProvider>
@@ -179,7 +180,7 @@ const DashBoard = ({
   );
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
-  const flyToControl = <Box className={classes.flyToIconWrapperProperty}>{flyToSelectSite}</Box>;
+  const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
 
   const dashboardControl = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
@@ -194,7 +195,7 @@ const DashBoard = ({
       <Grid item sm={8}>
         {backButtonControl}
         {fullMapControl}
-        {flyToControl}
+        {zoomToControl}
         <Paper className={classes.legendProperty}>
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
             <Box display="flex" m={1}>

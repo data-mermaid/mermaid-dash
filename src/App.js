@@ -48,6 +48,7 @@ class App extends Component {
     ],
     bbox: null,
     zoomFullMap: false,
+    zoomToSite: false,
     highlightMarker: null,
     isLoading: false
   };
@@ -173,6 +174,11 @@ class App extends Component {
   fullMapZoomHandler = zoomOffOption => {
     const zoomFullMap = zoomOffOption ? true : false;
     this.setState({ zoomFullMap });
+  };
+
+  zoomToSiteHandler = zoomToOption => {
+    const zoomToSite = zoomToOption ? true : false;
+    this.setState({ zoomToSite });
   };
 
   removeHighlight = () => {
@@ -330,6 +336,8 @@ class App extends Component {
           sitesDropDownToggle={this.sitesDropDownToggle}
           zoomFullMap={this.state.zoomFullMap}
           fullMapZoomHandler={this.fullMapZoomHandler}
+          zoomToSite={this.state.zoomToSite}
+          zoomToSiteHandler={this.zoomToSiteHandler}
           getMapBounds={this.getMapBounds}
           getRawBBox={this.getRawBBox}
           bbox={this.state.bbox}
@@ -350,6 +358,7 @@ class App extends Component {
           histogramContent={this.state.histogram}
           backButtonHandler={this.backButtonHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
+          zoomToSiteHandler={this.zoomToSiteHandler}
           zoomAnimate={this.state.zoomAnimate}
           isLoading={this.state.isLoading}
         />
