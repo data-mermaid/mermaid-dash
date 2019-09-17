@@ -94,7 +94,7 @@ const mapProperty = {
 const miniMapProperty = {
   position: 'bottomleft',
   width: 240,
-  height: 140,
+  height: 135,
   zoomAnimation: true,
   toggleDisplay: true,
   aimingRectOptions: { color: '#91181A' },
@@ -317,10 +317,10 @@ class LeafletMap extends Component {
 
       //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
       if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
-        removeHighlight();
         const markersData = markerCluster.map(item => {
           return item.options.marker;
         });
+        removeHighlight();
         siteDropDownHandler(markersData);
 
         const selectedMarkersCluster = this.createCluster(selectClusterStyle);
