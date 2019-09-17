@@ -14,6 +14,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Slide from '@material-ui/core/Slide';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fade from '@material-ui/core/Fade';
 import styled from 'styled-components/macro';
 
 import { ButtonStyle } from './Button';
@@ -122,21 +124,35 @@ const DashBoard = ({
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
-      <ButtonStyle
-        buttonBorder={true}
-        growScaleHover={true}
-        onClick={() => fullMapZoomHandler(true)}
+      <Tooltip
+        title="Zoom to Full"
+        placement="right-end"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 600 }}
       >
-        <ZoomOutIcon className={classes.zoomOutIconProperty} />
-      </ButtonStyle>
+        <ButtonStyle
+          buttonBorder={true}
+          growScaleHover={true}
+          onClick={() => fullMapZoomHandler(true)}
+        >
+          <ZoomOutIcon className={classes.zoomOutIconProperty} placeholder="GeeksForGeeks" />
+        </ButtonStyle>
+      </Tooltip>
     </ThemeProvider>
   );
 
   const zoomToSelectSite = (
     <ThemeProvider theme={theme.mapControl}>
-      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
-        <CurrentSelectLocationIcon className={classes.zoomOutIconProperty} />
-      </ButtonStyle>
+      <Tooltip
+        title="Zoom to Selected Site"
+        placement="right-end"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 600 }}
+      >
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+          <CurrentSelectLocationIcon className={classes.zoomOutIconProperty} />
+        </ButtonStyle>
+      </Tooltip>
     </ThemeProvider>
   );
 
