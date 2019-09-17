@@ -197,7 +197,7 @@ class LeafletMap extends Component {
     const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
 
     //if all sites property are the same (equals to 1), return true
-    return coordinatesSizeResult && siteNamesSizeResult;
+    return coordinatesSizeResult || siteNamesSizeResult;
   }
 
   checkSimilarBoundingBox(box1, box2) {
@@ -317,6 +317,7 @@ class LeafletMap extends Component {
 
       //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
       if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
+        removeHighlight();
         const markersData = markerCluster.map(item => {
           return item.options.marker;
         });
@@ -333,7 +334,6 @@ class LeafletMap extends Component {
       }
 
       fullMapZoomHandler(false);
-      removeHighlight();
     });
 
     markersData.forEach(marker => {
