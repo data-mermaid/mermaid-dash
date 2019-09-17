@@ -170,10 +170,9 @@ class LeafletMap extends Component {
     const { highlightMarker, zoomToSite, zoomToSiteHandler } = this.props;
     if (zoomToSite && highlightMarker) {
       const markerLatlng = highlightMarker._latlng;
-      this.map.setView([markerLatlng.lat, markerLatlng.lng], 13);
+      this.map.setView([markerLatlng.lat, markerLatlng.lng], 16);
       zoomToSiteHandler(false);
     }
-    this.zoomFullMap();
   }
 
   //returns a stringified number similar to toFixed
