@@ -2,6 +2,7 @@ import React from 'react';
 
 import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
+import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
 import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
@@ -57,6 +58,11 @@ const gridStyleProperties = makeStyles(theme => ({
   zoomOutIconWrapperProperty: {
     position: 'fixed',
     top: 130,
+    left: 10
+  },
+  flyToIconWrapperProperty: {
+    position: 'fixed',
+    top: 170,
     left: 10
   },
   legendProperty: {
@@ -125,6 +131,14 @@ const DashBoard = ({
     </ThemeProvider>
   );
 
+  const flyToSelectSite = (
+    <ThemeProvider theme={theme.fullZoom}>
+      <ButtonStyle buttonBorder={true} onClick={() => fullMapZoomHandler(true)}>
+        <CurrentSelectLocationIcon className={classes.zoomOutIconProperty} />
+      </ButtonStyle>
+    </ThemeProvider>
+  );
+
   const dropDownSites = siteDropDownData.length > 0 && showDropDown && (
     <DropDown
       siteList={siteDropDownData}
@@ -165,6 +179,7 @@ const DashBoard = ({
   );
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
+  const flyToControl = <Box className={classes.flyToIconWrapperProperty}>{flyToSelectSite}</Box>;
 
   const dashboardControl = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
@@ -179,6 +194,7 @@ const DashBoard = ({
       <Grid item sm={8}>
         {backButtonControl}
         {fullMapControl}
+        {flyToControl}
         <Paper className={classes.legendProperty}>
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
             <Box display="flex" m={1}>
