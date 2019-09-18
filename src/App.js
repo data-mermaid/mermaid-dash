@@ -49,6 +49,7 @@ class App extends Component {
     bbox: null,
     zoomFullMap: false,
     highlightMarker: null,
+    highlightCluster: null,
     isLoading: false
   };
 
@@ -141,8 +142,16 @@ class App extends Component {
   };
 
   siteClickHandler = selectedSite => {
-    if (selectedSite.key) {
-      selectedSite = this.siteLookup(selectedSite);
+    const { highlightCluster, siteDropDownData } = this.state;
+    const siteDropdownList = siteDropDownData.map(site => site.id);
+    selectedSite = selectedSite.key ? this.siteLookup(selectedSite) : selectedSite;
+    const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
+      ? true
+      : false;
+
+    if (highlightCluster !== null && !siteExistsInCluster) {
+      highlightCluster.clearLayers();
+      this.setState({ highlightCluster: null });
     }
     this.setState({ siteDetail: selectedSite, showSiteDetail: true, zoomFullMap: false });
   };
@@ -162,10 +171,14 @@ class App extends Component {
   };
 
   backButtonHandler = () => {
-    const { highlightMarker } = this.state;
+    const { highlightMarker, highlightCluster } = this.state;
     if (highlightMarker !== null) {
       highlightMarker.setIcon(leafletProperty.icon);
       this.setState({ highlightMarker: null });
+    }
+    if (highlightCluster !== null) {
+      highlightCluster.clearLayers();
+      this.setState({ highlightCluster: null });
     }
     this.setState({ showSiteDetail: false, zoomFullMap: false });
   };
@@ -186,6 +199,18 @@ class App extends Component {
   setIconActive = marker => {
     marker.setIcon(leafletProperty.activeIcon);
     this.setState({ highlightMarker: marker });
+  };
+
+  removeHighlightCluster = () => {
+    const { highlightCluster } = this.state;
+    if (highlightCluster !== null) {
+      highlightCluster.clearLayers();
+      this.setState({ highlightCluster: null });
+    }
+  };
+
+  setClusterActive = clusterMarker => {
+    this.setState({ highlightCluster: clusterMarker });
   };
 
   getMapBounds = bbox => {
@@ -336,6 +361,8 @@ class App extends Component {
           contentLoadHandler={this.contentLoadHandler}
           removeHighlight={this.removeHighlight}
           setIconActive={this.setIconActive}
+          removeHighlightCluster={this.removeHighlightCluster}
+          setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
           showFullMap={this.state.showFullMap}
         />

@@ -4,6 +4,7 @@ import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
+import { ReactComponent as SelectMultiIcon } from '../styles/Icons/two.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import { ThemeProvider } from 'styled-components/macro';
@@ -61,8 +62,8 @@ const gridStyleProperties = makeStyles(theme => ({
   },
   legendProperty: {
     position: 'fixed',
-    width: 220,
-    height: 140,
+    width: 200,
+    height: 135,
     bottom: 10,
     left: 250,
     color: 'white',
@@ -78,7 +79,8 @@ const gridStyleProperties = makeStyles(theme => ({
     margin: '3px 8px 0 4px'
   },
   legendMarkerIconProperty: {
-    marginRight: '3px'
+    marginRight: '5px',
+    marginLeft: '2px'
   },
   zoomOutIconProperty: {
     width: '16px',
@@ -183,19 +185,23 @@ const DashBoard = ({
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
             <Box display="flex" m={1}>
               <SelectMarkerIcon
-                width="30px"
-                height="30px"
+                width="20px"
+                height="20px"
                 className={classes.legendMarkerIconProperty}
               />
-              <Typography variant="h6">Selected Project Site</Typography>
+              <Typography variant="body1">Selected Project Site</Typography>
             </Box>
-            <Box display="flex" m={1}>
-              <SinglePointIcon width="22px" height="22px" className={classes.legendIconProperty} />
-              <Typography variant="h6">Project Site</Typography>
+            <Box display="flex" ml={1} mb={1}>
+              <SelectMultiIcon width="15px" height="15px" className={classes.legendIconProperty} />
+              <Typography variant="body1">Selected Multiple Sites</Typography>
             </Box>
-            <Box display="flex" m={1}>
-              <MultiPointsIcon width="22px" height="22px" className={classes.legendIconProperty} />
-              <Typography variant="h6">Multiple Project Sites</Typography>
+            <Box display="flex" ml={1} mb={1}>
+              <SinglePointIcon width="15px" height="15px" className={classes.legendIconProperty} />
+              <Typography variant="body1">Project Site</Typography>
+            </Box>
+            <Box display="flex" ml={1}>
+              <MultiPointsIcon width="15px" height="15px" className={classes.legendIconProperty} />
+              <Typography variant="body1">Multiple Project Sites</Typography>
             </Box>
           </Box>
         </Paper>
