@@ -1,7 +1,7 @@
 import L from 'leaflet';
 
 export const defaultMarkerColor = '#A53434';
-export const selectMarkerColor = '#FF6347';
+export const selectedMarkerColor = '#FF6347';
 
 export const markerHtmlStyles = `
   background-color: ${defaultMarkerColor};

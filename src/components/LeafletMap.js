@@ -306,11 +306,11 @@ class LeafletMap extends Component {
 
     markersCluster.on('clusterclick', e => {
       const markerCluster = e.layer.getAllChildMarkers();
-      const selectClusterStyle = {
+      const selectedClusterStyle = {
         radius: 10,
         padding: 20,
         margin: 0,
-        color: leafletProperty.selectMarkerColor,
+        color: leafletProperty.selectedMarkerColor,
         pulseEffect: true
       };
       const currentZoom = e.layer._zoom;
@@ -323,7 +323,7 @@ class LeafletMap extends Component {
         removeHighlight();
         siteDropDownHandler(markersData);
 
-        const selectedMarkersCluster = this.createCluster(selectClusterStyle);
+        const selectedMarkersCluster = this.createCluster(selectedClusterStyle);
 
         markerCluster.forEach(selectMaker => {
           selectedMarkersCluster.addLayer(selectMaker);

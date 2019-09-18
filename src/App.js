@@ -143,21 +143,13 @@ class App extends Component {
 
   siteClickHandler = selectedSite => {
     const { highlightCluster, siteDropDownData } = this.state;
-    const siteDropdownList = siteDropDownData.map(site => {
-      return site.id;
-    });
-
-    if (selectedSite.key) {
-      selectedSite = this.siteLookup(selectedSite);
-    }
-
-    const foundSiteInCluster = siteDropdownList.find(site => {
-      return site === selectedSite.id;
-    })
+    const siteDropdownList = siteDropDownData.map(site => site.id);
+    selectedSite = selectedSite.key ? this.siteLookup(selectedSite) : selectedSite;
+    const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
       ? true
       : false;
 
-    if (highlightCluster !== null && !foundSiteInCluster) {
+    if (highlightCluster !== null && !siteExistsInCluster) {
       highlightCluster.clearLayers();
       this.setState({ highlightCluster: null });
     }
