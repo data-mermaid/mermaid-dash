@@ -30,7 +30,7 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
           href={loadedSiteProperties.contact_link}
           rel="noopener noreferrer"
         >
-          <Box p={1} display="flex" justifyContent="center">
+          <Box p={1} display="flex" justifyContent="center" fontWeight="fontWeightMedium">
             <ContactIcon fontSize="small" className={classes.iconProperty} />
             Contact Admins
           </Box>
