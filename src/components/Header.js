@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 const HeaderItem = ({ children, link }) => {
   return (
-    <Box p={2} fontSize={12}>
+    <Box p={2} fontSize={12} fontWeight="fontWeightBold">
       <LinkStyle target="_blank" href={link} rel="noopener noreferrer">
         {children}
       </LinkStyle>

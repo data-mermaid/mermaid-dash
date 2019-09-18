@@ -94,7 +94,7 @@ const mapProperty = {
 const miniMapProperty = {
   position: 'bottomleft',
   width: 240,
-  height: 135,
+  height: 130,
   zoomAnimation: true,
   toggleDisplay: true,
   aimingRectOptions: { color: '#91181A' },
