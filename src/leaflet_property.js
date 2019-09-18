@@ -13,16 +13,20 @@ export const markerHtmlStyles = `
   border: 1px solid #FFFFFF`;
 
 export const activeMarkerHtmlStyles = `
-  position: absolute;
+  position: fixed;
   border-radius: 50%;
   top: -200%;
-  border: 6px solid ${defaultMarkerColor};
-  width: 1.6rem;
-  height: 1.6rem;
+  border: 5px solid ${defaultMarkerColor};
+  width: 1.5rem;
+  height: 1.5rem;
   background-color: white;
-  animation-name: bounce;
-  animation-fill-mode: both;
-  animation-duration: 1s;
+  -webkit-animation: bounce;
+  @-webkit-keyframes bounce {
+    0%       { bottom:5px; }
+    25%, 75% { bottom:15px; }
+    50%      { bottom:20px; }
+    100%     {bottom:0;}
+  }
 `;
 
 export const activeInnerMarkerHtmlStyles = `
@@ -31,9 +35,9 @@ export const activeInnerMarkerHtmlStyles = `
   width: 0px;
   height: 0px;
   bottom: -26px;
-  left: -3px;
-  border: 8px solid transparent;
-  border-top: 15px solid ${defaultMarkerColor};
+  left: -2px;
+  border: 9px solid transparent;
+  border-top: 16px solid ${defaultMarkerColor};
 `;
 
 export const icon = L.divIcon({
