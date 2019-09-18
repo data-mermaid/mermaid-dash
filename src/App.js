@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import summary from '../src/apis/summary';
 import './customStyles.css';
 import * as leafletProperty from './leaflet_property';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from './components/Header';
 import DashBoard from './components/DashBoard';
@@ -322,6 +323,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
+        <CssBaseline />
         <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
         <LeafletMap
           markersData={this.state.sites}
