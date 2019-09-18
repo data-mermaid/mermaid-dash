@@ -2,8 +2,10 @@ import React from 'react';
 
 import BackArrowIcon from '@material-ui/icons/ArrowBack';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
+import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
 import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
+import { ReactComponent as SelectMultiIcon } from '../styles/Icons/two.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import { ThemeProvider } from 'styled-components/macro';
@@ -13,6 +15,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Slide from '@material-ui/core/Slide';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fade from '@material-ui/core/Fade';
 import styled from 'styled-components/macro';
 
 import { ButtonStyle } from './Button';
@@ -59,10 +63,15 @@ const gridStyleProperties = makeStyles(theme => ({
     top: 130,
     left: 10
   },
+  zoomToIconWrapperProperty: {
+    position: 'fixed',
+    top: 170,
+    left: 10
+  },
   legendProperty: {
     position: 'fixed',
-    width: 220,
-    height: 140,
+    width: 200,
+    height: 135,
     bottom: 10,
     left: 250,
     color: 'white',
@@ -78,7 +87,8 @@ const gridStyleProperties = makeStyles(theme => ({
     margin: '3px 8px 0 4px'
   },
   legendMarkerIconProperty: {
-    marginRight: '3px'
+    marginRight: '5px',
+    marginLeft: '2px'
   },
   zoomOutIconProperty: {
     width: '16px',
@@ -100,6 +110,7 @@ const DashBoard = ({
   metrics,
   histogramContent,
   fullMapZoomHandler,
+  zoomToSiteHandler,
   isLoading
 }) => {
   const classes = gridStyleProperties();
@@ -114,14 +125,36 @@ const DashBoard = ({
   );
 
   const fullMapToggle = (
-    <ThemeProvider theme={theme.fullZoom}>
-      <ButtonStyle
-        buttonBorder={true}
-        growScaleHover={true}
-        onClick={() => fullMapZoomHandler(true)}
+    <ThemeProvider theme={theme.mapControl}>
+      <Tooltip
+        title="Zoom to Full"
+        placement="right-end"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 600 }}
       >
-        <ZoomOutIcon className={classes.zoomOutIconProperty} />
-      </ButtonStyle>
+        <ButtonStyle
+          buttonBorder={true}
+          growScaleHover={true}
+          onClick={() => fullMapZoomHandler(true)}
+        >
+          <ZoomOutIcon className={classes.zoomOutIconProperty} placeholder="GeeksForGeeks" />
+        </ButtonStyle>
+      </Tooltip>
+    </ThemeProvider>
+  );
+
+  const zoomToSelectSite = (
+    <ThemeProvider theme={theme.mapControl}>
+      <Tooltip
+        title="Zoom to Selected Site"
+        placement="right-end"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 600 }}
+      >
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+          <CurrentSelectLocationIcon className={classes.zoomOutIconProperty} />
+        </ButtonStyle>
+      </Tooltip>
     </ThemeProvider>
   );
 
@@ -165,6 +198,7 @@ const DashBoard = ({
   );
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
+  const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
 
   const dashboardControl = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
@@ -179,23 +213,28 @@ const DashBoard = ({
       <Grid item sm={8}>
         {backButtonControl}
         {fullMapControl}
+        {zoomToControl}
         <Paper className={classes.legendProperty}>
           <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
             <Box display="flex" m={1}>
               <SelectMarkerIcon
-                width="30px"
-                height="30px"
+                width="20px"
+                height="20px"
                 className={classes.legendMarkerIconProperty}
               />
-              <Typography variant="h6">Selected Project Site</Typography>
+              <Typography variant="body1">Selected Project Site</Typography>
             </Box>
-            <Box display="flex" m={1}>
-              <SinglePointIcon width="22px" height="22px" className={classes.legendIconProperty} />
-              <Typography variant="h6">Project Site</Typography>
+            <Box display="flex" ml={1} mb={1}>
+              <SelectMultiIcon width="15px" height="15px" className={classes.legendIconProperty} />
+              <Typography variant="body1">Selected Multiple Sites</Typography>
             </Box>
-            <Box display="flex" m={1}>
-              <MultiPointsIcon width="22px" height="22px" className={classes.legendIconProperty} />
-              <Typography variant="h6">Multiple Project Sites</Typography>
+            <Box display="flex" ml={1} mb={1}>
+              <SinglePointIcon width="15px" height="15px" className={classes.legendIconProperty} />
+              <Typography variant="body1">Project Site</Typography>
+            </Box>
+            <Box display="flex" ml={1}>
+              <MultiPointsIcon width="15px" height="15px" className={classes.legendIconProperty} />
+              <Typography variant="body1">Multiple Project Sites</Typography>
             </Box>
           </Box>
         </Paper>

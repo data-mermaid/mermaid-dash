@@ -27,10 +27,11 @@ export const ButtonStyle = styled('button')`
     transform: ${props => props.theme.hoverTranslate};
   };
   &:hover {
-    -webkit-transform: ${props => props.growScaleHover && 'scale(1.1)'} ;
-    -ms-transform: ${props => props.growScaleHover && 'scale(1.1)'};
     transform: ${props => props.growScaleHover && 'scale(1.1)'};
-  }
+  };
+  &:hover {
+    transform: ${props => props.setWiggle && 'scale(0.95)'};
+  };
   &:focus {
     outline: none;
   }

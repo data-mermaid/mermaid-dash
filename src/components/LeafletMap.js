@@ -23,13 +23,15 @@ const Wrapper = styled.div`
 `;
 
 const windowWidth = () => (window ? window.innerWidth : 1800);
-const offsetX = w => 0.2 * w;
+const offsetX = w => 0.15 * w;
 
 const generateClusterIconStyle = ({
   baseRadius,
   basePadding,
+  margin,
   numberMarkers,
-  defaultMarkerColor
+  defaultMarkerColor,
+  setPulseAnimation
 }) => {
   const radius = String(numberMarkers).length * baseRadius + basePadding;
   let backgroundColor;
@@ -46,12 +48,15 @@ const generateClusterIconStyle = ({
   return `
     width: ${radius}px;
     height: ${radius}px;
+    margin-left: ${margin}px;
+    margin-top: ${margin}px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
     border: 1px solid white;
     background-color: ${backgroundColor};
+    animation: ${setPulseAnimation && 'pulse 2s infinite'} ;
   `;
 };
 
@@ -89,7 +94,7 @@ const mapProperty = {
 const miniMapProperty = {
   position: 'bottomleft',
   width: 240,
-  height: 140,
+  height: 135,
   zoomAnimation: true,
   toggleDisplay: true,
   aimingRectOptions: { color: '#91181A' },
@@ -129,6 +134,8 @@ class LeafletMap extends Component {
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
     }
+
+    this.zoomToSelectedSite();
     this.zoomFullMap();
   }
 
@@ -157,14 +164,24 @@ class LeafletMap extends Component {
   }
 
   zoomFullMap() {
-    if (this.props.zoomFullMap) {
+    const { zoomFullMap, fullMapZoomHandler } = this.props;
+    if (zoomFullMap) {
       this.map.setView([10, 170], 3);
-      this.props.fullMapZoomHandler(false);
+      fullMapZoomHandler(false);
+    }
+  }
+
+  zoomToSelectedSite() {
+    const { highlightMarker, zoomToSite, zoomToSiteHandler } = this.props;
+    if (zoomToSite && highlightMarker) {
+      const markerLatlng = highlightMarker._latlng;
+      this.map.setView([markerLatlng.lat, markerLatlng.lng], 16);
+      zoomToSiteHandler(false);
     }
   }
 
   //returns a stringified number similar to toFixed
-  toFixedNoRounding = function(number, n) {
+  toFixedNoRounding(number, n) {
     const regToSetSignificant = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
     const a = number.toString().match(regToSetSignificant)[0];
     const dot = a.indexOf('.');
@@ -173,7 +190,7 @@ class LeafletMap extends Component {
     }
     const b = n - (a.length - dot) + 1;
     return b > 0 ? a + '0'.repeat(b) : a;
-  };
+  }
 
   checkSameSiteInACluster(arr) {
     //check sites in cluster by their coordinates and names
@@ -192,7 +209,7 @@ class LeafletMap extends Component {
     const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
 
     //if all sites property are the same (equals to 1), return true
-    return coordinatesSizeResult && siteNamesSizeResult;
+    return coordinatesSizeResult || siteNamesSizeResult;
   }
 
   checkSimilarBoundingBox(box1, box2) {
@@ -251,26 +268,20 @@ class LeafletMap extends Component {
     });
   }
 
-  updateMarkers(markersData) {
-    const {
-      siteClickHandler,
-      fullMapZoomHandler,
-      siteDropDownHandler,
-      sitesDropDownToggle,
-      removeHighlight,
-      setIconActive
-    } = this.props;
-
-    const markersCluster = L.markerClusterGroup({
+  createCluster(style_property) {
+    const { radius, padding, margin, color, pulseEffect } = style_property;
+    const selectMarkerCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: false,
       iconCreateFunction: function(cluster) {
         const childCount = cluster.getChildCount();
         const clusterStyle = generateClusterIconStyle({
-          baseRadius: 10,
-          basePadding: 10,
+          baseRadius: radius,
+          basePadding: padding,
+          margin: margin,
           numberMarkers: childCount,
-          defaultMarkerColor: leafletProperty.defaultMarkerColor
+          defaultMarkerColor: color,
+          setPulseAnimation: pulseEffect
         });
 
         return new L.DivIcon({
@@ -282,8 +293,38 @@ class LeafletMap extends Component {
       }
     });
 
+    return selectMarkerCluster;
+  }
+
+  updateMarkers(markersData) {
+    const {
+      siteClickHandler,
+      fullMapZoomHandler,
+      siteDropDownHandler,
+      sitesDropDownToggle,
+      removeHighlight,
+      setIconActive,
+      removeHighlightCluster,
+      setClusterActive
+    } = this.props;
+    const allClusterStyle = {
+      radius: 10,
+      padding: 10,
+      margin: 5,
+      color: leafletProperty.defaultMarkerColor
+    };
+
+    const markersCluster = this.createCluster(allClusterStyle);
+
     markersCluster.on('clusterclick', e => {
       const markerCluster = e.layer.getAllChildMarkers();
+      const selectedClusterStyle = {
+        radius: 10,
+        padding: 20,
+        margin: 0,
+        color: leafletProperty.selectedMarkerColor,
+        pulseEffect: true
+      };
       const currentZoom = e.layer._zoom;
 
       //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
@@ -291,11 +332,20 @@ class LeafletMap extends Component {
         const markersData = markerCluster.map(item => {
           return item.options.marker;
         });
+        removeHighlight();
         siteDropDownHandler(markersData);
+
+        const selectedMarkersCluster = this.createCluster(selectedClusterStyle);
+
+        markerCluster.forEach(selectMaker => {
+          selectedMarkersCluster.addLayer(selectMaker);
+        });
+        removeHighlightCluster();
+        setClusterActive(selectedMarkersCluster);
+        this.map.addLayer(selectedMarkersCluster);
       }
 
       fullMapZoomHandler(false);
-      removeHighlight();
     });
 
     markersData.forEach(marker => {
