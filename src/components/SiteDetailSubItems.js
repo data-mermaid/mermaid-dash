@@ -4,7 +4,7 @@ import ContactIcon from '@material-ui/icons/Email';
 
 import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
-import { ButtonStyle } from './Button';
+import { ButtonStyle, LinkStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
 import Typography from '@material-ui/core/Typography';
@@ -25,19 +25,16 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
       <ButtonStyle setHover={true} boxShadow={true}>
-        <a
+        <LinkStyle
           target="_blank"
-          style={{ color: 'white' }}
           href={loadedSiteProperties.contact_link}
           rel="noopener noreferrer"
         >
           <Box p={1} display="flex" justifyContent="center">
             <ContactIcon fontSize="small" className={classes.iconProperty} />
-            <Typography variant="body1" display="inline">
-              Contact Admins
-            </Typography>
+            Contact Admins
           </Box>
-        </a>
+        </LinkStyle>
       </ButtonStyle>
     </ThemeProvider>
   );

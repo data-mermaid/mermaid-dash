@@ -19,7 +19,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import styled from 'styled-components/macro';
 
-import { ButtonStyle } from './Button';
+import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
