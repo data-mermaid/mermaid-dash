@@ -56,7 +56,7 @@ const generateClusterIconStyle = ({
     border-radius: 50%;
     border: 1px solid white;
     background-color: ${backgroundColor};
-    animation: ${setPulseAnimation && 'pulse 2s infinite'} ;
+    animation: ${setPulseAnimation && 'pulse 1s'} ;
   `;
 };
 

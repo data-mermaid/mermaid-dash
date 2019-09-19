@@ -20,13 +20,9 @@ export const activeMarkerHtmlStyles = `
   width: 1.5rem;
   height: 1.5rem;
   background-color: white;
-  -webkit-animation: bounce;
-  @-webkit-keyframes bounce {
-    0%       { bottom:5px; }
-    25%, 75% { bottom:15px; }
-    50%      { bottom:20px; }
-    100%     {bottom:0;}
-  }
+  animation: bounce;
+  animation-fill-mode: both;
+  animation-duration: 0.5s;
 `;
 
 export const activeInnerMarkerHtmlStyles = `
