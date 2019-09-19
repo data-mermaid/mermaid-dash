@@ -18,7 +18,11 @@ const cardStyle = makeStyles(theme => ({
   },
   title: {
     borderTop: '1px solid',
-    padding: '12px 4px 4px 4px'
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '58px'
   },
   body: {
     color: '#5080AD',
@@ -31,13 +35,9 @@ const cardStyle = makeStyles(theme => ({
 
 const MetricCard = ({ content: { title, count }, isLoading }) => {
   const classes = cardStyle();
-  const mediaMin1842 = useMediaQuery('(min-width:1842px)');
-  const mediaMin1600 = useMediaQuery('(min-width:1600px)');
+  const mediaMin1842 = useMediaQuery('(min-width:1840px)');
 
   const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;
-  if (title === 'Avg Coral Coverage' && !mediaMin1600) {
-    title = 'Avg CC';
-  }
 
   const contentItem =
     count !== null && count >= 0 && !isLoading ? (
@@ -51,7 +51,7 @@ const MetricCard = ({ content: { title, count }, isLoading }) => {
   return (
     <Paper className={classes.root}>
       <Typography variant="h2">{contentItem}</Typography>
-      <Box fontWeight="fontWeightMedium" fontSize={mediaMin1842 ? 18 : 15}>
+      <Box fontWeight="fontWeightMedium" fontSize={mediaMin1842 ? 20 : 18}>
         {titleItem}
       </Box>
     </Paper>
