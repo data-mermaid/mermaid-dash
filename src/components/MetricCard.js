@@ -12,13 +12,11 @@ import PropTypes from 'prop-types';
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(1, 0),
     textAlign: 'center',
     borderRadius: 0
   },
   title: {
     borderTop: '1px solid',
-    padding: 0,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
