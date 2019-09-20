@@ -3,10 +3,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import CheckBoxFullMap from './CheckBoxFullMap';
+import { LinkStyle } from '../styles/MermaidStyledComponents';
 
 import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+
+const MermaidHeader = [
+  { name: 'COLLECT', link: 'https://collect.datamermaid.org' },
+  { name: 'ABOUT THIS DATA', link: 'https://datamermaid.org/about/' },
+  { name: 'PRIVACY', link: 'https://datamermaid.org/terms-of-service/' },
+  { name: 'CONTACT', link: 'https://datamermaid.org/contact/' }
+];
 
 const useStyles = makeStyles(theme => ({
   appBarProperty: {
@@ -19,6 +26,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const HeaderItem = ({ children, link }) => {
+  return (
+    <Box p={2} fontSize={12} fontWeight="fontWeightBold">
+      <LinkStyle target="_blank" href={link} rel="noopener noreferrer">
+        {children}
+      </LinkStyle>
+    </Box>
+  );
+};
+
+const HeaderItems = MermaidHeader.map(({ name, link }) => {
+  return (
+    <HeaderItem key={name} link={link}>
+      {name}
+    </HeaderItem>
+  );
+});
+
 const Header = ({ toggle }) => {
   const classes = useStyles();
 
@@ -28,54 +53,7 @@ const Header = ({ toggle }) => {
         <Box p={1} flexGrow={1}>
           <MermaidLogo height="38px" />
         </Box>
-        <Box p={2}>
-          <Typography variant="overline">
-            <a
-              target="_blank"
-              style={{ color: 'white' }}
-              href="https://collect.datamermaid.org"
-              rel="noopener noreferrer"
-            >
-              COLLECT
-            </a>
-          </Typography>
-        </Box>
-        <Box p={2}>
-          <Typography variant="overline">
-            <a
-              target="_blank"
-              style={{ color: 'white' }}
-              href="https://datamermaid.org/about/"
-              rel="noopener noreferrer"
-            >
-              ABOUT THIS DATA
-            </a>
-          </Typography>
-        </Box>
-        <Box p={2}>
-          <Typography variant="overline">
-            <a
-              target="_blank"
-              style={{ color: 'white' }}
-              href="https://datamermaid.org/terms-of-service/"
-              rel="noopener noreferrer"
-            >
-              PRIVACY
-            </a>
-          </Typography>
-        </Box>
-        <Box p={2}>
-          <Typography variant="overline">
-            <a
-              target="_blank"
-              style={{ color: 'white' }}
-              href="https://datamermaid.org/contact/"
-              rel="noopener noreferrer"
-            >
-              CONTACT
-            </a>
-          </Typography>
-        </Box>
+        {HeaderItems}
         <Box>
           <CheckBoxFullMap toggle={toggle} />
         </Box>

@@ -36,3 +36,8 @@ export const ButtonStyle = styled('button')`
     outline: none;
   }
 `;
+
+export const LinkStyle = styled('a')`
+  text-decoration: none;
+  color: white;
+`;
