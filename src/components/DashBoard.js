@@ -166,13 +166,11 @@ const DashBoard = ({
     />
   );
 
-  const siteDashboard = siteDetail ? (
+  const siteDashboard = siteDetail && (
     <div>
       {dropDownSites}
       <SiteDetail selectSite={siteDetail} />
     </div>
-  ) : (
-    <div />
   );
 
   const dashboard = (
