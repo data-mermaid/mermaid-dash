@@ -51,7 +51,7 @@ const drawerStyleProperties = makeStyles(theme => ({
   siteDetailControlProperty: {
     display: 'flex',
     justifyContent: 'flex-start',
-    padding: '16px 8px 0 8px'
+    padding: '16px 8px 4px 8px'
   }
 }));
 
