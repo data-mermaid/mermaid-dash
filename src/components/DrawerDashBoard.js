@@ -28,6 +28,7 @@ const drawerStyleProperties = makeStyles(theme => ({
     flexShrink: 0
   },
   drawerPaper: {
+    backgroundColor: '#F4F4F4',
     width: drawerWidth,
     top: 49,
     [theme.breakpoints.down('sm')]: {
