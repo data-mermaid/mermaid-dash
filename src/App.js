@@ -3,6 +3,7 @@ import summary from '../src/apis/summary';
 import { BrowserRouter } from 'react-router-dom';
 import './customStyles.css';
 import * as leafletProperty from './leaflet_property';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
@@ -354,6 +355,7 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
+        <CssBaseline />
         <Header handleDrawerChange={this.handleDrawerChange} />
         <DrawerDashBoard
           open={this.state.open}

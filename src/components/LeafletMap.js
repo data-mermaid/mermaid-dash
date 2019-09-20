@@ -56,7 +56,7 @@ const generateClusterIconStyle = ({
     border-radius: 50%;
     border: 1px solid white;
     background-color: ${backgroundColor};
-    animation: ${setPulseAnimation && 'pulse 2s infinite'} ;
+    animation: ${setPulseAnimation && 'pulse 1s'} ;
   `;
 };
 
@@ -94,7 +94,7 @@ const mapProperty = {
 const miniMapProperty = {
   position: 'bottomleft',
   width: 240,
-  height: 135,
+  height: 130,
   zoomAnimation: true,
   toggleDisplay: true,
   aimingRectOptions: { color: '#91181A' },

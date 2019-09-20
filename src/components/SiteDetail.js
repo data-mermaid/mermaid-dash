@@ -65,7 +65,7 @@ const SiteDetail = ({ selectSite }) => {
 
   const siteAdmins = loadedSite && loadedSite.properties.project_admins && (
     <Box borderTop={1} pt={1} display="flex">
-      <AdminIcon />
+      <AdminIcon width="20px" height="20px" />
       <Typography variant="body1">
         Admins:{' '}
         {loadedSite.properties.project_admins
@@ -79,7 +79,7 @@ const SiteDetail = ({ selectSite }) => {
 
   const siteOrganizations = loadedSite && loadedSite.properties.tags && (
     <Box pt={1} display="flex">
-      <OrganizationIcon width="20px" height="20px" />
+      <OrganizationIcon width="23px" />
       <Typography variant="body1">
         Organizations:{' '}
         {loadedSite.properties.tags

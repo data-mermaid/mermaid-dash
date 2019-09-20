@@ -19,7 +19,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import styled from 'styled-components/macro';
 
-import { ButtonStyle } from './Button';
+import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
@@ -70,8 +70,8 @@ const gridStyleProperties = makeStyles(theme => ({
   },
   legendProperty: {
     position: 'fixed',
-    width: 200,
-    height: 135,
+    width: 190,
+    height: 130,
     bottom: 10,
     left: 250,
     color: 'white',
@@ -220,19 +220,19 @@ const DashBoard = ({
                 height="20px"
                 className={classes.legendMarkerIconProperty}
               />
-              <Typography variant="body1">Selected Project Site</Typography>
+              <Typography variant="body2">Selected Project Site</Typography>
             </Box>
             <Box display="flex" ml={1} mb={1}>
               <SelectMultiIcon width="15px" height="15px" className={classes.legendIconProperty} />
-              <Typography variant="body1">Selected Multiple Sites</Typography>
+              <Typography variant="body2">Selected Multiple Sites</Typography>
             </Box>
             <Box display="flex" ml={1} mb={1}>
               <SinglePointIcon width="15px" height="15px" className={classes.legendIconProperty} />
-              <Typography variant="body1">Project Site</Typography>
+              <Typography variant="body2">Project Site</Typography>
             </Box>
             <Box display="flex" ml={1}>
               <MultiPointsIcon width="15px" height="15px" className={classes.legendIconProperty} />
-              <Typography variant="body1">Multiple Project Sites</Typography>
+              <Typography variant="body2">Multiple Project Sites</Typography>
             </Box>
           </Box>
         </Paper>

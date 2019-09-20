@@ -15,7 +15,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
-import { ButtonStyle } from './Button';
+import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
 import PropTypes from 'prop-types';
@@ -41,7 +41,7 @@ const mapControlStyleProperty = makeStyles(theme => ({
   legendProperty: {
     position: 'fixed',
     width: 200,
-    height: 135,
+    height: 130,
     bottom: 10,
     left: 250,
     color: 'white',
@@ -110,19 +110,19 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
             height="20px"
             className={classes.legendMarkerIconProperty}
           />
-          <Typography variant="body1">Selected Project Site</Typography>
+          <Typography variant="body2">Selected Project Site</Typography>
         </Box>
         <Box display="flex" ml={1} mb={1}>
           <SelectMultiIcon width="15px" height="15px" className={classes.legendIconProperty} />
-          <Typography variant="body1">Selected Multiple Sites</Typography>
+          <Typography variant="body2">Selected Multiple Sites</Typography>
         </Box>
         <Box display="flex" ml={1} mb={1}>
           <SinglePointIcon width="15px" height="15px" className={classes.legendIconProperty} />
-          <Typography variant="body1">Project Site</Typography>
+          <Typography variant="body2">Project Site</Typography>
         </Box>
-        <Box display="flex" ml={1}>
+        <Box display="flex" ml={1} mb={1}>
           <MultiPointsIcon width="15px" height="15px" className={classes.legendIconProperty} />
-          <Typography variant="body1">Multiple Project Sites</Typography>
+          <Typography variant="body2">Multiple Project Sites</Typography>
         </Box>
       </Box>
     </Paper>

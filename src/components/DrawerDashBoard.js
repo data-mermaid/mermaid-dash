@@ -13,7 +13,7 @@ import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 import DropDown from './DropDown';
 import { theme } from './theme';
-import { ButtonStyle } from './Button';
+import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { summary, histogram, drawerWidth } from '../constants/summary-information';
 
 import PropTypes from 'prop-types';

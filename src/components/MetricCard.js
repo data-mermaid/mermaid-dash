@@ -12,26 +12,28 @@ import PropTypes from 'prop-types';
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(1, 0),
     textAlign: 'center',
     borderRadius: 0
   },
   title: {
     borderTop: '1px solid',
-    padding: '12px 4px 4px 4px'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '58px'
   },
   body: {
     color: '#5080AD',
-    padding: theme.spacing(4, 1)
+    padding: '30px 0px 30px 0'
   },
   progress: {
-    margin: theme.spacing(4.75, 1)
+    margin: '35px'
   }
 }));
 
 const MetricCard = ({ content: { title, count }, isLoading }) => {
   const classes = cardStyle();
-  const mediaMin1800 = useMediaQuery('(min-width:1800px)');
+  const mediaMin1842 = useMediaQuery('(min-width:1840px)');
 
   const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;
 
@@ -39,20 +41,17 @@ const MetricCard = ({ content: { title, count }, isLoading }) => {
     count !== null && count >= 0 && !isLoading ? (
       <Box className={classes.body}>{countContent}</Box>
     ) : (
-      <div>
-        <CircularProgress className={classes.progress} />
-      </div>
+      <CircularProgress size={50} className={classes.progress} />
     );
+
   const titleItem = title ? <Box className={classes.title}>{title}</Box> : null;
 
   return (
     <Paper className={classes.root}>
       <Typography variant="h2">{contentItem}</Typography>
-      {mediaMin1800 ? (
-        <Typography variant="h5">{titleItem}</Typography>
-      ) : (
-        <Typography variant="h6">{titleItem}</Typography>
-      )}
+      <Box fontWeight="fontWeightMedium" fontSize={mediaMin1842 ? 20 : 18}>
+        {titleItem}
+      </Box>
     </Paper>
   );
 };

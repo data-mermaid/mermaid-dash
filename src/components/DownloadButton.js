@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from 'styled-components/macro';
 import { theme } from './theme';
-import { ButtonStyle } from './Button';
+import { ButtonStyle } from '../styles/MermaidStyledComponents';
 
 const downloadButtonStyle = makeStyles(theme => ({
   iconProperty: {
