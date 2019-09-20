@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 
 const drawerStyleProperties = makeStyles(theme => ({
   summaryDashboardProperty: {
+    overflowX: 'hidden',
     paddingBottom: theme.spacing(8)
   },
   drawer: {
