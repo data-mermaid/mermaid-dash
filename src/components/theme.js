@@ -12,8 +12,8 @@ export const theme = {
   backButton: {
     color: color.mermaidDark,
     bgColor: color.mermaidWhite,
-    position: 'fixed',
-    width: '70px',
+    width: '75px',
+    height: 'auto',
     padding: '5px',
     initialTranslate: 'translate(0%)',
     hoverTranslate: 'translate(-5%, 0%)'
