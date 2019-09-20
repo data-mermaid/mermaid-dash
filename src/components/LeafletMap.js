@@ -18,7 +18,7 @@ L.Icon.Default.mergeOptions({
 
 const Wrapper = styled.div`
   position: fixed;
-  width: calc(100vw - 10px);
+  width: 100vw;
   height: calc(100vh - 49px);
 `;
 
@@ -209,7 +209,7 @@ class LeafletMap extends Component {
     const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
 
     //if all sites property are the same (equals to 1), return true
-    return coordinatesSizeResult || siteNamesSizeResult;
+    return coordinatesSizeResult && siteNamesSizeResult;
   }
 
   checkSimilarBoundingBox(box1, box2) {
