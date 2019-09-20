@@ -29,7 +29,16 @@ const drawerStyleProperties = makeStyles(theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    top: 49
+    top: 49,
+    [theme.breakpoints.down('sm')]: {
+      width: drawerWidth - 250
+    },
+    [theme.breakpoints.up('md')]: {
+      width: drawerWidth - 150
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: drawerWidth
+    }
   },
   drawerHeader: {
     display: 'flex',
