@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 const metricStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2)
+    padding: theme.spacing(0, 1)
   }
 }));
 
@@ -31,7 +31,8 @@ const MetricCards = ({ metrics, isLoading }) => {
 };
 
 MetricCards.propTypes = {
-  metrics: PropTypes.array
+  metrics: PropTypes.array,
+  classes: PropTypes.object
 };
 
 export default MetricCards;
