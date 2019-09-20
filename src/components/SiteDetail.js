@@ -2,18 +2,17 @@ import React, { useState } from 'react';
 
 import AdminIcon from '@material-ui/icons/Person';
 import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-
-import { TextLoader } from './Loader';
 
 import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
+import { TextLoader } from './Loader';
 import { pieChartDefault } from '../constants/sample-data';
 
 import PropTypes from 'prop-types';
@@ -41,8 +40,7 @@ const protocolsArray = [
 
 const containerStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(1)
+    padding: '16px 8px 100px 8px'
   },
   siteWrapper: {
     padding: theme.spacing(2, 2),
@@ -51,6 +49,9 @@ const containerStyle = makeStyles(theme => ({
   },
   reefProperty: {
     padding: '8px 8px 8px 0'
+  },
+  siteInfoCardProperty: {
+    padding: 0
   }
 }));
 
