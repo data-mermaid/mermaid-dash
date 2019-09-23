@@ -359,7 +359,7 @@ class App extends Component {
         <Header open={this.state.open} handleDrawerChange={this.handleDrawerChange} />
         <DrawerDashBoard
           open={this.state.open}
-          handleDrawerClose={this.handleDrawerClose}
+          handleDrawerChange={this.handleDrawerChange}
           siteDetail={this.state.siteDetail}
           siteDropDownData={this.state.siteDropDownData}
           siteClickHandler={this.siteClickHandler}
@@ -375,7 +375,6 @@ class App extends Component {
         />
         <LeafletMap
           open={this.state.open}
-          handleDrawerOpen={this.handleDrawerOpen}
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}

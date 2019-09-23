@@ -14,15 +14,15 @@ const ProgressBarContainer = styled('div')`
 
 const dropDownStyle = makeStyles(theme => ({
   root: {
-    width: '87%',
+    width: '85%',
     [theme.breakpoints.down('sm')]: {
-      width: '79%'
+      width: '77%'
     },
     [theme.breakpoints.up('md')]: {
-      width: '82%'
+      width: '80%'
     },
     [theme.breakpoints.up('lg')]: {
-      width: '87%'
+      width: '85%'
     }
   }
 }));
@@ -33,7 +33,7 @@ const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
   const customStyles = {
     control: (base, state) => ({
       ...base,
-      height: '65px',
+      height: '48px',
       boxShadow:
         '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)',
       borderRadius: 0

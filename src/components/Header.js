@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
@@ -82,10 +81,10 @@ const Header = ({ open, handleDrawerChange }) => {
         {HeaderItems}
         <Box>
           <Tooltip
-            title={open ? 'Hide Dashboard' : 'Show Dashboard'}
+            title={open ? 'Hide dashboard' : 'Show dashboard'}
             placement="bottom"
             TransitionComponent={Fade}
-            TransitionProps={{ timeout: 600 }}
+            TransitionProps={{ timeout: 300 }}
           >
             <IconButton
               color="inherit"
@@ -93,7 +92,7 @@ const Header = ({ open, handleDrawerChange }) => {
               onClick={handleDrawerChange}
               className={classes.menuIconProperty}
             >
-              {open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              <MenuIcon />
             </IconButton>
           </Tooltip>
         </Box>
