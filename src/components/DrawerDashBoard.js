@@ -6,7 +6,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { ThemeProvider } from 'styled-components/macro';
 
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
@@ -43,8 +42,8 @@ const drawerStyleProperties = makeStyles(theme => ({
   },
   siteDetailControlProperty: {
     display: 'flex',
-    justifyContent: 'flex-start',
-    padding: '16px 8px 4px 8px'
+    justifyContent: 'space-between',
+    padding: '16px 8px 0 8px'
   }
 }));
 
@@ -63,14 +62,14 @@ const DrawerDashBoard = ({
   const classes = drawerStyleProperties();
 
   const backButton = (
-    <Box>
-      <ThemeProvider theme={theme.backButton}>
-        <ButtonStyle translateHover={true} boxShadow={true} onClick={backButtonHandler}>
-          <BackArrowIcon />
-          <Typography variant="h6">Back</Typography>
-        </ButtonStyle>
-      </ThemeProvider>
-    </Box>
+    <ThemeProvider theme={theme.backButton}>
+      <ButtonStyle translateHover={true} boxShadow={true} onClick={backButtonHandler}>
+        <BackArrowIcon />
+        <Box fontSize={20} fontWeight="fontWeightBold">
+          Back
+        </Box>
+      </ButtonStyle>
+    </ThemeProvider>
   );
 
   const dropDownSites = siteDropDownData.length > 0 && showDropDown && (

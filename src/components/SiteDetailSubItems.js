@@ -24,18 +24,12 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
 
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
-      <ButtonStyle setHover={true} boxShadow={true}>
-        <LinkStyle
-          target="_blank"
-          href={loadedSiteProperties.contact_link}
-          rel="noopener noreferrer"
-        >
-          <Box p={1} display="flex" justifyContent="center" fontWeight="fontWeightMedium">
-            <ContactIcon fontSize="small" className={classes.iconProperty} />
-            Contact Admins
-          </Box>
-        </LinkStyle>
-      </ButtonStyle>
+      <LinkStyle target="_blank" href={loadedSiteProperties.contact_link} rel="noopener noreferrer">
+        <ButtonStyle setHover={true} boxShadow={true}>
+          <ContactIcon fontSize="small" className={classes.iconProperty} />
+          <Box fontWeight="fontWeightMedium">Contact Admins</Box>
+        </ButtonStyle>
+      </LinkStyle>
     </ThemeProvider>
   );
 

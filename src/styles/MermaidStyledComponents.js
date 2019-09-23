@@ -11,6 +11,10 @@ export const ButtonStyle = styled('button')`
       : css`
           border: none;
         `}
+  display: flex;
+  flex-direction: ${props => props.theme.flexDirection};
+  justify-content: center;
+  align-items: center;
   background: ${props => (props.notAllowed ? props.theme.notAllowedBgColor : props.theme.bgColor)};
   font-size: 1em;
   position: ${props => props.theme.position};
@@ -25,13 +29,13 @@ export const ButtonStyle = styled('button')`
   cursor: ${props => (props.notAllowed ? 'not-allowed' : 'pointer')};
   &:hover {
     transform: ${props => props.theme.hoverTranslate};
-  };
+  }
   &:hover {
     transform: ${props => props.growScaleHover && 'scale(1.1)'};
-  };
+  }
   &:hover {
     transform: ${props => props.setWiggle && 'scale(0.95)'};
-  };
+  }
   &:focus {
     outline: none;
   }
