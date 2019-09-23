@@ -41,13 +41,6 @@ const drawerStyleProperties = makeStyles(theme => ({
       width: drawerWidth
     }
   },
-  drawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-start'
-  },
   siteDetailControlProperty: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -80,6 +73,21 @@ const DrawerDashBoard = ({
     </Box>
   );
 
+  const dropDownSites = siteDropDownData.length > 0 && showDropDown && (
+    <DropDown
+      siteList={siteDropDownData}
+      selectSite={siteDetail}
+      siteClickHandler={siteClickHandler}
+    />
+  );
+
+  const siteControls = (
+    <Box className={classes.siteDetailControlProperty}>
+      {backButton}
+      {dropDownSites}
+    </Box>
+  );
+
   const dashboard = (
     <div className={classes.summaryDashboardProperty}>
       <InformationCard title={summary.title} type={summary.type} textContent={summary} />
@@ -92,25 +100,11 @@ const DrawerDashBoard = ({
     </div>
   );
 
-  const dropDownSites = siteDropDownData.length > 0 && showDropDown && (
-    <DropDown
-      siteList={siteDropDownData}
-      selectSite={siteDetail}
-      siteClickHandler={siteClickHandler}
-    />
-  );
-
   const siteDashboard = siteDetail && (
     <div>
+      {siteControls}
       <SiteDetail selectSite={siteDetail} />
     </div>
-  );
-
-  const siteControlArea = showSiteDetail && (
-    <Box className={classes.siteDetailControlProperty}>
-      {backButton}
-      {dropDownSites}
-    </Box>
   );
 
   return (
@@ -123,7 +117,6 @@ const DrawerDashBoard = ({
         paper: classes.drawerPaper
       }}
     >
-      {siteControlArea}
       {showSiteDetail ? siteDashboard : dashboard}
     </Drawer>
   );
