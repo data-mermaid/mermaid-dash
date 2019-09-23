@@ -3,7 +3,6 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import BackArrowIcon from '@material-ui/icons/ArrowBack';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { ThemeProvider } from 'styled-components/macro';
@@ -48,8 +47,22 @@ const drawerStyleProperties = makeStyles(theme => ({
   },
   siteDetailControlProperty: {
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     padding: '16px 8px 0 8px'
+  },
+  collapseButtonProperty: {
+    position: 'fixed',
+    top: 66,
+    right: 650,
+    [theme.breakpoints.down('sm')]: {
+      right: 400
+    },
+    [theme.breakpoints.up('md')]: {
+      right: 500
+    },
+    [theme.breakpoints.up('lg')]: {
+      right: 650
+    }
   }
 }));
 
@@ -68,15 +81,21 @@ const DrawerDashBoard = ({
 }) => {
   const classes = drawerStyleProperties();
 
-  const backButton = (
-    <ThemeProvider theme={theme.backButton}>
-      <ButtonStyle translateHover={true} boxShadow={true} onClick={backButtonHandler}>
-        <BackArrowIcon />
-        <Box fontSize={20} fontWeight="fontWeightBold">
-          Back
-        </Box>
-      </ButtonStyle>
-    </ThemeProvider>
+  const collapseDashboardMenu = (
+    <Box className={classes.collapseButtonProperty}>
+      <ThemeProvider theme={theme.dashboardControl}>
+        <Tooltip
+          title="Hide"
+          placement="bottom"
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 300 }}
+        >
+          <ButtonStyle onClick={handleDrawerChange}>
+            <ChevronRightIcon />
+          </ButtonStyle>
+        </Tooltip>
+      </ThemeProvider>
+    </Box>
   );
 
   const clearSelectedSite = (
@@ -100,24 +119,10 @@ const DrawerDashBoard = ({
     />
   );
 
-  const collapseMenu = (
-    <Tooltip
-      title="Hide dashboard"
-      placement="bottom"
-      TransitionComponent={Fade}
-      TransitionProps={{ timeout: 300 }}
-    >
-      <IconButton color="inherit" aria-label="open drawer" onClick={handleDrawerChange}>
-        <ChevronRightIcon />
-      </IconButton>
-    </Tooltip>
-  );
-
   const siteControls = (
     <Box className={classes.siteDetailControlProperty}>
-      {collapseMenu}
-      {clearSelectedSite}
       {dropDownSites}
+      {clearSelectedSite}
     </Box>
   );
 
@@ -150,6 +155,7 @@ const DrawerDashBoard = ({
         paper: classes.drawerPaper
       }}
     >
+      {collapseDashboardMenu}
       {showSiteDetail ? siteDashboard : dashboard}
     </Drawer>
   );

@@ -4,8 +4,8 @@ const color = {
   mermaidBlue: '#468DAE',
   mermaidBlack: 'black',
   mermaidNotAllowed: '#9C9C9C',
-  mermaidQuiteGray: 'rgba(0,0,0,0.2)',
-  mermaidGray: '#585858'
+  mermaidGray: '#585858',
+  mermaidWhiteGray: '#F4F4F4'
 };
 
 export const theme = {
@@ -29,10 +29,17 @@ export const theme = {
   mapControl: {
     color: color.mermaidGray,
     bgColor: color.mermaidWhite,
-    borderColor: color.mermaidQuiteGray,
-    position: 'fixed',
+    borderColor: color.mermaidWhiteGray,
     padding: '0',
     width: '32px',
     height: '32px'
+  },
+  dashboardControl: {
+    color: color.mermaidGray,
+    bgColor: color.mermaidWhiteGray,
+    borderColor: color.mermaidWhiteGray,
+    padding: '0',
+    width: '20px',
+    height: '48px'
   }
 };

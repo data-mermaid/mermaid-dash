@@ -14,15 +14,15 @@ const ProgressBarContainer = styled('div')`
 
 const dropDownStyle = makeStyles(theme => ({
   root: {
-    width: '85%',
+    width: '92%',
     [theme.breakpoints.down('sm')]: {
-      width: '77%'
+      width: '86%'
     },
     [theme.breakpoints.up('md')]: {
-      width: '80%'
+      width: '89%'
     },
     [theme.breakpoints.up('lg')]: {
-      width: '85%'
+      width: '92%'
     }
   }
 }));
