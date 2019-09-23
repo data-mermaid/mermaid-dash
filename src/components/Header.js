@@ -1,13 +1,16 @@
 import React from 'react';
 
 import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Box from '@material-ui/core/Box';
+import Fade from '@material-ui/core/Fade';
 import { drawerWidth } from '../constants/summary-information';
 import { LinkStyle } from '../styles/MermaidStyledComponents';
 
@@ -67,7 +70,7 @@ const HeaderItems = MermaidHeader.map(({ name, link }) => {
   );
 });
 
-const Header = ({ handleDrawerChange }) => {
+const Header = ({ open, handleDrawerChange }) => {
   const classes = headerStyles();
 
   return (
@@ -78,14 +81,21 @@ const Header = ({ handleDrawerChange }) => {
         </Box>
         {HeaderItems}
         <Box>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerChange}
-            className={classes.menuIconProperty}
+          <Tooltip
+            title={open ? 'Hide Dashboard' : 'Show Dashboard'}
+            placement="bottom"
+            TransitionComponent={Fade}
+            TransitionProps={{ timeout: 600 }}
           >
-            <MenuIcon />
-          </IconButton>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerChange}
+              className={classes.menuIconProperty}
+            >
+              {open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
     </AppBar>

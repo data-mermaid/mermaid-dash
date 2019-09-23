@@ -356,7 +356,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <CssBaseline />
-        <Header handleDrawerChange={this.handleDrawerChange} />
+        <Header open={this.state.open} handleDrawerChange={this.handleDrawerChange} />
         <DrawerDashBoard
           open={this.state.open}
           handleDrawerClose={this.handleDrawerClose}
