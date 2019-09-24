@@ -4,7 +4,7 @@ import { default as ReactSelect } from 'react-select';
 import styled from 'styled-components';
 import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 
 import PropTypes from 'prop-types';
 
@@ -14,20 +14,31 @@ const ProgressBarContainer = styled('div')`
 
 const dropDownStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(1)
+    width: '92%',
+    [theme.breakpoints.down('sm')]: {
+      width: '86%'
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '89%'
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '92%'
+    }
   }
 }));
-
-const Select = styled(ReactSelect)`
-  div {
-    border-radius: 0px !important;
-  }
-`;
 
 const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
   const classes = dropDownStyle();
   const [loadedSiteList, setLoadedSiteList] = useState([]);
+  const customStyles = {
+    control: (base, state) => ({
+      ...base,
+      height: '48px',
+      boxShadow:
+        '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)',
+      borderRadius: 0
+    })
+  };
 
   if (siteList && (!loadedSiteList[0] || siteList[0].id !== loadedSiteList[0].key)) {
     const loadedList = siteList.map(site => {
@@ -48,12 +59,12 @@ const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
   };
 
   const siteListComponent = loadedSiteList ? (
-    <Select
+    <ReactSelect
       value={valueForSelect(selectSite)}
       placeholder="Select Site"
       onChange={siteClickHandler}
       options={loadedSiteList}
-      className={classes.root}
+      styles={customStyles}
     />
   ) : (
     <ProgressBarContainer>
@@ -61,17 +72,14 @@ const DropDown = ({ siteList, siteClickHandler, selectSite }) => {
     </ProgressBarContainer>
   );
 
-  return (
-    <Grid item xs={12}>
-      {siteListComponent}
-    </Grid>
-  );
+  return <Box className={classes.root}>{siteListComponent}</Box>;
 };
 
 DropDown.propTypes = {
   selectSite: PropTypes.object,
   siteList: PropTypes.array,
-  siteSelectHandler: PropTypes.func
+  siteSelectHandler: PropTypes.func,
+  classes: PropTypes.object
 };
 
 export default DropDown;

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import summary from '../src/apis/summary';
+import { BrowserRouter } from 'react-router-dom';
 import './customStyles.css';
 import * as leafletProperty from './leaflet_property';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from './components/Header';
-import DashBoard from './components/DashBoard';
+import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
+import LeafletMapControl from './components/LeafletMapControl';
 
 class App extends Component {
   state = {
-    showFullMap: true,
     showSiteDetail: false,
     showDropDown: false,
     sites: [],
@@ -52,7 +52,8 @@ class App extends Component {
     zoomToSite: false,
     highlightMarker: null,
     highlightCluster: null,
-    isLoading: false
+    isLoading: false,
+    open: true
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -139,8 +140,8 @@ class App extends Component {
     this.setState({ metrics });
   }
 
-  toggle = () => {
-    this.setState({ showFullMap: !this.state.showFullMap, zoomFullMap: false });
+  handleDrawerChange = () => {
+    this.setState({ open: !this.state.open });
   };
 
   siteClickHandler = selectedSite => {
@@ -355,8 +356,25 @@ class App extends Component {
     return (
       <BrowserRouter>
         <CssBaseline />
-        <Header toggle={this.toggle} showFullMap={this.state.showFullMap} />
+        <Header open={this.state.open} handleDrawerChange={this.handleDrawerChange} />
+        <DrawerDashBoard
+          open={this.state.open}
+          handleDrawerChange={this.handleDrawerChange}
+          siteDetail={this.state.siteDetail}
+          siteDropDownData={this.state.siteDropDownData}
+          siteClickHandler={this.siteClickHandler}
+          showSiteDetail={this.state.showSiteDetail}
+          showDropDown={this.state.showDropDown}
+          metrics={this.state.metrics}
+          histogramContent={this.state.histogram}
+          backButtonHandler={this.backButtonHandler}
+          fullMapZoomHandler={this.fullMapZoomHandler}
+          zoomToSiteHandler={this.zoomToSiteHandler}
+          zoomAnimate={this.state.zoomAnimate}
+          isLoading={this.state.isLoading}
+        />
         <LeafletMap
+          open={this.state.open}
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
@@ -374,22 +392,10 @@ class App extends Component {
           removeHighlightCluster={this.removeHighlightCluster}
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
-          showFullMap={this.state.showFullMap}
         />
-        <DashBoard
-          siteDetail={this.state.siteDetail}
-          siteDropDownData={this.state.siteDropDownData}
-          siteClickHandler={this.siteClickHandler}
-          showSiteDetail={this.state.showSiteDetail}
-          showFullMap={this.state.showFullMap}
-          showDropDown={this.state.showDropDown}
-          metrics={this.state.metrics}
-          histogramContent={this.state.histogram}
-          backButtonHandler={this.backButtonHandler}
+        <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
-          zoomAnimate={this.state.zoomAnimate}
-          isLoading={this.state.isLoading}
         />
       </BrowserRouter>
     );

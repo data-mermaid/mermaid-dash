@@ -1,3 +1,5 @@
+export const drawerWidth = 650;
+
 export const summary = {
   title: 'Summary Statistics',
   header: 'Data is more powerful when shared',

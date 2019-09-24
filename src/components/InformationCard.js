@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import styled from 'styled-components/macro';
 
 import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
@@ -12,12 +13,16 @@ import CartTextContent from './CardTextContent';
 
 import PropTypes from 'prop-types';
 
+const CardDiv = styled.div`
+  padding: ${props => (props.setPaddingOff ? '0 0 16px 0' : '16px 8px 16px 8px')};
+`;
+
 const cardStyle = makeStyles(theme => ({
   root: {
-    paddingBottom: theme.spacing(2)
+    padding: theme.spacing(2, 1)
   },
   cardWrapper: {
-    padding: theme.spacing(2, 2),
+    padding: theme.spacing(2, 1),
     borderRadius: 0
   },
   iconProperty: {
@@ -115,7 +120,7 @@ const InformationCard = ({
       <Paper className={classes.cardWrapper}>{loaderType}</Paper>
     );
 
-  return <div className={classes.root}>{cardContent}</div>;
+  return <CardDiv setPaddingOff={type === 'pieChart'}>{cardContent}</CardDiv>;
 };
 
 InformationCard.propTypes = {
@@ -130,7 +135,8 @@ InformationCard.propTypes = {
   sampleUnitCounts: PropTypes.number,
   pieChartContent: PropTypes.array,
   pieChartLegend: PropTypes.object,
-  textContent: PropTypes.object
+  textContent: PropTypes.object,
+  classes: PropTypes.object
 };
 
 export default InformationCard;
