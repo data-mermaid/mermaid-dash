@@ -14,6 +14,7 @@ class App extends Component {
   state = {
     showSiteDetail: false,
     showDropDown: false,
+    mapSizeCount: 0,
     sites: [],
     siteDetail: null,
     siteDropDownData: [],
@@ -141,7 +142,7 @@ class App extends Component {
   }
 
   handleDrawerChange = () => {
-    this.setState({ open: !this.state.open });
+    this.setState({ open: !this.state.open, mapSizeCount: this.state.mapSizeCount + 1 });
   };
 
   siteClickHandler = selectedSite => {
@@ -379,6 +380,7 @@ class App extends Component {
         />
         <LeafletMap
           open={this.state.open}
+          dashboardSize={this.state.mapSizeCount}
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}

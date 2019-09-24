@@ -145,7 +145,6 @@ class LeafletMap extends Component {
     }
     if (this.props.open) {
       this.map.invalidateSize();
-      console.log(this.map);
     }
     this.zoomToSelectedSite();
     this.zoomFullMap();
@@ -164,6 +163,13 @@ class LeafletMap extends Component {
     this.setState({ mapBoundingBoxCorner: initSouthBbox });
     this.props.getMapBounds(initBbox);
     this.updateBoundingBoxFromZoom();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.dashboardSize !== prevProps.dashboardSize) {
+      console.error('Map Invalidation needs to trigger here');
+      // TODO: Trigger map invalidation function
+    }
   }
 
   panToOffCenter(latlng, offset, options) {
@@ -297,9 +303,7 @@ class LeafletMap extends Component {
         });
 
         return new L.DivIcon({
-          html: `<div style="${clusterStyle}"><span style="${
-            leafletProperty.clusterIconNumberStyles
-          }"> ${childCount} </span></div>`,
+          html: `<div style="${clusterStyle}"><span style="${leafletProperty.clusterIconNumberStyles}"> ${childCount} </span></div>`,
           className: 'marker-cluster-icon'
         });
       }
