@@ -18,21 +18,23 @@ L.Icon.Default.mergeOptions({
 
 const MapContainer = styled.div`
   height: 100%;
-  padding-right: ${props => (props.open ? '650px' : '0px')};
-`;
-
-const MapFrame = styled.div`
-  height: 100%;
   width: 100%;
-  outline: 10px solid black;
+  padding-right: ${props => (props.dashBoardOpen ? '650px' : '0px')};
+
+  @media (min-width: 0px) {
+    padding-right: ${props => (props.dashBoardOpen ? '350px' : '0px')};
+  }
+  @media (min-width: 960px) {
+    padding-right: ${props => (props.dashBoardOpen ? '500px' : '0px')};
+  }
+  @media (min-width: 1280px) {
+    padding-right: ${props => (props.dashBoardOpen ? '650px' : '0px')};
+  }
 `;
 
 const Wrapper = styled.div`
   height: calc(100vh - 49px);
 `;
-
-const windowWidth = () => (window ? window.innerWidth : 1800);
-const offsetX = w => 0.15 * w;
 
 const generateClusterIconStyle = ({
   baseRadius,
@@ -124,8 +126,8 @@ class LeafletMap extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { markersData: prevMarkersData } = prevProps;
-    const { markersData } = this.props;
+    const { markersData: prevMarkersData, dashBoardOpen: prevDashboardOpen } = prevProps;
+    const { markersData, dashBoardOpen } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
@@ -143,9 +145,12 @@ class LeafletMap extends Component {
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
     }
-    if (this.props.open) {
+
+    //redraw leaflet map when dashboard is open or close
+    if (dashBoardOpen !== prevDashboardOpen) {
       this.map.invalidateSize();
     }
+
     this.zoomToSelectedSite();
     this.zoomFullMap();
   }
@@ -165,16 +170,9 @@ class LeafletMap extends Component {
     this.updateBoundingBoxFromZoom();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.dashboardSize !== prevProps.dashboardSize) {
-      console.error('Map Invalidation needs to trigger here');
-      // TODO: Trigger map invalidation function
-    }
-  }
-
-  panToOffCenter(latlng, offset, options) {
-    const x = latlng.containerPoint.x + offset[0],
-      y = latlng.containerPoint.y - offset[1],
+  panToOffCenter(latlng, options) {
+    const x = latlng.containerPoint.x,
+      y = latlng.containerPoint.y,
       currentZoom = this.map._zoom,
       newLatlng = this.map.containerPointToLatLng([x, y]);
 
@@ -303,7 +301,9 @@ class LeafletMap extends Component {
         });
 
         return new L.DivIcon({
-          html: `<div style="${clusterStyle}"><span style="${leafletProperty.clusterIconNumberStyles}"> ${childCount} </span></div>`,
+          html: `<div style="${clusterStyle}"><span style="${
+            leafletProperty.clusterIconNumberStyles
+          }"> ${childCount} </span></div>`,
           className: 'marker-cluster-icon'
         });
       }
@@ -373,12 +373,11 @@ class LeafletMap extends Component {
 
       markersCluster.addLayer(
         markerPoint.on('click', e => {
-          const responsiveOffSetX = offsetX(windowWidth());
           removeHighlight();
           setIconActive(markerPoint);
           siteClickHandler(marker);
           sitesDropDownToggle(false);
-          this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
+          this.panToOffCenter(e, { animate: true });
         })
       );
     });
@@ -388,10 +387,8 @@ class LeafletMap extends Component {
 
   render() {
     return (
-      <MapContainer open={this.props.open}>
-        <MapFrame>
-          <Wrapper id="map" />
-        </MapFrame>
+      <MapContainer dashBoardOpen={this.props.dashBoardOpen}>
+        <Wrapper id="map" />
       </MapContainer>
     );
   }

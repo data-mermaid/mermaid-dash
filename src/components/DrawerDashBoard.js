@@ -67,7 +67,7 @@ const drawerStyleProperties = makeStyles(theme => ({
 }));
 
 const DrawerDashBoard = ({
-  open,
+  dashBoardOpen,
   handleDrawerChange,
   isLoading,
   showDropDown,
@@ -150,7 +150,7 @@ const DrawerDashBoard = ({
       className={classes.drawer}
       variant="persistent"
       anchor="right"
-      open={open}
+      open={dashBoardOpen}
       classes={{
         paper: classes.drawerPaper
       }}
@@ -162,7 +162,7 @@ const DrawerDashBoard = ({
 };
 
 DrawerDashBoard.propTypes = {
-  open: PropTypes.bool,
+  dashBoardOpen: PropTypes.bool,
   isLoading: PropTypes.bool,
   showDropDown: PropTypes.bool,
   showSiteDetail: PropTypes.bool,

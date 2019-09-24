@@ -14,7 +14,6 @@ class App extends Component {
   state = {
     showSiteDetail: false,
     showDropDown: false,
-    mapSizeCount: 0,
     sites: [],
     siteDetail: null,
     siteDropDownData: [],
@@ -54,7 +53,7 @@ class App extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
-    open: true
+    dashBoardOpen: true
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -142,7 +141,7 @@ class App extends Component {
   }
 
   handleDrawerChange = () => {
-    this.setState({ open: !this.state.open, mapSizeCount: this.state.mapSizeCount + 1 });
+    this.setState({ dashBoardOpen: !this.state.dashBoardOpen });
   };
 
   siteClickHandler = selectedSite => {
@@ -357,9 +356,12 @@ class App extends Component {
     return (
       <BrowserRouter>
         <CssBaseline />
-        <Header open={this.state.open} handleDrawerChange={this.handleDrawerChange} />
+        <Header
+          dashBoardOpen={this.state.dashBoardOpen}
+          handleDrawerChange={this.handleDrawerChange}
+        />
         <DrawerDashBoard
-          open={this.state.open}
+          dashBoardOpen={this.state.dashBoardOpen}
           handleDrawerChange={this.handleDrawerChange}
           siteDetail={this.state.siteDetail}
           siteDropDownData={this.state.siteDropDownData}
@@ -379,8 +381,7 @@ class App extends Component {
           zoomToSiteHandler={this.zoomToSiteHandler}
         />
         <LeafletMap
-          open={this.state.open}
-          dashboardSize={this.state.mapSizeCount}
+          dashBoardOpen={this.state.dashBoardOpen}
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
