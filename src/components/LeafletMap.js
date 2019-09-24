@@ -19,16 +19,16 @@ L.Icon.Default.mergeOptions({
 const MapContainer = styled.div`
   height: 100%;
   width: 100%;
-  padding-right: ${props => (props.dashBoardOpen ? '650px' : '0px')};
+  padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
 
   @media (min-width: 0px) {
-    padding-right: ${props => (props.dashBoardOpen ? '350px' : '0px')};
+    padding-right: ${props => (props.sidePanelOpen ? '350px' : '0px')};
   }
   @media (min-width: 960px) {
-    padding-right: ${props => (props.dashBoardOpen ? '500px' : '0px')};
+    padding-right: ${props => (props.sidePanelOpen ? '500px' : '0px')};
   }
   @media (min-width: 1280px) {
-    padding-right: ${props => (props.dashBoardOpen ? '650px' : '0px')};
+    padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
   }
 `;
 
@@ -126,8 +126,8 @@ class LeafletMap extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { markersData: prevMarkersData, dashBoardOpen: prevDashboardOpen } = prevProps;
-    const { markersData, dashBoardOpen } = this.props;
+    const { markersData: prevMarkersData, sidePanelOpen: prevsidePanelOpen } = prevProps;
+    const { markersData, sidePanelOpen } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
@@ -147,7 +147,7 @@ class LeafletMap extends Component {
     }
 
     //redraw leaflet map when dashboard is open or close
-    if (dashBoardOpen !== prevDashboardOpen) {
+    if (sidePanelOpen !== prevsidePanelOpen) {
       this.map.invalidateSize();
     }
 
@@ -387,7 +387,7 @@ class LeafletMap extends Component {
 
   render() {
     return (
-      <MapContainer dashBoardOpen={this.props.dashBoardOpen}>
+      <MapContainer sidePanelOpen={this.props.sidePanelOpen}>
         <Wrapper id="map" />
       </MapContainer>
     );

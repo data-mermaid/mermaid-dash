@@ -69,7 +69,7 @@ const HeaderItems = MermaidHeader.map(({ name, link }) => {
   );
 });
 
-const Header = ({ dashBoardOpen, handleDrawerChange }) => {
+const Header = ({ sidePanelOpen, handleDrawerChange }) => {
   const classes = headerStyles();
 
   return (
@@ -81,7 +81,7 @@ const Header = ({ dashBoardOpen, handleDrawerChange }) => {
         {HeaderItems}
         <Box>
           <Tooltip
-            title={dashBoardOpen ? 'Hide dashboard' : 'Show dashboard'}
+            title={sidePanelOpen ? 'Hide dashboard' : 'Show dashboard'}
             placement="bottom"
             TransitionComponent={Fade}
             TransitionProps={{ timeout: 300 }}

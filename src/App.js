@@ -53,7 +53,7 @@ class App extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
-    dashBoardOpen: true
+    sidePanelOpen: true
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -141,7 +141,7 @@ class App extends Component {
   }
 
   handleDrawerChange = () => {
-    this.setState({ dashBoardOpen: !this.state.dashBoardOpen });
+    this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
   };
 
   siteClickHandler = selectedSite => {
@@ -357,11 +357,11 @@ class App extends Component {
       <BrowserRouter>
         <CssBaseline />
         <Header
-          dashBoardOpen={this.state.dashBoardOpen}
+          sidePanelOpen={this.state.sidePanelOpen}
           handleDrawerChange={this.handleDrawerChange}
         />
         <DrawerDashBoard
-          dashBoardOpen={this.state.dashBoardOpen}
+          sidePanelOpen={this.state.sidePanelOpen}
           handleDrawerChange={this.handleDrawerChange}
           siteDetail={this.state.siteDetail}
           siteDropDownData={this.state.siteDropDownData}
@@ -381,7 +381,7 @@ class App extends Component {
           zoomToSiteHandler={this.zoomToSiteHandler}
         />
         <LeafletMap
-          dashBoardOpen={this.state.dashBoardOpen}
+          sidePanelOpen={this.state.sidePanelOpen}
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
