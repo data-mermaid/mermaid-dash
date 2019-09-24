@@ -24,12 +24,14 @@ const mapControlStyleProperty = makeStyles(theme => ({
   zoomToIconWrapperProperty: {
     position: 'fixed',
     top: 170,
-    left: 11
+    left: 11,
+    zIndex: 1000
   },
   zoomOutIconWrapperProperty: {
     position: 'fixed',
     top: 130,
-    left: 11
+    left: 11,
+    zIndex: 1000
   },
   mapControlIconProperty: {
     width: '18px',
@@ -45,7 +47,8 @@ const mapControlStyleProperty = makeStyles(theme => ({
     opacity: 0.6,
     backgroundColor: '#000000',
     borderRadius: 0,
-    boxShadow: 'none'
+    boxShadow: 'none',
+    zIndex: 1000
   },
   legendItemProperty: {
     padding: '5px 0 10px 0px'

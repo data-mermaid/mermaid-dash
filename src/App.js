@@ -53,7 +53,7 @@ class App extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
-    open: true
+    sidePanelOpen: true
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -141,7 +141,7 @@ class App extends Component {
   }
 
   handleDrawerChange = () => {
-    this.setState({ open: !this.state.open });
+    this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
   };
 
   siteClickHandler = selectedSite => {
@@ -356,9 +356,12 @@ class App extends Component {
     return (
       <BrowserRouter>
         <CssBaseline />
-        <Header open={this.state.open} handleDrawerChange={this.handleDrawerChange} />
+        <Header
+          sidePanelOpen={this.state.sidePanelOpen}
+          handleDrawerChange={this.handleDrawerChange}
+        />
         <DrawerDashBoard
-          open={this.state.open}
+          sidePanelOpen={this.state.sidePanelOpen}
           handleDrawerChange={this.handleDrawerChange}
           siteDetail={this.state.siteDetail}
           siteDropDownData={this.state.siteDropDownData}
@@ -373,8 +376,12 @@ class App extends Component {
           zoomAnimate={this.state.zoomAnimate}
           isLoading={this.state.isLoading}
         />
+        <LeafletMapControl
+          fullMapZoomHandler={this.fullMapZoomHandler}
+          zoomToSiteHandler={this.zoomToSiteHandler}
+        />
         <LeafletMap
-          open={this.state.open}
+          sidePanelOpen={this.state.sidePanelOpen}
           markersData={this.state.sites}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
@@ -392,10 +399,6 @@ class App extends Component {
           removeHighlightCluster={this.removeHighlightCluster}
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
-        />
-        <LeafletMapControl
-          fullMapZoomHandler={this.fullMapZoomHandler}
-          zoomToSiteHandler={this.zoomToSiteHandler}
         />
       </BrowserRouter>
     );

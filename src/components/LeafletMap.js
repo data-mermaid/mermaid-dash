@@ -16,14 +16,25 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
-const Wrapper = styled.div`
-  position: fixed;
-  width: 100vw;
-  height: calc(100vh - 49px);
+const MapContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
+
+  @media (min-width: 0px) {
+    padding-right: ${props => (props.sidePanelOpen ? '350px' : '0px')};
+  }
+  @media (min-width: 960px) {
+    padding-right: ${props => (props.sidePanelOpen ? '500px' : '0px')};
+  }
+  @media (min-width: 1280px) {
+    padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
+  }
 `;
 
-const windowWidth = () => (window ? window.innerWidth : 1800);
-const offsetX = w => 0.15 * w;
+const Wrapper = styled.div`
+  height: calc(100vh - 49px);
+`;
 
 const generateClusterIconStyle = ({
   baseRadius,
@@ -115,8 +126,8 @@ class LeafletMap extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { markersData: prevMarkersData } = prevProps;
-    const { markersData } = this.props;
+    const { markersData: prevMarkersData, sidePanelOpen: prevsidePanelOpen } = prevProps;
+    const { markersData, sidePanelOpen } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
@@ -133,6 +144,11 @@ class LeafletMap extends Component {
 
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
+    }
+
+    //redraw leaflet map when dashboard is open or close
+    if (sidePanelOpen !== prevsidePanelOpen) {
+      this.map.invalidateSize();
     }
 
     this.zoomToSelectedSite();
@@ -154,9 +170,9 @@ class LeafletMap extends Component {
     this.updateBoundingBoxFromZoom();
   }
 
-  panToOffCenter(latlng, offset, options) {
-    const x = latlng.containerPoint.x + offset[0],
-      y = latlng.containerPoint.y - offset[1],
+  panToOffCenter(latlng, options) {
+    const x = latlng.containerPoint.x,
+      y = latlng.containerPoint.y,
       currentZoom = this.map._zoom,
       newLatlng = this.map.containerPointToLatLng([x, y]);
 
@@ -357,12 +373,11 @@ class LeafletMap extends Component {
 
       markersCluster.addLayer(
         markerPoint.on('click', e => {
-          const responsiveOffSetX = offsetX(windowWidth());
           removeHighlight();
           setIconActive(markerPoint);
           siteClickHandler(marker);
           sitesDropDownToggle(false);
-          this.panToOffCenter(e, [responsiveOffSetX, 0], { animate: true });
+          this.panToOffCenter(e, { animate: true });
         })
       );
     });
@@ -371,7 +386,11 @@ class LeafletMap extends Component {
   }
 
   render() {
-    return <Wrapper id="map" />;
+    return (
+      <MapContainer sidePanelOpen={this.props.sidePanelOpen}>
+        <Wrapper id="map" />
+      </MapContainer>
+    );
   }
 }
 export default LeafletMap;
