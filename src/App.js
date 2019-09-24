@@ -373,6 +373,10 @@ class App extends Component {
           zoomAnimate={this.state.zoomAnimate}
           isLoading={this.state.isLoading}
         />
+        <LeafletMapControl
+          fullMapZoomHandler={this.fullMapZoomHandler}
+          zoomToSiteHandler={this.zoomToSiteHandler}
+        />
         <LeafletMap
           open={this.state.open}
           markersData={this.state.sites}
@@ -392,10 +396,6 @@ class App extends Component {
           removeHighlightCluster={this.removeHighlightCluster}
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
-        />
-        <LeafletMapControl
-          fullMapZoomHandler={this.fullMapZoomHandler}
-          zoomToSiteHandler={this.zoomToSiteHandler}
         />
       </BrowserRouter>
     );

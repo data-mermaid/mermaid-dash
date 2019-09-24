@@ -16,9 +16,18 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
+const MapContainer = styled.div`
+  height: 100%;
+  padding-right: ${props => (props.open ? '650px' : '0px')};
+`;
+
+const MapFrame = styled.div`
+  height: 100%;
+  width: 100%;
+  outline: 10px solid black;
+`;
+
 const Wrapper = styled.div`
-  position: fixed;
-  width: 100vw;
   height: calc(100vh - 49px);
 `;
 
@@ -134,7 +143,10 @@ class LeafletMap extends Component {
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
     }
-
+    if (this.props.open) {
+      this.map.invalidateSize();
+      console.log(this.map);
+    }
     this.zoomToSelectedSite();
     this.zoomFullMap();
   }
@@ -371,7 +383,13 @@ class LeafletMap extends Component {
   }
 
   render() {
-    return <Wrapper id="map" />;
+    return (
+      <MapContainer open={this.props.open}>
+        <MapFrame>
+          <Wrapper id="map" />
+        </MapFrame>
+      </MapContainer>
+    );
   }
 }
 export default LeafletMap;
