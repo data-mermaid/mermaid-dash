@@ -18,6 +18,7 @@ import DropDown from './DropDown';
 import { theme } from './theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { summary, histogram, drawerWidth } from '../constants/summary-information';
+import SidePanelControl from './SidePanelControl';
 
 import PropTypes from 'prop-types';
 
@@ -157,7 +158,7 @@ const DrawerDashBoard = ({
     </div>
   );
 
-  return (
+  const result = sidePanelOpen ? (
     <Drawer
       className={classes.drawer}
       variant="persistent"
@@ -171,7 +172,15 @@ const DrawerDashBoard = ({
       {clearSelectedSite}
       {showSiteDetail ? siteDashboard : dashboard}
     </Drawer>
+  ) : (
+    <SidePanelControl
+      showSiteDetail={showSiteDetail}
+      handleDrawerChange={handleDrawerChange}
+      backButtonHandler={backButtonHandler}
+    />
   );
+
+  return <>{result}</>;
 };
 
 DrawerDashBoard.propTypes = {
