@@ -198,7 +198,7 @@ const DashBoard = ({
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
 
-  const dashboardControl = (
+  const sidePanelCOntrol = (
     <Slide direction="left" in={showFullMap} mountOnEnter unmountOnExit>
       <Grid item sm={4} className={classes.dashBoardProperty}>
         {showSiteDetail ? siteDashboard : dashboard}
@@ -237,7 +237,7 @@ const DashBoard = ({
           </Box>
         </Paper>
       </Grid>
-      {dashboardControl}
+      {sidePanelCOntrol}
     </RootGrid>
   );
 };

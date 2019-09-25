@@ -69,9 +69,9 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     <ThemeProvider theme={theme.mapControl}>
       <Tooltip
         title="Zoom to Full"
-        placement="right-end"
+        placement="right"
         TransitionComponent={Fade}
-        TransitionProps={{ timeout: 600 }}
+        TransitionProps={{ timeout: 200 }}
       >
         <ButtonStyle
           buttonBorder={true}
@@ -88,9 +88,9 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     <ThemeProvider theme={theme.mapControl}>
       <Tooltip
         title="Zoom to Selected Site"
-        placement="right-end"
+        placement="right"
         TransitionComponent={Fade}
-        TransitionProps={{ timeout: 600 }}
+        TransitionProps={{ timeout: 200 }}
       >
         <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
           <CurrentSelectLocationIcon className={classes.mapControlIconProperty} />

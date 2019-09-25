@@ -356,10 +356,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <CssBaseline />
-        <Header
-          sidePanelOpen={this.state.sidePanelOpen}
-          handleDrawerChange={this.handleDrawerChange}
-        />
+        <Header />
         <DrawerDashBoard
           sidePanelOpen={this.state.sidePanelOpen}
           handleDrawerChange={this.handleDrawerChange}
