@@ -1,6 +1,5 @@
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
@@ -45,14 +44,28 @@ const drawerStyleProperties = makeStyles(theme => ({
       width: drawerWidth
     }
   },
-  siteDetailControlProperty: {
+  dropDownWrapperProperty: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     padding: '16px 8px 0 8px'
   },
   collapseButtonProperty: {
     position: 'fixed',
     top: 66,
+    right: 650,
+    [theme.breakpoints.down('sm')]: {
+      right: 400
+    },
+    [theme.breakpoints.up('md')]: {
+      right: 500
+    },
+    [theme.breakpoints.up('lg')]: {
+      right: 650
+    }
+  },
+  clearSelectionButtonProperty: {
+    position: 'fixed',
+    top: 130,
     right: 650,
     [theme.breakpoints.down('sm')]: {
       right: 400
@@ -81,14 +94,14 @@ const DrawerDashBoard = ({
 }) => {
   const classes = drawerStyleProperties();
 
-  const collapseDashboardMenu = (
+  const collapseSidePanel = (
     <Box className={classes.collapseButtonProperty}>
-      <ThemeProvider theme={theme.dashboardControl}>
+      <ThemeProvider theme={theme.sidePanelCOntrol}>
         <Tooltip
           title="Hide"
-          placement="bottom"
+          placement="left"
           TransitionComponent={Fade}
-          TransitionProps={{ timeout: 300 }}
+          TransitionProps={{ timeout: 200 }}
         >
           <ButtonStyle onClick={handleDrawerChange}>
             <ChevronRightIcon />
@@ -98,31 +111,30 @@ const DrawerDashBoard = ({
     </Box>
   );
 
-  const clearSelectedSite = (
-    <Tooltip
-      title="Clear selected site"
-      placement="bottom"
-      TransitionComponent={Fade}
-      TransitionProps={{ timeout: 300 }}
-    >
-      <IconButton color="inherit" aria-label="clear select site" onClick={backButtonHandler}>
-        <ClearIcon />
-      </IconButton>
-    </Tooltip>
+  const clearSelectedSite = showSiteDetail && (
+    <Box className={classes.clearSelectionButtonProperty}>
+      <ThemeProvider theme={theme.sidePanelCOntrol}>
+        <Tooltip
+          title="Clear selection"
+          placement="left"
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 200 }}
+        >
+          <ButtonStyle onClick={backButtonHandler}>
+            <ClearIcon />
+          </ButtonStyle>
+        </Tooltip>
+      </ThemeProvider>
+    </Box>
   );
 
   const dropDownSites = siteDropDownData.length > 0 && showDropDown && (
-    <DropDown
-      siteList={siteDropDownData}
-      selectSite={siteDetail}
-      siteClickHandler={siteClickHandler}
-    />
-  );
-
-  const siteControls = (
-    <Box className={classes.siteDetailControlProperty}>
-      {dropDownSites}
-      {clearSelectedSite}
+    <Box className={classes.dropDownWrapperProperty}>
+      <DropDown
+        siteList={siteDropDownData}
+        selectSite={siteDetail}
+        siteClickHandler={siteClickHandler}
+      />
     </Box>
   );
 
@@ -140,7 +152,7 @@ const DrawerDashBoard = ({
 
   const siteDashboard = siteDetail && (
     <div>
-      {siteControls}
+      {dropDownSites}
       <SiteDetail selectSite={siteDetail} />
     </div>
   );
@@ -155,7 +167,8 @@ const DrawerDashBoard = ({
         paper: classes.drawerPaper
       }}
     >
-      {collapseDashboardMenu}
+      {collapseSidePanel}
+      {clearSelectedSite}
       {showSiteDetail ? siteDashboard : dashboard}
     </Drawer>
   );

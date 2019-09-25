@@ -9,6 +9,7 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
+import SidePanelControl from './components/SidePanelControl';
 
 class App extends Component {
   state = {
@@ -356,10 +357,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <CssBaseline />
-        <Header
-          sidePanelOpen={this.state.sidePanelOpen}
-          handleDrawerChange={this.handleDrawerChange}
-        />
+        <Header />
         <DrawerDashBoard
           sidePanelOpen={this.state.sidePanelOpen}
           handleDrawerChange={this.handleDrawerChange}
@@ -375,6 +373,11 @@ class App extends Component {
           zoomToSiteHandler={this.zoomToSiteHandler}
           zoomAnimate={this.state.zoomAnimate}
           isLoading={this.state.isLoading}
+        />
+        <SidePanelControl
+          showSiteDetail={this.state.showSiteDetail}
+          handleDrawerChange={this.handleDrawerChange}
+          backButtonHandler={this.backButtonHandler}
         />
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}

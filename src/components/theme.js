@@ -34,12 +34,12 @@ export const theme = {
     width: '32px',
     height: '32px'
   },
-  dashboardControl: {
+  sidePanelCOntrol: {
     color: color.mermaidGray,
     bgColor: color.mermaidWhiteGray,
     borderColor: color.mermaidWhiteGray,
     padding: '0',
-    width: '20px',
+    width: '48px',
     height: '48px'
   }
 };
