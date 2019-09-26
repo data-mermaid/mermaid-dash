@@ -365,19 +365,19 @@ class LeafletMap extends Component {
 
       //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
       if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
-        const markersData = markerCluster.map(item => {
-          return item.options.marker;
-        });
-        removeHighlight();
-        siteDropDownHandler(markersData);
-
         const selectedMarkersCluster = this.createCluster(selectedClusterStyle);
+        const markersData = markerCluster.map(item => item.options.marker);
 
         markerCluster.forEach(selectMaker => {
           selectedMarkersCluster.addLayer(selectMaker);
         });
+
+        removeHighlight();
         removeHighlightCluster();
         setClusterActive(selectedMarkersCluster);
+        siteDropDownHandler(markersData);
+
+        this.recenterView(currentZoom);
         this.map.addLayer(selectedMarkersCluster);
       }
 
