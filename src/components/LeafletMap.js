@@ -176,7 +176,8 @@ class LeafletMap extends Component {
     this.updateBoundingBoxFromZoom();
   }
 
-  //use case: user select site when side panel is closed. Panel will automatically slide in. This will adjust the center when the site is pushed to left.
+  // use case: For when user selects site when side panel is closed. Panel
+  // will slide in, and will adjust the center when the site is pushed left
   recenterView(zoom) {
     const { sidePanelOpen, siteDetail } = this.props;
     const { siteCenterChange } = this.state;
