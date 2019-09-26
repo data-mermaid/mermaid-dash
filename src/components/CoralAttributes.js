@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ReactComponent as Coral } from '../styles/Icons/coral.svg';
 import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -15,43 +16,66 @@ const coralStyleProperties = makeStyles(theme => ({
   coralIconProperty: {
     paddingRight: theme.spacing(1),
     width: '25px'
+  },
+  attributeWrapperProperty: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '33%',
+    margin: '8px 16px 0 0',
+    border: '1px solid',
+    padding: '8px',
+    borderRadius: '20px',
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    }
   }
 }));
 
 const CoralAttributes = ({ loadedSiteProperties }) => {
   const classes = coralStyleProperties();
+  const mediaMax959 = useMediaQuery('(max-width:959px)');
+  const spaceContent = mediaMax959 && ': ';
 
   return (
     <Box
       display="flex"
-      flexDirection="row"
+      flexDirection={mediaMax959 ? 'column' : 'row'}
       justifyContent="flex-start"
       className={classes.reefProperty}
     >
-      <Box p={1} mr={2} border={1} borderRadius={10} display="flex" alignItems="center">
+      <Box className={classes.attributeWrapperProperty}>
         <Coral className={classes.coralIconProperty} />
-        <Box display="flex" alignItems="left" flexDirection="column">
+        <Box display="flex" alignItems="left" flexDirection={mediaMax959 ? 'row' : 'column'}>
           <Typography variant="body1">Reef Zone</Typography>
           <Typography variant="body1">
-            <strong>{loadedSiteProperties.reef_zone}</strong>
+            <strong>
+              {spaceContent}
+              {loadedSiteProperties.reef_zone}
+            </strong>
           </Typography>
         </Box>
       </Box>
-      <Box p={1} mr={2} border={1} borderRadius={10} display="flex" alignItems="center">
+      <Box className={classes.attributeWrapperProperty}>
         <Coral className={classes.coralIconProperty} />
-        <Box display="flex" alignItems="left" flexDirection="column">
+        <Box display="flex" alignItems="left" flexDirection={mediaMax959 ? 'row' : 'column'}>
           <Typography variant="body1">Reef Type</Typography>
           <Typography variant="body1">
-            <strong>{loadedSiteProperties.reef_type}</strong>
+            <strong>
+              {spaceContent}
+              {loadedSiteProperties.reef_type}
+            </strong>
           </Typography>
         </Box>
       </Box>
-      <Box p={1} mr={2} border={1} borderRadius={10} display="flex" alignItems="center">
+      <Box className={classes.attributeWrapperProperty}>
         <Coral className={classes.coralIconProperty} />
-        <Box display="flex" alignItems="left" flexDirection="column">
+        <Box display="flex" alignItems="left" flexDirection={mediaMax959 ? 'row' : 'column'}>
           <Typography variant="body1">Exposure</Typography>
           <Typography variant="body1">
-            <strong>{loadedSiteProperties.exposure}</strong>
+            <strong>
+              {spaceContent}
+              {loadedSiteProperties.exposure}
+            </strong>
           </Typography>
         </Box>
       </Box>
