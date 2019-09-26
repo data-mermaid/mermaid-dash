@@ -165,6 +165,12 @@ class App extends Component {
   };
 
   siteDropDownHandler = selectedSites => {
+    const { sidePanelOpen } = this.state;
+
+    if (!sidePanelOpen) {
+      this.setState({ sidePanelOpen: true });
+    }
+
     this.setState({
       siteDetail: selectedSites[0],
       siteDropDownData: selectedSites,
