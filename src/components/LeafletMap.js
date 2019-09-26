@@ -122,11 +122,12 @@ const miniMapProperty = {
 class LeafletMap extends Component {
   state = {
     mapZoomLevel: mapProperty.zoom,
-    mapBoundingBoxCorner: null
+    mapBoundingBoxCorner: null,
+    siteCenterChange: false
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { markersData: prevMarkersData, sidePanelOpen: prevsidePanelOpen } = prevProps;
+    const { markersData: prevMarkersData, sidePanelOpen: prevSidePanelOpen } = prevProps;
     const { markersData, sidePanelOpen } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
@@ -147,8 +148,13 @@ class LeafletMap extends Component {
     }
 
     //redraw leaflet map when dashboard is open or close
-    if (sidePanelOpen !== prevsidePanelOpen) {
+    if (sidePanelOpen !== prevSidePanelOpen) {
       this.map.invalidateSize();
+    }
+
+    //reset when selected site view is set to center
+    if (!sidePanelOpen && sidePanelOpen !== prevSidePanelOpen) {
+      this.setState({ siteCenterChange: true });
     }
 
     this.zoomToSelectedSite();
@@ -170,13 +176,26 @@ class LeafletMap extends Component {
     this.updateBoundingBoxFromZoom();
   }
 
-  panToOffCenter(latlng, options) {
+  //use case: user select site when side panel is closed. Panel will automatically slide in. This will adjust the center when the site is pushed to left.
+  recenterView(zoom) {
+    const { sidePanelOpen, siteDetail } = this.props;
+    const { siteCenterChange } = this.state;
+
+    if (sidePanelOpen && siteDetail && siteCenterChange) {
+      const siteLatlng = [siteDetail.geometry.coordinates[1], siteDetail.geometry.coordinates[0]];
+      this.map.setView(siteLatlng, zoom);
+      this.setState({ siteCenterChange: false });
+    }
+  }
+
+  panToCenter(latlng, options) {
     const x = latlng.containerPoint.x,
       y = latlng.containerPoint.y,
       currentZoom = this.map._zoom,
       newLatlng = this.map.containerPointToLatLng([x, y]);
 
-    return this.map.setView(newLatlng, currentZoom, { pan: options });
+    this.map.setView(newLatlng, currentZoom, { pan: options });
+    this.recenterView(currentZoom);
   }
 
   zoomFullMap() {
@@ -377,7 +396,8 @@ class LeafletMap extends Component {
           setIconActive(markerPoint);
           siteClickHandler(marker);
           sitesDropDownToggle(false);
-          this.panToOffCenter(e, { animate: true });
+
+          this.panToCenter(e, { animate: true });
         })
       );
     });

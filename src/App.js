@@ -145,7 +145,7 @@ class App extends Component {
   };
 
   siteClickHandler = selectedSite => {
-    const { highlightCluster, siteDropDownData } = this.state;
+    const { highlightCluster, siteDropDownData, sidePanelOpen } = this.state;
     const siteDropdownList = siteDropDownData.map(site => site.id);
     selectedSite = selectedSite.key ? this.siteLookup(selectedSite) : selectedSite;
     const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
@@ -156,6 +156,11 @@ class App extends Component {
       highlightCluster.clearLayers();
       this.setState({ highlightCluster: null });
     }
+
+    if (!sidePanelOpen) {
+      this.setState({ sidePanelOpen: true });
+    }
+
     this.setState({ siteDetail: selectedSite, showSiteDetail: true, zoomFullMap: false });
   };
 
@@ -183,7 +188,7 @@ class App extends Component {
       highlightCluster.clearLayers();
       this.setState({ highlightCluster: null });
     }
-    this.setState({ showSiteDetail: false, zoomFullMap: false });
+    this.setState({ showSiteDetail: false, zoomFullMap: false, siteDetail: null });
   };
 
   fullMapZoomHandler = zoomOffOption => {
@@ -380,6 +385,7 @@ class App extends Component {
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}
           markersData={this.state.sites}
+          siteDetail={this.state.siteDetail}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
           sitesDropDownToggle={this.sitesDropDownToggle}
