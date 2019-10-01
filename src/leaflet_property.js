@@ -55,3 +55,33 @@ export const clusterIconNumberStyles = `
   color: white;
   font-size: 14px;
 `;
+
+export const popUpDefaultStyles = `
+  display: flex;
+  flex-direction: column;
+  height: 53px;
+  width: 300px;
+  overflow-y: overlay;
+`;
+
+export const popUpHigherStyles = `
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  width: 300px;
+  overflow-y: overlay;
+`;
+
+export const popUpContentItemStyles = `
+  border-bottom: 1px solid;
+  padding: 5px 5px 5px 0;
+  cursor: pointer;
+`;
+export const popUpContentLastItemStyles = `
+  padding: 5px 5px 5px 0;
+  cursor: pointer;
+`;
+
+export const activeSelection = `
+  font-weight: 900; !important
+`;

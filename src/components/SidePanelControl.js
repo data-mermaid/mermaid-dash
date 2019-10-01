@@ -33,7 +33,7 @@ const SidePanelControl = ({ showSiteDetail, backButtonHandler, handleDrawerChang
 
   const showPanelControl = (
     <Box className={classes.showPanelButtonProperty}>
-      <ThemeProvider theme={theme.sidePanelCOntrol}>
+      <ThemeProvider theme={theme.sidePanelControl}>
         <Tooltip
           title="Show"
           placement="left"
@@ -50,7 +50,7 @@ const SidePanelControl = ({ showSiteDetail, backButtonHandler, handleDrawerChang
 
   const clearSelectedSite = showSiteDetail && (
     <Box className={classes.clearSiteButtonProperty}>
-      <ThemeProvider theme={theme.sidePanelCOntrol}>
+      <ThemeProvider theme={theme.sidePanelControl}>
         <Tooltip
           title="Clear selection"
           placement="left"

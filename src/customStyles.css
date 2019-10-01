@@ -2,6 +2,21 @@
   opacity: 0.6 !important;
 }
 
+.leaflet-popup-content {
+	margin: 5px !important;
+}
+
+
+.leaflet-popup-tip-container {
+	margin-left: -11px !important;
+}
+
+.leaflet-popup-content-wrapper {
+	margin-left: 30px !important;
+}
+
+
+
 #grid-dashboard::-webkit-scrollbar-track {
 	border: 1px solid black;
 	background-color: #F5F5F5;

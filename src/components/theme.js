@@ -34,7 +34,7 @@ export const theme = {
     width: '32px',
     height: '32px'
   },
-  sidePanelCOntrol: {
+  sidePanelControl: {
     color: color.mermaidGray,
     bgColor: color.mermaidWhiteGray,
     borderColor: color.mermaidWhiteGray,
