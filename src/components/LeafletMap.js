@@ -5,7 +5,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
-import * as leafletProperty from '../leaflet_property';
+import * as leafletProperty from '../constants/leaflet_properties';
 import styled from 'styled-components/macro';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -359,15 +359,11 @@ class LeafletMap extends Component {
             </div>`;
     });
 
-    const popUpContent = `
-            <div style="${popUpContentStyles}" class="popup-wrapper">
-              ${popUpArray.join('')}
-            </div>
-        `;
-
-    const popup = L.popup()
-      .setLatLng(coordinates)
-      .setContent(`${popUpContent}`);
+    const popup = L.popup().setLatLng(coordinates).setContent(`
+      <div style="${popUpContentStyles}" class="popup-wrapper">
+        ${popUpArray.join('')}
+      </div>
+  `);
     return popup;
   }
 
@@ -375,12 +371,15 @@ class LeafletMap extends Component {
     popupCluster.openOn(this.map);
     const { siteClickHandler } = this.props;
     const el = popupCluster.getElement().children[0].children[0].children[0].children;
+    const handleInteraction = evt => {
+      evt.preventDefault();
+      const resultMarker = markersData.filter(site => site.id === evt.path[0].id)[0];
+      siteClickHandler(resultMarker);
+    };
 
     for (let i of el) {
-      i.addEventListener('click', function(e) {
-        const resultMarker = markersData.filter(site => site.id === e.path[0].id)[0];
-        siteClickHandler(resultMarker);
-      });
+      i.addEventListener('click', handleInteraction);
+      i.addEventListener('touchstart', handleInteraction);
     }
   }
 
