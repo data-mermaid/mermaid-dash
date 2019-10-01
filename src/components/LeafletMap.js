@@ -378,8 +378,8 @@ class LeafletMap extends Component {
     };
 
     for (let i of el) {
-      i.addEventListener('click', handleInteraction);
       i.addEventListener('touchstart', handleInteraction);
+      i.addEventListener('click', handleInteraction);
     }
   }
 
