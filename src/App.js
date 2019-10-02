@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import summary from '../src/apis/summary';
 import { BrowserRouter } from 'react-router-dom';
 import './customStyles.css';
-import * as leafletProperty from './leaflet_property';
+import * as leafletProperty from './constants/leaflet_properties';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from './components/Header';
@@ -53,7 +53,8 @@ class App extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
-    sidePanelOpen: true
+    sidePanelOpen: true,
+    popupOpen: false
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -154,7 +155,11 @@ class App extends Component {
 
     if (highlightCluster !== null && !siteExistsInCluster) {
       highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null });
+      this.setState({ highlightCluster: null, popupOpen: false });
+    }
+
+    if (highlightCluster !== null && siteExistsInCluster) {
+      this.setState({ popupOpen: true });
     }
 
     if (!sidePanelOpen) {
@@ -192,14 +197,14 @@ class App extends Component {
     }
     if (highlightCluster !== null) {
       highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null });
+      this.setState({ highlightCluster: null, popupOpen: false });
     }
     this.setState({ showSiteDetail: false, zoomFullMap: false, siteDetail: null });
   };
 
   fullMapZoomHandler = zoomOffOption => {
     const zoomFullMap = zoomOffOption ? true : false;
-    this.setState({ zoomFullMap });
+    this.setState({ zoomFullMap, popupOpen: false });
   };
 
   zoomToSiteHandler = zoomToOption => {
@@ -224,7 +229,7 @@ class App extends Component {
     const { highlightCluster } = this.state;
     if (highlightCluster !== null) {
       highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null });
+      this.setState({ highlightCluster: null, popupOpen: false });
     }
   };
 
@@ -372,16 +377,12 @@ class App extends Component {
           sidePanelOpen={this.state.sidePanelOpen}
           handleDrawerChange={this.handleDrawerChange}
           siteDetail={this.state.siteDetail}
-          siteDropDownData={this.state.siteDropDownData}
-          siteClickHandler={this.siteClickHandler}
           showSiteDetail={this.state.showSiteDetail}
-          showDropDown={this.state.showDropDown}
           metrics={this.state.metrics}
           histogramContent={this.state.histogram}
           backButtonHandler={this.backButtonHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
-          zoomAnimate={this.state.zoomAnimate}
           isLoading={this.state.isLoading}
         />
         <LeafletMapControl
@@ -400,7 +401,6 @@ class App extends Component {
           zoomToSite={this.state.zoomToSite}
           zoomToSiteHandler={this.zoomToSiteHandler}
           getMapBounds={this.getMapBounds}
-          getRawBBox={this.getRawBBox}
           bbox={this.state.bbox}
           contentLoadHandler={this.contentLoadHandler}
           removeHighlight={this.removeHighlight}
@@ -408,6 +408,7 @@ class App extends Component {
           removeHighlightCluster={this.removeHighlightCluster}
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
+          popupOpen={this.state.popupOpen}
         />
       </BrowserRouter>
     );

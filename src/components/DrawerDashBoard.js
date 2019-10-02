@@ -14,7 +14,6 @@ import Box from '@material-ui/core/Box';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-import DropDown from './DropDown';
 import { theme } from './theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { summary, histogram, drawerWidth } from '../constants/summary-information';
@@ -84,20 +83,17 @@ const DrawerDashBoard = ({
   sidePanelOpen,
   handleDrawerChange,
   isLoading,
-  showDropDown,
   showSiteDetail,
   metrics,
   histogramContent,
-  siteDropDownData,
   siteDetail,
-  siteClickHandler,
   backButtonHandler
 }) => {
   const classes = drawerStyleProperties();
 
   const collapseSidePanel = (
     <Box className={classes.collapseButtonProperty}>
-      <ThemeProvider theme={theme.sidePanelCOntrol}>
+      <ThemeProvider theme={theme.sidePanelControl}>
         <Tooltip
           title="Hide"
           placement="left"
@@ -114,7 +110,7 @@ const DrawerDashBoard = ({
 
   const clearSelectedSite = showSiteDetail && (
     <Box className={classes.clearSelectionButtonProperty}>
-      <ThemeProvider theme={theme.sidePanelCOntrol}>
+      <ThemeProvider theme={theme.sidePanelControl}>
         <Tooltip
           title="Clear selection"
           placement="left"
@@ -126,16 +122,6 @@ const DrawerDashBoard = ({
           </ButtonStyle>
         </Tooltip>
       </ThemeProvider>
-    </Box>
-  );
-
-  const dropDownSites = siteDropDownData.length > 0 && showDropDown && (
-    <Box className={classes.dropDownWrapperProperty}>
-      <DropDown
-        siteList={siteDropDownData}
-        selectSite={siteDetail}
-        siteClickHandler={siteClickHandler}
-      />
     </Box>
   );
 
@@ -153,7 +139,6 @@ const DrawerDashBoard = ({
 
   const siteDashboard = siteDetail && (
     <div>
-      {dropDownSites}
       <SiteDetail selectSite={siteDetail} />
     </div>
   );
@@ -186,13 +171,10 @@ const DrawerDashBoard = ({
 DrawerDashBoard.propTypes = {
   sidePanelOpen: PropTypes.bool,
   isLoading: PropTypes.bool,
-  showDropDown: PropTypes.bool,
   showSiteDetail: PropTypes.bool,
   metrics: PropTypes.array,
   histogramContent: PropTypes.array,
-  siteDropDownData: PropTypes.array,
   siteDetail: PropTypes.object,
-  siteClickHandler: PropTypes.func,
   backButtonHandler: PropTypes.func,
   classes: PropTypes.object
 };

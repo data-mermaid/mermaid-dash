@@ -5,7 +5,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
-import * as leafletProperty from '../leaflet_property';
+import * as leafletProperty from '../constants/leaflet_properties';
 import styled from 'styled-components/macro';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -127,13 +127,18 @@ class LeafletMap extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { markersData: prevMarkersData, sidePanelOpen: prevSidePanelOpen } = prevProps;
-    const { markersData, sidePanelOpen } = this.props;
+    const {
+      markersData: prevMarkersData,
+      sidePanelOpen: prevSidePanelOpen,
+      siteDetail: prevSiteDetail
+    } = prevProps;
+    const { markersData, sidePanelOpen, siteDetail, popupOpen } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
     const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
+    const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
 
     if (markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
@@ -155,6 +160,10 @@ class LeafletMap extends Component {
     //reset when selected site view is set to center
     if (!sidePanelOpen && sidePanelOpen !== prevSidePanelOpen) {
       this.setState({ siteCenterChange: true });
+    }
+
+    if (popupOpen || (siteDetail === null && prevSiteDetailId)) {
+      this.map.closePopup();
     }
 
     this.zoomToSelectedSite();
@@ -204,6 +213,7 @@ class LeafletMap extends Component {
     if (zoomFullMap) {
       this.map.setView([10, 170], 3);
       fullMapZoomHandler(false);
+      this.map.closePopup();
     }
   }
 
@@ -332,6 +342,47 @@ class LeafletMap extends Component {
     return selectMarkerCluster;
   }
 
+  createPopup(markersData, coordinates) {
+    const popUpContentStyles =
+      markersData.length > 2
+        ? leafletProperty.popUpHigherStyles
+        : leafletProperty.popUpDefaultStyles;
+    const popUpArray = markersData.map((item, index) => {
+      const itemStyle =
+        index === markersData.length - 1
+          ? leafletProperty.popUpContentLastItemStyles
+          : leafletProperty.popUpContentItemStyles;
+
+      return `
+            <div style="${itemStyle}" id="${item.id}" class="popup-item active">
+              ${item.properties.site_name} - ${item.properties.project_name}
+            </div>`;
+    });
+
+    const popup = L.popup().setLatLng(coordinates).setContent(`
+      <div style="${popUpContentStyles}" class="popup-wrapper">
+        ${popUpArray.join('')}
+      </div>
+  `);
+    return popup;
+  }
+
+  popupClickHandler(popupCluster, markersData) {
+    popupCluster.openOn(this.map);
+    const { siteClickHandler } = this.props;
+    const el = popupCluster.getElement().children[0].children[0].children[0].children;
+    const handleInteraction = evt => {
+      evt.preventDefault();
+      const resultMarker = markersData.filter(site => site.id === evt.path[0].id)[0];
+      siteClickHandler(resultMarker);
+    };
+
+    for (let i of el) {
+      i.addEventListener('touchstart', handleInteraction);
+      i.addEventListener('click', handleInteraction);
+    }
+  }
+
   updateMarkers(markersData) {
     const {
       siteClickHandler,
@@ -354,6 +405,8 @@ class LeafletMap extends Component {
 
     markersCluster.on('clusterclick', e => {
       const markerCluster = e.layer.getAllChildMarkers();
+      const currentZoom = e.layer._zoom;
+      const clusterCoordinates = e.layer.getLatLng();
       const selectedClusterStyle = {
         radius: 10,
         padding: 20,
@@ -361,15 +414,20 @@ class LeafletMap extends Component {
         color: leafletProperty.selectedMarkerColor,
         pulseEffect: true
       };
-      const currentZoom = e.layer._zoom;
 
       //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
       if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
         const selectedMarkersCluster = this.createCluster(selectedClusterStyle);
         const markersData = markerCluster.map(item => item.options.marker);
+        const popUpCluster = this.createPopup(markersData, clusterCoordinates);
+
+        this.popupClickHandler(popUpCluster, markersData);
 
         markerCluster.forEach(selectMaker => {
           selectedMarkersCluster.addLayer(selectMaker);
+          selectedMarkersCluster.on('clusterclick', () => {
+            this.popupClickHandler(popUpCluster, markersData);
+          });
         });
 
         removeHighlight();
@@ -390,14 +448,12 @@ class LeafletMap extends Component {
         { icon: leafletProperty.icon, marker }
       );
       markerPoint._leaflet_id = marker.id;
-
       markersCluster.addLayer(
         markerPoint.on('click', e => {
           removeHighlight();
           setIconActive(markerPoint);
           siteClickHandler(marker);
           sitesDropDownToggle(false);
-
           this.panToCenter(e, { animate: true });
         })
       );
