@@ -59,15 +59,14 @@ export const clusterIconNumberStyles = `
 export const popUpDefaultStyles = `
   display: flex;
   flex-direction: column;
-  height: 53px;
+  height: auto;
   width: 300px;
-  overflow-y: overlay;
 `;
 
 export const popUpHigherStyles = `
   display: flex;
   flex-direction: column;
-  height: 100px;
+  height: 280px;
   width: 300px;
   overflow-y: overlay;
 `;

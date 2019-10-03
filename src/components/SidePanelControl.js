@@ -28,7 +28,7 @@ const sidePanelStyleProperties = makeStyles(theme => ({
   }
 }));
 
-const SidePanelControl = ({ showSiteDetail, backButtonHandler, handleDrawerChange }) => {
+const SidePanelControl = ({ showSiteDetail, clearSelectedSiteHandler, handleDrawerChange }) => {
   const classes = sidePanelStyleProperties();
 
   const showPanelControl = (
@@ -57,7 +57,7 @@ const SidePanelControl = ({ showSiteDetail, backButtonHandler, handleDrawerChang
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 300 }}
         >
-          <ButtonStyle onClick={backButtonHandler}>
+          <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
         </Tooltip>
