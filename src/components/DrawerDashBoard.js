@@ -53,6 +53,7 @@ const drawerStyleProperties = makeStyles(theme => ({
     position: 'fixed',
     top: 66,
     right: 650,
+    zIndex: 1000,
     [theme.breakpoints.down('sm')]: {
       right: 400
     },
@@ -67,6 +68,7 @@ const drawerStyleProperties = makeStyles(theme => ({
     position: 'fixed',
     top: 130,
     right: 650,
+    zIndex: 1000,
     [theme.breakpoints.down('sm')]: {
       right: 400
     },
@@ -144,19 +146,21 @@ const DrawerDashBoard = ({
   );
 
   const result = sidePanelOpen ? (
-    <Drawer
-      className={classes.drawer}
-      variant="persistent"
-      anchor="right"
-      open={sidePanelOpen}
-      classes={{
-        paper: classes.drawerPaper
-      }}
-    >
+    <>
       {collapseSidePanel}
       {clearSelectedSite}
-      {showSiteDetail ? siteDashboard : dashboard}
-    </Drawer>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="right"
+        open={sidePanelOpen}
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        {showSiteDetail ? siteDashboard : dashboard}
+      </Drawer>
+    </>
   ) : (
     <SidePanelControl
       showSiteDetail={showSiteDetail}
