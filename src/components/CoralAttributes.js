@@ -26,7 +26,7 @@ const coralStyleProperties = makeStyles(theme => ({
     borderRadius: '20px',
     [theme.breakpoints.down('sm')]: {
       margin: '8px 0 0 0',
-      width: '100%'
+      width: '90%'
     }
   }
 }));
