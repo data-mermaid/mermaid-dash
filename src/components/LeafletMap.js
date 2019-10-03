@@ -367,7 +367,7 @@ class LeafletMap extends Component {
           : leafletProperty.popUpContentItemStyles;
 
       return `
-            <div style="${itemStyle}" id="${item.id}" class="popup-item">
+            <div style="${itemStyle}" id="${item.id}" class="popup-cluster-site">
               ${item.properties.site_name} - ${item.properties.project_name}
             </div>`;
     });
@@ -395,7 +395,7 @@ class LeafletMap extends Component {
       i.addEventListener('click', handleInteraction);
     }
 
-    const elems = document.getElementsByClassName('popup-item');
+    const elems = document.getElementsByClassName('popup-cluster-site');
     this.setState({ popUpList: elems });
   }
 
