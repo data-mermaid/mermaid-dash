@@ -87,7 +87,7 @@ const DrawerDashBoard = ({
   metrics,
   histogramContent,
   siteDetail,
-  backButtonHandler
+  clearSelectedSiteHandler
 }) => {
   const classes = drawerStyleProperties();
 
@@ -117,7 +117,7 @@ const DrawerDashBoard = ({
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 200 }}
         >
-          <ButtonStyle onClick={backButtonHandler}>
+          <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
         </Tooltip>
@@ -161,7 +161,7 @@ const DrawerDashBoard = ({
     <SidePanelControl
       showSiteDetail={showSiteDetail}
       handleDrawerChange={handleDrawerChange}
-      backButtonHandler={backButtonHandler}
+      clearSelectedSiteHandler={clearSelectedSiteHandler}
     />
   );
 
@@ -175,7 +175,7 @@ DrawerDashBoard.propTypes = {
   metrics: PropTypes.array,
   histogramContent: PropTypes.array,
   siteDetail: PropTypes.object,
-  backButtonHandler: PropTypes.func,
+  clearSelectedSiteHandler: PropTypes.func,
   classes: PropTypes.object
 };
 

@@ -190,7 +190,7 @@ class App extends Component {
     this.setState({ showDropDown: option });
   };
 
-  backButtonHandler = () => {
+  clearSelectedSiteHandler = () => {
     const { highlightMarker, highlightCluster } = this.state;
     if (highlightMarker !== null) {
       highlightMarker.setIcon(leafletProperty.icon);
@@ -386,7 +386,7 @@ class App extends Component {
           showSiteDetail={this.state.showSiteDetail}
           metrics={this.state.metrics}
           histogramContent={this.state.histogram}
-          backButtonHandler={this.backButtonHandler}
+          clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
           isLoading={this.state.isLoading}
