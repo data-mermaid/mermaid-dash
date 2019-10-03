@@ -21,11 +21,12 @@ const coralStyleProperties = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     width: '33%',
-    margin: '8px 16px 0 0',
+    margin: '0 8px 0 0',
     border: '1px solid',
     padding: '8px',
     borderRadius: '20px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
+      margin: '8px 0 0 0',
       width: '100%'
     }
   }
@@ -33,7 +34,7 @@ const coralStyleProperties = makeStyles(theme => ({
 
 const CoralAttributes = ({ loadedSiteProperties }) => {
   const classes = coralStyleProperties();
-  const mediaMax959 = useMediaQuery('(max-width:959px)');
+  const mediaMax959 = useMediaQuery('(max-width:960px)');
   const spaceContent = mediaMax959 && ': ';
 
   return (
