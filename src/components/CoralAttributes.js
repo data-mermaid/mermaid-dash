@@ -8,7 +8,6 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 import PropTypes from 'prop-types';
-import { height } from '@material-ui/system';
 
 const coralStyleProperties = makeStyles(theme => ({
   reefProperty: {
@@ -16,7 +15,8 @@ const coralStyleProperties = makeStyles(theme => ({
   },
   coralIconProperty: {
     width: '20px',
-    height: '20px'
+    height: '20px',
+    marginTop: '3px'
   },
   attributeWrapperProperty: {
     display: 'flex',
