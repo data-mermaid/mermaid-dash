@@ -155,11 +155,11 @@ class App extends Component {
 
     if (highlightCluster !== null && !siteExistsInCluster) {
       highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null, popupOpen: false });
-    }
-
-    if (highlightCluster !== null && siteExistsInCluster) {
+      this.setState({ highlightCluster: null, popupOpen: true });
+    } else if (highlightCluster !== null && siteExistsInCluster) {
       this.setState({ popupOpen: true });
+    } else if (highlightCluster === null) {
+      this.setState({ popupOpen: false });
     }
 
     if (!sidePanelOpen) {
@@ -179,6 +179,7 @@ class App extends Component {
     this.setState({
       siteDetail: selectedSites[0],
       siteDropDownData: selectedSites,
+      popupOpen: true,
       showSiteDetail: true,
       showDropDown: true,
       zoomFullMap: false
@@ -197,14 +198,19 @@ class App extends Component {
     }
     if (highlightCluster !== null) {
       highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null, popupOpen: false });
+      this.setState({ highlightCluster: null });
     }
-    this.setState({ showSiteDetail: false, zoomFullMap: false, siteDetail: null });
+    this.setState({
+      showSiteDetail: false,
+      zoomFullMap: false,
+      siteDetail: null,
+      popupOpen: false
+    });
   };
 
   fullMapZoomHandler = zoomOffOption => {
     const zoomFullMap = zoomOffOption ? true : false;
-    this.setState({ zoomFullMap, popupOpen: false });
+    this.setState({ zoomFullMap });
   };
 
   zoomToSiteHandler = zoomToOption => {
@@ -229,7 +235,7 @@ class App extends Component {
     const { highlightCluster } = this.state;
     if (highlightCluster !== null) {
       highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null, popupOpen: false });
+      this.setState({ highlightCluster: null });
     }
   };
 

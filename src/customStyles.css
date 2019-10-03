@@ -6,6 +6,12 @@
 	margin: 5px 15px  !important;
 }
 
+.active {
+	font-weight: bold;
+	font-style: italic;
+	font-size: 0.85rem;
+}
+
 
 .leaflet-popup-tip-container {
 	margin-left: -11px !important;

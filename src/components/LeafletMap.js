@@ -123,7 +123,8 @@ class LeafletMap extends Component {
   state = {
     mapZoomLevel: mapProperty.zoom,
     mapBoundingBoxCorner: null,
-    siteCenterChange: false
+    siteCenterChange: false,
+    popUpList: []
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -137,8 +138,9 @@ class LeafletMap extends Component {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
-    const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
+    const siteDetailId = siteDetail && siteDetail.id;
 
     if (markersData !== prevMarkersData) {
       this.updateMarkers(this.props.markersData);
@@ -162,8 +164,11 @@ class LeafletMap extends Component {
       this.setState({ siteCenterChange: true });
     }
 
-    if (popupOpen || (siteDetail === null && prevSiteDetailId)) {
+    if (siteDetail === null && prevSiteDetailId) {
       this.map.closePopup();
+    }
+    if (popupOpen && siteDetailId !== prevSiteDetailId) {
+      this.popupHighlightSelect(popUpList, siteDetailId);
     }
 
     this.zoomToSelectedSite();
@@ -354,13 +359,13 @@ class LeafletMap extends Component {
           : leafletProperty.popUpContentItemStyles;
 
       return `
-            <div style="${itemStyle}" id="${item.id}" class="popup-item active">
+            <div style="${itemStyle}" id="${item.id}" class="popup-item">
               ${item.properties.site_name} - ${item.properties.project_name}
             </div>`;
     });
 
     const popup = L.popup().setLatLng(coordinates).setContent(`
-      <div style="${popUpContentStyles}" class="popup-wrapper">
+      <div style="${popUpContentStyles}">
         ${popUpArray.join('')}
       </div>
   `);
@@ -381,6 +386,17 @@ class LeafletMap extends Component {
       i.addEventListener('touchstart', handleInteraction);
       i.addEventListener('click', handleInteraction);
     }
+
+    const elems = document.getElementsByClassName('popup-item');
+    this.setState({ popUpList: elems });
+  }
+
+  popupHighlightSelect(popupContent, siteHighlight) {
+    for (let elem of popupContent) {
+      elem.classList.remove('active');
+    }
+    const findSiteId = document.getElementById(`${siteHighlight}`);
+    findSiteId.classList.add('active');
   }
 
   updateMarkers(markersData) {
@@ -426,7 +442,11 @@ class LeafletMap extends Component {
         markerCluster.forEach(selectMaker => {
           selectedMarkersCluster.addLayer(selectMaker);
           selectedMarkersCluster.on('clusterclick', () => {
+            const { popUpList } = this.state;
+            const { siteDetail } = this.props;
+            const siteDetailId = siteDetail && siteDetail.id;
             this.popupClickHandler(popUpCluster, markersData);
+            this.popupHighlightSelect(popUpList, siteDetailId);
           });
         });
 
@@ -451,6 +471,7 @@ class LeafletMap extends Component {
       markersCluster.addLayer(
         markerPoint.on('click', e => {
           removeHighlight();
+          removeHighlightCluster();
           setIconActive(markerPoint);
           siteClickHandler(marker);
           sitesDropDownToggle(false);
