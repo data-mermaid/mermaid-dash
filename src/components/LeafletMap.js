@@ -347,11 +347,19 @@ class LeafletMap extends Component {
     return selectMarkerCluster;
   }
 
+  countClusterPopupChar(clusterArray) {
+    const clusterSiteNameArray = clusterArray.map(item => {
+      return `${item.properties.site_name} - ${item.properties.project_name}`;
+    });
+    return clusterSiteNameArray.toString().length;
+  }
+
   createPopup(markersData, coordinates) {
     const popUpContentStyles =
-      markersData.length > 2
+      markersData.length >= 10 || this.countClusterPopupChar(markersData) >= 450
         ? leafletProperty.popUpHigherStyles
         : leafletProperty.popUpDefaultStyles;
+
     const popUpArray = markersData.map((item, index) => {
       const itemStyle =
         index === markersData.length - 1
