@@ -14,8 +14,7 @@ const coralStyleProperties = makeStyles(theme => ({
     padding: '8px 8px 8px 0'
   },
   coralIconProperty: {
-    paddingRight: theme.spacing(1),
-    width: '25px'
+    width: '20px'
   },
   attributeWrapperProperty: {
     display: 'flex',
