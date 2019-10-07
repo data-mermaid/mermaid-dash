@@ -72,21 +72,16 @@ const SiteDetail = ({ selectSite }) => {
   );
 
   const SiteDetailCards = protocolsArray.map(protocol => {
-    const protocolName =
-      protocol.name === 'bleachingqc' ? 'quadrat_benthic_percent' : protocol.name;
-    const bleachingSubitems =
-      protocol.name === 'bleachingqc' &&
-      (loadedSite && loadedSite.properties.protocols['colonies_bleached']);
-    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocolName];
+    const bleachingProtocol = protocol.name === 'bleachingqc';
+    const transectProperty = bleachingProtocol ? protocol.property : protocol.name;
+    const bleachingSubItems = loadedSite && loadedSite.properties.protocols['colonies_bleached'];
+    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[transectProperty];
 
     const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
     const setToPrivate = dataPolicy === 'private';
 
-    const generatePrivateLabel = protocol => {
-      const protocolName =
-        protocol === 'beltfish' ? 'Fish Belt' : 'Benthic: PIT, LIT and Habitat Complexity';
-      return `This data is unavailable because ${protocolName} Sample Units are set to Private for this project.`;
-    };
+    const generatePrivateLabel = protocol_title =>
+      `This data is unavailable because ${protocol_title} Sample Units are set to Private for this project.`;
 
     const convertBleachingContent = content => {
       return (
@@ -97,47 +92,43 @@ const SiteDetail = ({ selectSite }) => {
       );
     };
 
-    const convertContent = (content, protocol) => {
-      if (protocol === 'bleachingqc') {
-        return convertBleachingContent(content);
-      }
-
+    const convertContent = (content, transect) => {
       return (
         content &&
-        content.map(item => {
-          const attribute = Object.keys(item)[0];
-          const value =
-            protocol === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
-          return { x: attribute, y: value };
-        })
+        (bleachingProtocol
+          ? convertBleachingContent(content)
+          : content.map(item => {
+              const attribute = Object.keys(item)[0];
+              const value =
+                transect === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
+              return { x: attribute, y: value };
+            }))
       );
     };
 
     const convertLegend = (content, protocol) => {
-      const title = protocol.legendTitle;
-      const data =
-        protocol.name === 'bleachingqc'
-          ? bleachingCategories.map(item => {
-              return { name: item.name };
-            })
-          : content &&
-            content.map(item => {
-              const attribute = Object.keys(item)[0];
-              return { name: attribute };
-            });
+      const { legendTitle: title } = protocol;
+
+      const data = bleachingProtocol
+        ? bleachingCategories.map(item => {
+            return { name: item.name };
+          })
+        : content &&
+          content.map(item => {
+            const attribute = Object.keys(item)[0];
+            return { name: attribute };
+          });
 
       return { title, data };
     };
 
     const protocolContent =
       loadedSiteProtocol &&
-      (protocol.name === 'bleachingqc'
-        ? loadedSiteProtocol
-        : loadedSite.properties.protocols[protocol.name][protocol.property]);
+      (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[protocol.property]);
 
     const sourceContent = setToPrivate
       ? pieChartDefault.body
-      : convertContent(protocolContent, protocol.name);
+      : convertContent(protocolContent, transectProperty);
 
     const sourceLegendData = setToPrivate
       ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
@@ -151,9 +142,8 @@ const SiteDetail = ({ selectSite }) => {
         pieChartContent={sourceContent}
         pieChartLegend={sourceLegendData}
         setToPrivate={setToPrivate}
-        privateLabel={generatePrivateLabel(protocol.name)}
-        sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
-        bleachingSubitems={bleachingSubitems}
+        privateLabel={generatePrivateLabel(protocol.title)}
+        bleachingSubItems={bleachingSubItems}
         title={protocol.title}
         type={protocol.type}
       />

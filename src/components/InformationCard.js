@@ -39,8 +39,7 @@ const InformationCard = ({
   histogramContent,
   title,
   type,
-  sampleUnitCounts,
-  bleachingSubitems,
+  bleachingSubItems,
   pieChartContent,
   pieChartLegend,
   textContent
@@ -61,7 +60,7 @@ const InformationCard = ({
 
   const subAttributeItem = !setToPrivate && (
     <>
-      <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+      <Typography m={1}>Sample units: {protocol && protocol.sample_unit_count} </Typography>
       {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
         <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
       ) : (
@@ -72,19 +71,15 @@ const InformationCard = ({
     </>
   );
 
-  const subAttributeBleachingItem = !setToPrivate && bleachingSubitems && (
+  const bleachingSubAttributeItem = !setToPrivate && bleachingSubItems && (
     <>
-      <Typography m={1}>Bleached colonies: {bleachingSubitems.avg_percent_bleached}%</Typography>
-      <Typography m={1}>Hard coral genera: {bleachingSubitems.avg_count_genera}</Typography>
-      <Typography m={1}>Observed coral colonies: {bleachingSubitems.avg_count_total}</Typography>
+      <Typography m={1}>Bleached colonies: {bleachingSubItems.avg_percent_bleached}%</Typography>
+      <Typography m={1}>Hard coral genera: {bleachingSubItems.avg_count_genera}</Typography>
+      <Typography m={1}>Observed coral colonies: {bleachingSubItems.avg_count_total}</Typography>
     </>
   );
 
-  const protocolSubItem = bleachingSubitems ? (
-    <>{subAttributeBleachingItem}</>
-  ) : (
-    <>{subAttributeItem}</>
-  );
+  const protocolSubItem = bleachingSubItems ? bleachingSubAttributeItem : subAttributeItem;
 
   const subItems = type === 'pieChart' && (
     <Box>
@@ -145,7 +140,7 @@ InformationCard.propTypes = {
   histogramContent: PropTypes.array,
   title: PropTypes.string,
   type: PropTypes.string,
-  sampleUnitCounts: PropTypes.number,
+  bleachingSubItems: PropTypes.object,
   pieChartContent: PropTypes.array,
   pieChartLegend: PropTypes.object,
   textContent: PropTypes.object,
