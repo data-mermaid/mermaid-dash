@@ -40,6 +40,7 @@ const InformationCard = ({
   title,
   type,
   sampleUnitCounts,
+  bleachingSubitems,
   pieChartContent,
   pieChartLegend,
   textContent
@@ -58,25 +59,37 @@ const InformationCard = ({
     return hardCoralPercentage.toFixed(2);
   };
 
-  const sampleUnitResult = !setToPrivate && (
-    <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+  const subAttributeItem = !setToPrivate && (
+    <>
+      <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+      {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
+        <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
+      ) : (
+        <Typography m={1}>
+          Reef fish biomass: {protocolName === 'beltfish' && protocol.biomass_kgha} kg/ha
+        </Typography>
+      )}
+    </>
   );
 
-  const subAttributeItem =
-    !setToPrivate &&
-    (protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
-      <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
-    ) : (
-      <Typography m={1}>
-        Reef fish biomass: {protocolName === 'beltfish' && protocol.biomass_kgha} kg/ha
-      </Typography>
-    ));
+  const subAttributeBleachingItem = !setToPrivate && bleachingSubitems && (
+    <>
+      <Typography m={1}>Bleached colonies: {bleachingSubitems.avg_percent_bleached}%</Typography>
+      <Typography m={1}>Hard coral genera: {bleachingSubitems.avg_count_genera}</Typography>
+      <Typography m={1}>Observed coral colonies: {bleachingSubitems.avg_count_total}</Typography>
+    </>
+  );
+
+  const protocolSubItem = bleachingSubitems ? (
+    <>{subAttributeBleachingItem}</>
+  ) : (
+    <>{subAttributeItem}</>
+  );
 
   const subItems = type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      {sampleUnitResult}
-      {subAttributeItem}
+      {protocolSubItem}
     </Box>
   );
 
