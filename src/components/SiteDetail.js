@@ -14,7 +14,7 @@ import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
 import { pieChartDefault } from '../constants/sample-data';
-import { protocolsArray, bleachingCategories } from '../constants/transect_protocols';
+import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
 
 import PropTypes from 'prop-types';
 
@@ -73,6 +73,7 @@ const SiteDetail = ({ selectSite }) => {
 
   const SiteDetailCards = protocolsArray.map(protocol => {
     const bleachingProtocol = protocol.name === 'bleachingqc';
+    const fishBeltProtocol = protocol.name === 'beltfish';
     const transectProperty = bleachingProtocol ? protocol.property : protocol.name;
     const bleachingSubItems = loadedSite && loadedSite.properties.protocols['colonies_bleached'];
     const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[transectProperty];
@@ -83,24 +84,18 @@ const SiteDetail = ({ selectSite }) => {
     const generatePrivateLabel = protocol_title =>
       `This data is unavailable because ${protocol_title} Sample Units are set to Private for this project.`;
 
-    const convertBleachingContent = content => {
-      return (
-        content &&
-        bleachingCategories.map(item => {
-          return { x: item.name, y: content[item.type] };
-        })
-      );
-    };
-
-    const convertContent = (content, transect) => {
+    const convertContent = content => {
       return (
         content &&
         (bleachingProtocol
-          ? convertBleachingContent(content)
+          ? bleachingCategories.map(item => {
+              return { x: item.name, y: content[item.type] };
+            })
           : content.map(item => {
               const attribute = Object.keys(item)[0];
-              const value =
-                transect === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
+              const value = fishBeltProtocol
+                ? Object.values(item)[0]
+                : Object.values(item)[0] * 100;
               return { x: attribute, y: value };
             }))
       );
@@ -126,9 +121,7 @@ const SiteDetail = ({ selectSite }) => {
       loadedSiteProtocol &&
       (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[protocol.property]);
 
-    const sourceContent = setToPrivate
-      ? pieChartDefault.body
-      : convertContent(protocolContent, transectProperty);
+    const sourceContent = setToPrivate ? pieChartDefault.body : convertContent(protocolContent);
 
     const sourceLegendData = setToPrivate
       ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
