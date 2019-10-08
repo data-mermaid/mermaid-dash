@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { VictoryPie, VictoryLegend } from 'victory';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components';
-
 import PropTypes from 'prop-types';
 
 const LabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.smallScreen ? '150px' : '160px')};
-  left: ${props => (props.midScreen ? '145px' : '75px')};
-  width: 160px;
-  height: 40px;
+  top: ${props => (props.smScreen ? '165px' : props.mdScreen ? '210px' : '165px')};
+  left: ${props => (props.smScreen ? '105px' : props.mdScreen ? '160px' : '80px')};
+  width: 140px;
+  height: 50px;
 `;
 const PrivateLabelContainer = styled('div')`
   position: relative;
-  top: 200px;
-  left: ${props => (props.smallScreen ? '80px' : props.midScreen ? '90px' : '150px')};
+  top: ${props => (props.mdScreen ? '210px' : '165px')};
+  left: ${props => (props.mdScreen ? '90px' : '150px')};
   width: 60%;
   z-index: 1;
 `;
@@ -24,7 +23,7 @@ const Label = styled('div')`
   opacity: ${props => (props.content ? 1 : 0)};
   transition: opacity 0.5s ease-in-out;
   text-align: center;
-  font-size: 16px;
+  font-size: 13px;
   &::before {
     content: '${props => props.content}';
   }
@@ -37,7 +36,11 @@ const PrivateLabel = styled('div')`
   }
 `;
 
-const ImageStyle = styled('div')`
+const ChartWrapper = styled('div')`
+  width: 100%;
+  height: ${props => (props.smScreen ? '420px' : props.mdScreen ? '540px' : '100%')};
+  display: flex;
+  flex-direction: ${props => (props.mdScreen ? 'column' : 'row')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
 `;
 
@@ -67,13 +70,13 @@ const privateColorScale = [
 
 const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
-  const mediaMax1299 = useMediaQuery('(max-width:1299px)');
-  const mediaMin1300 = useMediaQuery('(min-width:1300px)');
-  const mediaMax1600 = useMediaQuery('(max-width:1600px)');
-  const mediaMin1300Max1600 = mediaMin1300 && mediaMax1600;
+  const mediaMax960 = useMediaQuery('(max-width:960px');
+  const mediaMin961 = useMediaQuery('(min-width:961px)');
+  const mediaMax1280 = useMediaQuery('(max-width:1280px)');
+  const mediaBetween961And1280 = mediaMin961 && mediaMax1280;
 
   const labelControl = (
-    <LabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
+    <LabelContainer smScreen={mediaMax960} mdScreen={mediaMax1280}>
       <Label content={centerLabel.label} />
       {centerLabel.category !== 'Tropic group' ? (
         <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}%`} />
@@ -84,96 +87,90 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
   );
 
   const privateLabelControl = setToPrivate && (
-    <PrivateLabelContainer smallScreen={mediaMax1299} midScreen={mediaMin1300Max1600}>
+    <PrivateLabelContainer mdScreen={mediaMax1280}>
       <PrivateLabel content={privateLabel} />
     </PrivateLabelContainer>
   );
 
   return (
-    <>
-      {privateLabelControl}
-      <ImageStyle policy={setToPrivate}>
-        {labelControl}
-        <svg width="100%" height={mediaMax1299 ? 330 : 360}>
-          <VictoryLegend
-            standalone={mediaMax1600}
-            colorScale={setToPrivate ? privateColorScale : defaultColorScale}
-            x={310}
-            title={chartLegend.title}
-            centerTitle
-            style={{
-              title: { fontSize: 18 }
-            }}
-            data={chartLegend.data}
-          />
-          <VictoryPie
-            standalone={false}
-            innerRadius={90}
-            height={mediaMax1299 ? 250 : 280}
-            width={mediaMax1299 ? 350 : 350}
-            padding={{
-              right: mediaMin1300Max1600 ? 0 : 80,
-              left: mediaMin1300Max1600 ? 100 : 40
-            }}
-            labels={() => null}
-            colorScale={setToPrivate ? privateColorScale : defaultColorScale}
-            data={chartContent}
-            events={[
-              {
-                target: 'data',
-                eventHandlers: {
-                  onMouseOver: () => {
-                    return [
-                      {
-                        target: 'data',
-                        mutation: data => {
-                          const {
-                            datum: { x: label, y: number }
-                          } = data;
-                          setCenterLabel({
-                            category: chartLegend.title,
-                            number,
-                            label
-                          });
-                        }
-                      },
-                      {
-                        target: 'data',
-                        mutation: () => ({
-                          style: {
-                            fill: 'smoke',
-                            opacity: 0.6,
-                            transition: '0.25s ease-in-out'
-                          }
-                        })
+    <div>
+      {setToPrivate ? privateLabelControl : labelControl}
+      <ChartWrapper smScreen={mediaMax960} mdScreen={mediaMax1280} policy={setToPrivate}>
+        <VictoryPie
+          innerRadius={90}
+          height={mediaMax1280 ? 300 : 360}
+          width={mediaMax1280 ? 400 : 400}
+          padding={mediaMax1280 ? 30 : 60}
+          labels={() => null}
+          colorScale={setToPrivate ? privateColorScale : defaultColorScale}
+          data={chartContent}
+          events={[
+            {
+              target: 'data',
+              eventHandlers: {
+                onMouseOver: () => {
+                  return [
+                    {
+                      target: 'data',
+                      mutation: data => {
+                        const {
+                          datum: { x: label, y: number }
+                        } = data;
+                        setCenterLabel({
+                          category: chartLegend.title,
+                          number,
+                          label
+                        });
                       }
-                    ];
-                  },
-                  onMouseOut: () => {
-                    return [
-                      {
-                        target: 'data',
-                        mutation: () => {
-                          setCenterLabel({
-                            category: null,
-                            number: null,
-                            label: null
-                          });
+                    },
+                    {
+                      target: 'data',
+                      mutation: () => ({
+                        style: {
+                          fill: 'smoke',
+                          opacity: 0.6,
+                          transition: '0.25s ease-in-out'
                         }
-                      },
-                      {
-                        target: 'data',
-                        mutation: () => {}
+                      })
+                    }
+                  ];
+                },
+                onMouseOut: () => {
+                  return [
+                    {
+                      target: 'data',
+                      mutation: () => {
+                        setCenterLabel({
+                          category: null,
+                          number: null,
+                          label: null
+                        });
                       }
-                    ];
-                  }
+                    },
+                    {
+                      target: 'data',
+                      mutation: () => {}
+                    }
+                  ];
                 }
               }
-            ]}
-          />
-        </svg>
-      </ImageStyle>
-    </>
+            }
+          ]}
+        />
+        <VictoryLegend
+          colorScale={setToPrivate ? privateColorScale : defaultColorScale}
+          title={chartLegend.title}
+          orientation="horizontal"
+          itemsPerRow={mediaBetween961And1280 ? 3 : 2}
+          y={mediaMax1280 ? 0 : 50}
+          style={{
+            title: { fontSize: mediaMax1280 ? 18 : 23 },
+            labels: { fontSize: mediaMax1280 ? 13 : 17 }
+          }}
+          data={chartLegend.data}
+        />
+      </ChartWrapper>
+    </div>
   );
 };
 

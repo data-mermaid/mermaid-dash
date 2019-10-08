@@ -25,7 +25,7 @@ const CardChartContent = ({
       />
     );
 
-  return <Box m={1}>{chart}</Box>;
+  return <Box>{chart}</Box>;
 };
 
 export default CardChartContent;
