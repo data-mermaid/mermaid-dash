@@ -6,15 +6,15 @@ import PropTypes from 'prop-types';
 
 const LabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.smallScreen ? '165px' : props.mobileScreen ? '210px' : '165px')};
-  left: ${props => (props.smallScreen ? '105px' : props.mobileScreen ? '160px' : '80px')};
+  top: ${props => (props.smScreen ? '165px' : props.mdScreen ? '210px' : '165px')};
+  left: ${props => (props.smScreen ? '105px' : props.mdScreen ? '160px' : '80px')};
   width: 140px;
   height: 50px;
 `;
 const PrivateLabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.mobileScreen ? '210px' : '165px')};
-  left: ${props => (props.mobileScreen ? '90px' : '150px')};
+  top: ${props => (props.mdScreen ? '210px' : '165px')};
+  left: ${props => (props.mdScreen ? '90px' : '150px')};
   width: 60%;
   z-index: 1;
 `;
@@ -36,11 +36,11 @@ const PrivateLabel = styled('div')`
   }
 `;
 
-const ChartWrapper = styled('Box')`
+const ChartWrapper = styled('div')`
   width: 100%;
-  height: ${props => (props.smallScreen ? '420px' : props.mobileScreen ? '540px' : '100%')};
+  height: ${props => (props.smScreen ? '420px' : props.mdScreen ? '540px' : '100%')};
   display: flex;
-  flex-direction: ${props => (props.mobileScreen ? 'column' : 'row')};
+  flex-direction: ${props => (props.mdScreen ? 'column' : 'row')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
 `;
 
@@ -71,10 +71,12 @@ const privateColorScale = [
 const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax960 = useMediaQuery('(max-width:960px');
-  const medianMax1280 = useMediaQuery('(max-width:1280px)');
+  const mediaMin961 = useMediaQuery('(min-width:961px)');
+  const mediaMax1280 = useMediaQuery('(max-width:1280px)');
+  const mediaBetween961And1280 = mediaMin961 && mediaMax1280;
 
   const labelControl = (
-    <LabelContainer smallScreen={mediaMax960} mobileScreen={medianMax1280}>
+    <LabelContainer smScreen={mediaMax960} mdScreen={mediaMax1280}>
       <Label content={centerLabel.label} />
       {centerLabel.category !== 'Tropic group' ? (
         <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}%`} />
@@ -85,7 +87,7 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
   );
 
   const privateLabelControl = setToPrivate && (
-    <PrivateLabelContainer mobileScreen={medianMax1280}>
+    <PrivateLabelContainer mdScreen={mediaMax1280}>
       <PrivateLabel content={privateLabel} />
     </PrivateLabelContainer>
   );
@@ -93,12 +95,12 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
   return (
     <div>
       {setToPrivate ? privateLabelControl : labelControl}
-      <ChartWrapper smallScreen={mediaMax960} mobileScreen={medianMax1280} policy={setToPrivate}>
+      <ChartWrapper smScreen={mediaMax960} mdScreen={mediaMax1280} policy={setToPrivate}>
         <VictoryPie
           innerRadius={90}
-          height={medianMax1280 ? 300 : 360}
-          width={medianMax1280 ? 400 : 400}
-          padding={medianMax1280 ? 30 : 60}
+          height={mediaMax1280 ? 300 : 360}
+          width={mediaMax1280 ? 400 : 400}
+          padding={mediaMax1280 ? 30 : 60}
           labels={() => null}
           colorScale={setToPrivate ? privateColorScale : defaultColorScale}
           data={chartContent}
@@ -159,11 +161,11 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
           colorScale={setToPrivate ? privateColorScale : defaultColorScale}
           title={chartLegend.title}
           orientation="horizontal"
-          itemsPerRow={2}
-          y={medianMax1280 ? 0 : 50}
+          itemsPerRow={mediaBetween961And1280 ? 3 : 2}
+          y={mediaMax1280 ? 0 : 50}
           style={{
-            title: { fontSize: medianMax1280 ? 18 : 23 },
-            labels: { fontSize: medianMax1280 ? 13 : 17 }
+            title: { fontSize: mediaMax1280 ? 18 : 23 },
+            labels: { fontSize: mediaMax1280 ? 13 : 17 }
           }}
           data={chartLegend.data}
         />
