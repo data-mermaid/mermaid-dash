@@ -81,8 +81,8 @@ const SiteDetail = ({ selectSite }) => {
     const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
     const setToPrivate = dataPolicy === 'private';
 
-    const generatePrivateLabel = protocol_title =>
-      `This data is unavailable because ${protocol_title} Sample Units are set to Private for this project.`;
+    const generatePrivateLabel = protocolTitle =>
+      `This data is unavailable because ${protocolTitle} Sample Units are set to Private for this project.`;
 
     const convertContent = content => {
       return (
