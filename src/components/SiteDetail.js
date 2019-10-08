@@ -14,29 +14,9 @@ import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
 import { pieChartDefault } from '../constants/sample-data';
+import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
 
 import PropTypes from 'prop-types';
-
-const protocolsArray = [
-  {
-    name: 'benthiclit',
-    title: 'Benthic[LIT] % Cover',
-    property: 'coral_cover',
-    type: 'pieChart'
-  },
-  {
-    name: 'benthicpit',
-    title: 'Benthic[PIT] % Cover',
-    property: 'coral_cover',
-    type: 'pieChart'
-  },
-  {
-    name: 'beltfish',
-    title: 'Fish Belt',
-    property: 'biomass_kgha_tg',
-    type: 'pieChart'
-  }
-];
 
 const containerStyle = makeStyles(theme => ({
   root: {
@@ -92,48 +72,60 @@ const SiteDetail = ({ selectSite }) => {
   );
 
   const SiteDetailCards = protocolsArray.map(protocol => {
-    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[protocol.name];
+    const bleachingProtocol = protocol.name === 'bleachingqc';
+    const fishBeltProtocol = protocol.name === 'beltfish';
+    const transectProperty = bleachingProtocol ? protocol.property : protocol.name;
+    const bleachingSubItems = loadedSite && loadedSite.properties.protocols['colonies_bleached'];
+    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[transectProperty];
+
     const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
     const setToPrivate = dataPolicy === 'private';
 
-    const generatePrivateLabel = protocol => {
-      const protocolName =
-        protocol === 'beltfish' ? 'Fish Belt' : 'Benthic: PIT, LIT and Habitat Complexity';
-      return `This data is unavailable because ${protocolName} Sample Units are set to Private for this project.`;
-    };
+    const generatePrivateLabel = protocolTitle =>
+      `This data is unavailable because ${protocolTitle} Sample Units are set to Private for this project.`;
 
-    const convertContent = (content, protocol) => {
+    const convertContent = content => {
       return (
         content &&
-        content.map(item => {
-          const attribute = Object.keys(item)[0];
-          const value =
-            protocol === 'beltfish' ? Object.values(item)[0] : Object.values(item)[0] * 100;
-          return { x: attribute, y: value };
-        })
+        (bleachingProtocol
+          ? bleachingCategories.map(item => {
+              return { x: item.name, y: content[item.type] };
+            })
+          : content.map(item => {
+              const attribute = Object.keys(item)[0];
+              const value = fishBeltProtocol
+                ? Object.values(item)[0]
+                : Object.values(item)[0] * 100;
+              return { x: attribute, y: value };
+            }))
       );
     };
 
     const convertLegend = (content, protocol) => {
-      const title = protocol === 'beltfish' ? 'Tropic group' : 'Benthic category';
-      const data =
-        content &&
-        content.map(item => {
-          const attribute = Object.keys(item)[0];
-          return { name: attribute };
-        });
+      const { legendTitle: title } = protocol;
+
+      const data = bleachingProtocol
+        ? bleachingCategories.map(item => {
+            return { name: item.name };
+          })
+        : content &&
+          content.map(item => {
+            const attribute = Object.keys(item)[0];
+            return { name: attribute };
+          });
 
       return { title, data };
     };
 
     const protocolContent =
-      loadedSiteProtocol && loadedSite.properties.protocols[protocol.name][protocol.property];
-    const sourceContent = setToPrivate
-      ? pieChartDefault.body
-      : convertContent(protocolContent, protocol.name);
+      loadedSiteProtocol &&
+      (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[protocol.property]);
+
+    const sourceContent = setToPrivate ? pieChartDefault.body : convertContent(protocolContent);
+
     const sourceLegendData = setToPrivate
       ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
-      : convertLegend(protocolContent, protocol.name);
+      : convertLegend(protocolContent, protocol);
 
     const cardsComponent = loadedSiteProtocol && (
       <InformationCard
@@ -143,8 +135,8 @@ const SiteDetail = ({ selectSite }) => {
         pieChartContent={sourceContent}
         pieChartLegend={sourceLegendData}
         setToPrivate={setToPrivate}
-        privateLabel={generatePrivateLabel(protocol.name)}
-        sampleUnitCounts={loadedSiteProtocol.sample_unit_count}
+        privateLabel={generatePrivateLabel(protocol.title)}
+        bleachingSubItems={bleachingSubItems}
         title={protocol.title}
         type={protocol.type}
       />

@@ -5,7 +5,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
-import * as leafletProperty from '../constants/leaflet_properties';
+import * as leafletProperty from '../constants/leaflet-properties';
 import styled from 'styled-components/macro';
 
 delete L.Icon.Default.prototype._getIconUrl;

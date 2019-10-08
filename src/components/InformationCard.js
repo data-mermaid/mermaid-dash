@@ -39,7 +39,7 @@ const InformationCard = ({
   histogramContent,
   title,
   type,
-  sampleUnitCounts,
+  bleachingSubItems,
   pieChartContent,
   pieChartLegend,
   textContent
@@ -58,25 +58,33 @@ const InformationCard = ({
     return hardCoralPercentage.toFixed(2);
   };
 
-  const sampleUnitResult = !setToPrivate && (
-    <Typography m={1}>Sample units: {sampleUnitCounts} </Typography>
+  const subAttributeItem = !setToPrivate && (
+    <>
+      <Typography m={1}>Sample units: {protocol && protocol.sample_unit_count} </Typography>
+      {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
+        <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
+      ) : (
+        <Typography m={1}>
+          Reef fish biomass: {protocolName === 'beltfish' && protocol.biomass_kgha} kg/ha
+        </Typography>
+      )}
+    </>
   );
 
-  const subAttributeItem =
-    !setToPrivate &&
-    (protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
-      <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
-    ) : (
-      <Typography m={1}>
-        Reef fish biomass: {protocolName === 'beltfish' && protocol.biomass_kgha} kg/ha
-      </Typography>
-    ));
+  const bleachingSubAttributeItem = !setToPrivate && bleachingSubItems && (
+    <>
+      <Typography m={1}>Bleached colonies: {bleachingSubItems.avg_percent_bleached}%</Typography>
+      <Typography m={1}>Hard coral genera: {bleachingSubItems.avg_count_genera}</Typography>
+      <Typography m={1}>Observed coral colonies: {bleachingSubItems.avg_count_total}</Typography>
+    </>
+  );
+
+  const protocolSubItem = bleachingSubItems ? bleachingSubAttributeItem : subAttributeItem;
 
   const subItems = type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      {sampleUnitResult}
-      {subAttributeItem}
+      {protocolSubItem}
     </Box>
   );
 
@@ -132,7 +140,7 @@ InformationCard.propTypes = {
   histogramContent: PropTypes.array,
   title: PropTypes.string,
   type: PropTypes.string,
-  sampleUnitCounts: PropTypes.number,
+  bleachingSubItems: PropTypes.object,
   pieChartContent: PropTypes.array,
   pieChartLegend: PropTypes.object,
   textContent: PropTypes.object,

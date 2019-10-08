@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import summary from '../src/apis/summary';
 import { BrowserRouter } from 'react-router-dom';
 import './customStyles.css';
-import * as leafletProperty from './constants/leaflet_properties';
+import * as leafletProperty from './constants/leaflet-properties';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from './components/Header';
