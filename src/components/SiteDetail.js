@@ -101,31 +101,13 @@ const SiteDetail = ({ selectSite }) => {
       );
     };
 
-    const convertLegend = (content, protocol) => {
-      const { legendTitle: title } = protocol;
-
-      const data = bleachingProtocol
-        ? bleachingCategories.map(item => {
-            return { name: item.name };
-          })
-        : content &&
-          content.map(item => {
-            const attribute = Object.keys(item)[0];
-            return { name: attribute };
-          });
-
-      return { title, data };
-    };
-
     const protocolContent =
       loadedSiteProtocol &&
       (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[protocol.property]);
-
-    const sourceContent = setToPrivate ? pieChartDefault.body : convertContent(protocolContent);
-
-    const sourceLegendData = setToPrivate
-      ? { title: pieChartDefault.legendTitle, data: pieChartDefault.legend }
-      : convertLegend(protocolContent, protocol);
+    const sourceData = convertContent(protocolContent);
+    const defaultData = { title: pieChartDefault.legendTitle, data: pieChartDefault.body };
+    const availableData = { title: protocol.legendTitle, data: sourceData };
+    const sourceContent = setToPrivate ? defaultData : availableData;
 
     const cardsComponent = loadedSiteProtocol && (
       <InformationCard
@@ -133,7 +115,6 @@ const SiteDetail = ({ selectSite }) => {
         protocol={loadedSiteProtocol}
         protocolName={protocol.name}
         pieChartContent={sourceContent}
-        pieChartLegend={sourceLegendData}
         setToPrivate={setToPrivate}
         privateLabel={generatePrivateLabel(protocol.title)}
         bleachingSubItems={bleachingSubItems}

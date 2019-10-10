@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { VictoryPie, VictoryLegend } from 'victory';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components';
+import { privateColorScale, attributeColors } from '../constants/attribute-colors';
 import PropTypes from 'prop-types';
 
 const LabelContainer = styled('div')`
@@ -44,36 +45,26 @@ const ChartWrapper = styled('div')`
   filter: ${props => props.policy && 'blur(0.8rem)'};
 `;
 
-const defaultColorScale = [
-  '#4B3991',
-  '#8B0033',
-  '#C8283D',
-  '#EE5634',
-  '#FB9E4F',
-  '#FDDA79',
-  '#E0F686',
-  '#9ED893',
-  '#57B894',
-  '#2A74AF'
-];
-
-const privateColorScale = [
-  '#DCDCDC',
-  '#D3D3D3',
-  '#C0C0C0',
-  '#A9A9A9',
-  '#808080',
-  '#696969',
-  '#778899',
-  '#708090'
-];
-
-const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => {
+const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const mediaMin961 = useMediaQuery('(min-width:961px)');
   const mediaMax1280 = useMediaQuery('(max-width:1280px)');
   const mediaBetween961And1280 = mediaMin961 && mediaMax1280;
+  const pieChartContent = chartContent.data;
+  const legendTitle = chartContent.title;
+
+  const benthicAttributeCollection = pieChartContent.map(({ x }) => x);
+  const filteredAttributeCollection = attributeColors.filter(({ name }) =>
+    benthicAttributeCollection.includes(name)
+  );
+
+  const legendData = filteredAttributeCollection.map(({ name }) => ({ name }));
+  const benthicsColorScale = filteredAttributeCollection.map(({ color }) => color);
+  const contentData = legendData.map(({ name }) => {
+    const foundAttribute = pieChartContent.find(({ x }) => x === name);
+    return { x: name, y: foundAttribute.y };
+  });
 
   const labelControl = (
     <LabelContainer smScreen={mediaMax960} mdScreen={mediaMax1280}>
@@ -102,8 +93,8 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
           width={mediaMax1280 ? 400 : 400}
           padding={mediaMax1280 ? 30 : 60}
           labels={() => null}
-          colorScale={setToPrivate ? privateColorScale : defaultColorScale}
-          data={chartContent}
+          colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
+          data={setToPrivate ? pieChartContent : contentData}
           events={[
             {
               target: 'data',
@@ -117,7 +108,7 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
                           datum: { x: label, y: number }
                         } = data;
                         setCenterLabel({
-                          category: chartLegend.title,
+                          category: legendTitle,
                           number,
                           label
                         });
@@ -158,8 +149,8 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
           ]}
         />
         <VictoryLegend
-          colorScale={setToPrivate ? privateColorScale : defaultColorScale}
-          title={chartLegend.title}
+          colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
+          title={legendTitle}
           orientation="horizontal"
           itemsPerRow={mediaBetween961And1280 ? 3 : 2}
           y={mediaMax1280 ? 0 : 50}
@@ -167,7 +158,7 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
             title: { fontSize: mediaMax1280 ? 18 : 23 },
             labels: { fontSize: mediaMax1280 ? 13 : 17 }
           }}
-          data={chartLegend.data}
+          data={legendData}
         />
       </ChartWrapper>
     </div>
@@ -175,11 +166,9 @@ const PieChart = ({ chartContent, chartLegend, setToPrivate, privateLabel }) => 
 };
 
 PieChart.propTypes = {
-  chartContent: PropTypes.array,
-  chartLegend: PropTypes.shape({
-    title: PropTypes.string,
-    data: PropTypes.array
-  })
+  chartContent: PropTypes.object,
+  setToPrivate: PropTypes.bool,
+  privateLabel: PropTypes.string
 };
 
 export default PieChart;
