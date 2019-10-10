@@ -7,13 +7,5 @@ export const pieChartDefault = {
     { x: 'Omnivore', y: 74.5 },
     { x: 'Piscivore', y: 177.4 }
   ],
-  legendTitle: 'Private group',
-  legend: [
-    { name: 'Herbivore-detritivore' },
-    { name: 'Herbivore-macroalgae' },
-    { name: 'Invertivore-mobile' },
-    { name: 'Invertivore-sessile' },
-    { name: 'Omnivore' },
-    { name: 'Piscivore' }
-  ]
+  legendTitle: 'Private group'
 };
