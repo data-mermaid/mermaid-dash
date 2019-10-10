@@ -41,7 +41,6 @@ const InformationCard = ({
   type,
   bleachingSubItems,
   pieChartContent,
-  pieChartLegend,
   textContent
 }) => {
   const classes = cardStyle();
@@ -102,7 +101,6 @@ const InformationCard = ({
       <CardChartContent
         chartType={type}
         pieChartContent={pieChartContent}
-        pieChartLegend={pieChartLegend}
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
         histogramContent={histogramContent}
@@ -141,8 +139,7 @@ InformationCard.propTypes = {
   title: PropTypes.string,
   type: PropTypes.string,
   bleachingSubItems: PropTypes.object,
-  pieChartContent: PropTypes.array,
-  pieChartLegend: PropTypes.object,
+  pieChartContent: PropTypes.object,
   textContent: PropTypes.object,
   classes: PropTypes.object
 };
