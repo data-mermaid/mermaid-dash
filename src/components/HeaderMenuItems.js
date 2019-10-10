@@ -21,7 +21,7 @@ const HeaderMenuItemsProperties = makeStyles(theme => ({
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
-    left: '743px !important'
+    marginLeft: '9px'
   }
 })(props => (
   <Menu
