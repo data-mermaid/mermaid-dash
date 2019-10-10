@@ -43,5 +43,5 @@ export const ButtonStyle = styled('button')`
 
 export const LinkStyle = styled('a')`
   text-decoration: none;
-  color: white;
+  color: ${props => (props.menuButton ? 'black' : 'white')};
 `;
