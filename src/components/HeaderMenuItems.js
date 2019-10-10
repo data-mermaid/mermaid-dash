@@ -20,19 +20,15 @@ const HeaderMenuItemsProperties = makeStyles(theme => ({
 
 const StyledMenu = withStyles({
   paper: {
-    border: '1px solid #d3d4d5'
+    border: '1px solid #d3d4d5',
+    left: '743px !important'
   }
 })(props => (
   <Menu
     elevation={5}
     getContentAnchorEl={null}
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center'
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center'
+      vertical: 'bottom'
     }}
     {...props}
   />
