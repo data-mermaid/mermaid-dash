@@ -156,7 +156,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
           height={mediaMin1281 ? 500 : 220}
           itemsPerRow={mediaMin1281 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2}
           style={{
-            labels: { fontSize: mediaMin1281 ? 20 : mediaMin960 ? 13 : 17 }
+            labels: { fontSize: mediaMin1281 ? 20 : mediaMin960 ? 12 : 17, fontFamily: 'Arial' }
           }}
           data={legendData}
         />
