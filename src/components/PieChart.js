@@ -58,7 +58,10 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     benthicAttributeCollection.includes(name)
   );
 
-  const legendData = filteredAttributeCollection.map(({ name }) => ({ name }));
+  const legendData = filteredAttributeCollection.map(({ name }) => ({
+    name,
+    symbol: { type: 'square' }
+  }));
   const benthicsColorScale = filteredAttributeCollection.map(({ color }) => color);
   const contentData = legendData.map(({ name }) => {
     const foundAttribute = chartContent.find(({ x }) => x === name);
