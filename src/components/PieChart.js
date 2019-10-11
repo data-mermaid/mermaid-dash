@@ -58,15 +58,16 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     benthicAttributeCollection.includes(name)
   );
 
-  const legendData = filteredAttributeCollection.map(({ name }) => ({
-    name,
-    symbol: { type: 'square' }
-  }));
   const benthicsColorScale = filteredAttributeCollection.map(({ color }) => color);
-  const contentData = legendData.map(({ name }) => {
+  const contentData = filteredAttributeCollection.map(({ name }) => {
     const foundAttribute = chartContent.find(({ x }) => x === name);
     return { x: name, y: foundAttribute.y };
   });
+
+  //only show legend item with value greater than 0%
+  const legendData = contentData
+    .filter(({ y }) => y > 0)
+    .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
 
   const labelControl = (
     <LabelContainer smScreen={mediaMax960} mdScreen={mediaMax1280}>
