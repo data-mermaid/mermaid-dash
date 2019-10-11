@@ -40,7 +40,7 @@ const PrivateLabel = styled('div')`
 
 const ChartWrapper = styled('div')`
   width: 100%;
-  height: ${props => (props.smScreen ? '420px' : props.mdScreen ? '540px' : '100%')};
+  height: ${props => (props.mdScreen ? '450px' : '100%')};
   display: flex;
   flex-direction: ${props => (props.mdScreen ? 'column' : 'row')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
@@ -49,9 +49,9 @@ const ChartWrapper = styled('div')`
 const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax960 = useMediaQuery('(max-width:960px');
-  const mediaMin961 = useMediaQuery('(min-width:961px)');
+  const mediaMin960 = useMediaQuery('(min-width:960px)');
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const mediaMax1280 = useMediaQuery('(max-width:1280px)');
-  const mediaBetween961And1280 = mediaMin961 && mediaMax1280;
 
   const benthicAttributeCollection = chartContent.map(({ x }) => x);
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
@@ -88,7 +88,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
   return (
     <div>
       {setToPrivate ? privateLabelControl : labelControl}
-      <ChartWrapper smScreen={mediaMax960} mdScreen={mediaMax1280} policy={setToPrivate}>
+      <ChartWrapper mdScreen={mediaMax1280} policy={setToPrivate}>
         <VictoryPie
           innerRadius={90}
           height={mediaMax1280 ? 300 : 360}
@@ -153,11 +153,10 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
         <VictoryLegend
           colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
           orientation="horizontal"
-          itemsPerRow={mediaBetween961And1280 ? 3 : 2}
-          y={mediaMax1280 ? 0 : 50}
+          height={mediaMin1281 ? 500 : 220}
+          itemsPerRow={mediaMin1281 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2}
           style={{
-            title: { fontSize: mediaMax1280 ? 18 : 23 },
-            labels: { fontSize: mediaMax1280 ? 13 : 17 }
+            labels: { fontSize: mediaMin1281 ? 20 : mediaMin960 ? 13 : 17 }
           }}
           data={legendData}
         />
