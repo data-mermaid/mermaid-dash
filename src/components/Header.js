@@ -1,22 +1,17 @@
 import React from 'react';
 
-import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
-import { drawerWidth } from '../constants/summary-information';
-import { LinkStyle } from '../styles/MermaidStyledComponents';
 
-import PropTypes from 'prop-types';
-
-const MermaidHeader = [
-  { name: 'COLLECT', link: 'https://collect.datamermaid.org' },
-  { name: 'ABOUT THIS DATA', link: 'https://datamermaid.org/about/' },
-  { name: 'PRIVACY', link: 'https://datamermaid.org/terms-of-service/' },
-  { name: 'CONTACT', link: 'https://datamermaid.org/contact/' }
-];
+import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+import { MenuLink } from '../styles/MermaidStyledComponents';
+import HeaderMenu from './HeaderMenu';
+import headerContent from '../constants/header-content';
 
 const headerStyles = makeStyles(theme => ({
   appBarProperty: {
@@ -27,14 +22,6 @@ const headerStyles = makeStyles(theme => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     })
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    marginRight: drawerWidth
   },
   toolBarProperty: {
     padding: 0
@@ -50,14 +37,14 @@ const headerStyles = makeStyles(theme => ({
 const HeaderItem = ({ children, link }) => {
   return (
     <Box p={2} fontSize={12} fontWeight="fontWeightBold">
-      <LinkStyle target="_blank" href={link} rel="noopener noreferrer">
+      <MenuLink target="_blank" href={link} rel="noopener noreferrer">
         {children}
-      </LinkStyle>
+      </MenuLink>
     </Box>
   );
 };
 
-const HeaderItems = MermaidHeader.map(({ name, link }) => {
+const HeaderItems = headerContent.map(({ name, link }) => {
   return (
     <HeaderItem key={name} link={link}>
       {name}
@@ -67,6 +54,7 @@ const HeaderItems = MermaidHeader.map(({ name, link }) => {
 
 const Header = () => {
   const classes = headerStyles();
+  const mediaMax960 = useMediaQuery('(min-width:960px');
 
   return (
     <AppBar position="static" className={classes.appBarProperty}>
@@ -74,7 +62,8 @@ const Header = () => {
         <Box p={1} flexGrow={1}>
           <MermaidLogo height="38px" />
         </Box>
-        {HeaderItems}
+        {mediaMax960 && HeaderItems}
+        <HeaderMenu />
       </Toolbar>
     </AppBar>
   );
