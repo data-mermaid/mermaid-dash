@@ -54,7 +54,7 @@ const InformationCard = ({
       .reduce((acc, val) => acc + val, 0);
     const hardCoralPercentage = hardCoralResult * 100;
 
-    return hardCoralPercentage.toFixed(2);
+    return hardCoralPercentage.toFixed(1);
   };
 
   const subAttributeItem = !setToPrivate && (
@@ -72,7 +72,9 @@ const InformationCard = ({
 
   const bleachingSubAttributeItem = !setToPrivate && bleachingSubItems && (
     <>
-      <Typography m={1}>Bleached colonies: {bleachingSubItems.avg_percent_bleached}%</Typography>
+      <Typography m={1}>
+        Bleached colonies: {bleachingSubItems.avg_percent_bleached.toFixed(1)}%
+      </Typography>
       <Typography m={1}>Hard coral genera: {bleachingSubItems.avg_count_genera}</Typography>
       <Typography m={1}>Observed coral colonies: {bleachingSubItems.avg_count_total}</Typography>
     </>
