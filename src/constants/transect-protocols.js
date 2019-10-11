@@ -30,7 +30,7 @@ export const protocolsArray = [
 ];
 
 export const bleachingCategories = [
-  { type: 'avg_percent_hard', name: 'Hard Coral' },
-  { type: 'avg_percent_soft', name: 'Soft Coral' },
-  { type: 'avg_percent_algae', name: 'Macro-algae' }
+  { type: 'avg_percent_hard', name: 'Hard coral' },
+  { type: 'avg_percent_soft', name: 'Soft coral' },
+  { type: 'avg_percent_algae', name: 'Macroalgae' }
 ];
