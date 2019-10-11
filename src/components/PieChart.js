@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { VictoryPie, VictoryLegend } from 'victory';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components';
-import { privateColorScale, attributeColors } from '../constants/attribute-colors';
 import PropTypes from 'prop-types';
+
+import { privateColorScale, attributeColors } from '../constants/attribute-colors';
 
 const LabelContainer = styled('div')`
   position: relative;
@@ -166,7 +167,10 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
 };
 
 PieChart.propTypes = {
-  chartContent: PropTypes.object,
+  chartContent: PropTypes.shape({
+    title: PropTypes.string,
+    data: PropTypes.array
+  }),
   setToPrivate: PropTypes.bool,
   privateLabel: PropTypes.string
 };
