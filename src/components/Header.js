@@ -1,18 +1,17 @@
 import React from 'react';
 
-import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Box from '@material-ui/core/Box';
-import { LinkStyle } from '../styles/MermaidStyledComponents';
 
+import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
+import { MenuLink } from '../styles/MermaidStyledComponents';
 import HeaderMenu from './HeaderMenu';
 import { mermaidHeader } from '../constants/header';
-
-import PropTypes from 'prop-types';
 
 const headerStyles = makeStyles(theme => ({
   appBarProperty: {
@@ -38,9 +37,9 @@ const headerStyles = makeStyles(theme => ({
 const HeaderItem = ({ children, link }) => {
   return (
     <Box p={2} fontSize={12} fontWeight="fontWeightBold">
-      <LinkStyle target="_blank" href={link} rel="noopener noreferrer">
+      <MenuLink target="_blank" href={link} rel="noopener noreferrer">
         {children}
-      </LinkStyle>
+      </MenuLink>
     </Box>
   );
 };

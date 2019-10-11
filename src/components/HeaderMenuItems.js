@@ -6,11 +6,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import HelpIcon from '@material-ui/icons/Help';
 import LockIcon from '@material-ui/icons/Lock';
 import MailIcon from '@material-ui/icons/Mail';
-import { LinkStyle } from '../styles/MermaidStyledComponents';
+import { MenuLink } from '../styles/MermaidStyledComponents';
 
 import { mermaidHeader } from '../constants/header';
 
-const HeaderMenuItemsProperties = makeStyles(theme => ({
+const headerMenuItemsProperties = makeStyles(theme => ({
   menuIconProperty: {
     width: '20px',
     height: '20px',
@@ -25,10 +25,11 @@ const StyledMenu = withStyles({
   }
 })(props => (
   <Menu
-    elevation={5}
+    elevation={4}
     getContentAnchorEl={null}
     anchorOrigin={{
-      vertical: 'bottom'
+      vertical: 'bottom',
+      horizontal: 'center'
     }}
     {...props}
   />
@@ -41,28 +42,36 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
-const HeaderMenuItems = ({ anchorEl, handleClose }) => {
-  const classes = HeaderMenuItemsProperties();
-  const iconFilter = name => {
-    if (name === 'ABOUT THIS DATA') {
-      return <HelpIcon className={classes.menuIconProperty} />;
-    } else if (name === 'PRIVACY') {
-      return <LockIcon className={classes.menuIconProperty} />;
-    } else if (name === 'CONTACT') {
-      return <MailIcon className={classes.menuIconProperty} />;
-    }
-    return <EditIcon className={classes.menuIconProperty} />;
-  };
+const MenuIcon = ({ name }) => {
+  const { menuIconProperty } = headerMenuItemsProperties();
+  let Icon;
 
+  switch (name) {
+    case 'ABOUT THIS DATA':
+      Icon = HelpIcon;
+      break;
+    case 'PRIVACY':
+      Icon = LockIcon;
+      break;
+    case 'CONTACT':
+      Icon = MailIcon;
+      break;
+    default:
+      Icon = EditIcon;
+      break;
+  }
+  return <Icon className={menuIconProperty} />;
+};
+
+const HeaderMenuItems = ({ anchorEl, handleClose }) => {
   const MenuItems = mermaidHeader.map(({ name, link }) => {
-    const icon = iconFilter(name);
     return (
-      <LinkStyle target="_blank" href={link} rel="noopener noreferrer" menuButton={true} key={name}>
+      <MenuLink target="_blank" href={link} rel="noopener noreferrer" menuButton={true} key={name}>
         <StyledMenuItem onClick={handleClose}>
-          {icon}
+          <MenuIcon name={name} />
           {name}
         </StyledMenuItem>
-      </LinkStyle>
+      </MenuLink>
     );
   });
 
