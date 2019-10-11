@@ -13,7 +13,7 @@ import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
-import { pieChartDefault } from '../constants/sample-data';
+import { defaultPieChartContent } from '../constants/sample-data';
 import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
 
 import PropTypes from 'prop-types';
@@ -105,9 +105,7 @@ const SiteDetail = ({ selectSite }) => {
       loadedSiteProtocol &&
       (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[protocol.property]);
     const sourceData = convertContent(protocolContent);
-    const defaultData = { title: pieChartDefault.legendTitle, data: pieChartDefault.body };
-    const availableData = { title: protocol.legendTitle, data: sourceData };
-    const sourceContent = setToPrivate ? defaultData : availableData;
+    const sourceContent = setToPrivate ? defaultPieChartContent : sourceData;
 
     const cardsComponent = loadedSiteProtocol && (
       <InformationCard

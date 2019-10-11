@@ -100,6 +100,7 @@ const InformationCard = ({
     ) : (
       <CardChartContent
         chartType={type}
+        protocolName={protocolName}
         pieChartContent={pieChartContent}
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
@@ -139,7 +140,7 @@ InformationCard.propTypes = {
   title: PropTypes.string,
   type: PropTypes.string,
   bleachingSubItems: PropTypes.object,
-  pieChartContent: PropTypes.object,
+  pieChartContent: PropTypes.array,
   textContent: PropTypes.object,
   classes: PropTypes.object
 };
