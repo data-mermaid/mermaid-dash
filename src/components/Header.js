@@ -11,7 +11,7 @@ import Box from '@material-ui/core/Box';
 import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
 import { MenuLink } from '../styles/MermaidStyledComponents';
 import HeaderMenu from './HeaderMenu';
-import { mermaidHeader } from '../constants/header';
+import headerContent from '../constants/header-content';
 
 const headerStyles = makeStyles(theme => ({
   appBarProperty: {
@@ -44,7 +44,7 @@ const HeaderItem = ({ children, link }) => {
   );
 };
 
-const HeaderItems = mermaidHeader.map(({ name, link }) => {
+const HeaderItems = headerContent.map(({ name, link }) => {
   return (
     <HeaderItem key={name} link={link}>
       {name}

@@ -8,7 +8,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import MailIcon from '@material-ui/icons/Mail';
 import { MenuLink } from '../styles/MermaidStyledComponents';
 
-import { mermaidHeader } from '../constants/header';
+import headerContent from '../constants/header-content';
 
 const headerMenuItemsProperties = makeStyles(theme => ({
   menuIconProperty: {
@@ -64,7 +64,7 @@ const MenuIcon = ({ name }) => {
 };
 
 const HeaderMenuItems = ({ anchorEl, handleClose }) => {
-  const MenuItems = mermaidHeader.map(({ name, link }) => {
+  const MenuItems = headerContent.map(({ name, link }) => {
     return (
       <MenuLink target="_blank" href={link} rel="noopener noreferrer" menuButton={true} key={name}>
         <StyledMenuItem onClick={handleClose}>
