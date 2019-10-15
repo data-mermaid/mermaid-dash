@@ -40,37 +40,39 @@ const PrivateLabel = styled('div')`
 
 const ChartWrapper = styled('div')`
   width: 100%;
-  height: ${props => (props.smScreen ? '420px' : props.mdScreen ? '540px' : '100%')};
+  height: ${props => (props.mdScreen ? '450px' : '100%')};
   display: flex;
   flex-direction: ${props => (props.mdScreen ? 'column' : 'row')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
 `;
 
-const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
+const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
   const mediaMax960 = useMediaQuery('(max-width:960px');
-  const mediaMin961 = useMediaQuery('(min-width:961px)');
+  const mediaMin960 = useMediaQuery('(min-width:960px)');
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const mediaMax1280 = useMediaQuery('(max-width:1280px)');
-  const mediaBetween961And1280 = mediaMin961 && mediaMax1280;
-  const pieChartContent = chartContent.data;
-  const legendTitle = chartContent.title;
 
-  const benthicAttributeCollection = pieChartContent.map(({ x }) => x);
+  const benthicAttributeCollection = chartContent.map(({ x }) => x);
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
     benthicAttributeCollection.includes(name)
   );
 
-  const legendData = filteredAttributeCollection.map(({ name }) => ({ name }));
   const benthicsColorScale = filteredAttributeCollection.map(({ color }) => color);
-  const contentData = legendData.map(({ name }) => {
-    const foundAttribute = pieChartContent.find(({ x }) => x === name);
+  const contentData = filteredAttributeCollection.map(({ name }) => {
+    const foundAttribute = chartContent.find(({ x }) => x === name);
     return { x: name, y: foundAttribute.y };
   });
+
+  //only show legend item with value greater than 0%
+  const legendData = contentData
+    .filter(({ y }) => y > 0)
+    .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
 
   const labelControl = (
     <LabelContainer smScreen={mediaMax960} mdScreen={mediaMax1280}>
       <Label content={centerLabel.label} />
-      {centerLabel.category !== 'Tropic group' ? (
+      {centerLabel.category !== 'beltfish' ? (
         <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}%`} />
       ) : (
         <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}kg/ha`} />
@@ -87,7 +89,7 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
   return (
     <div>
       {setToPrivate ? privateLabelControl : labelControl}
-      <ChartWrapper smScreen={mediaMax960} mdScreen={mediaMax1280} policy={setToPrivate}>
+      <ChartWrapper mdScreen={mediaMax1280} policy={setToPrivate}>
         <VictoryPie
           innerRadius={90}
           height={mediaMax1280 ? 300 : 360}
@@ -95,7 +97,7 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
           padding={mediaMax1280 ? 30 : 60}
           labels={() => null}
           colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
-          data={setToPrivate ? pieChartContent : contentData}
+          data={setToPrivate ? chartContent : contentData}
           events={[
             {
               target: 'data',
@@ -109,7 +111,7 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
                           datum: { x: label, y: number }
                         } = data;
                         setCenterLabel({
-                          category: legendTitle,
+                          category: protocolName,
                           number,
                           label
                         });
@@ -151,13 +153,11 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
         />
         <VictoryLegend
           colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
-          title={legendTitle}
           orientation="horizontal"
-          itemsPerRow={mediaBetween961And1280 ? 3 : 2}
-          y={mediaMax1280 ? 0 : 50}
+          height={mediaMin1281 ? 500 : 220}
+          itemsPerRow={mediaMin1281 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2}
           style={{
-            title: { fontSize: mediaMax1280 ? 18 : 23 },
-            labels: { fontSize: mediaMax1280 ? 13 : 17 }
+            labels: { fontSize: mediaMin1281 ? 20 : mediaMin960 ? 12 : 17, fontFamily: 'Arial' }
           }}
           data={legendData}
         />
@@ -167,10 +167,8 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
 };
 
 PieChart.propTypes = {
-  chartContent: PropTypes.shape({
-    title: PropTypes.string,
-    data: PropTypes.array
-  }),
+  protocolName: PropTypes.string,
+  chartContent: PropTypes.array,
   setToPrivate: PropTypes.bool,
   privateLabel: PropTypes.string
 };
