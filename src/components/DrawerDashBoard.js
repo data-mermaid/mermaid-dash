@@ -89,7 +89,8 @@ const DrawerDashBoard = ({
   metrics,
   histogramContent,
   siteDetail,
-  clearSelectedSiteHandler
+  clearSelectedSiteHandler,
+  hideDrawer
 }) => {
   const classes = drawerStyleProperties();
 
@@ -164,6 +165,8 @@ const DrawerDashBoard = ({
   ) : (
     <SidePanelControl
       showSiteDetail={showSiteDetail}
+      sidePanelOpen={sidePanelOpen}
+      hideDrawer={hideDrawer}
       handleDrawerChange={handleDrawerChange}
       clearSelectedSiteHandler={clearSelectedSiteHandler}
     />

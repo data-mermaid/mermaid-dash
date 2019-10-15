@@ -145,7 +145,7 @@ class App extends Component {
   resize() {
     let currentMobileDisplay = window.innerWidth < 960;
     if (currentMobileDisplay !== this.state.mobileDisplay) {
-      this.setState({ mobileDisplay: currentMobileDisplay });
+      this.setState({ mobileDisplay: currentMobileDisplay, sidePanelOpen: !currentMobileDisplay });
     }
   }
 
@@ -154,7 +154,7 @@ class App extends Component {
   };
 
   siteClickHandler = selectedSite => {
-    const { highlightCluster, siteDropDownData, sidePanelOpen } = this.state;
+    const { highlightCluster, siteDropDownData, sidePanelOpen, mobileDisplay } = this.state;
     const siteDropdownList = siteDropDownData.map(site => site.id);
     selectedSite = selectedSite.key ? this.siteLookup(selectedSite) : selectedSite;
     const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
@@ -170,7 +170,7 @@ class App extends Component {
       this.setState({ popupOpen: false });
     }
 
-    if (!sidePanelOpen) {
+    if (!mobileDisplay && !sidePanelOpen) {
       this.setState({ sidePanelOpen: true });
     }
 
@@ -398,6 +398,7 @@ class App extends Component {
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
           isLoading={this.state.isLoading}
+          hideDrawer={this.state.mobileDisplay}
         />
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}
