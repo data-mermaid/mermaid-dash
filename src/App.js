@@ -53,8 +53,9 @@ class App extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
-    sidePanelOpen: true,
-    popupOpen: false
+    sidePanelOpen: window.innerWidth >= 960,
+    popupOpen: false,
+    mobileDisplay: window.innerWidth < 960
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -136,9 +137,16 @@ class App extends Component {
       histogram[i].label = barchartResult[i];
     }
 
-    this.setState({ histogram });
-    this.setState({ sites });
-    this.setState({ metrics });
+    this.setState({ histogram, sites, metrics });
+    window.addEventListener('resize', this.resize.bind(this));
+    this.resize();
+  }
+
+  resize() {
+    let currentMobileDisplay = window.innerWidth < 960;
+    if (currentMobileDisplay !== this.state.mobileDisplay) {
+      this.setState({ mobileDisplay: currentMobileDisplay, sidePanelOpen: !currentMobileDisplay });
+    }
   }
 
   handleDrawerChange = () => {
@@ -146,7 +154,7 @@ class App extends Component {
   };
 
   siteClickHandler = selectedSite => {
-    const { highlightCluster, siteDropDownData, sidePanelOpen } = this.state;
+    const { highlightCluster, siteDropDownData, sidePanelOpen, mobileDisplay } = this.state;
     const siteDropdownList = siteDropDownData.map(site => site.id);
     selectedSite = selectedSite.key ? this.siteLookup(selectedSite) : selectedSite;
     const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
@@ -162,7 +170,7 @@ class App extends Component {
       this.setState({ popupOpen: false });
     }
 
-    if (!sidePanelOpen) {
+    if (!mobileDisplay && !sidePanelOpen) {
       this.setState({ sidePanelOpen: true });
     }
 
@@ -390,6 +398,7 @@ class App extends Component {
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
           isLoading={this.state.isLoading}
+          hideDrawer={this.state.mobileDisplay}
         />
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}
@@ -415,6 +424,7 @@ class App extends Component {
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
           popupOpen={this.state.popupOpen}
+          hideMiniMap={this.state.mobileDisplay}
         />
       </BrowserRouter>
     );

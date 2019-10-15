@@ -28,10 +28,16 @@ const sidePanelStyleProperties = makeStyles(theme => ({
   }
 }));
 
-const SidePanelControl = ({ showSiteDetail, clearSelectedSiteHandler, handleDrawerChange }) => {
+const SidePanelControl = ({
+  showSiteDetail,
+  clearSelectedSiteHandler,
+  handleDrawerChange,
+  sidePanelOpen,
+  hideDrawer
+}) => {
   const classes = sidePanelStyleProperties();
 
-  const showPanelControl = (
+  const showPanelControl = (sidePanelOpen || !hideDrawer) && (
     <Box className={classes.showPanelButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
         <Tooltip
@@ -48,7 +54,7 @@ const SidePanelControl = ({ showSiteDetail, clearSelectedSiteHandler, handleDraw
     </Box>
   );
 
-  const clearSelectedSite = showSiteDetail && (
+  const clearSelectedSite = showSiteDetail && !hideDrawer && (
     <Box className={classes.clearSiteButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
         <Tooltip
