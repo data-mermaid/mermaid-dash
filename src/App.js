@@ -53,9 +53,9 @@ class App extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
-    sidePanelOpen: true,
+    sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
-    mobileDisplay: false
+    mobileDisplay: window.innerWidth < 960
   };
 
   async componentDidUpdate(prevProps, prevState) {

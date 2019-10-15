@@ -185,11 +185,15 @@ class LeafletMap extends Component {
 
   componentDidMount() {
     this.map = L.map('map', mapProperty);
+    const { hideMiniMap } = this.props;
     const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
     const initMapBounds = this.map.getBounds();
     const initBbox = this.createBoundingBox(initMapBounds);
     const initSouthBbox = initMapBounds.getSouth();
-    miniMapControl.addTo(this.map);
+
+    if (hideMiniMap) {
+      miniMapControl.addTo(this.map);
+    }
 
     this.setState({
       mapZoomLevel: this.map.getZoom(),
