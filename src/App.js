@@ -54,7 +54,8 @@ class App extends Component {
     highlightCluster: null,
     isLoading: false,
     sidePanelOpen: true,
-    popupOpen: false
+    popupOpen: false,
+    mobileDisplay: false
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -136,9 +137,16 @@ class App extends Component {
       histogram[i].label = barchartResult[i];
     }
 
-    this.setState({ histogram });
-    this.setState({ sites });
-    this.setState({ metrics });
+    this.setState({ histogram, sites, metrics });
+    window.addEventListener('resize', this.resize.bind(this));
+    this.resize();
+  }
+
+  resize() {
+    let currentMobileDisplay = window.innerWidth < 960;
+    if (currentMobileDisplay !== this.state.mobileDisplay) {
+      this.setState({ mobileDisplay: currentMobileDisplay });
+    }
   }
 
   handleDrawerChange = () => {
@@ -415,6 +423,7 @@ class App extends Component {
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
           popupOpen={this.state.popupOpen}
+          hideMiniMap={this.state.mobileDisplay}
         />
       </BrowserRouter>
     );

@@ -134,12 +134,12 @@ class LeafletMap extends Component {
       sidePanelOpen: prevSidePanelOpen,
       siteDetail: prevSiteDetail
     } = prevProps;
-    const { markersData, sidePanelOpen, siteDetail, popupOpen } = this.props;
+    const { markersData, sidePanelOpen, siteDetail, popupOpen, hideMiniMap } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, hideMiniMap, miniMap } = this.state;
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
 
@@ -198,15 +198,6 @@ class LeafletMap extends Component {
     });
     this.props.getMapBounds(initBbox);
     this.updateBoundingBoxFromZoom();
-    window.addEventListener('resize', this.resize.bind(this));
-    this.resize();
-  }
-
-  resize() {
-    let currentHideMiniMap = window.innerWidth <= 960;
-    if (currentHideMiniMap !== this.state.hideMiniMap) {
-      this.setState({ hideMiniMap: currentHideMiniMap });
-    }
   }
 
   // use case: For when user selects site when side panel is closed. Panel
