@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Box from '@material-ui/core/Box';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { ThemeProvider } from 'styled-components/macro';
 import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
@@ -64,6 +65,7 @@ const mapControlStyleProperty = makeStyles(theme => ({
 
 const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
   const classes = mapControlStyleProperty();
+  const mediaMax960 = useMediaQuery('(min-width:960px');
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
@@ -131,7 +133,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     <div>
       {fullMapControl}
       {zoomToControl}
-      {mapLegend}
+      {mediaMax960 && mapLegend}
     </div>
   );
 };
