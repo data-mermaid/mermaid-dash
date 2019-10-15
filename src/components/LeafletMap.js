@@ -85,8 +85,7 @@ const miniMapLayer = L.tileLayer(
   worldImageryMapLayer = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     {
-      attribution:
-        'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+      attribution: 'Tiles &copy; Esri'
     }
   ),
   labelLayer = L.tileLayer(
@@ -124,7 +123,9 @@ class LeafletMap extends Component {
     mapZoomLevel: mapProperty.zoom,
     mapBoundingBoxCorner: null,
     siteCenterChange: false,
-    popUpList: []
+    popUpList: [],
+    hideMiniMap: false,
+    miniMap: null
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -138,7 +139,7 @@ class LeafletMap extends Component {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList } = this.state;
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, hideMiniMap, miniMap } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
 
@@ -170,6 +171,13 @@ class LeafletMap extends Component {
     if (popupOpen && siteDetailId !== prevSiteDetailId) {
       this.popupHighlightSelect(popUpList, siteDetailId);
     }
+    if (miniMap !== null) {
+      if (hideMiniMap) {
+        miniMap.remove();
+      } else if (!hideMiniMap) {
+        miniMap.addTo(this.map);
+      }
+    }
 
     this.zoomToSelectedSite();
     this.zoomFullMap();
@@ -181,13 +189,24 @@ class LeafletMap extends Component {
     const initMapBounds = this.map.getBounds();
     const initBbox = this.createBoundingBox(initMapBounds);
     const initSouthBbox = initMapBounds.getSouth();
-
     miniMapControl.addTo(this.map);
 
-    this.setState({ mapZoomLevel: this.map.getZoom() });
-    this.setState({ mapBoundingBoxCorner: initSouthBbox });
+    this.setState({
+      mapZoomLevel: this.map.getZoom(),
+      mapBoundingBoxCorner: initSouthBbox,
+      miniMap: miniMapControl
+    });
     this.props.getMapBounds(initBbox);
     this.updateBoundingBoxFromZoom();
+    window.addEventListener('resize', this.resize.bind(this));
+    this.resize();
+  }
+
+  resize() {
+    let currentHideMiniMap = window.innerWidth <= 960;
+    if (currentHideMiniMap !== this.state.hideMiniMap) {
+      this.setState({ hideMiniMap: currentHideMiniMap });
+    }
   }
 
   // use case: For when user selects site when side panel is closed. Panel
