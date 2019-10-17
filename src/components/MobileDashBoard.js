@@ -1,11 +1,8 @@
 import React from 'react';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import MetricCards from './MetricCardsContainer';
 import MetricCard from './MetricCard';
 
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 const mobileDashBoardStyleProperties = makeStyles(theme => ({
@@ -13,7 +10,7 @@ const mobileDashBoardStyleProperties = makeStyles(theme => ({
     position: 'fixed',
     width: '100%',
     bottom: 0,
-    height: '150px',
+    height: '135px',
     zIndex: 1000
   },
   gridContainerStyle: {
