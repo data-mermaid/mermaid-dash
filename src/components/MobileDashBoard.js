@@ -4,6 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import MetricCard from './MetricCard';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
+import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import Box from '@material-ui/core/Box';
 
 import Grid from '@material-ui/core/Grid';
@@ -65,7 +66,8 @@ const MobileDashBoard = ({
 
   const selectSite = loadedSite && (
     <Grid item xs={12} className={classes.selectSiteStyle}>
-      <Box flexGrow={1} fontSize={16}>
+      <Box flexGrow={1} fontSize={16} alignItems="center">
+        <SelectMarkerIcon width="16px" height="16px" />
         {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
       </Box>
       <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
