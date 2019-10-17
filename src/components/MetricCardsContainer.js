@@ -24,7 +24,7 @@ const MetricCards = ({ metrics, isLoading }) => {
   });
 
   return (
-    <Grid container spacing={2} className={classes.root}>
+    <Grid container spacing={1} className={classes.root}>
       {cardList}
     </Grid>
   );

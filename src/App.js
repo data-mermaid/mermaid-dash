@@ -9,6 +9,7 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
+import MobileDashBoard from './components/MobileDashBoard';
 
 class App extends Component {
   state = {
@@ -178,9 +179,9 @@ class App extends Component {
   };
 
   siteDropDownHandler = selectedSites => {
-    const { sidePanelOpen } = this.state;
+    const { sidePanelOpen, mobileDisplay } = this.state;
 
-    if (!sidePanelOpen) {
+    if (!mobileDisplay && !sidePanelOpen) {
       this.setState({ sidePanelOpen: true });
     }
 
@@ -426,6 +427,9 @@ class App extends Component {
           popupOpen={this.state.popupOpen}
           hideMiniMap={this.state.mobileDisplay}
         />
+        {this.state.mobileDisplay && (
+          <MobileDashBoard metrics={this.state.metrics} isLoading={this.state.isLoading} />
+        )}
       </BrowserRouter>
     );
   }
