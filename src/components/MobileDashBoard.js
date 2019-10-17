@@ -35,11 +35,25 @@ const mobileDashBoardStyleProperties = makeStyles(theme => ({
     borderRadius: '4px',
     alignItems: 'center'
   },
+  siteNameProperty: {
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   iconButtonStyle: {
     padding: 0
   },
   clearIconStyle: {
     fontSize: '30px'
+  },
+  selectIconStyle: {
+    width: '14px',
+    height: '14px',
+    marginRight: '5px'
+  },
+  nameStyle: {
+    fontWeight: 'bold'
   }
 }));
 const MobileDashBoard = ({
@@ -66,9 +80,11 @@ const MobileDashBoard = ({
 
   const selectSite = loadedSite && (
     <Grid item xs={12} className={classes.selectSiteStyle}>
-      <Box flexGrow={1} fontSize={16} alignItems="center">
-        <SelectMarkerIcon width="16px" height="16px" />
-        {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
+      <Box className={classes.siteNameProperty}>
+        <SelectMarkerIcon className={classes.selectIconStyle} />
+        <Box className={classes.nameStyle}>
+          {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
+        </Box>
       </Box>
       <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
         <ClearIcon className={classes.clearIconStyle} />
