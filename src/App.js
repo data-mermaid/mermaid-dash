@@ -428,7 +428,13 @@ class App extends Component {
           hideMiniMap={this.state.mobileDisplay}
         />
         {this.state.mobileDisplay && (
-          <MobileDashBoard metrics={this.state.metrics} isLoading={this.state.isLoading} />
+          <MobileDashBoard
+            metrics={this.state.metrics}
+            isLoading={this.state.isLoading}
+            siteDetail={this.state.siteDetail}
+            showSiteDetail={this.state.showSiteDetail}
+            clearSelectedSiteHandler={this.clearSelectedSiteHandler}
+          />
         )}
       </BrowserRouter>
     );
