@@ -17,7 +17,7 @@ const mobileDashBoardStyleProperties = makeStyles(theme => ({
     zIndex: 1000,
     display: 'flex',
     alignItems: 'flex-end',
-    paddingBottom: '10px'
+    paddingBottom: '15px'
   },
   gridContainerStyle: {
     padding: theme.spacing(0, 1)
