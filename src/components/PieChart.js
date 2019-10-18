@@ -15,8 +15,8 @@ const LabelContainer = styled('div')`
 `;
 const PrivateLabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.mediaMax1280 ? '210px' : '165px')};
-  left: ${props => (props.mediaMax1280 ? '90px' : '150px')};
+  top: ${props => (props.mediaMax1280 ? '180px' : '165px')};
+  left: ${props => (props.mediaMax1280 ? '130px' : '150px')};
   width: 60%;
   z-index: 1;
 `;
