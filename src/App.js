@@ -10,6 +10,7 @@ import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
 import MobileDashBoard from './components/MobileDashBoard';
+import MobileInfoDetail from './components/MobileInfoDetail';
 
 class App extends Component {
   state = {
@@ -55,6 +56,7 @@ class App extends Component {
     highlightCluster: null,
     isLoading: false,
     sidePanelOpen: window.innerWidth >= 960,
+    bottomPanelOpen: false,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960
   };
@@ -152,6 +154,10 @@ class App extends Component {
 
   handleDrawerChange = () => {
     this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
+  };
+
+  toggleExpand = () => {
+    this.setState({ bottomPanelOpen: !this.state.bottomPanelOpen });
   };
 
   siteClickHandler = selectedSite => {
@@ -434,6 +440,19 @@ class App extends Component {
             siteDetail={this.state.siteDetail}
             showSiteDetail={this.state.showSiteDetail}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
+            toggleExpand={this.toggleExpand}
+            bottomPanelOpen={this.state.bottomPanelOpen}
+          />
+        )}
+        {this.state.mobileDisplay && (
+          <MobileInfoDetail
+            metrics={this.state.metrics}
+            isLoading={this.state.isLoading}
+            siteDetail={this.state.siteDetail}
+            showSiteDetail={this.state.showSiteDetail}
+            histogramContent={this.state.histogram}
+            bottomPanelOpen={this.state.bottomPanelOpen}
+            toggleExpand={this.toggleExpand}
           />
         )}
       </BrowserRouter>

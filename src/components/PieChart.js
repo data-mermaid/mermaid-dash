@@ -8,15 +8,15 @@ import { privateColorScale, attributeColors } from '../constants/attribute-color
 
 const LabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.smScreen ? '165px' : props.mdScreen ? '210px' : '165px')};
-  left: ${props => (props.smScreen ? '105px' : props.mdScreen ? '160px' : '80px')};
+  top: ${props => (props.mediaMax960 ? '165px' : props.mediaMax1280 ? '210px' : '165px')};
+  left: ${props => (props.mediaMax960 ? '105px' : props.mediaMax1280 ? '160px' : '80px')};
   width: 140px;
   height: 50px;
 `;
 const PrivateLabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.mdScreen ? '210px' : '165px')};
-  left: ${props => (props.mdScreen ? '90px' : '150px')};
+  top: ${props => (props.mediaMax1280 ? '210px' : '165px')};
+  left: ${props => (props.mediaMax1280 ? '90px' : '150px')};
   width: 60%;
   z-index: 1;
 `;
@@ -40,18 +40,22 @@ const PrivateLabel = styled('div')`
 
 const ChartWrapper = styled('div')`
   width: 100%;
-  height: ${props => (props.mdScreen ? '450px' : '100%')};
+  /* height: ${props => (props.mediaMax1280 ? '450px' : '100%')}; */
+  height: 100%;
   display: flex;
-  flex-direction: ${props => (props.mdScreen ? 'column' : 'row')};
+  flex-direction: ${props => (props.mediaMin600_Max960 || !props.mediaMax1280 ? 'row' : 'column')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
 `;
 
 const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
   const [centerLabel, setCenterLabel] = useState({ number: null, label: null, category: null });
+  const mediaMin600 = useMediaQuery('(min-width:600px)');
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const mediaMin960 = useMediaQuery('(min-width:960px)');
   const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const mediaMax1280 = useMediaQuery('(max-width:1280px)');
+  const mediaMin600_Max960 = mediaMax960 && mediaMin600;
+  console.log('inBetweenMedia ', mediaMin600_Max960);
 
   const benthicAttributeCollection = chartContent.map(({ x }) => x);
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
@@ -70,7 +74,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
 
   const labelControl = (
-    <LabelContainer smScreen={mediaMax960} mdScreen={mediaMax1280}>
+    <LabelContainer mediaMax960={mediaMax960} mediaMax1280={mediaMax1280}>
       <Label content={centerLabel.label} />
       {centerLabel.category !== 'beltfish' ? (
         <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}%`} />
@@ -81,7 +85,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
   );
 
   const privateLabelControl = setToPrivate && (
-    <PrivateLabelContainer mdScreen={mediaMax1280}>
+    <PrivateLabelContainer mediaMax1280={mediaMax1280}>
       <PrivateLabel content={privateLabel} />
     </PrivateLabelContainer>
   );
@@ -89,7 +93,11 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
   return (
     <div>
       {setToPrivate ? privateLabelControl : labelControl}
-      <ChartWrapper mdScreen={mediaMax1280} policy={setToPrivate}>
+      <ChartWrapper
+        mediaMax1280={mediaMax1280}
+        mediaMin600_Max960={mediaMin600_Max960}
+        policy={setToPrivate}
+      >
         <VictoryPie
           innerRadius={90}
           height={mediaMax1280 ? 300 : 360}
@@ -154,10 +162,15 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
         <VictoryLegend
           colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
           orientation="horizontal"
-          height={mediaMin1281 ? 500 : 220}
-          itemsPerRow={mediaMin1281 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2}
+          height={mediaMin1281 ? 500 : mediaMin600_Max960 ? 310 : 140}
+          itemsPerRow={
+            mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2
+          }
           style={{
-            labels: { fontSize: mediaMin1281 ? 20 : mediaMin960 ? 12 : 17, fontFamily: 'Arial' }
+            labels: {
+              fontSize: mediaMin1281 ? 20 : mediaMin600_Max960 ? 13 : 11,
+              fontFamily: 'Arial'
+            }
           }}
           data={legendData}
         />

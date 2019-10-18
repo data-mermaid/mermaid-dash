@@ -15,7 +15,7 @@ const TitleBoxStyle = styled.div`
   justify-content: center;
   align-items: center;
   ${props =>
-    props.mediaMax960 &&
+    (props.mediaMax960 || props.bottomPanelOpen) &&
     css`
       height: 58px;
     `}
@@ -24,13 +24,14 @@ const TitleBoxStyle = styled.div`
     css`
       font-weight: bold;
     `};
-  font-size: ${props => (props.mediaMax960 ? '20px' : '11px')};
+  font-size: ${props => (props.mediaMax960 ? '20px' : props.bottomPanelOpen ? '15px' : '11px')};
 `;
 
 const ContentBoxStyle = styled.div`
   color: #5080ad;
   padding: ${props => (props.mediaMax960 ? '30px 0px 30px 0' : '0')};
-  font-size: ${props => (props.mediaMax960 ? '55px' : '32px')};
+  font-size: ${props => (props.mediaMax960 || props.bottomPanelOpen ? '55px' : '32px')};
+  height: ${props => props.bottomPanelOpen && '80px'};
 `;
 
 const cardStyle = makeStyles(theme => ({
@@ -46,16 +47,17 @@ const cardStyle = makeStyles(theme => ({
   }
 }));
 
-const MetricCard = ({ content: { title, count }, isLoading }) => {
+const MetricCard = ({ content: { title, count }, isLoading, bottomPanelOpen }) => {
   const classes = cardStyle();
   const mediaMax960 = useMediaQuery('(min-width:960px');
-  const mediaMin1842 = useMediaQuery('(min-width:1840px)');
 
   const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;
 
   const contentItem =
     count !== null && count >= 0 && !isLoading ? (
-      <ContentBoxStyle mediaMax960={mediaMax960}>{countContent}</ContentBoxStyle>
+      <ContentBoxStyle mediaMax960={mediaMax960} bottomPanelOpen={bottomPanelOpen}>
+        {countContent}
+      </ContentBoxStyle>
     ) : (
       <CircularProgress
         size={mediaMax960 ? 60 : 31}
@@ -64,7 +66,7 @@ const MetricCard = ({ content: { title, count }, isLoading }) => {
     );
 
   const titleItem = title && (
-    <TitleBoxStyle mediaMin1842={mediaMin1842} mediaMax960={mediaMax960}>
+    <TitleBoxStyle mediaMax960={mediaMax960} bottomPanelOpen={bottomPanelOpen}>
       {title}
     </TitleBoxStyle>
   );

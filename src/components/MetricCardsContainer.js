@@ -12,13 +12,13 @@ const metricStyle = makeStyles(theme => ({
   }
 }));
 
-const MetricCards = ({ metrics, isLoading }) => {
+const MetricCards = ({ metrics, isLoading, bottomPanelOpen }) => {
   const classes = metricStyle();
 
   const cardList = metrics.map((card, index) => {
     return (
       <Grid item xs={4} key={index}>
-        <MetricCard content={card} isLoading={isLoading} />
+        <MetricCard content={card} isLoading={isLoading} bottomPanelOpen={bottomPanelOpen} />
       </Grid>
     );
   });
