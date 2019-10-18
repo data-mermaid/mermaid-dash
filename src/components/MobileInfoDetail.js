@@ -3,6 +3,7 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import styled from 'styled-components/macro';
 import Box from '@material-ui/core/Box';
+import Slide from '@material-ui/core/Slide';
 import { ThemeProvider } from 'styled-components/macro';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -72,12 +73,12 @@ const MobileInfoDetail = ({
 
   const siteDashboard = siteDetail && <SiteDetail selectSite={siteDetail} />;
   return (
-    bottomPanelOpen && (
+    <Slide direction="up" in={bottomPanelOpen} mountOnEnter unmountOnExit>
       <WrapperDiv>
         {collapseInfoButton}
         {showSiteDetail ? siteDashboard : dashboard}
       </WrapperDiv>
-    )
+    </Slide>
   );
 };
 

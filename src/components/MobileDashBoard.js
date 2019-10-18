@@ -9,6 +9,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import Box from '@material-ui/core/Box';
+import Slide from '@material-ui/core/Slide';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -125,14 +126,14 @@ const MobileDashBoard = ({
   );
 
   return (
-    !bottomPanelOpen && (
+    <Slide direction="up" in={!bottomPanelOpen} mountOnEnter unmountOnExit>
       <div className={classes.root}>
         {extendedInfoButton}
         <Grid container spacing={1} className={classes.gridContainerStyle}>
           {showSiteDetail ? selectSite : cardList}
         </Grid>
       </div>
-    )
+    </Slide>
   );
 };
 
