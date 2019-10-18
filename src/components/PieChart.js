@@ -8,8 +8,8 @@ import { privateColorScale, attributeColors } from '../constants/attribute-color
 
 const LabelContainer = styled('div')`
   position: relative;
-  top: ${props => (props.mediaMax960 ? '165px' : props.mediaMax1280 ? '210px' : '165px')};
-  left: ${props => (props.mediaMax960 ? '105px' : props.mediaMax1280 ? '160px' : '80px')};
+  top: ${props => (props.mediaMin600_Max960 ? '165px' : props.mediaMax1280 ? '210px' : '165px')};
+  left: ${props => (props.mediaMin600_Max960 ? '105px' : props.mediaMax1280 ? '160px' : '80px')};
   width: 140px;
   height: 50px;
 `;
@@ -74,7 +74,11 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
 
   const labelControl = (
-    <LabelContainer mediaMax960={mediaMax960} mediaMax1280={mediaMax1280}>
+    <LabelContainer
+      mediaMin600_Max960={mediaMin600_Max960}
+      mediaMax960={mediaMax960}
+      mediaMax1280={mediaMax1280}
+    >
       <Label content={centerLabel.label} />
       {centerLabel.category !== 'beltfish' ? (
         <Label content={centerLabel.number && `${centerLabel.number.toFixed(1)}%`} />
