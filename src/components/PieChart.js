@@ -1,7 +1,7 @@
 import React from 'react';
 import { VictoryPie, VictoryLegend, VictoryTooltip } from 'victory';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components/macro';
 import PropTypes from 'prop-types';
 
 import { privateColorScale, attributeColors } from '../constants/attribute-colors';
@@ -12,6 +12,15 @@ const ChartWrapper = styled('div')`
   display: flex;
   flex-direction: ${props => (props.mediaMin600_Max960 || !props.mediaMax1280 ? 'row' : 'column')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
+`;
+
+const SvgWrapper = styled('svg')`
+  width: 360px;
+  ${props =>
+    props.setHeight &&
+    css`
+      height: 380px;
+    `}
 `;
 
 const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
@@ -104,21 +113,24 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
           }
         ]}
       />
-      <VictoryLegend
-        colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
-        orientation="horizontal"
-        height={mediaMin1281 ? 500 : mediaMin600_Max960 ? 310 : 140}
-        itemsPerRow={
-          mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2
-        }
-        style={{
-          labels: {
-            fontSize: mediaMin1281 ? 20 : mediaMin600_Max960 ? 13 : 11,
-            fontFamily: 'Arial'
+      <SvgWrapper setHeight={mediaMin600_Max960 || !mediaMax1280}>
+        <VictoryLegend
+          standalone={false}
+          colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
+          orientation="horizontal"
+          height={mediaMin1281 ? 500 : mediaMin600_Max960 ? 310 : 140}
+          itemsPerRow={
+            mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2
           }
-        }}
-        data={legendData}
-      />
+          style={{
+            labels: {
+              fontSize: mediaMin1281 ? 15 : mediaMin600_Max960 ? 14 : 11,
+              fontFamily: 'Arial'
+            }
+          }}
+          data={legendData}
+        />
+      </SvgWrapper>
     </ChartWrapper>
   );
 };
