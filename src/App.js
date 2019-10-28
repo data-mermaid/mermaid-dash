@@ -11,6 +11,7 @@ import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
 import MobileDashBoard from './components/MobileDashBoard';
 import MobileInfoDetail from './components/MobileInfoDetail';
+import DraggablePanel from './components/DraggablePanel';
 
 class App extends Component {
   state = {
@@ -433,28 +434,7 @@ class App extends Component {
           popupOpen={this.state.popupOpen}
           hideMiniMap={this.state.mobileDisplay}
         />
-        {this.state.mobileDisplay && (
-          <MobileDashBoard
-            metrics={this.state.metrics}
-            isLoading={this.state.isLoading}
-            siteDetail={this.state.siteDetail}
-            showSiteDetail={this.state.showSiteDetail}
-            clearSelectedSiteHandler={this.clearSelectedSiteHandler}
-            toggleExpand={this.toggleExpand}
-            bottomPanelOpen={this.state.bottomPanelOpen}
-          />
-        )}
-        {this.state.mobileDisplay && (
-          <MobileInfoDetail
-            metrics={this.state.metrics}
-            isLoading={this.state.isLoading}
-            siteDetail={this.state.siteDetail}
-            showSiteDetail={this.state.showSiteDetail}
-            histogramContent={this.state.histogram}
-            bottomPanelOpen={this.state.bottomPanelOpen}
-            toggleExpand={this.toggleExpand}
-          />
-        )}
+        {this.state.mobileDisplay && <DraggablePanel />}
       </BrowserRouter>
     );
   }
