@@ -1,58 +1,164 @@
 import React, { useState } from 'react';
+
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import MetricCards from './MetricCardsContainer';
+import InformationCard from './InformationCard';
+import SiteDetail from './SiteDetail';
+
 import styled from 'styled-components/macro';
 import Draggable, { DraggableCore } from 'react-draggable';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
+import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
+import Box from '@material-ui/core/Box';
 
-console.log(window.innerHeight);
+import { histogram } from '../constants/summary-information';
+
 const Container = styled('div')`
   position: fixed;
   width: 100%;
-  height: 1000px;
-  border: 2px solid red;
-  overflow-y: hidden;
+  height: 100%;
+  bottom: 1;
+  border-radius: 4px;
   z-index: 1000;
   justify-content: center;
   display: flex;
-  background: rgba(50, 50, 50, 0.5);
-  top: 80vh;
+  background: #f4f4f4;
+  padding-bottom: 130px;
   .handle {
-    width: 30px;
-    height: 7px;
-    background: orange;
+    width: 60px;
+    height: 5px;
+    background: gray;
     border-radius: 25px;
-    margin-top: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
   }
 `;
 
-// const WidgetDiv = styled('div')``;
+const WrapperHistogramDiv = styled.div`
+  width: 100%;
+`;
 
-const DraggablePanel = () => {
+const TestDivWrapper = styled.div`
+  height: 1000px;
+  width: 100%;
+  display: flex;
+  overflow-y: scroll;
+  flex-direction: column;
+`;
+
+const mobileDashBoardStyleProperties = makeStyles(theme => ({
+  root: {
+    width: '100%',
+    height: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingTop: '10px'
+  },
+  siteNameProperty: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  selectIconStyle: {
+    width: '14px',
+    height: '14px',
+    marginRight: '5px'
+  },
+  nameStyle: {
+    fontWeight: 'bold'
+  },
+  iconButtonStyle: {
+    padding: 0
+  },
+  clearIconStyle: {
+    fontSize: '24px'
+  },
+  selectSiteStyle: {
+    display: 'flex',
+    background: 'white',
+    borderRadius: '4px'
+  }
+}));
+
+const DraggablePanel = ({
+  metrics,
+  isLoading,
+  histogramContent,
+  siteDetail,
+  showSiteDetail,
+  dragPanelPosition,
+  clearSelectedSiteHandler
+}) => {
+  const classes = mobileDashBoardStyleProperties();
   const [open, setOpen] = useState(false);
+  const [loadedSite, setLoadedSite] = useState(null);
 
-  const handleStop = (evt, val) => {
-    console.log('handle stop');
-    console.log('e ', evt);
-    console.log('val from stop ', val);
-    if (!open && val.y < -25) {
+  if (siteDetail && (!loadedSite || loadedSite.id !== siteDetail.id)) {
+    setLoadedSite(siteDetail);
+  }
+
+  const handleStop = (evt, { y }) => {
+    console.log('y, ', y);
+    if (!open && y < -180) {
       setOpen(true);
-    } else if (open && val.y > -684) {
+    } else if (open && y > -800) {
       setOpen(false);
     }
   };
 
   const calBounds = windowHeight => {
-    // console.log('calbounds ', (windowHeight * -800) / 980);
-    return (windowHeight * -800) / 1180;
+    return (windowHeight * -960) / 1080;
   };
+
+  const dashboard = (
+    <>
+      <MetricCards metrics={metrics} isLoading={isLoading} />
+      <WrapperHistogramDiv>
+        <InformationCard
+          title={histogram.title}
+          type={histogram.type}
+          histogramContent={histogramContent}
+        />
+      </WrapperHistogramDiv>
+    </>
+  );
+
+  const siteSelectRender =
+    loadedSite &&
+    (open ? (
+      <Grid item xs={12}>
+        <SiteDetail selectSite={loadedSite} />
+      </Grid>
+    ) : (
+      <Grid item xs={12}>
+        <Box className={classes.siteNameProperty}>
+          <SelectMarkerIcon className={classes.selectIconStyle} />
+          <Box className={classes.nameStyle}>
+            {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
+          </Box>
+          <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
+            <ClearIcon className={classes.clearIconStyle} />
+          </IconButton>
+        </Box>
+      </Grid>
+    ));
 
   return (
     <Draggable
       axis="y"
       handle=".handle"
       onStop={handleStop}
-      position={open ? { x: 0, y: calBounds(window.innerHeight) } : { x: 0, y: 0 }}
+      position={open ? { x: 0, y: calBounds(window.innerHeight) } : dragPanelPosition}
     >
       <Container open={open}>
-        <div className="handle" />
+        <div className={classes.root}>
+          <div className="handle" />
+          <TestDivWrapper>{dashboard}</TestDivWrapper>
+        </div>
       </Container>
     </Draggable>
   );

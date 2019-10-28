@@ -59,7 +59,8 @@ class App extends Component {
     sidePanelOpen: window.innerWidth >= 960,
     bottomPanelOpen: false,
     popupOpen: false,
-    mobileDisplay: window.innerWidth < 960
+    mobileDisplay: window.innerWidth < 960,
+    dragPanelPosition: { x: 0, y: -160 }
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -182,7 +183,12 @@ class App extends Component {
       this.setState({ sidePanelOpen: true });
     }
 
-    this.setState({ siteDetail: selectedSite, showSiteDetail: true, zoomFullMap: false });
+    this.setState({
+      siteDetail: selectedSite,
+      showSiteDetail: true,
+      zoomFullMap: false,
+      dragPanelPosition: { x: 0, y: -70 }
+    });
   };
 
   siteDropDownHandler = selectedSites => {
@@ -198,7 +204,8 @@ class App extends Component {
       popupOpen: true,
       showSiteDetail: true,
       showDropDown: true,
-      zoomFullMap: false
+      zoomFullMap: false,
+      dragPanelPosition: { x: 0, y: -70 }
     });
   };
 
@@ -220,7 +227,8 @@ class App extends Component {
       showSiteDetail: false,
       zoomFullMap: false,
       siteDetail: null,
-      popupOpen: false
+      popupOpen: false,
+      dragPanelPosition: { x: 0, y: -160 }
     });
   };
 
@@ -434,7 +442,17 @@ class App extends Component {
           popupOpen={this.state.popupOpen}
           hideMiniMap={this.state.mobileDisplay}
         />
-        {this.state.mobileDisplay && <DraggablePanel />}
+        {this.state.mobileDisplay && (
+          <DraggablePanel
+            metrics={this.state.metrics}
+            isLoading={this.state.isLoading}
+            histogramContent={this.state.histogram}
+            siteDetail={this.state.siteDetail}
+            showSiteDetail={this.state.showSiteDetail}
+            dragPanelPosition={this.state.dragPanelPosition}
+            clearSelectedSiteHandler={this.clearSelectedSiteHandler}
+          />
+        )}
       </BrowserRouter>
     );
   }
