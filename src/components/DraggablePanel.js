@@ -157,7 +157,7 @@ const DraggablePanel = ({
       <Container open={open}>
         <div className={classes.root}>
           <div className="handle" />
-          <TestDivWrapper>{dashboard}</TestDivWrapper>
+          <TestDivWrapper>{showSiteDetail ? siteSelectRender : dashboard}</TestDivWrapper>
         </div>
       </Container>
     </Draggable>
