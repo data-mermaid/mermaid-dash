@@ -27,11 +27,12 @@ const Container = styled('div')`
   background: #f4f4f4;
   padding-bottom: 130px;
   .handle {
-    width: 60px;
-    height: 5px;
+    width: 40px;
+    height: 12px;
     background: gray;
     border-radius: 25px;
     margin-bottom: 10px;
+    outline: none;
     cursor: pointer;
   }
 `;
