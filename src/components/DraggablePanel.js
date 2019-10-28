@@ -37,10 +37,6 @@ const Container = styled('div')`
   }
 `;
 
-const WrapperHistogramDiv = styled.div`
-  width: 100%;
-`;
-
 const TestDivWrapper = styled.div`
   height: 1000px;
   width: 100%;
@@ -104,7 +100,7 @@ const DraggablePanel = ({
 
   const handleStop = (evt, { y }) => {
     console.log('y, ', y);
-    if (!open && y < -180) {
+    if (!open && y < -190) {
       setOpen(true);
     } else if (open && y > -800) {
       setOpen(false);
@@ -118,34 +114,28 @@ const DraggablePanel = ({
   const dashboard = (
     <>
       <MetricCards metrics={metrics} isLoading={isLoading} />
-      <WrapperHistogramDiv>
-        <InformationCard
-          title={histogram.title}
-          type={histogram.type}
-          histogramContent={histogramContent}
-        />
-      </WrapperHistogramDiv>
+      <InformationCard
+        title={histogram.title}
+        type={histogram.type}
+        histogramContent={histogramContent}
+      />
     </>
   );
 
   const siteSelectRender =
     loadedSite &&
     (open ? (
-      <Grid item xs={12}>
-        <SiteDetail selectSite={loadedSite} />
-      </Grid>
+      <SiteDetail selectSite={loadedSite} />
     ) : (
-      <Grid item xs={12}>
-        <Box className={classes.siteNameProperty}>
-          <SelectMarkerIcon className={classes.selectIconStyle} />
-          <Box className={classes.nameStyle}>
-            {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
-          </Box>
-          <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
-            <ClearIcon className={classes.clearIconStyle} />
-          </IconButton>
+      <Box className={classes.siteNameProperty}>
+        <SelectMarkerIcon className={classes.selectIconStyle} />
+        <Box className={classes.nameStyle}>
+          {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
         </Box>
-      </Grid>
+        <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
+          <ClearIcon className={classes.clearIconStyle} />
+        </IconButton>
+      </Box>
     ));
 
   return (
@@ -158,7 +148,11 @@ const DraggablePanel = ({
       <Container open={open}>
         <div className={classes.root}>
           <div className="handle" />
-          <TestDivWrapper>{showSiteDetail ? siteSelectRender : dashboard}</TestDivWrapper>
+          <TestDivWrapper>
+            <Grid item xs={12}>
+              {showSiteDetail ? siteSelectRender : dashboard}
+            </Grid>
+          </TestDivWrapper>
         </div>
       </Container>
     </Draggable>

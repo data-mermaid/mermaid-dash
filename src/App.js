@@ -60,7 +60,7 @@ class App extends Component {
     bottomPanelOpen: false,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
-    dragPanelPosition: { x: 0, y: -160 }
+    dragPanelPosition: { x: 0, y: -170 }
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -228,7 +228,7 @@ class App extends Component {
       zoomFullMap: false,
       siteDetail: null,
       popupOpen: false,
-      dragPanelPosition: { x: 0, y: -160 }
+      dragPanelPosition: { x: 0, y: -170 }
     });
   };
 
