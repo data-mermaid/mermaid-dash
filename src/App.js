@@ -9,8 +9,6 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
-// import MobileDashBoard from './components/MobileDashBoard';
-// import MobileInfoDetail from './components/MobileInfoDetail';
 import DraggablePanel from './components/DraggablePanel';
 
 class App extends Component {
@@ -57,10 +55,9 @@ class App extends Component {
     highlightCluster: null,
     isLoading: false,
     sidePanelOpen: window.innerWidth >= 960,
-    bottomPanelOpen: false,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
-    dragPanelPosition: { x: 0, y: -170 }
+    dragPanelPosition: { x: 0, y: -175 }
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -158,10 +155,6 @@ class App extends Component {
     this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
   };
 
-  toggleExpand = () => {
-    this.setState({ bottomPanelOpen: !this.state.bottomPanelOpen });
-  };
-
   siteClickHandler = selectedSite => {
     const { highlightCluster, siteDropDownData, sidePanelOpen, mobileDisplay } = this.state;
     const siteDropdownList = siteDropDownData.map(site => site.id);
@@ -194,7 +187,7 @@ class App extends Component {
   siteDropDownHandler = selectedSites => {
     const { sidePanelOpen, mobileDisplay } = this.state;
 
-    if (!mobileDisplay && !sidePanelOpen) {
+    if (!(mobileDisplay || sidePanelOpen)) {
       this.setState({ sidePanelOpen: true });
     }
 
@@ -228,7 +221,7 @@ class App extends Component {
       zoomFullMap: false,
       siteDetail: null,
       popupOpen: false,
-      dragPanelPosition: { x: 0, y: -170 }
+      dragPanelPosition: { x: 0, y: -175 }
     });
   };
 

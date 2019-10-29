@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import MetricCards from './MetricCardsContainer';
-import InformationCard from './InformationCard';
-import SiteDetail from './SiteDetail';
-
 import styled from 'styled-components/macro';
-import Draggable from 'react-draggable';
-import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
+
+import Draggable from 'react-draggable';
+import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 
+import MetricCards from './MetricCardsContainer';
+import InformationCard from './InformationCard';
+import SiteDetail from './SiteDetail';
 import { histogram } from '../constants/summary-information';
 
 const Container = styled('div')`
@@ -28,8 +28,8 @@ const Container = styled('div')`
   padding-bottom: 50px;
   transition: transform 0.25s ease-out;
   .handle {
-    width: 30px;
-    height: 10px;
+    width: 40px;
+    height: 12px;
     background: #bababa;
     border-radius: 25px;
     margin-bottom: 10px;
@@ -110,7 +110,7 @@ const DraggablePanel = ({
 
   const dashboard = (
     <>
-      <MetricCards metrics={metrics} isLoading={isLoading} />
+      <MetricCards metrics={metrics} isLoading={isLoading} bottomPanelOpen={open} />
       <InformationCard
         title={histogram.title}
         type={histogram.type}

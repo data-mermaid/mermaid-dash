@@ -2,36 +2,45 @@ import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import styled, { css } from 'styled-components/macro';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components/macro';
 
 const TitleBoxStyle = styled.div`
   border-top: ${props => (props.mediaMax960 ? '1px solid' : '0')};
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 11px;
   ${props =>
     (props.mediaMax960 || props.bottomPanelOpen) &&
     css`
       height: 58px;
-    `}
-  ${props =>
-    !props.mediaMax960 &&
-    css`
       font-weight: bold;
-    `};
-  font-size: ${props => (props.mediaMax960 ? '20px' : props.bottomPanelOpen ? '15px' : '11px')};
+      font-size: 18px;
+    `}
 `;
 
 const ContentBoxStyle = styled.div`
   color: #5080ad;
-  padding: ${props => (props.mediaMax960 ? '30px 0px 30px 0' : '0')};
-  font-size: ${props => (props.mediaMax960 || props.bottomPanelOpen ? '55px' : '32px')};
-  height: ${props => props.bottomPanelOpen && '80px'};
+  ${props =>
+    props.mediaMax960
+      ? css`
+          padding: 30px 0px 30px 0;
+          font-size: 55px;
+        `
+      : props.bottomPanelOpen
+      ? css`
+          padding: 30px 0px 0px 0;
+          font-size: 55px;
+        `
+      : css`
+          padding: 0;
+          font-size: 32px;
+        `}
 `;
 
 const cardStyle = makeStyles(theme => ({
