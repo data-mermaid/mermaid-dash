@@ -26,7 +26,7 @@ const Container = styled('div')`
   display: flex;
   background: #f4f4f4;
   padding-bottom: 50px;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.25s ease-out;
   .handle {
     width: 30px;
     height: 10px;
