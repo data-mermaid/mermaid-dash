@@ -9,8 +9,8 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
-import MobileDashBoard from './components/MobileDashBoard';
-import MobileInfoDetail from './components/MobileInfoDetail';
+// import MobileDashBoard from './components/MobileDashBoard';
+// import MobileInfoDetail from './components/MobileInfoDetail';
 import DraggablePanel from './components/DraggablePanel';
 
 class App extends Component {

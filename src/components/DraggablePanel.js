@@ -26,6 +26,7 @@ const Container = styled('div')`
   display: flex;
   background: #f4f4f4;
   padding-bottom: 50px;
+  transition: transform 0.3s ease-in-out;
   .handle {
     width: 30px;
     height: 10px;
@@ -35,6 +36,16 @@ const Container = styled('div')`
     outline: none;
     cursor: pointer;
   }
+`;
+
+const Widget = styled.div`
+  width: 30px;
+  height: 10px;
+  background: #bababa;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  outline: none;
+  cursor: pointer;
 `;
 
 const TestDivWrapper = styled.div`
@@ -93,6 +104,7 @@ const DraggablePanel = ({
   const classes = mobileDashBoardStyleProperties();
   const [open, setOpen] = useState(false);
   const [loadedSite, setLoadedSite] = useState(null);
+  const responsiveDragPanelHeight = (window.innerHeight * -1020) / 1080;
 
   if (siteDetail && (!loadedSite || loadedSite.id !== siteDetail.id)) {
     setLoadedSite(siteDetail);
@@ -103,15 +115,11 @@ const DraggablePanel = ({
   };
 
   const handleStop = (evt, { y }) => {
-    if (!open && y < -200) {
+    if (!open && y < dragPanelPosition.y) {
       setOpen(true);
-    } else if (open && y > -800) {
+    } else if (open && y > responsiveDragPanelHeight) {
       setOpen(false);
     }
-  };
-
-  const calBounds = windowHeight => {
-    return (windowHeight * -1020) / 1080;
   };
 
   const dashboard = (
@@ -144,13 +152,13 @@ const DraggablePanel = ({
   return (
     <Draggable
       axis="y"
-      handle=".handle"
       onStop={handleStop}
-      position={open ? { x: 0, y: calBounds(window.innerHeight) } : dragPanelPosition}
+      bounds={open && { top: responsiveDragPanelHeight - 10, left: 0, right: 0, bottom: 0 }}
+      position={open ? { x: 0, y: responsiveDragPanelHeight } : dragPanelPosition}
     >
       <Container open={open}>
         <div className={classes.root}>
-          <div className="handle" onClick={handleDragClick} />
+          <Widget onClick={handleDragClick} />
           <TestDivWrapper>
             <Grid item xs={12}>
               {showSiteDetail ? siteSelectRender : dashboard}
