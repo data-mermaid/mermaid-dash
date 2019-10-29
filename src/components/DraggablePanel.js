@@ -26,17 +26,15 @@ const Container = styled('div')`
   display: flex;
   background: #f4f4f4;
   padding-bottom: 50px;
-  transition: transform 0.2s ease-in-out;
-`;
-
-const Widget = styled('div')`
-  width: 30px;
-  height: 10px;
-  background: #bababa;
-  border-radius: 25px;
-  margin-bottom: 10px;
-  outline: none;
-  cursor: pointer;
+  .handle {
+    width: 30px;
+    height: 10px;
+    background: #bababa;
+    border-radius: 25px;
+    margin-bottom: 10px;
+    outline: none;
+    cursor: pointer;
+  }
 `;
 
 const TestDivWrapper = styled.div`
@@ -146,12 +144,13 @@ const DraggablePanel = ({
   return (
     <Draggable
       axis="y"
+      handle=".handle"
       onStop={handleStop}
       position={open ? { x: 0, y: calBounds(window.innerHeight) } : dragPanelPosition}
     >
       <Container open={open}>
         <div className={classes.root}>
-          <Widget onClick={handleDragClick} />
+          <div className="handle" onClick={handleDragClick} />
           <TestDivWrapper>
             <Grid item xs={12}>
               {showSiteDetail ? siteSelectRender : dashboard}
