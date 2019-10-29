@@ -6,7 +6,7 @@ import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 
 import styled from 'styled-components/macro';
-import Draggable, { DraggableCore } from 'react-draggable';
+import Draggable from 'react-draggable';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -26,6 +26,7 @@ const Container = styled('div')`
   display: flex;
   background: #f4f4f4;
   padding-bottom: 50px;
+  transition: transform 0.2s ease-in-out;
 `;
 
 const Widget = styled('div')`
@@ -99,8 +100,12 @@ const DraggablePanel = ({
     setLoadedSite(siteDetail);
   }
 
+  const handleDragClick = () => {
+    setOpen(!open);
+  };
+
   const handleStop = (evt, { y }) => {
-    if (!open && y < -190) {
+    if (!open && y < -200) {
       setOpen(true);
     } else if (open && y > -800) {
       setOpen(false);
@@ -146,7 +151,7 @@ const DraggablePanel = ({
     >
       <Container open={open}>
         <div className={classes.root}>
-          <Widget />
+          <Widget onClick={handleDragClick} />
           <TestDivWrapper>
             <Grid item xs={12}>
               {showSiteDetail ? siteSelectRender : dashboard}
