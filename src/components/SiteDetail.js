@@ -4,6 +4,7 @@ import AdminIcon from '@material-ui/icons/Person';
 import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -15,13 +16,15 @@ import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
 import { defaultPieChartContent } from '../constants/sample-data';
 import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
+import styled from 'styled-components/macro';
 
 import PropTypes from 'prop-types';
 
+const WrapperDiv = styled('div')`
+  padding: ${props => (props.mediaMax960 ? '0 8px 100px 8px' : '16px 8px 100px 8px')};
+`;
+
 const containerStyle = makeStyles(theme => ({
-  root: {
-    padding: '16px 8px 100px 8px'
-  },
   siteWrapper: {
     padding: theme.spacing(2, 2),
     marginBottom: theme.spacing(2),
@@ -37,6 +40,7 @@ const containerStyle = makeStyles(theme => ({
 
 const SiteDetail = ({ selectSite }) => {
   const classes = containerStyle();
+  const mediaMax960 = useMediaQuery('(max-width:960px');
   const [loadedSite, setLoadedSite] = useState(null);
 
   if (selectSite && (!loadedSite || loadedSite.id !== selectSite.id)) {
@@ -125,7 +129,7 @@ const SiteDetail = ({ selectSite }) => {
   });
 
   const site = loadedSite ? (
-    <div className={classes.root}>
+    <WrapperDiv mediaMax960={mediaMax960}>
       <Paper className={classes.siteWrapper}>
         <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
         {siteAdmins}
@@ -134,7 +138,7 @@ const SiteDetail = ({ selectSite }) => {
         <SiteNote loadedSiteProperties={loadedSite.properties} />
       </Paper>
       {SiteDetailCards}
-    </div>
+    </WrapperDiv>
   ) : (
     <Paper className={classes.siteWrapper}>
       <TextLoader />

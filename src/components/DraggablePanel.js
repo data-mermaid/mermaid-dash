@@ -25,16 +25,17 @@ const Container = styled('div')`
   justify-content: center;
   display: flex;
   background: #f4f4f4;
-  padding-bottom: 130px;
-  .handle {
-    width: 40px;
-    height: 12px;
-    background: gray;
-    border-radius: 25px;
-    margin-bottom: 10px;
-    outline: none;
-    cursor: pointer;
-  }
+  padding-bottom: 50px;
+`;
+
+const Widget = styled('div')`
+  width: 30px;
+  height: 10px;
+  background: #bababa;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  outline: none;
+  cursor: pointer;
 `;
 
 const TestDivWrapper = styled.div`
@@ -99,7 +100,6 @@ const DraggablePanel = ({
   }
 
   const handleStop = (evt, { y }) => {
-    console.log('y, ', y);
     if (!open && y < -190) {
       setOpen(true);
     } else if (open && y > -800) {
@@ -108,7 +108,7 @@ const DraggablePanel = ({
   };
 
   const calBounds = windowHeight => {
-    return (windowHeight * -960) / 1080;
+    return (windowHeight * -1020) / 1080;
   };
 
   const dashboard = (
@@ -141,13 +141,12 @@ const DraggablePanel = ({
   return (
     <Draggable
       axis="y"
-      handle=".handle"
       onStop={handleStop}
       position={open ? { x: 0, y: calBounds(window.innerHeight) } : dragPanelPosition}
     >
       <Container open={open}>
         <div className={classes.root}>
-          <div className="handle" />
+          <Widget />
           <TestDivWrapper>
             <Grid item xs={12}>
               {showSiteDetail ? siteSelectRender : dashboard}
