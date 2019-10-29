@@ -38,20 +38,7 @@ const Container = styled('div')`
   }
 `;
 
-const Widget = styled.div`
-  width: 30px;
-  height: 10px;
-  background: #bababa;
-  border-radius: 25px;
-  margin-bottom: 10px;
-  outline: none;
-  :focus {
-    outline: none;
-  }
-  cursor: pointer;
-`;
-
-const TestDivWrapper = styled.div`
+const WrapperInfoPanel = styled.div`
   height: 1000px;
   width: 100%;
   display: flex;
@@ -159,11 +146,11 @@ const DraggablePanel = ({
       <Container open={open}>
         <div className={classes.root}>
           <div className="handle" />
-          <TestDivWrapper>
+          <WrapperInfoPanel>
             <Grid item xs={12}>
               {showSiteDetail ? siteSelectRender : dashboard}
             </Grid>
-          </TestDivWrapper>
+          </WrapperInfoPanel>
         </div>
       </Container>
     </Draggable>
