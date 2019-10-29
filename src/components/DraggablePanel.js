@@ -45,6 +45,9 @@ const Widget = styled.div`
   border-radius: 25px;
   margin-bottom: 10px;
   outline: none;
+  :focus {
+    outline: none;
+  }
   cursor: pointer;
 `;
 
@@ -110,14 +113,10 @@ const DraggablePanel = ({
     setLoadedSite(siteDetail);
   }
 
-  const handleDragClick = () => {
-    setOpen(!open);
-  };
-
   const handleStop = (evt, { y }) => {
-    if (!open && y < dragPanelPosition.y) {
+    if (!open && y <= dragPanelPosition.y) {
       setOpen(true);
-    } else if (open && y > responsiveDragPanelHeight) {
+    } else if (open && y >= responsiveDragPanelHeight) {
       setOpen(false);
     }
   };
@@ -152,13 +151,14 @@ const DraggablePanel = ({
   return (
     <Draggable
       axis="y"
+      handle=".handle"
       onStop={handleStop}
       bounds={open && { top: responsiveDragPanelHeight - 10, left: 0, right: 0, bottom: 0 }}
       position={open ? { x: 0, y: responsiveDragPanelHeight } : dragPanelPosition}
     >
       <Container open={open}>
         <div className={classes.root}>
-          <Widget onClick={handleDragClick} />
+          <div className="handle" />
           <TestDivWrapper>
             <Grid item xs={12}>
               {showSiteDetail ? siteSelectRender : dashboard}
