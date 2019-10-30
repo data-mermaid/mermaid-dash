@@ -435,7 +435,7 @@ class App extends Component {
           popupOpen={this.state.popupOpen}
           hideMiniMap={this.state.mobileDisplay}
         />
-        {this.state.mobileDisplay && (
+        {/* {this.state.mobileDisplay && (
           <DraggablePanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
@@ -445,7 +445,7 @@ class App extends Component {
             dragPanelPosition={this.state.dragPanelPosition}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           />
-        )}
+        )} */}
       </main>
     );
   }
