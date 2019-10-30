@@ -21,7 +21,7 @@ const DraggablePanelContainer = styled('div')`
   width: 100%;
   height: 100%;
   border-radius: 4px;
-  z-index: 1000;
+  z-index: 3000;
   justify-content: center;
   display: flex;
   background: #f4f4f4;
@@ -95,13 +95,15 @@ const DraggablePanel = ({
   const classes = draggablePanelStyleProperties();
   const [open, setOpen] = useState(false);
   const [loadedSite, setLoadedSite] = useState(null);
-  const responsiveDragPanelHeight = (window.innerHeight * -1020) / 1080;
+  const responsiveDragPanelHeight = (window.innerHeight * 25) / 1080;
 
   if (siteDetail && (!loadedSite || loadedSite.id !== siteDetail.id)) {
     setLoadedSite(siteDetail);
   }
 
   const handleStop = (evt, { y }) => {
+    console.log(y);
+    console.log(responsiveDragPanelHeight);
     if (!open && y <= dragPanelPosition.y) {
       setOpen(true);
     } else if (open && y >= responsiveDragPanelHeight) {

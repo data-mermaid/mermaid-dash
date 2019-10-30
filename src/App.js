@@ -56,10 +56,11 @@ class App extends Component {
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
-    dragPanelPosition: { x: 0, y: -175 }
+    dragPanelPosition: { x: 0, y: 730 }
   };
 
   async componentDidUpdate(prevProps, prevState) {
+    console.log(window.innerHeight);
     const { bbox, metrics, histogram } = this.state;
     const { metrics: prevMetrics, bbox: prevBbox } = prevState;
     const prevMetricCountriesCount = prevMetrics[0].count;
@@ -434,7 +435,7 @@ class App extends Component {
           popupOpen={this.state.popupOpen}
           hideMiniMap={this.state.mobileDisplay}
         />
-        {/* {this.state.mobileDisplay && (
+        {this.state.mobileDisplay && (
           <DraggablePanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
@@ -444,7 +445,7 @@ class App extends Component {
             dragPanelPosition={this.state.dragPanelPosition}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           />
-        )} */}
+        )}
       </main>
     );
   }
