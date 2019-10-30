@@ -15,6 +15,8 @@ import headerContent from '../constants/header-content';
 
 const headerStyles = makeStyles(theme => ({
   appBarProperty: {
+    position: 'fixed',
+    width: '100%',
     background: '#2C3742',
     height: 49,
     justifyContent: 'center',
@@ -57,7 +59,7 @@ const Header = () => {
   const mediaMax960 = useMediaQuery('(min-width:960px');
 
   return (
-    <AppBar position="static" className={classes.appBarProperty}>
+    <AppBar className={classes.appBarProperty}>
       <Toolbar className={classes.toolBarProperty}>
         <Box p={1} flexGrow={1}>
           <MermaidLogo height="38px" />
