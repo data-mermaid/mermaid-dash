@@ -18,6 +18,7 @@ import { histogram } from '../constants/summary-information';
 
 const DraggablePanelContainer = styled('div')`
   position: fixed;
+  top: 800px;
   width: 100%;
   height: 100%;
   border-radius: 4px;
