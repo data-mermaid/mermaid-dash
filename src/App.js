@@ -393,7 +393,7 @@ class App extends Component {
 
   render() {
     return (
-      <BrowserRouter>
+      <main>
         <CssBaseline />
         <Header />
         <DrawerDashBoard
@@ -446,7 +446,7 @@ class App extends Component {
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           />
         )}
-      </BrowserRouter>
+      </main>
     );
   }
 }
