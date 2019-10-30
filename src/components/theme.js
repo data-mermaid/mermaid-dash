@@ -34,20 +34,6 @@ export const theme = {
     width: '32px',
     height: '32px'
   },
-  expandLessButton: {
-    color: color.mermaidWhite,
-    bgColor: 'transparent',
-    padding: '0',
-    width: '26px',
-    height: '26px'
-  },
-  expandMoreButton: {
-    color: color.mermaidDark,
-    bgColor: 'transparent',
-    padding: '0',
-    width: '26px',
-    height: '26px'
-  },
   sidePanelControl: {
     color: color.mermaidGray,
     bgColor: color.mermaidWhiteGray,

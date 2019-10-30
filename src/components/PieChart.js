@@ -2,8 +2,8 @@ import React from 'react';
 import { VictoryPie, VictoryLegend, VictoryTooltip } from 'victory';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled, { css } from 'styled-components/macro';
-import PropTypes from 'prop-types';
 
+import PropTypes from 'prop-types';
 import { privateColorScale, attributeColors } from '../constants/attribute-colors';
 
 const ChartWrapper = styled('div')`
@@ -35,7 +35,7 @@ const SvgWrapper = styled('svg')`
     `}
 `;
 
-const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
+const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
   const mediaMin600 = useMediaQuery('(min-width:600px)');
   const mediaMax600 = useMediaQuery('(max-width:600px)');
   const mediaMax960 = useMediaQuery('(max-width:960px');
@@ -56,7 +56,6 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     return { x: name, y: foundAttribute.y };
   });
 
-  //only show legend item with value greater than 0%
   const legendData = contentData
     .filter(({ y }) => y > 0)
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
@@ -75,8 +74,8 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     <>
       {privateLabelText}
       <ChartWrapper
-        mediaMax1280={mediaMax1280}
         mediaMin600_Max960={mediaMin600_Max960}
+        mediaMax1280={mediaMax1280}
         policy={setToPrivate}
       >
         <VictoryPie
@@ -163,7 +162,6 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
 };
 
 PieChart.propTypes = {
-  protocolName: PropTypes.string,
   chartContent: PropTypes.array,
   setToPrivate: PropTypes.bool,
   privateLabel: PropTypes.string

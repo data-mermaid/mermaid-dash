@@ -1,20 +1,17 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import styled from 'styled-components/macro';
+
 import Grid from '@material-ui/core/Grid';
-import MetricCard from './MetricCard';
 
 import PropTypes from 'prop-types';
+import MetricCard from './MetricCard';
 
-const metricStyle = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(0, 1)
-  }
-}));
+const WrapperMetricCardsContainer = styled(Grid)`
+  padding: 0 8px;
+`;
 
 const MetricCards = ({ metrics, isLoading, bottomPanelOpen }) => {
-  const classes = metricStyle();
-
   const cardList = metrics.map((card, index) => {
     return (
       <Grid item xs={4} key={index}>
@@ -24,15 +21,16 @@ const MetricCards = ({ metrics, isLoading, bottomPanelOpen }) => {
   });
 
   return (
-    <Grid container spacing={1} className={classes.root}>
+    <WrapperMetricCardsContainer container spacing={1}>
       {cardList}
-    </Grid>
+    </WrapperMetricCardsContainer>
   );
 };
 
 MetricCards.propTypes = {
   metrics: PropTypes.array,
-  classes: PropTypes.object
+  isLoading: PropTypes.bool,
+  bottomPanelOpen: PropTypes.bool
 };
 
 export default MetricCards;

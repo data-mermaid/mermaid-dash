@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import styled from 'styled-components/macro';
+
 import AdminIcon from '@material-ui/icons/Person';
 import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg';
-import makeStyles from '@material-ui/core/styles/makeStyles';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 
+import PropTypes from 'prop-types';
 import SiteDetailSubItems from './SiteDetailSubItems';
 import CoralAttributes from './CoralAttributes';
 import SiteNote from './SiteNote';
@@ -16,30 +18,18 @@ import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
 import { defaultPieChartContent } from '../constants/sample-data';
 import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
-import styled from 'styled-components/macro';
 
-import PropTypes from 'prop-types';
-
-const WrapperDiv = styled('div')`
+const SiteSummaryWrapper = styled('div')`
   padding: ${props => (props.mediaMax960 ? '0 8px 100px 8px' : '16px 8px 100px 8px')};
 `;
 
-const containerStyle = makeStyles(theme => ({
-  siteWrapper: {
-    padding: theme.spacing(2, 2),
-    marginBottom: theme.spacing(2),
-    borderRadius: 0
-  },
-  reefProperty: {
-    padding: '8px 8px 8px 0'
-  },
-  siteInfoCardProperty: {
-    padding: 0
-  }
-}));
+const SiteInfoWrapper = styled(Paper)`
+  padding: 16px 16px;
+  margin-bottom: 16px;
+  border-radius: 0;
+`;
 
 const SiteDetail = ({ selectSite }) => {
-  const classes = containerStyle();
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const [loadedSite, setLoadedSite] = useState(null);
 
@@ -75,7 +65,7 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
-  const SiteDetailCards = protocolsArray.map(protocol => {
+  const siteChartCards = protocolsArray.map(protocol => {
     const bleachingProtocol = protocol.name === 'bleachingqc';
     const fishBeltProtocol = protocol.name === 'beltfish';
     const transectProperty = bleachingProtocol ? protocol.property : protocol.name;
@@ -128,31 +118,32 @@ const SiteDetail = ({ selectSite }) => {
     return <div key={protocol.name}>{cardsComponent}</div>;
   });
 
-  const site = loadedSite ? (
-    <WrapperDiv mediaMax960={mediaMax960}>
-      <Paper className={classes.siteWrapper}>
-        <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
-        {siteAdmins}
-        {siteOrganizations}
-        <CoralAttributes loadedSiteProperties={loadedSite.properties} />
-        <SiteNote loadedSiteProperties={loadedSite.properties} />
-      </Paper>
-      {SiteDetailCards}
-    </WrapperDiv>
+  const siteInfoCard = loadedSite ? (
+    <SiteInfoWrapper>
+      <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+      {siteAdmins}
+      {siteOrganizations}
+      <CoralAttributes loadedSiteProperties={loadedSite.properties} />
+      <SiteNote loadedSiteProperties={loadedSite.properties} />
+    </SiteInfoWrapper>
   ) : (
-    <Paper className={classes.siteWrapper}>
+    <SiteInfoWrapper>
       <TextLoader />
-    </Paper>
+    </SiteInfoWrapper>
   );
 
-  return <div>{site}</div>;
+  return (
+    <SiteSummaryWrapper mediaMax960={mediaMax960}>
+      {siteInfoCard}
+      {siteChartCards}
+    </SiteSummaryWrapper>
+  );
 };
 
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
     id: PropTypes.string.isRequired
-  }),
-  classes: PropTypes.object
+  })
 };
 
 export default SiteDetail;

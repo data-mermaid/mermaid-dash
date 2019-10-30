@@ -26,28 +26,17 @@ const TitleBoxStyle = styled.div`
 
 const ContentBoxStyle = styled.div`
   color: #5080ad;
-  ${props =>
-    props.mediaMax960
-      ? css`
-          padding: 30px 0px 30px 0;
-          font-size: 55px;
-        `
-      : props.bottomPanelOpen
-      ? css`
-          padding: 30px 0px 0px 0;
-          font-size: 55px;
-        `
-      : css`
-          padding: 0;
-          font-size: 32px;
-        `}
+  padding: ${props =>
+    props.mediaMax960 ? '30px 0px 30px 0' : props.bottomPanelOpen && '30px 0px 0px 0'};
+  font-size: ${props => (props.mediaMax960 || props.bottomPanelOpen ? '55px' : '32px')};
+`;
+
+const WrapperMetricCard = styled(Paper)`
+  text-align: center;
+  border-radius: 4px;
 `;
 
 const cardStyle = makeStyles(theme => ({
-  root: {
-    textAlign: 'center',
-    borderRadius: 4
-  },
   mobileProgress: {
     margin: '7px'
   },
@@ -81,16 +70,18 @@ const MetricCard = ({ content: { title, count }, isLoading, bottomPanelOpen }) =
   );
 
   return (
-    <Paper className={classes.root}>
+    <WrapperMetricCard>
       {contentItem}
       {titleItem}
-    </Paper>
+    </WrapperMetricCard>
   );
 };
 
 MetricCard.propTypes = {
   title: PropTypes.string,
-  count: PropTypes.number
+  count: PropTypes.number,
+  isLoading: PropTypes.bool,
+  bottomPanelOpen: PropTypes.bool
 };
 
 export default MetricCard;
