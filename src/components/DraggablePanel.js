@@ -28,15 +28,16 @@ const DraggablePanelContainer = styled('div')`
   background: #f4f4f4;
   padding-bottom: 50px;
   transition: transform 0.25s ease-out;
-  .handle {
-    width: 48px;
-    height: 12px;
-    background: #d3d3d3;
-    border-radius: 25px;
-    margin-bottom: 10px;
-    outline: none;
-    cursor: pointer;
-  }
+`;
+
+const Widget = styled('div')`
+  width: 48px;
+  height: 12px;
+  background: #d3d3d3;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  outline: none;
+  cursor: pointer;
 `;
 
 const PanelWrapper = styled('div')`
@@ -55,6 +56,9 @@ const BottomSummaryWrapper = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   flex-direction: column;
+  .nodrag {
+    outline: none;
+  }
 `;
 
 const draggablePanelStyleProperties = makeStyles(theme => ({
@@ -136,15 +140,15 @@ const DraggablePanel = ({
   return (
     <Draggable
       axis="y"
-      handle=".handle"
+      cancel=".nodrag"
       onStop={handleStop}
       bounds={open && { top: responsiveDragPanelHeight - 10, left: 0, right: 0, bottom: 0 }}
       position={open ? { x: 0, y: responsiveDragPanelHeight } : dragPanelPosition}
     >
       <DraggablePanelContainer open={open}>
         <PanelWrapper>
-          <div className="handle" />
-          <BottomSummaryWrapper>
+          <Widget />
+          <BottomSummaryWrapper className="nodrag">
             {showSiteDetail ? siteSelectRender : dashboard}
           </BottomSummaryWrapper>
         </PanelWrapper>
