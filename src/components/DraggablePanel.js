@@ -20,7 +20,6 @@ const DraggablePanelContainer = styled('div')`
   position: fixed;
   width: 100%;
   height: 100%;
-  bottom: 1;
   border-radius: 4px;
   z-index: 2000;
   justify-content: center;
