@@ -57,7 +57,7 @@ class App extends Component {
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
-    dragPanelPosition: { x: 0, y: -175 }
+    dragPanelPosition: { x: 0, y: -250 }
   };
 
   async componentDidUpdate(prevProps, prevState) {

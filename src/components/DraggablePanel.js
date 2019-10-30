@@ -15,7 +15,6 @@ import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 import { histogram } from '../constants/summary-information';
-import { style } from '@material-ui/system';
 
 const DraggablePanelContainer = styled('div')`
   position: fixed;
