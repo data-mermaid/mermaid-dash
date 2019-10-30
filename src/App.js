@@ -9,6 +9,7 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
+import DraggablePanel from './components/DraggablePanel';
 
 class App extends Component {
   state = {
@@ -55,7 +56,8 @@ class App extends Component {
     isLoading: false,
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
-    mobileDisplay: window.innerWidth < 960
+    mobileDisplay: window.innerWidth < 960,
+    dragPanelPosition: { x: 0, y: -175 }
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -174,13 +176,18 @@ class App extends Component {
       this.setState({ sidePanelOpen: true });
     }
 
-    this.setState({ siteDetail: selectedSite, showSiteDetail: true, zoomFullMap: false });
+    this.setState({
+      siteDetail: selectedSite,
+      showSiteDetail: true,
+      zoomFullMap: false,
+      dragPanelPosition: { x: 0, y: -70 }
+    });
   };
 
   siteDropDownHandler = selectedSites => {
-    const { sidePanelOpen } = this.state;
+    const { sidePanelOpen, mobileDisplay } = this.state;
 
-    if (!sidePanelOpen) {
+    if (!(mobileDisplay || sidePanelOpen)) {
       this.setState({ sidePanelOpen: true });
     }
 
@@ -190,7 +197,8 @@ class App extends Component {
       popupOpen: true,
       showSiteDetail: true,
       showDropDown: true,
-      zoomFullMap: false
+      zoomFullMap: false,
+      dragPanelPosition: { x: 0, y: -70 }
     });
   };
 
@@ -212,7 +220,8 @@ class App extends Component {
       showSiteDetail: false,
       zoomFullMap: false,
       siteDetail: null,
-      popupOpen: false
+      popupOpen: false,
+      dragPanelPosition: { x: 0, y: -175 }
     });
   };
 
@@ -426,6 +435,17 @@ class App extends Component {
           popupOpen={this.state.popupOpen}
           hideMiniMap={this.state.mobileDisplay}
         />
+        {this.state.mobileDisplay && (
+          <DraggablePanel
+            metrics={this.state.metrics}
+            isLoading={this.state.isLoading}
+            histogramContent={this.state.histogram}
+            siteDetail={this.state.siteDetail}
+            showSiteDetail={this.state.showSiteDetail}
+            dragPanelPosition={this.state.dragPanelPosition}
+            clearSelectedSiteHandler={this.clearSelectedSiteHandler}
+          />
+        )}
       </BrowserRouter>
     );
   }

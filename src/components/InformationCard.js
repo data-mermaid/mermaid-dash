@@ -102,7 +102,6 @@ const InformationCard = ({
     ) : (
       <CardChartContent
         chartType={type}
-        protocolName={protocolName}
         pieChartContent={pieChartContent}
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
