@@ -19,6 +19,7 @@ L.Icon.Default.mergeOptions({
 const MapContainer = styled.div`
   height: 100%;
   width: 100%;
+  position: static;
   /* position: fixed;
   top: 49px; */
   /* padding-top: 49px; */
