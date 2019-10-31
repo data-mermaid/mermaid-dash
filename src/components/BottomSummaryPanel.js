@@ -11,6 +11,7 @@ import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import Box from '@material-ui/core/Box';
 
+import PropTypes from 'prop-types';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
@@ -24,7 +25,8 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
     flexDirection: 'row',
     background: 'white',
     borderRadius: '4px',
-    width: '96%'
+    width: '96%',
+    padding: '8px 0'
   },
   selectMarkerIconStyle: {
     width: '14px',
@@ -132,6 +134,15 @@ const BottomSummaryPanel = ({
       )}
     </BottomPanelContainer>
   );
+};
+
+BottomSummaryPanel.propTypes = {
+  metrics: PropTypes.array,
+  isLoading: PropTypes.bool,
+  histogramContent: PropTypes.array,
+  siteDetail: PropTypes.object,
+  showSiteDetail: PropTypes.bool,
+  clearSelectedSiteHandler: PropTypes.func
 };
 
 export default BottomSummaryPanel;
