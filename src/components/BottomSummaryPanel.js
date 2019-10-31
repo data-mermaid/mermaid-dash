@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import Box from '@material-ui/core/Box';
@@ -19,8 +20,7 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
     flexDirection: 'row',
     background: 'white',
     borderRadius: '4px',
-    margin: '0 8px 0 8px',
-    padding: '4px 0 4px 0'
+    width: '96%'
   },
   selectMarkerIconStyle: {
     width: '14px',
@@ -35,11 +35,17 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
   },
   clearIconStyle: {
     fontSize: '24px'
+  },
+  expandLessIcon: {
+    color: 'white'
   }
 }));
 
 const BottomPanelContainer = styled('div')`
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   z-index: 2000;
   bottom: 0;
   width: 100%;
@@ -76,7 +82,14 @@ const BottomSummaryPanel = ({
     </Box>
   );
 
-  return <BottomPanelContainer>{showSiteDetail ? selectedSiteName : summary}</BottomPanelContainer>;
+  return (
+    <BottomPanelContainer>
+      <IconButton className={classes.iconButtonStyle}>
+        <ExpandLessIcon className={classes.expandLessIcon} />
+      </IconButton>
+      {showSiteDetail ? selectedSiteName : summary}
+    </BottomPanelContainer>
+  );
 };
 
 export default BottomSummaryPanel;
