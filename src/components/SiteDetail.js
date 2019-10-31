@@ -20,7 +20,8 @@ import { defaultPieChartContent } from '../constants/sample-data';
 import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
 
 const SiteSummaryWrapper = styled('div')`
-  padding: ${props => (props.mediaMax960 ? '0 8px 100px 8px' : '16px 8px 100px 8px')};
+  padding: ${props => (props.mediaMax960 ? '0 8px 0px 8px' : '16px 8px 50px 8px')};
+  width: 100%;
 `;
 
 const SiteInfoWrapper = styled(Paper)`

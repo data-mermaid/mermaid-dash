@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandLess';
+import ExpandLessIcon from '@material-ui/icons/ExpandMore';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import Box from '@material-ui/core/Box';
 
 import MetricCards from './MetricCardsContainer';
+import InformationCard from './InformationCard';
+import SiteDetail from './SiteDetail';
+import { histogram } from '../constants/summary-information';
 
 const bottomPanelStyleProperties = makeStyles(theme => ({
   selectedSiteProperty: {
@@ -33,6 +37,9 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
   iconButtonStyle: {
     padding: 0
   },
+  siteControlIconButtonStyle: {
+    padding: '10px'
+  },
   clearIconStyle: {
     fontSize: '24px'
   },
@@ -46,48 +53,87 @@ const BottomPanelContainer = styled('div')`
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 2000;
+  z-index: 1000;
   bottom: 0;
   width: 100%;
   height: auto;
   padding-bottom: 8px;
+  ${props =>
+    props.open &&
+    css`
+      top: 49px;
+      background-color: #f4f4f4;
+      overflow-x: hidden;
+      overflow-y: overlay;
+    `}
 `;
 
 const BottomSummaryPanel = ({
   metrics,
   isLoading,
-  bottomPanelOpen,
+  histogramContent,
   showSiteDetail,
   siteDetail,
   clearSelectedSiteHandler
 }) => {
   const classes = bottomPanelStyleProperties();
   const [loadedSite, setLoadedSite] = useState(null);
+  const [open, setOpen] = useState(false);
+
   if (siteDetail && (!loadedSite || loadedSite.id !== siteDetail.id)) {
     setLoadedSite(siteDetail);
   }
+
+  const toggleExpand = () => {
+    setOpen(!open);
+  };
   const summary = (
-    <MetricCards metrics={metrics} isLoading={isLoading} bottomPanelOpen={bottomPanelOpen} />
+    <>
+      <MetricCards metrics={metrics} isLoading={isLoading} bottomPanelOpen={open} />
+      {open && (
+        <InformationCard
+          title={histogram.title}
+          type={histogram.type}
+          histogramContent={histogramContent}
+        />
+      )}
+    </>
   );
 
-  const selectedSiteName = loadedSite && (
-    <Box className={classes.selectedSiteProperty}>
-      <SelectMarkerIcon className={classes.selectMarkerIconStyle} />
-      <Box className={classes.siteNameStyle}>
-        {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
+  const selectedSiteName =
+    loadedSite &&
+    (open ? (
+      <SiteDetail selectSite={loadedSite} />
+    ) : (
+      <Box className={classes.selectedSiteProperty}>
+        <SelectMarkerIcon className={classes.selectMarkerIconStyle} />
+        <Box className={classes.siteNameStyle}>
+          {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
+        </Box>
+        <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
+          <ClearIcon className={classes.clearIconStyle} />
+        </IconButton>
       </Box>
-      <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
-        <ClearIcon className={classes.clearIconStyle} />
-      </IconButton>
-    </Box>
-  );
+    ));
 
   return (
-    <BottomPanelContainer>
-      <IconButton className={classes.iconButtonStyle}>
-        <ExpandLessIcon className={classes.expandLessIcon} />
+    <BottomPanelContainer open={open}>
+      <IconButton
+        className={open ? classes.siteControlIconButtonStyle : classes.iconButtonStyle}
+        onClick={toggleExpand}
+      >
+        {open ? <ExpandLessIcon /> : <ExpandMoreIcon className={classes.expandLessIcon} />}
       </IconButton>
       {showSiteDetail ? selectedSiteName : summary}
+      {open &&
+        (showSiteDetail && (
+          <IconButton
+            className={classes.siteControlIconButtonStyle}
+            onClick={clearSelectedSiteHandler}
+          >
+            <ClearIcon />
+          </IconButton>
+        ))}
     </BottomPanelContainer>
   );
 };

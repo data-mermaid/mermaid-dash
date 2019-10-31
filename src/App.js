@@ -58,7 +58,6 @@ class App extends Component {
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
-    bottomPanelOpen: false,
     dragPanelPosition: { x: 0, y: -175 }
   };
 
@@ -441,7 +440,7 @@ class App extends Component {
           <BottomSummaryPanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
-            bottomPanelOpen={this.state.bottomPanelOpen}
+            histogramContent={this.state.histogram}
             siteDetail={this.state.siteDetail}
             showSiteDetail={this.state.showSiteDetail}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
