@@ -17,12 +17,12 @@ import SiteDetail from './SiteDetail';
 import { histogram } from '../constants/summary-information';
 
 const DraggablePanelContainer = styled('div')`
-  position: fixed;
-  /* top: 800px; */
+  position: absolute;
+  /* top: 600px; */
   width: 100%;
   height: 100%;
   border-radius: 4px;
-  z-index: 20000;
+  z-index: 2000;
   justify-content: center;
   display: flex;
   background: #f4f4f4;

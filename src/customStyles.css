@@ -1,3 +1,7 @@
+body {
+	overflow: hidden;
+}
+
 .leaflet-bottom .leaflet-control {
   opacity: 0.6 !important;
 }

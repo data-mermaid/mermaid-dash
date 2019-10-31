@@ -22,7 +22,7 @@ const MapContainer = styled.div`
   /* position: fixed;
   top: 49px; */
   /* padding-top: 49px; */
-  /* margin-top: 49px; */
+  margin-top: 49px;
   padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
 
   @media (min-width: 0px) {
@@ -37,7 +37,6 @@ const MapContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
-  margin-top: 49px;
   height: calc(100vh - 49px);
 `;
 
