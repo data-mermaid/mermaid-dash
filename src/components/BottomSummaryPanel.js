@@ -35,7 +35,7 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
     fontWeight: 'bold'
   },
   iconButtonStyle: {
-    padding: 0
+    padding: '0px'
   },
   siteControlIconButtonStyle: {
     padding: '10px'
@@ -127,10 +127,7 @@ const BottomSummaryPanel = ({
       {showSiteDetail ? selectedSiteName : summary}
       {open &&
         (showSiteDetail && (
-          <IconButton
-            className={classes.siteControlIconButtonStyle}
-            onClick={clearSelectedSiteHandler}
-          >
+          <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </IconButton>
         ))}
