@@ -9,7 +9,6 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
 import MetricCards from './MetricCardsContainer';

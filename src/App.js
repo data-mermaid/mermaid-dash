@@ -9,6 +9,7 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
+import BottomSummaryPanel from './components/BottomSummaryPanel';
 import DraggablePanel from './components/DraggablePanel';
 
 class App extends Component {
@@ -57,6 +58,7 @@ class App extends Component {
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
+    bottomPanelOpen: false,
     dragPanelPosition: { x: 0, y: -175 }
   };
 
@@ -436,6 +438,16 @@ class App extends Component {
           hideMiniMap={this.state.mobileDisplay}
         />
         {this.state.mobileDisplay && (
+          <BottomSummaryPanel
+            metrics={this.state.metrics}
+            isLoading={this.state.isLoading}
+            bottomPanelOpen={this.state.bottomPanelOpen}
+            siteDetail={this.state.siteDetail}
+            showSiteDetail={this.state.showSiteDetail}
+            clearSelectedSiteHandler={this.clearSelectedSiteHandler}
+          />
+        )}
+        {/* {this.state.mobileDisplay && (
           <DraggablePanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
@@ -445,7 +457,7 @@ class App extends Component {
             dragPanelPosition={this.state.dragPanelPosition}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           />
-        )}
+        )} */}
       </BrowserRouter>
     );
   }
