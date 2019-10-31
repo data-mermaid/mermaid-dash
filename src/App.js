@@ -10,7 +10,6 @@ import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
 import BottomSummaryPanel from './components/BottomSummaryPanel';
-import DraggablePanel from './components/DraggablePanel';
 
 class App extends Component {
   state = {
@@ -446,17 +445,6 @@ class App extends Component {
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           />
         )}
-        {/* {this.state.mobileDisplay && (
-          <DraggablePanel
-            metrics={this.state.metrics}
-            isLoading={this.state.isLoading}
-            histogramContent={this.state.histogram}
-            siteDetail={this.state.siteDetail}
-            showSiteDetail={this.state.showSiteDetail}
-            dragPanelPosition={this.state.dragPanelPosition}
-            clearSelectedSiteHandler={this.clearSelectedSiteHandler}
-          />
-        )} */}
       </BrowserRouter>
     );
   }

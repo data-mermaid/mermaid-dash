@@ -125,12 +125,11 @@ const BottomSummaryPanel = ({
         {open ? <ExpandLessIcon /> : <ExpandMoreIcon className={classes.expandLessIcon} />}
       </IconButton>
       {showSiteDetail ? selectedSiteName : summary}
-      {open &&
-        (showSiteDetail && (
-          <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
-            <ClearIcon />
-          </IconButton>
-        ))}
+      {open && showSiteDetail && (
+        <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
+          <ClearIcon />
+        </IconButton>
+      )}
     </BottomPanelContainer>
   );
 };
