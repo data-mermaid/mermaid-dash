@@ -19,9 +19,6 @@ L.Icon.Default.mergeOptions({
 const MapContainer = styled.div`
   height: 100%;
   width: 100%;
-  /* position: fixed;
-  top: 49px; */
-  /* padding-top: 49px; */
   margin-top: 49px;
   padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
 

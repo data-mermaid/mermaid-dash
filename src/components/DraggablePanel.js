@@ -9,6 +9,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
 import MetricCards from './MetricCardsContainer';
@@ -18,7 +19,6 @@ import { histogram } from '../constants/summary-information';
 
 const DraggablePanelContainer = styled('div')`
   position: absolute;
-  /* top: 600px; */
   width: 100%;
   height: 100%;
   border-radius: 4px;
@@ -54,7 +54,7 @@ const BottomSummaryWrapper = styled.div`
   width: 100%;
   display: flex;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: overlay;
   flex-direction: column;
   .nodrag {
     outline: none;
