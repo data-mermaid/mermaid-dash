@@ -19,6 +19,7 @@ L.Icon.Default.mergeOptions({
 const MapContainer = styled.div`
   height: 100%;
   width: 100%;
+  position: fixed;
   margin-top: 49px;
   padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
 
@@ -94,7 +95,7 @@ const miniMapLayer = L.tileLayer(
   );
 
 const mapProperty = {
-  center: [10, 170],
+  center: window.innerWidth < 960 ? [-30, 180] : [10, 170],
   zoom: 3,
   minZoom: 3,
   maxZoom: 16,
@@ -229,9 +230,10 @@ class LeafletMap extends Component {
   }
 
   zoomFullMap() {
-    const { zoomFullMap, fullMapZoomHandler } = this.props;
+    const { zoomFullMap, fullMapZoomHandler, hideMiniMap } = this.props;
     if (zoomFullMap) {
-      this.map.setView([10, 170], 3);
+      const mapCenter = hideMiniMap ? [-30, 180] : [10, 170];
+      this.map.setView(mapCenter, 3);
       fullMapZoomHandler(false);
       this.map.closePopup();
     }

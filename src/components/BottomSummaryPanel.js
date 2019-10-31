@@ -18,7 +18,9 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
     alignItems: 'center',
     flexDirection: 'row',
     background: 'white',
-    borderRadius: '4px'
+    borderRadius: '4px',
+    margin: '0 8px 0 8px',
+    padding: '4px 0 4px 0'
   },
   selectMarkerIconStyle: {
     width: '14px',
@@ -42,6 +44,7 @@ const BottomPanelContainer = styled('div')`
   bottom: 0;
   width: 100%;
   height: auto;
+  padding-bottom: 8px;
 `;
 
 const BottomSummaryPanel = ({
