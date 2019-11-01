@@ -45,3 +45,16 @@ export const MenuLink = styled('a')`
   text-decoration: none;
   color: ${props => (props.menuButton ? 'black' : 'white')};
 `;
+
+export const DialogText = styled('p')`
+  font-size: ${props => (props.dialogTitle ? '1.25rem' : '0.85rem')};
+  ${props =>
+    props.dialogTitle || props.mrTitleItem
+      ? css`
+          margin: 0;
+          font-weight: 800;
+        `
+      : css`
+          margin-top: 0;
+        `}
+`;

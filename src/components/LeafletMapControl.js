@@ -78,11 +78,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
         TransitionComponent={Fade}
         TransitionProps={{ timeout: 200 }}
       >
-        <ButtonStyle
-          buttonBorder={true}
-          growScaleHover={true}
-          onClick={() => fullMapZoomHandler(true)}
-        >
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
           <ZoomOutIcon />
         </ButtonStyle>
       </Tooltip>
