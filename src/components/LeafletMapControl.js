@@ -9,7 +9,6 @@ import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
 import { ReactComponent as SelectMultiIcon } from '../styles/Icons/two.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
-import HelpIcon from '@material-ui/icons/Help';
 import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
 
 import Tooltip from '@material-ui/core/Tooltip';
@@ -17,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
+import IntroModal from './IntroModal';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
@@ -40,10 +40,6 @@ const mapControlStyleProperty = makeStyles(theme => ({
     top: 210,
     left: 11,
     zIndex: 1000
-  },
-  mapControlIconProperty: {
-    width: '18px',
-    height: '18px'
   },
   legendProperty: {
     position: 'fixed',
@@ -87,7 +83,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
           growScaleHover={true}
           onClick={() => fullMapZoomHandler(true)}
         >
-          <ZoomOutIcon className={classes.mapControlIconProperty} />
+          <ZoomOutIcon />
         </ButtonStyle>
       </Tooltip>
     </ThemeProvider>
@@ -102,22 +98,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
         TransitionProps={{ timeout: 200 }}
       >
         <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
-          <CurrentSelectLocationIcon className={classes.mapControlIconProperty} />
-        </ButtonStyle>
-      </Tooltip>
-    </ThemeProvider>
-  );
-
-  const summaryStatisticsInfo = (
-    <ThemeProvider theme={theme.mapControl}>
-      <Tooltip
-        title="Zoom to Selected Site"
-        placement="right"
-        TransitionComponent={Fade}
-        TransitionProps={{ timeout: 200 }}
-      >
-        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
-          <HelpIcon className={classes.mapControlIconProperty} />
+          <CurrentSelectLocationIcon />
         </ButtonStyle>
       </Tooltip>
     </ThemeProvider>
@@ -126,7 +107,9 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
   const summaryStatisticsControl = (
-    <Box className={classes.summaryStatisticsWrapperProperty}>{summaryStatisticsInfo}</Box>
+    <Box className={classes.summaryStatisticsWrapperProperty}>
+      <IntroModal />
+    </Box>
   );
   const mapLegend = (
     <Paper className={classes.legendProperty}>
@@ -159,7 +142,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     <div>
       {fullMapControl}
       {zoomToControl}
-      {!mediaMax960 && summaryStatisticsControl}
+      {summaryStatisticsControl}
       {mediaMax960 && mapLegend}
     </div>
   );
