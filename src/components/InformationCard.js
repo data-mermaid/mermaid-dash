@@ -13,8 +13,9 @@ import CartTextContent from './CardTextContent';
 
 import PropTypes from 'prop-types';
 
-const CardDiv = styled.div`
+const CardDiv = styled('div')`
   padding: ${props => (props.setPaddingOff ? '0 0 16px 0' : '16px 8px 16px 8px')};
+  width: 100%;
 `;
 
 const cardStyle = makeStyles(theme => ({

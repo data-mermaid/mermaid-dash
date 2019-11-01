@@ -9,7 +9,7 @@ import Header from './components/Header';
 import DrawerDashBoard from './components/DrawerDashBoard';
 import LeafletMap from './components/LeafletMap';
 import LeafletMapControl from './components/LeafletMapControl';
-import DraggablePanel from './components/DraggablePanel';
+import BottomSummaryPanel from './components/BottomSummaryPanel';
 
 class App extends Component {
   state = {
@@ -436,13 +436,12 @@ class App extends Component {
           hideMiniMap={this.state.mobileDisplay}
         />
         {this.state.mobileDisplay && (
-          <DraggablePanel
+          <BottomSummaryPanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
             histogramContent={this.state.histogram}
             siteDetail={this.state.siteDetail}
             showSiteDetail={this.state.showSiteDetail}
-            dragPanelPosition={this.state.dragPanelPosition}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           />
         )}

@@ -2,6 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components/macro';
 
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
@@ -9,6 +10,9 @@ import MetricCard from './MetricCard';
 
 const WrapperMetricCardsContainer = styled(Grid)`
   padding: 0 8px;
+`;
+const WrapperMetricCardsBox = styled(Box)`
+  width: 100%;
 `;
 
 const MetricCards = ({ metrics, isLoading, bottomPanelOpen }) => {
@@ -21,9 +25,11 @@ const MetricCards = ({ metrics, isLoading, bottomPanelOpen }) => {
   });
 
   return (
-    <WrapperMetricCardsContainer container spacing={1}>
-      {cardList}
-    </WrapperMetricCardsContainer>
+    <WrapperMetricCardsBox>
+      <WrapperMetricCardsContainer container spacing={1}>
+        {cardList}
+      </WrapperMetricCardsContainer>
+    </WrapperMetricCardsBox>
   );
 };
 
