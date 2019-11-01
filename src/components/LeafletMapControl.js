@@ -9,6 +9,7 @@ import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
 import { ReactComponent as SelectMultiIcon } from '../styles/Icons/two.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
+import HelpIcon from '@material-ui/icons/Help';
 import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
 
 import Tooltip from '@material-ui/core/Tooltip';
@@ -31,6 +32,12 @@ const mapControlStyleProperty = makeStyles(theme => ({
   zoomOutIconWrapperProperty: {
     position: 'fixed',
     top: 130,
+    left: 11,
+    zIndex: 1000
+  },
+  summaryStatisticsWrapperProperty: {
+    position: 'fixed',
+    top: 210,
     left: 11,
     zIndex: 1000
   },
@@ -101,8 +108,26 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     </ThemeProvider>
   );
 
+  const summaryStatisticsInfo = (
+    <ThemeProvider theme={theme.mapControl}>
+      <Tooltip
+        title="Zoom to Selected Site"
+        placement="right"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 200 }}
+      >
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+          <HelpIcon className={classes.mapControlIconProperty} />
+        </ButtonStyle>
+      </Tooltip>
+    </ThemeProvider>
+  );
+
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
+  const summaryStatisticsControl = (
+    <Box className={classes.summaryStatisticsWrapperProperty}>{summaryStatisticsInfo}</Box>
+  );
   const mapLegend = (
     <Paper className={classes.legendProperty}>
       <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
@@ -129,10 +154,12 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
       </Box>
     </Paper>
   );
+
   return (
     <div>
       {fullMapControl}
       {zoomToControl}
+      {!mediaMax960 && summaryStatisticsControl}
       {mediaMax960 && mapLegend}
     </div>
   );
