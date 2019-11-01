@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
+import IntroModal from './IntroModal';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
@@ -34,9 +35,11 @@ const mapControlStyleProperty = makeStyles(theme => ({
     left: 11,
     zIndex: 1000
   },
-  mapControlIconProperty: {
-    width: '18px',
-    height: '18px'
+  summaryStatisticsWrapperProperty: {
+    position: 'fixed',
+    top: 210,
+    left: 11,
+    zIndex: 1000
   },
   legendProperty: {
     position: 'fixed',
@@ -75,12 +78,8 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
         TransitionComponent={Fade}
         TransitionProps={{ timeout: 200 }}
       >
-        <ButtonStyle
-          buttonBorder={true}
-          growScaleHover={true}
-          onClick={() => fullMapZoomHandler(true)}
-        >
-          <ZoomOutIcon className={classes.mapControlIconProperty} />
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
+          <ZoomOutIcon />
         </ButtonStyle>
       </Tooltip>
     </ThemeProvider>
@@ -95,7 +94,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
         TransitionProps={{ timeout: 200 }}
       >
         <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
-          <CurrentSelectLocationIcon className={classes.mapControlIconProperty} />
+          <CurrentSelectLocationIcon />
         </ButtonStyle>
       </Tooltip>
     </ThemeProvider>
@@ -103,6 +102,11 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
+  const summaryStatisticsControl = (
+    <Box className={classes.summaryStatisticsWrapperProperty}>
+      <IntroModal />
+    </Box>
+  );
   const mapLegend = (
     <Paper className={classes.legendProperty}>
       <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
@@ -129,10 +133,12 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
       </Box>
     </Paper>
   );
+
   return (
     <div>
       {fullMapControl}
       {zoomToControl}
+      {summaryStatisticsControl}
       {mediaMax960 && mapLegend}
     </div>
   );
