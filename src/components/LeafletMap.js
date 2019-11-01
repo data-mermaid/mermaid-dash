@@ -400,9 +400,8 @@ class LeafletMap extends Component {
     popupCluster.openOn(this.map);
     const { siteClickHandler } = this.props;
     const el = popupCluster.getElement().children[0].children[0].children[0].children;
-    const handleInteraction = evt => {
-      evt.preventDefault();
-      const resultMarker = markersData.filter(site => site.id === evt.path[0].id)[0];
+    const handleInteraction = ({ target: { id: siteId } }) => {
+      const resultMarker = markersData.filter(site => site.id === siteId)[0];
       siteClickHandler(resultMarker);
     };
 
