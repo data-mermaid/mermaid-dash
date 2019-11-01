@@ -64,7 +64,7 @@ const IntroModal = () => {
         onClose={modalCloseHandler}
         open={open}
         scroll={'paper'}
-        PaperProps={{ style: { margin: '6px' } }}
+        PaperProps={{ style: { margin: '8px' } }}
       >
         <MuiDialogTitle>
           <DiablogText title={'title'}>About This Map</DiablogText>
