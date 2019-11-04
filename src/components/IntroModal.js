@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { ThemeProvider } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,10 +10,31 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from '@material-ui/core/Tooltip';
+import ContactIcon from '@material-ui/icons/Email';
+
 import Fade from '@material-ui/core/Fade';
 
 import { theme } from './theme';
 import { ButtonStyle, DialogText } from '../styles/MermaidStyledComponents';
+
+const InlineButtonImage = styled('div')`
+  color: white;
+  display: inline-flex;
+  background: #468dae;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px 4px 6px;
+`;
+
+const InlineButtonIcon = styled(ContactIcon)`
+  font-size: 0.8rem !important;
+  margin-right: 4px;
+`;
+
+const InlineButtonText = styled('span')`
+  font-size: 12px;
+  margin-top: 2px;
+`;
 
 const IntroModal = () => {
   const [open, setModalStage] = useState(true);
@@ -36,6 +58,13 @@ const IntroModal = () => {
     </ThemeProvider>
   );
 
+  const contactButton = (
+    <InlineButtonImage>
+      <InlineButtonIcon />
+      <InlineButtonText>Contact Admins</InlineButtonText>
+    </InlineButtonImage>
+  );
+
   return (
     <div>
       {summaryStatisticsInfo}
@@ -55,8 +84,7 @@ const IntroModal = () => {
           </DialogText>
           <DialogText>
             1. If you would like to publish any analyses based on these data, please contact the
-            appropriate project administrators using the [Contact Admins] button (where is just the
-            in line button image) available for each site
+            appropriate project administrators using the {contactButton} available for each site
           </DialogText>
           <DialogText>
             2. Do not assume data is representative. Some projects have survey sites in geographies
