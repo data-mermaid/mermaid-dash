@@ -2,7 +2,6 @@ import React from 'react';
 
 import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { ThemeProvider } from 'styled-components/macro';
 import { ReactComponent as SinglePointIcon } from '../styles/Icons/circular-shape-silhouette.svg';
 import { ReactComponent as MultiPointsIcon } from '../styles/Icons/four.svg';
@@ -52,7 +51,10 @@ const mapControlStyleProperty = makeStyles(theme => ({
     backgroundColor: '#000000',
     borderRadius: 0,
     boxShadow: 'none',
-    zIndex: 1000
+    zIndex: 1000,
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   },
   legendItemProperty: {
     padding: '5px 0 10px 0px'
@@ -68,7 +70,6 @@ const mapControlStyleProperty = makeStyles(theme => ({
 
 const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
   const classes = mapControlStyleProperty();
-  const mediaMax960 = useMediaQuery('(min-width:960px');
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
@@ -139,7 +140,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
       {fullMapControl}
       {zoomToControl}
       {summaryStatisticsControl}
-      {mediaMax960 && mapLegend}
+      {mapLegend}
     </div>
   );
 };

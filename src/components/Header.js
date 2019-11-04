@@ -2,7 +2,6 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,11 +17,7 @@ const headerStyles = makeStyles(theme => ({
     position: 'fixed',
     background: '#2C3742',
     height: 49,
-    justifyContent: 'center',
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+    justifyContent: 'center'
   },
   toolBarProperty: {
     padding: 0
@@ -32,12 +27,22 @@ const headerStyles = makeStyles(theme => ({
   },
   hide: {
     display: 'none'
+  },
+  headerItemStyle: {
+    padding: theme.spacing(2),
+    fontSize: '12px',
+    fontWeight: '800',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
   }
 }));
 
 const HeaderItem = ({ children, link }) => {
+  const classes = headerStyles();
+
   return (
-    <Box p={2} fontSize={12} fontWeight="fontWeightBold">
+    <Box className={classes.headerItemStyle}>
       <MenuLink target="_blank" href={link} rel="noopener noreferrer">
         {children}
       </MenuLink>
@@ -55,7 +60,6 @@ const HeaderItems = headerContent.map(({ name, link }) => {
 
 const Header = () => {
   const classes = headerStyles();
-  const mediaMax960 = useMediaQuery('(min-width:960px');
 
   return (
     <AppBar className={classes.appBarProperty}>
@@ -63,7 +67,7 @@ const Header = () => {
         <Box p={1} flexGrow={1}>
           <MermaidLogo height="38px" />
         </Box>
-        {mediaMax960 && HeaderItems}
+        {HeaderItems}
         <HeaderMenu />
       </Toolbar>
     </AppBar>

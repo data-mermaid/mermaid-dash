@@ -12,6 +12,9 @@ const ChartWrapper = styled('div')`
   display: flex;
   flex-direction: ${props => (props.mediaMin600_Max960 || !props.mediaMax1280 ? 'row' : 'column')};
   filter: ${props => props.policy && 'blur(0.8rem)'};
+  @media (min-width: 600px) and (max-width: 960px) {
+    flex-direction: row;
+  }
 `;
 
 const PrivateTextWrapper = styled('div')`
