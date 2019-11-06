@@ -17,7 +17,7 @@ import Fade from '@material-ui/core/Fade';
 import { theme } from './theme';
 import { ButtonStyle, DialogText } from '../styles/MermaidStyledComponents';
 
-const InlineButtonImage = styled('div')`
+const InlineButtonImage = styled('span')`
   color: white;
   display: inline-flex;
   background: #468dae;
