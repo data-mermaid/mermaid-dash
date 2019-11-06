@@ -15,7 +15,6 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
-import IntroModal from './IntroModal';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
@@ -103,11 +102,6 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
-  const summaryStatisticsControl = (
-    <Box className={classes.summaryStatisticsWrapperProperty}>
-      <IntroModal />
-    </Box>
-  );
   const mapLegend = (
     <Paper className={classes.legendProperty}>
       <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
@@ -139,7 +133,6 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     <div>
       {fullMapControl}
       {zoomToControl}
-      {summaryStatisticsControl}
       {mapLegend}
     </div>
   );

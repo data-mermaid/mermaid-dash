@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { ThemeProvider } from 'styled-components/macro';
 import styled from 'styled-components/macro';
 
 import Button from '@material-ui/core/Button';
@@ -8,14 +7,11 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import HelpIcon from '@material-ui/icons/Help';
-import Tooltip from '@material-ui/core/Tooltip';
 import ContactIcon from '@material-ui/icons/Email';
 
-import Fade from '@material-ui/core/Fade';
+import Box from '@material-ui/core/Box';
 
-import { theme } from './theme';
-import { ButtonStyle, DialogText } from '../styles/MermaidStyledComponents';
+import { DialogText } from '../styles/MermaidStyledComponents';
 
 const InlineButtonImage = styled('div')`
   color: white;
@@ -36,28 +32,17 @@ const InlineButtonText = styled('span')`
   margin-top: 2px;
 `;
 
-const IntroModal = () => {
-  const [open, setModalStage] = useState(true);
+const MenuBoxItem = styled(Box)`
+  padding: 16px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  @media (max-width: 960px) {
+    display: none;
+  }
+`;
 
-  const modalToggleHandler = () => {
-    setModalStage(!open);
-  };
-
-  const summaryStatisticsInfo = (
-    <ThemeProvider theme={theme.mapControl}>
-      <Tooltip
-        title="About This Map"
-        placement="right"
-        TransitionComponent={Fade}
-        TransitionProps={{ timeout: 200 }}
-      >
-        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={modalToggleHandler}>
-          <HelpIcon />
-        </ButtonStyle>
-      </Tooltip>
-    </ThemeProvider>
-  );
-
+const IntroModal = ({ open, modalToggleHandler }) => {
   const contactButton = (
     <InlineButtonImage>
       <InlineButtonIcon />
@@ -65,9 +50,10 @@ const IntroModal = () => {
     </InlineButtonImage>
   );
 
+  const aboutThisData = <MenuBoxItem onClick={modalToggleHandler}>ABOUT THIS DATA</MenuBoxItem>;
   return (
     <div>
-      {summaryStatisticsInfo}
+      {aboutThisData}
       <Dialog
         onClose={modalToggleHandler}
         open={open}
@@ -75,7 +61,7 @@ const IntroModal = () => {
         PaperProps={{ style: { margin: '8px' } }}
       >
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>About This Map</DialogText>
+          <DialogText dialogTitle={true}>About This Data</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent>
           <DialogText>

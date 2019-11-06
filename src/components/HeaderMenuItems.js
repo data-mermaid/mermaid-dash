@@ -63,7 +63,7 @@ const MenuIcon = ({ name }) => {
   return <Icon className={menuIconProperty} />;
 };
 
-const HeaderMenuItems = ({ anchorEl, handleClose }) => {
+const HeaderMenuItems = ({ anchorEl, handleClose, modalToggleHandler }) => {
   const MenuItems = headerContent.map(({ name, link }) => {
     return (
       <MenuLink target="_blank" href={link} rel="noopener noreferrer" menuButton={true} key={name}>
@@ -83,6 +83,10 @@ const HeaderMenuItems = ({ anchorEl, handleClose }) => {
       open={Boolean(anchorEl)}
       onClose={handleClose}
     >
+      <StyledMenuItem onClick={modalToggleHandler}>
+        <MenuIcon name={'ABOUT THIS DATA'} />
+        {'ABOUT THIS DATA'}
+      </StyledMenuItem>
       {MenuItems}
     </StyledMenu>
   );

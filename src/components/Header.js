@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -10,6 +10,7 @@ import Box from '@material-ui/core/Box';
 import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
 import { MenuLink } from '../styles/MermaidStyledComponents';
 import HeaderMenu from './HeaderMenu';
+import IntroModal from './IntroModal';
 import headerContent from '../constants/header-content';
 
 const headerStyles = makeStyles(theme => ({
@@ -60,6 +61,11 @@ const HeaderItems = headerContent.map(({ name, link }) => {
 
 const Header = () => {
   const classes = headerStyles();
+  const [open, setModalStage] = useState(true);
+
+  const modalToggleHandler = () => {
+    setModalStage(!open);
+  };
 
   return (
     <AppBar className={classes.appBarProperty}>
@@ -67,8 +73,9 @@ const Header = () => {
         <Box p={1} flexGrow={1}>
           <MermaidLogo height="38px" />
         </Box>
+        <IntroModal open={open} modalToggleHandler={modalToggleHandler} />
         {HeaderItems}
-        <HeaderMenu />
+        <HeaderMenu modalToggleHandler={modalToggleHandler} />
       </Toolbar>
     </AppBar>
   );
