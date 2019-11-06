@@ -14,18 +14,8 @@ const menuStyleProperties = makeStyles(theme => ({
   }
 }));
 
-const HeaderMenu = ({ modalToggleHandler }) => {
+const HeaderMenu = ({ anchorEl, handleClick, handleClose, modalToggleHandler }) => {
   const classes = menuStyleProperties();
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div>

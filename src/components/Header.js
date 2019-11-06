@@ -63,8 +63,21 @@ const Header = () => {
   const classes = headerStyles();
   const [open, setModalStage] = useState(true);
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const modalToggleHandler = () => {
     setModalStage(!open);
+    if (!open) {
+      setAnchorEl(null);
+    }
   };
 
   return (
@@ -75,7 +88,12 @@ const Header = () => {
         </Box>
         <IntroModal open={open} modalToggleHandler={modalToggleHandler} />
         {HeaderItems}
-        <HeaderMenu modalToggleHandler={modalToggleHandler} />
+        <HeaderMenu
+          anchorEl={anchorEl}
+          handleClick={handleClick}
+          handleClose={handleClose}
+          modalToggleHandler={modalToggleHandler}
+        />
       </Toolbar>
     </AppBar>
   );
