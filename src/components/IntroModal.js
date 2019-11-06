@@ -13,7 +13,7 @@ import Box from '@material-ui/core/Box';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
 
-const InlineButtonImage = styled('div')`
+const InlineButtonImage = styled('span')`
   color: white;
   display: inline-flex;
   background: #468dae;
