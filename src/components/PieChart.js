@@ -51,14 +51,13 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
   const mediaMax1280 = useMediaQuery('(max-width:1280px)');
   const mediaMin600_Max960 = mediaMax960 && mediaMin600;
   const mediaMin960_Max1280 = mediaMax1280 && mediaMin960;
+
   const attributeColors =
     protocolName === 'beltfish' ? fishBeltAttributeColors : benthicAttributeColors;
-
-  const attributeCollection = chartContent.map(({ x }) => x);
+  const attributeCollection = chartContent.map(({ x, y }) => y !== 0 && x);
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
     attributeCollection.includes(name)
   );
-
   const attributeColorScale = filteredAttributeCollection.map(({ color }) => color);
   const contentData = filteredAttributeCollection.map(({ name }) => {
     const foundAttribute = chartContent.find(({ x }) => x === name);
