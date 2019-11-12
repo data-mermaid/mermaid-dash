@@ -80,7 +80,8 @@ const InformationCard = ({
     </>
   );
 
-  const protocolSubItem = bleachingSubItems ? bleachingSubAttributeItem : subAttributeItem;
+  const protocolSubItem =
+    protocolName === 'bleachingqc' ? bleachingSubAttributeItem : subAttributeItem;
 
   const subItems = type === 'pieChart' && (
     <Box>
