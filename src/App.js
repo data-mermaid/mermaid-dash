@@ -297,7 +297,6 @@ class App extends Component {
 
   getHardCoralValue(benthiclit, benthicpit) {
     let hardCoralValue;
-
     if (benthicpit && benthiclit) {
       const benthicpitCoralCover = benthicpit.coral_cover;
       const benthiclitCoralCover = benthiclit.coral_cover;
@@ -314,11 +313,13 @@ class App extends Component {
       hardCoralValue = (benthicpitHardCoral + benthiclitHardCoral) / 2;
     } else {
       const benthicCoralCover = benthicpit ? benthicpit.coral_cover : benthiclit.coral_cover;
-      hardCoralValue = benthicCoralCover
-        .map(coralItem => {
-          return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
-        })
-        .reduce((acc, val) => acc + val, 0);
+      hardCoralValue =
+        benthicCoralCover !== undefined &&
+        benthicCoralCover
+          .map(coralItem => {
+            return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
+          })
+          .reduce((acc, val) => acc + val, 0);
     }
     return hardCoralValue;
   }

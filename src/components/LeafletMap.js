@@ -95,7 +95,7 @@ const miniMapLayer = L.tileLayer(
   );
 
 const mapProperty = {
-  center: [-20, 180],
+  center: [-20, 100],
   zoom: 3,
   minZoom: 3,
   maxZoom: 16,
@@ -232,7 +232,7 @@ class LeafletMap extends Component {
   zoomFullMap() {
     const { zoomFullMap, fullMapZoomHandler } = this.props;
     if (zoomFullMap) {
-      this.map.setView([-20, 180], 3);
+      this.map.setView([-20, 100], 3);
       fullMapZoomHandler(false);
       this.map.closePopup();
     }

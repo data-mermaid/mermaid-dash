@@ -4,7 +4,11 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled, { css } from 'styled-components/macro';
 
 import PropTypes from 'prop-types';
-import { privateColorScale, attributeColors } from '../constants/attribute-colors';
+import {
+  privateColorScale,
+  benthicAttributeColors,
+  fishBeltAttributeColors
+} from '../constants/attribute-colors';
 
 const ChartWrapper = styled('div')`
   width: 100%;
@@ -38,7 +42,7 @@ const SvgWrapper = styled('svg')`
     `}
 `;
 
-const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
+const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
   const mediaMin600 = useMediaQuery('(min-width:600px)');
   const mediaMax600 = useMediaQuery('(max-width:600px)');
   const mediaMax960 = useMediaQuery('(max-width:960px');
@@ -47,18 +51,21 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
   const mediaMax1280 = useMediaQuery('(max-width:1280px)');
   const mediaMin600_Max960 = mediaMax960 && mediaMin600;
   const mediaMin960_Max1280 = mediaMax1280 && mediaMin960;
+  const attributeColors =
+    protocolName === 'beltfish' ? fishBeltAttributeColors : benthicAttributeColors;
 
-  const benthicAttributeCollection = chartContent.map(({ x }) => x);
+  const attributeCollection = chartContent.map(({ x }) => x);
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
-    benthicAttributeCollection.includes(name)
+    attributeCollection.includes(name)
   );
 
-  const benthicsColorScale = filteredAttributeCollection.map(({ color }) => color);
+  const attributeColorScale = filteredAttributeCollection.map(({ color }) => color);
   const contentData = filteredAttributeCollection.map(({ name }) => {
     const foundAttribute = chartContent.find(({ x }) => x === name);
     return { x: name, y: foundAttribute.y };
   });
 
+  const labelUnit = protocolName === 'beltfish' ? 'kg/ha' : '%';
   const legendData = contentData
     .filter(({ y }) => y > 0)
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
@@ -87,7 +94,7 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
           width={mediaMax1280 ? 400 : 450}
           padding={mediaMax1280 ? 30 : 50}
           labels={val => {
-            return val.x + '\n' + val.y.toFixed(1) + '%';
+            return val.x + '\n' + val.y.toFixed(1) + labelUnit;
           }}
           labelComponent={
             <VictoryTooltip
@@ -101,7 +108,7 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
               }}
             />
           }
-          colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
+          colorScale={setToPrivate ? privateColorScale : attributeColorScale}
           data={setToPrivate ? chartContent : contentData}
           events={[
             {
@@ -144,12 +151,10 @@ const PieChart = ({ chartContent, setToPrivate, privateLabel }) => {
         <SvgWrapper setHeight={mediaMin600_Max960 || !mediaMax1280}>
           <VictoryLegend
             standalone={false}
-            colorScale={setToPrivate ? privateColorScale : benthicsColorScale}
+            colorScale={setToPrivate ? privateColorScale : attributeColorScale}
             orientation="horizontal"
             height={mediaMin1281 ? 500 : mediaMin600_Max960 ? 310 : 140}
-            itemsPerRow={
-              mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : mediaMin960 ? 3 : 2
-            }
+            itemsPerRow={mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : 2}
             style={{
               labels: {
                 fontSize: mediaMin1281 ? 15 : mediaMin600_Max960 ? 14 : 11,
