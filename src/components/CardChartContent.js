@@ -8,6 +8,7 @@ import PieChart from './PieChart';
 
 const CardChartContent = ({
   chartType,
+  protocolName,
   pieChartContent,
   setToPrivate,
   privateLabel,
@@ -18,6 +19,7 @@ const CardChartContent = ({
       <BarChart chartContent={histogramContent} />
     ) : (
       <PieChart
+        protocolName={protocolName}
         chartContent={pieChartContent}
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}

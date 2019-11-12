@@ -46,7 +46,6 @@ const InformationCard = ({
 }) => {
   const classes = cardStyle();
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
-
   const findHardCoralValue = coral => {
     const hardCoralResult = coral
       .map(item => {
@@ -103,6 +102,7 @@ const InformationCard = ({
     ) : (
       <CardChartContent
         chartType={type}
+        protocolName={protocolName}
         pieChartContent={pieChartContent}
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
