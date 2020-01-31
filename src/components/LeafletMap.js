@@ -511,8 +511,7 @@ class LeafletMap extends Component {
     this.map.addLayer(markersCluster);
 
     if (markersData.length !== 0) {
-      this.map.fitBounds(markersCluster.getBounds());
-      const mapBounds = this.map.getBounds();
+      const mapBounds = markersCluster.getBounds().pad(0.1);
       const mapBoundingBox = this.createBoundingBox(mapBounds);
       const mapBoundingBoxCorner = mapBounds.getSouth();
 
@@ -523,6 +522,7 @@ class LeafletMap extends Component {
         mapBounds: mapBounds
       });
 
+      this.map.fitBounds(mapBounds);
       getMapBounds(mapBoundingBox);
     } else {
       this.map.setView([0, 0], 3);
