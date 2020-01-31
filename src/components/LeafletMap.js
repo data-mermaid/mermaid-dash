@@ -230,9 +230,13 @@ class LeafletMap extends Component {
     const { mapBounds } = this.state;
 
     if (zoomFullMap) {
-      this.map.fitBounds(mapBounds);
-      fullMapZoomHandler(false);
-      this.map.closePopup();
+      if (mapBounds) {
+        this.map.fitBounds(mapBounds);
+        fullMapZoomHandler(false);
+        this.map.closePopup();
+      } else {
+        this.map.setView(mapProperty.center, mapProperty.zoom);
+      }
     }
   }
 
@@ -300,7 +304,6 @@ class LeafletMap extends Component {
   }
 
   updateBoundingBoxFromZoom() {
-    const { mapZoomLevel } = this.state;
     const { getMapBounds, contentLoadHandler } = this.props;
 
     this.map.once('zoomend', e => {
@@ -308,10 +311,8 @@ class LeafletMap extends Component {
       const currZoom = e.target.getZoom();
       const currBbox = this.createBoundingBox(currBounds);
 
-      if (mapZoomLevel !== null) {
-        this.setState({ mapZoomLevel: currZoom });
-        getMapBounds(currBbox);
-      }
+      this.setState({ mapZoomLevel: currZoom });
+      getMapBounds(currBbox);
       contentLoadHandler(true);
     });
   }
@@ -325,17 +326,15 @@ class LeafletMap extends Component {
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
 
-      if (mapBoundingBoxCorner !== null) {
-        const viewDiff = mapBoundingBoxCorner - southBound;
-        if (viewDiff === 0) {
-          this.setState({ panToSameView: true });
-          contentLoadHandler(false);
-        } else if (viewDiff !== 0) {
-          this.setState({ mapBoundingBoxCorner: southBound, panToSameView: false });
-          getMapBounds(currBbox);
-          contentLoadHandler(true);
-        }
+      if (mapBoundingBoxCorner === southBound) {
+        this.setState({ panToSameView: true });
+        contentLoadHandler(false);
+      } else {
+        this.setState({ mapBoundingBoxCorner: southBound, panToSameView: false });
+        getMapBounds(currBbox);
+        contentLoadHandler(true);
       }
+      // }
     });
   }
 
@@ -510,7 +509,7 @@ class LeafletMap extends Component {
 
     this.map.addLayer(markersCluster);
 
-    if (markersData.length !== 0) {
+    if (markersData.length > 0) {
       const mapBounds = markersCluster.getBounds().pad(0.1);
       const mapBoundingBox = this.createBoundingBox(mapBounds);
       const mapBoundingBoxCorner = mapBounds.getSouth();
@@ -525,7 +524,7 @@ class LeafletMap extends Component {
       this.map.fitBounds(mapBounds);
       getMapBounds(mapBoundingBox);
     } else {
-      this.map.setView([0, 0], 3);
+      this.map.setView(mapProperty.center, mapProperty.zoom);
     }
   }
 
