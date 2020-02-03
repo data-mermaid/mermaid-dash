@@ -95,9 +95,9 @@ const miniMapLayer = L.tileLayer(
   );
 
 const mapProperty = {
-  center: [-20, 100],
-  zoom: 3,
-  minZoom: 3,
+  center: [0, 0],
+  zoom: 2,
+  minZoom: 2,
   maxZoom: 16,
   zoomControl: true,
   layers: [worldImageryMapLayer, labelLayer]
@@ -122,12 +122,14 @@ const miniMapProperty = {
 
 class LeafletMap extends Component {
   state = {
-    mapZoomLevel: mapProperty.zoom,
+    mapZoomLevel: null,
     mapBoundingBoxCorner: null,
+    mapBounds: null,
     siteCenterChange: false,
     popUpList: [],
     hideMiniMap: false,
-    miniMap: null
+    miniMap: null,
+    panToSameView: false
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -141,19 +143,19 @@ class LeafletMap extends Component {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap, panToSameView } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
 
     if (markersData !== prevMarkersData) {
-      this.updateMarkers(this.props.markersData);
+      this.updateMarkers(markersData);
     }
 
     if (mapZoomLevel !== prevMapZoomLevel) {
       this.updateBoundingBoxFromZoom();
     }
 
-    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
+    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner || panToSameView) {
       this.updateBoundingBoxFromPan();
     }
 
@@ -189,21 +191,14 @@ class LeafletMap extends Component {
     this.map = L.map('map', mapProperty);
     const { hideMiniMap } = this.props;
     const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
-    const initMapBounds = this.map.getBounds();
-    const initBbox = this.createBoundingBox(initMapBounds);
-    const initSouthBbox = initMapBounds.getSouth();
 
     if (hideMiniMap) {
       miniMapControl.addTo(this.map);
     }
 
     this.setState({
-      mapZoomLevel: this.map.getZoom(),
-      mapBoundingBoxCorner: initSouthBbox,
       miniMap: miniMapControl
     });
-    this.props.getMapBounds(initBbox);
-    this.updateBoundingBoxFromZoom();
   }
 
   // use case: For when user selects site when side panel is closed. Panel
@@ -230,11 +225,18 @@ class LeafletMap extends Component {
   }
 
   zoomFullMap() {
+    //Zoom to initial load marker cluster.
     const { zoomFullMap, fullMapZoomHandler } = this.props;
+    const { mapBounds } = this.state;
+
     if (zoomFullMap) {
-      this.map.setView([-20, 100], 3);
-      fullMapZoomHandler(false);
-      this.map.closePopup();
+      if (mapBounds) {
+        this.map.fitBounds(mapBounds);
+        fullMapZoomHandler(false);
+        this.map.closePopup();
+      } else {
+        this.map.setView(mapProperty.center, mapProperty.zoom);
+      }
     }
   }
 
@@ -302,18 +304,15 @@ class LeafletMap extends Component {
   }
 
   updateBoundingBoxFromZoom() {
-    const { mapZoomLevel } = this.state;
     const { getMapBounds, contentLoadHandler } = this.props;
 
     this.map.once('zoomend', e => {
       const currBounds = e.target.getBounds();
       const currZoom = e.target.getZoom();
       const currBbox = this.createBoundingBox(currBounds);
-      const zoomDiff = mapZoomLevel - currZoom;
-      if (zoomDiff !== 0) {
-        this.setState({ mapZoomLevel: currZoom });
-        getMapBounds(currBbox);
-      }
+
+      this.setState({ mapZoomLevel: currZoom });
+      getMapBounds(currBbox);
       contentLoadHandler(true);
     });
   }
@@ -326,12 +325,16 @@ class LeafletMap extends Component {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
-      const viewDiff = mapBoundingBoxCorner.toFixed(5) - southBound.toFixed(5);
-      if (viewDiff !== 0) {
-        this.setState({ mapBoundingBoxCorner: southBound });
+
+      if (mapBoundingBoxCorner === southBound) {
+        this.setState({ panToSameView: true });
+        contentLoadHandler(false);
+      } else {
+        this.setState({ mapBoundingBoxCorner: southBound, panToSameView: false });
         getMapBounds(currBbox);
+        contentLoadHandler(true);
       }
-      contentLoadHandler(true);
+      // }
     });
   }
 
@@ -431,7 +434,8 @@ class LeafletMap extends Component {
       removeHighlight,
       setIconActive,
       removeHighlightCluster,
-      setClusterActive
+      setClusterActive,
+      getMapBounds
     } = this.props;
     const allClusterStyle = {
       radius: 10,
@@ -504,6 +508,24 @@ class LeafletMap extends Component {
     });
 
     this.map.addLayer(markersCluster);
+
+    if (markersData.length === 0) {
+      this.map.setView(mapProperty.center, mapProperty.zoom);
+    } else {
+      const mapBounds = markersCluster.getBounds().pad(0.1);
+      const mapBoundingBox = this.createBoundingBox(mapBounds);
+      const mapBoundingBoxCorner = mapBounds.getSouth();
+
+      this.setState({
+        mapZoomLevel: this.map.getZoom(),
+        mapCenterLevel: markersCluster.getBounds().getCenter(),
+        mapBoundingBoxCorner: mapBoundingBoxCorner,
+        mapBounds: mapBounds
+      });
+
+      this.map.fitBounds(mapBounds);
+      getMapBounds(mapBoundingBox);
+    }
   }
 
   render() {
