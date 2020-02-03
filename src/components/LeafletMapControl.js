@@ -9,6 +9,7 @@ import { ReactComponent as SelectMultiIcon } from '../styles/Icons/two.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
@@ -19,8 +20,15 @@ import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 
 const mapControlStyleProperty = makeStyles(theme => ({
+  filterIconWrapperPproperty: {
+    position: 'fixed',
+    top: 210,
+    left: 11,
+    zIndex: 1000
+  },
   zoomToIconWrapperProperty: {
     position: 'fixed',
     top: 170,
@@ -100,8 +108,31 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     </ThemeProvider>
   );
 
+  const filterSites = (
+    <ThemeProvider theme={theme.mapControl}>
+      <Tooltip
+        title="Filter Sites"
+        placement="right"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 200 }}
+      >
+        <ButtonStyle
+          buttonBorder={true}
+          setWiggle={true}
+          onClick={() => {
+            console.log('Filtering');
+          }}
+        >
+          <FilterListIcon />
+        </ButtonStyle>
+      </Tooltip>
+    </ThemeProvider>
+  );
+
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
+  const filterControl = <Box className={classes.filterIconWrapperPproperty}>{filterSites}</Box>;
+
   const mapLegend = (
     <Paper className={classes.legendProperty}>
       <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
@@ -133,6 +164,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     <div>
       {fullMapControl}
       {zoomToControl}
+      {filterControl}
       {mapLegend}
     </div>
   );
