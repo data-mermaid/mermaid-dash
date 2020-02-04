@@ -1,9 +1,5 @@
 import React from 'react';
 
-import makeStyles from '@material-ui/core/styles/makeStyles';
-
-import Box from '@material-ui/core/Box';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';

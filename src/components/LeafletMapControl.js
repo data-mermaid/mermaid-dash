@@ -9,7 +9,6 @@ import { ReactComponent as SelectMultiIcon } from '../styles/Icons/two.svg';
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
-import FilterListIcon from '@material-ui/icons/FilterList';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
@@ -20,10 +19,8 @@ import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from './theme';
 
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
 
 import FilterModal from './FilterModal';
-import IntroModal from './IntroModal';
 
 const mapControlStyleProperty = makeStyles(theme => ({
   filterIconWrapperPproperty: {
