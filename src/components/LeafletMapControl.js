@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -21,6 +21,9 @@ import { theme } from './theme';
 
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
+
+import FilterModal from './FilterModal';
+import IntroModal from './IntroModal';
 
 const mapControlStyleProperty = makeStyles(theme => ({
   filterIconWrapperPproperty: {
@@ -77,6 +80,15 @@ const mapControlStyleProperty = makeStyles(theme => ({
 
 const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
   const classes = mapControlStyleProperty();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
@@ -108,30 +120,13 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
     </ThemeProvider>
   );
 
-  const filterSites = (
-    <ThemeProvider theme={theme.mapControl}>
-      <Tooltip
-        title="Filter Sites"
-        placement="right"
-        TransitionComponent={Fade}
-        TransitionProps={{ timeout: 200 }}
-      >
-        <ButtonStyle
-          buttonBorder={true}
-          setWiggle={true}
-          onClick={() => {
-            console.log('Filtering');
-          }}
-        >
-          <FilterListIcon />
-        </ButtonStyle>
-      </Tooltip>
-    </ThemeProvider>
-  );
-
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
-  const filterControl = <Box className={classes.filterIconWrapperPproperty}>{filterSites}</Box>;
+  const filterControl = (
+    <Box className={classes.filterIconWrapperPproperty}>
+      <FilterModal open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} />
+    </Box>
+  );
 
   const mapLegend = (
     <Paper className={classes.legendProperty}>
