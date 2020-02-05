@@ -47,13 +47,13 @@ const WrapperMetricCard = styled(Paper)`
 
 const cardStyle = makeStyles(theme => ({
   progress: {
-    margin: '39px',
-    width: '60px !important',
-    height: '60px !important',
+    margin: '37px',
+    width: '59px !important',
+    height: '59px !important',
     [theme.breakpoints.down('sm')]: {
-      margin: '7px',
-      width: '31px !important',
-      height: '31px !important'
+      margin: '6px',
+      width: '28px !important',
+      height: '28px !important'
     }
   }
 }));
