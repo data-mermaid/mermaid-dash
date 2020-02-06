@@ -91,11 +91,11 @@ class MermaidDash extends Component {
       } = await summary.get('sites/', {
         params: {
           limit: 1000,
+          country_name: countryName.join(','),
           geometry: {
             type: 'MultiPolygon',
             coordinates: [[bbox]]
-          },
-          country_name: countryName
+          }
         }
       });
 
