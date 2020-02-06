@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,19 +15,41 @@ import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import AutocompleteFilter from './AutocompleteFilter';
-import { countries, projects, organizations } from '../constants/sample-data';
+import { simpleCountries } from '../constants/sample-data';
 
-const AutocompleteInput = () => {
+const AutocompleteInput = ({ filterParams, addQueryStrings }) => {
   return (
     <>
-      <AutocompleteFilter label="Country" options={countries} />
-      <AutocompleteFilter label="Project" options={projects} />
-      <AutocompleteFilter label="Organization" options={organizations} />
+      <AutocompleteFilter
+        id="country-filter"
+        label="Country"
+        options={simpleCountries}
+        countryName={filterParams.country_name}
+        addQueryStrings={addQueryStrings}
+      />
     </>
   );
 };
 
-const FilterModal = ({ open, handleClickOpen, handleClose }) => {
+const FilterModal = ({ filterHandler, filterParams }) => {
+  const [open, setOpen] = useState(false);
+  const [queryStrings, setQueryStrings] = useState(filterParams);
+
+  const addQueryStrings = (property, options) => {
+    const params = { ...queryStrings };
+    params[property] = options;
+    setQueryStrings(params);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    filterHandler(queryStrings);
+  };
+
   const filterSites = (
     <ThemeProvider theme={theme.mapControl}>
       <Tooltip
@@ -51,7 +73,7 @@ const FilterModal = ({ open, handleClickOpen, handleClose }) => {
           <DialogText dialogTitle={true}>Filter</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
-          <AutocompleteInput>{'Country'}</AutocompleteInput>
+          <AutocompleteInput filterParams={filterParams} addQueryStrings={addQueryStrings} />
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Box from '@material-ui/core/Box';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -75,17 +75,13 @@ const mapControlStyleProperty = makeStyles(theme => ({
   }
 }));
 
-const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
+const LeafletMapControl = ({
+  fullMapZoomHandler,
+  zoomToSiteHandler,
+  filterHandler,
+  filterParams
+}) => {
   const classes = mapControlStyleProperty();
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
@@ -121,7 +117,7 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
   const filterControl = (
     <Box className={classes.filterIconWrapperPproperty}>
-      <FilterModal open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} />
+      <FilterModal filterHandler={filterHandler} filterParams={filterParams} />
     </Box>
   );
 

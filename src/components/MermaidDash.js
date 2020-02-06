@@ -57,18 +57,33 @@ class MermaidDash extends Component {
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
-    dragPanelPosition: { x: 0, y: -175 }
+    dragPanelPosition: { x: 0, y: -175 },
+    filterParams: { country_name: [], project: [] }
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { bbox, metrics, histogram } = this.state;
-    const { metrics: prevMetrics, bbox: prevBbox } = prevState;
+    const {
+      bbox,
+      metrics,
+      histogram,
+      filterParams: { country_name: countryName }
+    } = this.state;
+    const {
+      metrics: prevMetrics,
+      bbox: prevBbox,
+      filterParams: { country_name: prevCountryName }
+    } = prevState;
+
     const prevMetricCountriesCount = prevMetrics[0].count;
     const prevMetricProjectsCount = prevMetrics[1].count;
     const prevMetricUsersCount = prevMetrics[2].count;
     const prevMetricSitesCount = prevMetrics[3].count;
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
+
+    if (countryName !== prevCountryName) {
+      this.filterUpdate();
+    }
 
     if (bbox !== prevBbox) {
       const {
@@ -79,7 +94,8 @@ class MermaidDash extends Component {
           geometry: {
             type: 'MultiPolygon',
             coordinates: [[bbox]]
-          }
+          },
+          country_name: countryName
         }
       });
 
@@ -120,17 +136,17 @@ class MermaidDash extends Component {
   }
 
   async componentDidMount() {
+    const { metrics, histogram, filterParams } = this.state;
+    const params = new URLSearchParams(this.props.location.search);
+    const countryName = params.get('country_name');
+    const paramsObj = { limit: 1000, country_name: countryName };
+
     const {
       data: { features: sites }
-    } = await summary.get('/sites/?limit=1000');
-    // const {
-    //   data: { features: siteCountries }
-    // } = await summary.get('/sites/?limit=1000&country_name=Fiji');
+    } = await summary.get('/sites/', {
+      params: paramsObj
+    });
 
-    // console.log(siteCountries);
-    console.log(this);
-
-    const { metrics, histogram } = this.state;
     const barchartResult = this.histogramCount(sites, histogram);
 
     metrics[0].count = this.getCount(sites, 'country_name');
@@ -140,12 +156,16 @@ class MermaidDash extends Component {
     metrics[4].count = this.getTransectCount(sites, 'protocols');
     metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
 
+    if (countryName) {
+      filterParams.country_name.push(countryName);
+    }
+
     for (let i = 0; i < barchartResult.length; i++) {
       histogram[i].y = barchartResult[i];
       histogram[i].label = barchartResult[i];
     }
 
-    this.setState({ histogram, sites, metrics });
+    this.setState({ histogram, sites, metrics, filterParams });
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
   }
@@ -398,6 +418,26 @@ class MermaidDash extends Component {
     return sites.filter(site => site.id === siteId)[0];
   }
 
+  filterHandler = params => {
+    const newCountryParams = { ...this.state.filterParams };
+    newCountryParams.country_name = params.country_name;
+    this.setState({ filterParams: newCountryParams });
+  };
+
+  filterUpdate = () => {
+    const countryProperty = Object.entries(this.state.filterParams)[0];
+
+    const queryStrings =
+      countryProperty[1].length === 0 ? `` : `?${countryProperty[0]}=${countryProperty[1][0]}`;
+
+    this.props.history.push({
+      pathname: '/',
+      search: queryStrings
+    });
+
+    window.location.reload();
+  };
+
   render() {
     return (
       <>
@@ -419,6 +459,8 @@ class MermaidDash extends Component {
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
+          filterHandler={this.filterHandler}
+          filterParams={this.state.filterParams}
         />
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}
