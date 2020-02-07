@@ -157,7 +157,7 @@ class MermaidDash extends Component {
     metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
 
     if (countryName) {
-      filterParams.country_name.push(countryName);
+      filterParams.country_name = countryName.split(',');
     }
 
     for (let i = 0; i < barchartResult.length; i++) {
@@ -428,7 +428,9 @@ class MermaidDash extends Component {
     const countryProperty = Object.entries(this.state.filterParams)[0];
 
     const queryStrings =
-      countryProperty[1].length === 0 ? `` : `?${countryProperty[0]}=${countryProperty[1][0]}`;
+      countryProperty[1].length === 0
+        ? ``
+        : `?${countryProperty[0]}=${countryProperty[1].join(',')}`;
 
     this.props.history.push({
       pathname: '/',
