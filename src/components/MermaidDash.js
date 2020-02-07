@@ -59,7 +59,7 @@ class MermaidDash extends Component {
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
     dragPanelPosition: { x: 0, y: -175 },
-    filterParams: { country_name: [], project_id: [] },
+    filterParams: { country_name: [], project_id: [], date_min_after: '', date_max_before: '' },
     filterChoices: { countries: [], projects: [] }
   };
 
@@ -68,12 +68,16 @@ class MermaidDash extends Component {
       bbox,
       metrics,
       histogram,
-      filterParams: { country_name: countryName, project_id: projectId }
+      filterParams: { country_name: countryName, project_id: projectId, date_min_after: dateMin }
     } = this.state;
     const {
       metrics: prevMetrics,
       bbox: prevBbox,
-      filterParams: { country_name: prevCountryName, project_id: prevProjectId }
+      filterParams: {
+        country_name: prevCountryName,
+        project_id: prevProjectId,
+        date_min_after: prevDateMin
+      }
     } = prevState;
 
     const prevMetricCountriesCount = prevMetrics[0].count;
@@ -83,7 +87,7 @@ class MermaidDash extends Component {
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
 
-    if (countryName !== prevCountryName || projectId !== prevProjectId) {
+    if (countryName !== prevCountryName || projectId !== prevProjectId || dateMin !== prevDateMin) {
       this.filterUpdate();
     }
 
@@ -95,6 +99,7 @@ class MermaidDash extends Component {
           limit: 1000,
           country_name: countryName.join(','),
           project_id: projectId.join(','),
+          date_min_after: dateMin && `${dateMin}-01-01`,
           geometry: {
             type: 'MultiPolygon',
             coordinates: [[bbox]]
@@ -143,10 +148,13 @@ class MermaidDash extends Component {
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
     const projectId = params.get('project_id');
+    const dateMin = params.get('date_min_after');
+
     const paramsObj = {
       limit: 1000,
       country_name: countryName,
-      project_id: projectId
+      project_id: projectId,
+      date_min_after: dateMin
     };
 
     const {
@@ -179,6 +187,9 @@ class MermaidDash extends Component {
 
     if (projectId) {
       filterParams.project_id = projectId.split(',');
+    }
+    if (dateMin) {
+      filterParams.date_min_after = dateMin.split('-')[0];
     }
 
     for (let i = 0; i < barchartResult.length; i++) {
@@ -443,6 +454,7 @@ class MermaidDash extends Component {
     const newParams = { ...this.state.filterParams };
     newParams.country_name = params.country_name;
     newParams.project_id = params.project_id;
+    newParams.date_min_after = params.date_min_after;
     this.setState({ filterParams: newParams });
   };
 
@@ -450,6 +462,7 @@ class MermaidDash extends Component {
     const queryStrings = [];
     const countryProperty = Object.entries(this.state.filterParams)[0];
     const projectIdProperty = Object.entries(this.state.filterParams)[1];
+    const dateMinProperty = Object.entries(this.state.filterParams)[2];
 
     if (countryProperty[1].length > 0) {
       const countryQueryStrings = [countryProperty[0], countryProperty[1].join(',')].join('=');
@@ -461,6 +474,11 @@ class MermaidDash extends Component {
         '='
       );
       queryStrings.push(projectIdQueryStrings);
+    }
+
+    if (dateMinProperty[1].length > 0) {
+      const dateMinQueryStrings = [dateMinProperty[0], `${dateMinProperty[1]}-01-01`].join('=');
+      queryStrings.push(dateMinQueryStrings);
     }
 
     this.props.history.push({

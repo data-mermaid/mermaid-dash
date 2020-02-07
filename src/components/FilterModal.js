@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import TextField from '@material-ui/core/TextField';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import { DialogText } from '../styles/MermaidStyledComponents';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { ThemeProvider } from 'styled-components/macro';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
@@ -15,6 +17,13 @@ import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import AutocompleteFilter from './AutocompleteFilter';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
+}));
 
 const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => {
   const country_names = filterChoices.countries.map(country => country.name);
@@ -50,6 +59,26 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
   );
 };
 
+const DateInput = ({ filterParams, addQueryStrings }) => {
+  const classes = useStyles();
+  const [dateVal, setDateVal] = useState(filterParams.date_min_after);
+
+  return (
+    <form className={classes.root} noValidate autoComplete="off">
+      <TextField
+        id="start-year-input"
+        label="Start year"
+        value={dateVal}
+        onChange={event => {
+          setDateVal(event.target.value);
+          addQueryStrings('date_min_after', event.target.value);
+        }}
+      />
+      <TextField id="end-year-input" label="End year" />
+    </form>
+  );
+};
+
 const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
   const [open, setOpen] = useState(false);
   const [queryStrings, setQueryStrings] = useState(filterParams);
@@ -72,7 +101,6 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
     } else {
       params[property] = options;
     }
-
     setQueryStrings(params);
   };
 
@@ -103,9 +131,9 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
   return (
     <>
       {filterSites}
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={open} aria-labelledby="form-dialog-title">
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>Filter</DialogText>
+          <DialogText dialogTitle={true}>Filter By</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
           <AutocompleteInput
@@ -113,10 +141,11 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
           />
+          <DateInput filterParams={filterParams} addQueryStrings={addQueryStrings} />
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">
-            Filter
+            Done
           </Button>
         </MuiDialogActions>
       </Dialog>
