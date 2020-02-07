@@ -61,20 +61,29 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
 
 const DateInput = ({ filterParams, addQueryStrings }) => {
   const classes = useStyles();
-  const [dateVal, setDateVal] = useState(filterParams.date_min_after);
+  const [dateMinVal, setDateMinVal] = useState(filterParams.date_min_after);
+  const [dateMaxVal, setDateMaxVal] = useState(filterParams.date_max_before);
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <TextField
         id="start-year-input"
         label="Start year"
-        value={dateVal}
+        value={dateMinVal}
         onChange={event => {
-          setDateVal(event.target.value);
+          setDateMinVal(event.target.value);
           addQueryStrings('date_min_after', event.target.value);
         }}
       />
-      <TextField id="end-year-input" label="End year" />
+      <TextField
+        id="end-year-input"
+        label="End year"
+        value={dateMaxVal}
+        onChange={event => {
+          setDateMaxVal(event.target.value);
+          addQueryStrings('date_max_before', event.target.value);
+        }}
+      />
     </form>
   );
 };

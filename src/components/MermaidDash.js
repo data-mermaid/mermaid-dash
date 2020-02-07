@@ -68,7 +68,12 @@ class MermaidDash extends Component {
       bbox,
       metrics,
       histogram,
-      filterParams: { country_name: countryName, project_id: projectId, date_min_after: dateMin }
+      filterParams: {
+        country_name: countryName,
+        project_id: projectId,
+        date_min_after: dateMin,
+        date_max_before: dateMax
+      }
     } = this.state;
     const {
       metrics: prevMetrics,
@@ -76,7 +81,8 @@ class MermaidDash extends Component {
       filterParams: {
         country_name: prevCountryName,
         project_id: prevProjectId,
-        date_min_after: prevDateMin
+        date_min_after: prevDateMin,
+        date_max_before: prevDateMax
       }
     } = prevState;
 
@@ -87,7 +93,12 @@ class MermaidDash extends Component {
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
 
-    if (countryName !== prevCountryName || projectId !== prevProjectId || dateMin !== prevDateMin) {
+    if (
+      countryName !== prevCountryName ||
+      projectId !== prevProjectId ||
+      dateMin !== prevDateMin ||
+      dateMax !== prevDateMax
+    ) {
       this.filterUpdate();
     }
 
@@ -100,6 +111,7 @@ class MermaidDash extends Component {
           country_name: countryName.join(','),
           project_id: projectId.join(','),
           date_min_after: dateMin && `${dateMin}-01-01`,
+          date_max_before: dateMax && `${dateMax}-12-31`,
           geometry: {
             type: 'MultiPolygon',
             coordinates: [[bbox]]
@@ -149,12 +161,14 @@ class MermaidDash extends Component {
     const countryName = params.get('country_name');
     const projectId = params.get('project_id');
     const dateMin = params.get('date_min_after');
+    const dateMax = params.get('date_max_before');
 
     const paramsObj = {
       limit: 1000,
       country_name: countryName,
       project_id: projectId,
-      date_min_after: dateMin
+      date_min_after: dateMin,
+      date_max_before: dateMax
     };
 
     const {
@@ -188,8 +202,13 @@ class MermaidDash extends Component {
     if (projectId) {
       filterParams.project_id = projectId.split(',');
     }
+
     if (dateMin) {
       filterParams.date_min_after = dateMin.split('-')[0];
+    }
+
+    if (dateMax) {
+      filterParams.date_max_before = dateMax.split('-')[0];
     }
 
     for (let i = 0; i < barchartResult.length; i++) {
@@ -455,6 +474,7 @@ class MermaidDash extends Component {
     newParams.country_name = params.country_name;
     newParams.project_id = params.project_id;
     newParams.date_min_after = params.date_min_after;
+    newParams.date_max_before = params.date_max_before;
     this.setState({ filterParams: newParams });
   };
 
@@ -463,22 +483,22 @@ class MermaidDash extends Component {
     const countryProperty = Object.entries(this.state.filterParams)[0];
     const projectIdProperty = Object.entries(this.state.filterParams)[1];
     const dateMinProperty = Object.entries(this.state.filterParams)[2];
+    const dateMaxProperty = Object.entries(this.state.filterParams)[3];
 
     if (countryProperty[1].length > 0) {
-      const countryQueryStrings = [countryProperty[0], countryProperty[1].join(',')].join('=');
-      queryStrings.push(countryQueryStrings);
+      queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
     }
 
     if (projectIdProperty[1].length > 0) {
-      const projectIdQueryStrings = [projectIdProperty[0], projectIdProperty[1].join(',')].join(
-        '='
-      );
-      queryStrings.push(projectIdQueryStrings);
+      queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='));
     }
 
     if (dateMinProperty[1].length > 0) {
-      const dateMinQueryStrings = [dateMinProperty[0], `${dateMinProperty[1]}-01-01`].join('=');
-      queryStrings.push(dateMinQueryStrings);
+      queryStrings.push([dateMinProperty[0], `${dateMinProperty[1]}-01-01`].join('='));
+    }
+
+    if (dateMaxProperty[1].length > 0) {
+      queryStrings.push([dateMaxProperty[0], `${dateMaxProperty[1]}-12-31`].join('='));
     }
 
     this.props.history.push({
