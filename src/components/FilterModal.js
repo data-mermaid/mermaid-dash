@@ -22,6 +22,9 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     justifyContent: 'space-between'
+  },
+  textFieldStyle: {
+    marginRight: 10
   }
 }));
 
@@ -70,6 +73,7 @@ const DateInput = ({ filterParams, addQueryStrings }) => {
         id="start-year-input"
         label="Start year"
         value={dateMinVal}
+        className={classes.textFieldStyle}
         onChange={event => {
           setDateMinVal(event.target.value);
           addQueryStrings('date_min_after', event.target.value);
