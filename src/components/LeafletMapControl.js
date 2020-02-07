@@ -79,7 +79,8 @@ const LeafletMapControl = ({
   fullMapZoomHandler,
   zoomToSiteHandler,
   filterHandler,
-  filterParams
+  filterParams,
+  filterChoices
 }) => {
   const classes = mapControlStyleProperty();
 
@@ -117,7 +118,11 @@ const LeafletMapControl = ({
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
   const filterControl = (
     <Box className={classes.filterIconWrapperPproperty}>
-      <FilterModal filterHandler={filterHandler} filterParams={filterParams} />
+      <FilterModal
+        filterHandler={filterHandler}
+        filterParams={filterParams}
+        filterChoices={filterChoices}
+      />
     </Box>
   );
 

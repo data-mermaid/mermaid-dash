@@ -15,29 +15,64 @@ import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 import AutocompleteFilter from './AutocompleteFilter';
-import { simpleCountries } from '../constants/sample-data';
 
-const AutocompleteInput = ({ filterParams, addQueryStrings }) => {
+const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => {
+  const country_names = filterChoices.countries.map(country => country.name);
+  const project_names = filterChoices.projects.map(project => project.name);
+
+  const convertToName = id => {
+    const result = filterChoices.projects.reduce((newArr, obj) => {
+      if (id.includes(obj.id)) {
+        newArr.push(obj.name);
+      }
+      return newArr;
+    }, []);
+    return result;
+  };
+
   return (
     <>
       <AutocompleteFilter
-        id="country-filter"
+        id="country_name"
         label="Country"
-        options={simpleCountries}
-        countryName={filterParams.country_name}
+        options={country_names}
+        preFilledValues={filterParams.country_name}
+        addQueryStrings={addQueryStrings}
+      />
+      <AutocompleteFilter
+        id="project_id"
+        label="Project"
+        options={project_names}
+        preFilledValues={convertToName(filterParams.project_id)}
         addQueryStrings={addQueryStrings}
       />
     </>
   );
 };
 
-const FilterModal = ({ filterHandler, filterParams }) => {
+const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
   const [open, setOpen] = useState(false);
   const [queryStrings, setQueryStrings] = useState(filterParams);
 
+  const convertToId = name => {
+    const result = filterChoices.projects.reduce((newArr, obj) => {
+      if (name.includes(obj.name)) {
+        newArr.push(obj.id);
+      }
+      return newArr;
+    }, []);
+    return result;
+  };
+
   const addQueryStrings = (property, options) => {
     const params = { ...queryStrings };
-    params[property] = options;
+
+    if (property === 'project_id') {
+      params[property] = convertToId(options);
+    } else {
+      params[property] = options;
+    }
+
     setQueryStrings(params);
   };
 
@@ -73,7 +108,11 @@ const FilterModal = ({ filterHandler, filterParams }) => {
           <DialogText dialogTitle={true}>Filter</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
-          <AutocompleteInput filterParams={filterParams} addQueryStrings={addQueryStrings} />
+          <AutocompleteInput
+            filterParams={filterParams}
+            addQueryStrings={addQueryStrings}
+            filterChoices={filterChoices}
+          />
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">

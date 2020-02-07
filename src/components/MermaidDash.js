@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import summary from '../apis/summary';
+import choices from '../apis/choices';
 import '../customStyles.css';
 import * as leafletProperty from '../constants/leaflet-properties';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -58,7 +59,8 @@ class MermaidDash extends Component {
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
     dragPanelPosition: { x: 0, y: -175 },
-    filterParams: { country_name: [], project: [] }
+    filterParams: { country_name: [], project_id: [] },
+    filterChoices: { countries: [], projects: [] }
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -66,12 +68,12 @@ class MermaidDash extends Component {
       bbox,
       metrics,
       histogram,
-      filterParams: { country_name: countryName }
+      filterParams: { country_name: countryName, project_id: projectId }
     } = this.state;
     const {
       metrics: prevMetrics,
       bbox: prevBbox,
-      filterParams: { country_name: prevCountryName }
+      filterParams: { country_name: prevCountryName, project_id: prevProjectId }
     } = prevState;
 
     const prevMetricCountriesCount = prevMetrics[0].count;
@@ -81,7 +83,7 @@ class MermaidDash extends Component {
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
 
-    if (countryName !== prevCountryName) {
+    if (countryName !== prevCountryName || projectId !== prevProjectId) {
       this.filterUpdate();
     }
 
@@ -92,6 +94,7 @@ class MermaidDash extends Component {
         params: {
           limit: 1000,
           country_name: countryName.join(','),
+          project_id: projectId.join(','),
           geometry: {
             type: 'MultiPolygon',
             coordinates: [[bbox]]
@@ -136,10 +139,15 @@ class MermaidDash extends Component {
   }
 
   async componentDidMount() {
-    const { metrics, histogram, filterParams } = this.state;
+    const { metrics, histogram, filterParams, filterChoices } = this.state;
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
-    const paramsObj = { limit: 1000, country_name: countryName };
+    const projectId = params.get('project_id');
+    const paramsObj = {
+      limit: 1000,
+      country_name: countryName,
+      project_id: projectId
+    };
 
     const {
       data: { features: sites }
@@ -147,6 +155,15 @@ class MermaidDash extends Component {
       params: paramsObj
     });
 
+    const {
+      data: { results: projects }
+    } = await choices.get('/projects/?showall&limit=1000');
+
+    const { data: choices_data } = await choices.get('/choices');
+    const country_list = this.fetchChoices('countries', choices_data);
+
+    filterChoices.countries = country_list;
+    filterChoices.projects = projects;
     const barchartResult = this.histogramCount(sites, histogram);
 
     metrics[0].count = this.getCount(sites, 'country_name');
@@ -160,12 +177,16 @@ class MermaidDash extends Component {
       filterParams.country_name = countryName.split(',');
     }
 
+    if (projectId) {
+      filterParams.project_id = projectId.split(',');
+    }
+
     for (let i = 0; i < barchartResult.length; i++) {
       histogram[i].y = barchartResult[i];
       histogram[i].label = barchartResult[i];
     }
 
-    this.setState({ histogram, sites, metrics, filterParams });
+    this.setState({ histogram, sites, metrics, filterParams, filterChoices });
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
   }
@@ -419,25 +440,48 @@ class MermaidDash extends Component {
   }
 
   filterHandler = params => {
-    const newCountryParams = { ...this.state.filterParams };
-    newCountryParams.country_name = params.country_name;
-    this.setState({ filterParams: newCountryParams });
+    const newParams = { ...this.state.filterParams };
+    newParams.country_name = params.country_name;
+    newParams.project_id = params.project_id;
+    this.setState({ filterParams: newParams });
   };
 
   filterUpdate = () => {
+    const queryStrings = [];
     const countryProperty = Object.entries(this.state.filterParams)[0];
+    const projectIdProperty = Object.entries(this.state.filterParams)[1];
 
-    const queryStrings =
-      countryProperty[1].length === 0
-        ? ``
-        : `?${countryProperty[0]}=${countryProperty[1].join(',')}`;
+    if (countryProperty[1].length > 0) {
+      const countryQueryStrings = [countryProperty[0], countryProperty[1].join(',')].join('=');
+      queryStrings.push(countryQueryStrings);
+    }
+
+    if (projectIdProperty[1].length > 0) {
+      const projectIdQueryStrings = [projectIdProperty[0], projectIdProperty[1].join(',')].join(
+        '='
+      );
+      queryStrings.push(projectIdQueryStrings);
+    }
 
     this.props.history.push({
       pathname: '/',
-      search: queryStrings
+      search: '?' + queryStrings.join('&')
     });
 
     window.location.reload();
+  };
+
+  fetchChoices = (choice_name, choices) => {
+    return choices
+      .reduce((newArray, obj) => {
+        if (obj.name === choice_name) {
+          newArray = obj.data;
+        }
+        return newArray;
+      }, [])
+      .map(val => {
+        return { id: val.id, name: val.name };
+      });
   };
 
   render() {
@@ -463,6 +507,7 @@ class MermaidDash extends Component {
           zoomToSiteHandler={this.zoomToSiteHandler}
           filterHandler={this.filterHandler}
           filterParams={this.state.filterParams}
+          filterChoices={this.state.filterChoices}
         />
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}

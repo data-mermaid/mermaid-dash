@@ -14,9 +14,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AutocompleteFilter = ({ id, label, options, countryName, addQueryStrings }) => {
+const AutocompleteFilter = ({ id, label, options, preFilledValues, addQueryStrings }) => {
   const classes = useStyles();
-  const [value, setValue] = useState(countryName);
+  const [value, setValue] = useState(preFilledValues);
 
   return (
     <div className={classes.root}>
@@ -27,7 +27,7 @@ const AutocompleteFilter = ({ id, label, options, countryName, addQueryStrings }
         value={value}
         onChange={(event, val) => {
           setValue(val);
-          addQueryStrings('country_name', val);
+          addQueryStrings(id, val);
         }}
         filterSelectedOptions
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
