@@ -123,6 +123,10 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleFilter = () => {
+    setOpen(false);
     filterHandler(queryStrings);
   };
 
@@ -158,6 +162,9 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleFilter} color="primary">
             Done
           </Button>
         </MuiDialogActions>
