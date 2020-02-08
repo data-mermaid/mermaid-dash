@@ -23,7 +23,20 @@ import PropTypes from 'prop-types';
 import FilterModal from './FilterModal';
 
 const mapControlStyleProperty = makeStyles(theme => ({
-  filterIconWrapperPproperty: {
+  numberOfFilteredSitesWrapperProperty: {
+    position: 'fixed',
+    top: 242,
+    width: 32,
+    left: 11,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '0 0 4px 4px',
+    fontSize: '80%',
+    zIndex: 1000,
+    backgroundColor: '#F4F4F4'
+  },
+  filterIconWrapperProperty: {
     position: 'fixed',
     top: 210,
     left: 11,
@@ -80,7 +93,9 @@ const LeafletMapControl = ({
   zoomToSiteHandler,
   filterHandler,
   filterParams,
-  filterChoices
+  filterChoices,
+  showFilterNumbers,
+  numberOfFilteredSites
 }) => {
   const classes = mapControlStyleProperty();
 
@@ -117,13 +132,17 @@ const LeafletMapControl = ({
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
   const filterControl = (
-    <Box className={classes.filterIconWrapperPproperty}>
+    <Box className={classes.filterIconWrapperProperty}>
       <FilterModal
         filterHandler={filterHandler}
         filterParams={filterParams}
         filterChoices={filterChoices}
+        showFilterNumbers={showFilterNumbers}
       />
     </Box>
+  );
+  const numberFiltered = showFilterNumbers && (
+    <Box className={classes.numberOfFilteredSitesWrapperProperty}>{numberOfFilteredSites}</Box>
   );
 
   const mapLegend = (
@@ -158,6 +177,7 @@ const LeafletMapControl = ({
       {fullMapControl}
       {zoomToControl}
       {filterControl}
+      {numberFiltered}
       {mapLegend}
     </div>
   );

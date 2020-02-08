@@ -92,7 +92,7 @@ const DateInput = ({ filterParams, addQueryStrings }) => {
   );
 };
 
-const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
+const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNumbers }) => {
   const [open, setOpen] = useState(false);
   const [queryStrings, setQueryStrings] = useState(filterParams);
 
@@ -138,7 +138,12 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices }) => {
         TransitionComponent={Fade}
         TransitionProps={{ timeout: 200 }}
       >
-        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={handleClickOpen}>
+        <ButtonStyle
+          buttonBorder={!showFilterNumbers}
+          filterButton={showFilterNumbers}
+          setWiggle={true}
+          onClick={handleClickOpen}
+        >
           <FilterListIcon />
         </ButtonStyle>
       </Tooltip>

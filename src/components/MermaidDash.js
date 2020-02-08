@@ -60,7 +60,8 @@ class MermaidDash extends Component {
     mobileDisplay: window.innerWidth < 960,
     dragPanelPosition: { x: 0, y: -175 },
     filterParams: { country_name: [], project_id: [], date_min_after: '', date_max_before: '' },
-    filterChoices: { countries: [], projects: [] }
+    filterChoices: { countries: [], projects: [] },
+    showFilterNumbers: false
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -162,6 +163,7 @@ class MermaidDash extends Component {
     const projectId = params.get('project_id');
     const dateMin = params.get('date_min_after');
     const dateMax = params.get('date_max_before');
+    const queryStringsFound = countryName || projectId || dateMin || dateMax ? true : false;
 
     const paramsObj = {
       limit: 1000,
@@ -216,7 +218,14 @@ class MermaidDash extends Component {
       histogram[i].label = barchartResult[i];
     }
 
-    this.setState({ histogram, sites, metrics, filterParams, filterChoices });
+    this.setState({
+      histogram,
+      sites,
+      metrics,
+      filterParams,
+      filterChoices,
+      showFilterNumbers: queryStringsFound
+    });
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
   }
@@ -546,6 +555,8 @@ class MermaidDash extends Component {
           filterHandler={this.filterHandler}
           filterParams={this.state.filterParams}
           filterChoices={this.state.filterChoices}
+          showFilterNumbers={this.state.showFilterNumbers}
+          numberOfFilteredSites={this.state.sites.length}
         />
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}
