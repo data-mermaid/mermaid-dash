@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -18,8 +20,8 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 import AutocompleteFilter from './AutocompleteFilter';
 
-const useStyles = makeStyles(theme => ({
-  root: {
+const dateInputStyles = makeStyles(theme => ({
+  formStyle: {
     display: 'flex',
     justifyContent: 'space-between'
   },
@@ -62,39 +64,102 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
   );
 };
 
-const DateInput = ({ filterParams, addQueryStrings }) => {
-  const classes = useStyles();
+const DateInput = ({
+  filterParams,
+  addQueryStrings,
+  startYearValidation,
+  endYearValidation,
+  checkStartYear,
+  checkEndYear,
+  checkEndYearGreater
+}) => {
+  const classes = dateInputStyles();
   const [dateMinVal, setDateMinVal] = useState(filterParams.date_min_after);
   const [dateMaxVal, setDateMaxVal] = useState(filterParams.date_max_before);
+  const endYearGreaterThanStartYear =
+    !startYearValidation && !endYearValidation && dateMinVal > dateMaxVal;
+
+  const dateValidation = endYearGreaterThanStartYear && (
+    <FormHelperText id="year-validation-text">Start Year is greater than End Year</FormHelperText>
+  );
+
+  checkEndYearGreater(endYearGreaterThanStartYear);
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
-      <TextField
-        id="start-year-input"
-        label="Start year"
-        value={dateMinVal}
-        className={classes.textFieldStyle}
-        onChange={event => {
-          setDateMinVal(event.target.value);
-          addQueryStrings('date_min_after', event.target.value);
-        }}
-      />
-      <TextField
-        id="end-year-input"
-        label="End year"
-        value={dateMaxVal}
-        onChange={event => {
-          setDateMaxVal(event.target.value);
-          addQueryStrings('date_max_before', event.target.value);
-        }}
-      />
-    </form>
+    <>
+      <FormControl error>
+        <form className={classes.formStyle} noValidate autoComplete="off">
+          <TextField
+            error={startYearValidation}
+            helperText={startYearValidation && 'Incorrect entry!'}
+            id="start-year-input"
+            label="Start year"
+            value={dateMinVal}
+            className={classes.textFieldStyle}
+            onChange={event => {
+              setDateMinVal(event.target.value);
+              addQueryStrings('date_min_after', event.target.value);
+              checkStartYear(event.target.value);
+            }}
+          />
+          <TextField
+            error={endYearValidation}
+            helperText={endYearValidation && 'Incorrect entry!'}
+            id="end-year-input"
+            label="End year"
+            value={dateMaxVal}
+            onChange={event => {
+              setDateMaxVal(event.target.value);
+              addQueryStrings('date_max_before', event.target.value);
+              checkEndYear(event.target.value);
+            }}
+          />
+        </form>
+        {dateValidation}
+      </FormControl>
+    </>
   );
 };
 
 const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNumbers }) => {
+  const isNumericAndEmpty = n => {
+    if (n.length === 0) {
+      return true;
+    }
+    return !isNaN(parseFloat(n)) && isFinite(n);
+  };
+
   const [open, setOpen] = useState(false);
   const [queryStrings, setQueryStrings] = useState(filterParams);
+  const [startYearValidation, setStartYearValidation] = useState(
+    !isNumericAndEmpty(filterParams.date_min_after)
+  );
+  const [endYearValidation, setEndYearValidation] = useState(
+    !isNumericAndEmpty(filterParams.date_max_before)
+  );
+  const [endYearGreater, setEndYearGreater] = useState(
+    !(filterParams.date_min_after > filterParams.date_max_before)
+  );
+
+  const checkStartYear = input => {
+    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input)) {
+      setStartYearValidation(false);
+    } else {
+      setStartYearValidation(true);
+    }
+  };
+
+  const checkEndYear = input => {
+    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input)) {
+      setEndYearValidation(false);
+    } else {
+      setEndYearValidation(true);
+    }
+  };
+
+  const checkEndYearGreater = option => {
+    setEndYearGreater(option);
+  };
 
   const convertToId = name => {
     const result = filterChoices.projects.reduce((newArr, obj) => {
@@ -123,6 +188,8 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
 
   const handleClose = () => {
     setOpen(false);
+    setStartYearValidation(false);
+    setEndYearValidation(false);
   };
 
   const handleFilter = () => {
@@ -163,13 +230,25 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
           />
-          <DateInput filterParams={filterParams} addQueryStrings={addQueryStrings} />
+          <DateInput
+            filterParams={filterParams}
+            addQueryStrings={addQueryStrings}
+            startYearValidation={startYearValidation}
+            endYearValidation={endYearValidation}
+            checkStartYear={checkStartYear}
+            checkEndYear={checkEndYear}
+            checkEndYearGreater={checkEndYearGreater}
+          />
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleFilter} color="primary">
+          <Button
+            onClick={handleFilter}
+            color="primary"
+            disabled={startYearValidation || endYearValidation || endYearGreater}
+          >
             Done
           </Button>
         </MuiDialogActions>
