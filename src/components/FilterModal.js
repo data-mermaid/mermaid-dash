@@ -33,7 +33,7 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
   const [endYearValidation, setEndYearValidation] = useState(
     !isNumericAndEmpty(filterParams.date_max_before)
   );
-  const [endYearGreater, setEndYearGreater] = useState(false);
+  const [startYearGreaterThanEndYear, setEndYearGreater] = useState(false);
 
   const checkStartYear = input => {
     if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input)) {
@@ -144,7 +144,7 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
           <Button
             onClick={handleFilter}
             color="primary"
-            disabled={startYearValidation || endYearValidation || endYearGreater}
+            disabled={startYearValidation || endYearValidation || startYearGreaterThanEndYear}
           >
             Done
           </Button>

@@ -27,18 +27,18 @@ const DateInput = ({
   const classes = dateInputStyles();
   const [dateMinVal, setDateMinVal] = useState(filterParams.date_min_after);
   const [dateMaxVal, setDateMaxVal] = useState(filterParams.date_max_before);
-  const endYearGreaterThanStartYear =
+  const startYearGreaterThanEndYear =
     !startYearValidation &&
     !endYearValidation &&
     dateMaxVal.length > 0 &&
     dateMinVal.length > 0 &&
     dateMinVal > dateMaxVal;
 
-  const dateValidation = endYearGreaterThanStartYear && (
+  const dateValidation = startYearGreaterThanEndYear && (
     <FormHelperText id="year-validation-text">Start Year is greater than End Year</FormHelperText>
   );
 
-  checkEndYearGreater(endYearGreaterThanStartYear);
+  checkEndYearGreater(startYearGreaterThanEndYear);
 
   return (
     <>
