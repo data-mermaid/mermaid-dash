@@ -95,37 +95,38 @@ const LeafletMapControl = ({
   filterParams,
   filterChoices,
   showFilterNumbers,
-  numberOfFilteredSites
+  numberOfFilteredSites,
+  isFiltering
 }) => {
   const classes = mapControlStyleProperty();
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
-      <Tooltip
-        title="Zoom to Full"
-        placement="right"
-        TransitionComponent={Fade}
-        TransitionProps={{ timeout: 200 }}
-      >
-        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
+      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
+        <Tooltip
+          title="Zoom to Full"
+          placement="right"
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 200 }}
+        >
           <ZoomOutIcon />
-        </ButtonStyle>
-      </Tooltip>
+        </Tooltip>
+      </ButtonStyle>
     </ThemeProvider>
   );
 
   const zoomToSelectSite = (
     <ThemeProvider theme={theme.mapControl}>
-      <Tooltip
-        title="Zoom to Selected Site"
-        placement="right"
-        TransitionComponent={Fade}
-        TransitionProps={{ timeout: 200 }}
-      >
-        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+        <Tooltip
+          title="Zoom to Selected Site"
+          placement="right"
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 200 }}
+        >
           <CurrentSelectLocationIcon />
-        </ButtonStyle>
-      </Tooltip>
+        </Tooltip>
+      </ButtonStyle>
     </ThemeProvider>
   );
 
@@ -138,6 +139,7 @@ const LeafletMapControl = ({
         filterParams={filterParams}
         filterChoices={filterChoices}
         showFilterNumbers={showFilterNumbers}
+        isFiltering={isFiltering}
       />
     </Box>
   );

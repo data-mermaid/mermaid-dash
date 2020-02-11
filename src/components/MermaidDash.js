@@ -55,6 +55,7 @@ class MermaidDash extends Component {
     highlightMarker: null,
     highlightCluster: null,
     isLoading: false,
+    isFiltering: true,
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
@@ -246,7 +247,8 @@ class MermaidDash extends Component {
       metrics,
       filterParams,
       filterChoices,
-      showFilterNumbers: queryStringsFound
+      showFilterNumbers: queryStringsFound,
+      isFiltering: false
     });
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
@@ -585,6 +587,7 @@ class MermaidDash extends Component {
           filterChoices={this.state.filterChoices}
           showFilterNumbers={this.state.showFilterNumbers}
           numberOfFilteredSites={this.state.sites.length}
+          isFiltering={this.state.isFiltering}
         />
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}
