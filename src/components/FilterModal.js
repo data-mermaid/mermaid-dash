@@ -55,9 +55,9 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
     setEndYearGreater(option);
   };
 
-  const convertToId = name => {
-    const result = filterChoices.projects.reduce((newArr, obj) => {
-      if (name.includes(obj.name)) {
+  const convertToId = (names, filtered_options) => {
+    const result = filtered_options.reduce((newArr, obj) => {
+      if (names.includes(obj.name)) {
         newArr.push(obj.id);
       }
       return newArr;
@@ -69,7 +69,9 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
     const params = { ...queryStrings };
 
     if (property === 'project_id') {
-      params[property] = convertToId(options);
+      params[property] = convertToId(options, filterChoices.projects);
+    } else if (property === 'tag_id') {
+      params[property] = convertToId(options, filterChoices.tags);
     } else {
       params[property] = options;
     }
@@ -88,6 +90,7 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, showFilterNum
 
   const handleFilter = () => {
     setOpen(false);
+
     filterHandler(queryStrings);
   };
 

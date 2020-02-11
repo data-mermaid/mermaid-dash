@@ -59,8 +59,14 @@ class MermaidDash extends Component {
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
     dragPanelPosition: { x: 0, y: -175 },
-    filterParams: { country_name: [], project_id: [], date_min_after: '', date_max_before: '' },
-    filterChoices: { countries: [], projects: [] },
+    filterParams: {
+      country_name: [],
+      project_id: [],
+      tag_id: [],
+      date_min_after: '',
+      date_max_before: ''
+    },
+    filterChoices: { countries: [], projects: [], tags: [] },
     showFilterNumbers: false
   };
 
@@ -72,6 +78,7 @@ class MermaidDash extends Component {
       filterParams: {
         country_name: countryName,
         project_id: projectId,
+        tag_id: tagId,
         date_min_after: dateMin,
         date_max_before: dateMax
       }
@@ -82,6 +89,7 @@ class MermaidDash extends Component {
       filterParams: {
         country_name: prevCountryName,
         project_id: prevProjectId,
+        tag_id: prevTagId,
         date_min_after: prevDateMin,
         date_max_before: prevDateMax
       }
@@ -97,6 +105,7 @@ class MermaidDash extends Component {
     if (
       countryName !== prevCountryName ||
       projectId !== prevProjectId ||
+      tagId !== prevTagId ||
       dateMin !== prevDateMin ||
       dateMax !== prevDateMax
     ) {
@@ -111,6 +120,7 @@ class MermaidDash extends Component {
           limit: 1000,
           country_name: countryName.join(','),
           project_id: projectId.join(','),
+          tag_id: tagId.join(','),
           date_min_after: dateMin && `${dateMin}-01-01`,
           date_max_before: dateMax && `${dateMax}-12-31`,
           geometry: {
@@ -161,14 +171,17 @@ class MermaidDash extends Component {
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
     const projectId = params.get('project_id');
+    const tagId = params.get('tag_id');
     const dateMin = params.get('date_min_after');
     const dateMax = params.get('date_max_before');
-    const queryStringsFound = countryName || projectId || dateMin || dateMax ? true : false;
+    const queryStringsFound =
+      countryName || projectId || tagId || dateMin || dateMax ? true : false;
 
     const paramsObj = {
       limit: 1000,
       country_name: countryName,
       project_id: projectId,
+      tag_id: tagId,
       date_min_after: dateMin,
       date_max_before: dateMax
     };
@@ -179,15 +192,20 @@ class MermaidDash extends Component {
       params: paramsObj
     });
 
+    const { data: choices_data } = await choices.get('/choices');
     const {
       data: { results: projects }
     } = await choices.get('/projects/?showall&limit=1000');
 
-    const { data: choices_data } = await choices.get('/choices');
+    const {
+      data: { results: tags }
+    } = await choices.get('/projecttags');
+
     const country_list = this.fetchChoices('countries', choices_data);
 
     filterChoices.countries = country_list;
     filterChoices.projects = projects;
+    filterChoices.tags = tags;
     const barchartResult = this.histogramCount(sites, histogram);
 
     metrics[0].count = this.getCount(sites, 'country_name');
@@ -203,6 +221,10 @@ class MermaidDash extends Component {
 
     if (projectId) {
       filterParams.project_id = projectId.split(',');
+    }
+
+    if (tagId) {
+      filterParams.tag_id = tagId.split(',');
     }
 
     if (dateMin) {
@@ -482,6 +504,7 @@ class MermaidDash extends Component {
     const newParams = { ...this.state.filterParams };
     newParams.country_name = params.country_name;
     newParams.project_id = params.project_id;
+    newParams.tag_id = params.tag_id;
     newParams.date_min_after = params.date_min_after;
     newParams.date_max_before = params.date_max_before;
     this.setState({ filterParams: newParams });
@@ -491,8 +514,9 @@ class MermaidDash extends Component {
     const queryStrings = [];
     const countryProperty = Object.entries(this.state.filterParams)[0];
     const projectIdProperty = Object.entries(this.state.filterParams)[1];
-    const dateMinProperty = Object.entries(this.state.filterParams)[2];
-    const dateMaxProperty = Object.entries(this.state.filterParams)[3];
+    const tagIdProperty = Object.entries(this.state.filterParams)[2];
+    const dateMinProperty = Object.entries(this.state.filterParams)[3];
+    const dateMaxProperty = Object.entries(this.state.filterParams)[4];
 
     if (countryProperty[1].length > 0) {
       queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
@@ -500,6 +524,10 @@ class MermaidDash extends Component {
 
     if (projectIdProperty[1].length > 0) {
       queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='));
+    }
+
+    if (tagIdProperty[1].length > 0) {
+      queryStrings.push([tagIdProperty[0], tagIdProperty[1].join(',')].join('='));
     }
 
     if (dateMinProperty[1].length > 0) {
