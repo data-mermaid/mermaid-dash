@@ -61,9 +61,9 @@ const HeaderItems = headerContent.map(({ name, link }) => {
 
 const Header = () => {
   const classes = headerStyles();
-  const [open, setModalStage] = useState(true);
+  const [open, setModalStage] = useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
