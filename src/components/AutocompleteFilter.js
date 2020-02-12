@@ -36,11 +36,14 @@ const AutocompleteFilter = ({ id, label, options, preFilledValues, addQueryStrin
         renderOption={(option, { inputValue }) => {
           const matches = match(option, inputValue);
           const parts = parse(option, matches);
-
+          console.log(parts);
           return (
             <div>
               {parts.map((part, index) => (
-                <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                <span
+                  key={`dropdown-filter-list-${index}`}
+                  style={{ fontWeight: part.highlight ? 700 : 400 }}
+                >
                   {part.text}
                 </span>
               ))}
