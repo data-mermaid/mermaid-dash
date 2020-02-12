@@ -36,7 +36,7 @@ const AutocompleteFilter = ({ id, label, options, preFilledValues, addQueryStrin
         renderOption={(option, { inputValue }) => {
           const matches = match(option, inputValue);
           const parts = parse(option, matches);
-          console.log(parts);
+
           return (
             <div>
               {parts.map((part, index) => (
