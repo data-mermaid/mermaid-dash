@@ -2,17 +2,15 @@ import styled, { css } from 'styled-components/macro';
 
 export const ButtonStyle = styled('button')`
   color: ${props => props.theme.color};
-  border: 2px solid ${props => props.theme.borderColor};
   ${props =>
-    props.buttonBorder &&
-    css`
-      border-radius: 4px;
-    `};
-  ${props =>
-    props.filterButton &&
-    css`
-      border-radius: 4px 4px 0 0;
-    `};
+    props.buttonBorder
+      ? css`
+          border: 2px solid ${props => props.theme.borderColor};
+          border-radius: 4px;
+        `
+      : css`
+          border: none;
+        `}
   display: flex;
   flex-direction: ${props => props.theme.flexDirection};
   justify-content: center;

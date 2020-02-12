@@ -42,7 +42,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - *install_dependencies
-      - run: 
+      - run:
           name: Build
           command: |
               export REACT_APP_API_URL=https://summary-api.datamermaid.org;npm run build

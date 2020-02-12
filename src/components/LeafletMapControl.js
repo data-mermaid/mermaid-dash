@@ -20,28 +20,7 @@ import { theme } from './theme';
 
 import PropTypes from 'prop-types';
 
-import FilterModal from './FilterModal';
-
 const mapControlStyleProperty = makeStyles(theme => ({
-  numberOfFilteredSitesWrapperProperty: {
-    position: 'fixed',
-    top: 242,
-    width: 32,
-    left: 11,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '0 0 4px 4px',
-    fontSize: '80%',
-    zIndex: 1000,
-    backgroundColor: '#F4F4F4'
-  },
-  filterIconWrapperProperty: {
-    position: 'fixed',
-    top: 210,
-    left: 11,
-    zIndex: 1000
-  },
   zoomToIconWrapperProperty: {
     position: 'fixed',
     top: 170,
@@ -88,65 +67,41 @@ const mapControlStyleProperty = makeStyles(theme => ({
   }
 }));
 
-const LeafletMapControl = ({
-  fullMapZoomHandler,
-  zoomToSiteHandler,
-  filterHandler,
-  filterParams,
-  filterChoices,
-  showFilterNumbers,
-  numberOfFilteredSites,
-  isFiltering
-}) => {
+const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
   const classes = mapControlStyleProperty();
 
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
-      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
-        <Tooltip
-          title="Zoom to Full"
-          placement="right"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+      <Tooltip
+        title="Zoom to Full"
+        placement="right"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 200 }}
+      >
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
           <ZoomOutIcon />
-        </Tooltip>
-      </ButtonStyle>
+        </ButtonStyle>
+      </Tooltip>
     </ThemeProvider>
   );
 
   const zoomToSelectSite = (
     <ThemeProvider theme={theme.mapControl}>
-      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
-        <Tooltip
-          title="Zoom to Selected Site"
-          placement="right"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+      <Tooltip
+        title="Zoom to Selected Site"
+        placement="right"
+        TransitionComponent={Fade}
+        TransitionProps={{ timeout: 200 }}
+      >
+        <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
           <CurrentSelectLocationIcon />
-        </Tooltip>
-      </ButtonStyle>
+        </ButtonStyle>
+      </Tooltip>
     </ThemeProvider>
   );
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
-  const filterControl = (
-    <Box className={classes.filterIconWrapperProperty}>
-      <FilterModal
-        filterHandler={filterHandler}
-        filterParams={filterParams}
-        filterChoices={filterChoices}
-        showFilterNumbers={showFilterNumbers}
-        isFiltering={isFiltering}
-      />
-    </Box>
-  );
-  const numberFiltered = showFilterNumbers && (
-    <Box className={classes.numberOfFilteredSitesWrapperProperty}>{numberOfFilteredSites}</Box>
-  );
-
   const mapLegend = (
     <Paper className={classes.legendProperty}>
       <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>
@@ -178,8 +133,6 @@ const LeafletMapControl = ({
     <div>
       {fullMapControl}
       {zoomToControl}
-      {filterControl}
-      {numberFiltered}
       {mapLegend}
     </div>
   );
