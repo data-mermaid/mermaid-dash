@@ -193,10 +193,11 @@ class MermaidDash extends Component {
       params: paramsObj
     });
 
-    const { data: choices_data } = await choices.get('/choices');
     const {
       data: { results: projects }
-    } = await choices.get('/projects/?showall&limit=1000');
+    } = await choices.get('/projects/?showall&status=90&limit=1000');
+
+    const { data: choices_data } = await choices.get('/choices');
 
     const {
       data: { results: tags }
@@ -204,9 +205,9 @@ class MermaidDash extends Component {
 
     const country_list = this.fetchChoices('countries', choices_data);
 
-    filterChoices.countries = country_list;
+    filterChoices.countries = this.fetChNonTestProjectChoices(projects, 'countries', country_list);
     filterChoices.projects = projects;
-    filterChoices.tags = tags;
+    filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', tags);
     const barchartResult = this.histogramCount(sites, histogram);
 
     metrics[0].count = this.getCount(sites, 'country_name');
@@ -559,6 +560,20 @@ class MermaidDash extends Component {
       .map(val => {
         return { id: val.id, name: val.name };
       });
+  };
+
+  fetChNonTestProjectChoices = (projects, property, property_array) => {
+    const result = projects
+      .reduce((nonTestProject, project) => {
+        if (project[property].length !== 0) {
+          nonTestProject.push(project[property]);
+        }
+        return nonTestProject;
+      }, [])
+      .join(',')
+      .split(',');
+
+    return property_array.filter(value => [...new Set(result)].includes(value.name));
   };
 
   render() {
