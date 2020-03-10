@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import turfDistance from '@turf/distance';
+import { point } from '@turf/helpers';
 import summary from '../apis/summary';
 import choices from '../apis/choices';
 import '../customStyles.css';
@@ -145,8 +147,8 @@ class MermaidDash extends Component {
         metrics[2].count = this.getCount(sites, 'project_admins');
         this.setState({ metrics });
       }
-      if (prevMetricSitesCount !== sites.length) {
-        metrics[3].count = sites.length;
+      if (prevMetricSitesCount !== this.getUniqueSiteCount(sites)) {
+        metrics[3].count = this.getUniqueSiteCount(sites);
         this.setState({ metrics });
       }
       if (prevMetricTransectsCount !== this.getTransectCount(sites, 'protocols')) {
@@ -213,7 +215,7 @@ class MermaidDash extends Component {
     metrics[0].count = this.getCount(sites, 'country_name');
     metrics[1].count = this.getCount(sites, 'project_id');
     metrics[2].count = this.getCount(sites, 'project_admins');
-    metrics[3].count = sites.length;
+    metrics[3].count = this.getUniqueSiteCount(sites);
     metrics[4].count = this.getTransectCount(sites, 'protocols');
     metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
 
@@ -390,6 +392,30 @@ class MermaidDash extends Component {
     }
 
     return new Set(result).size;
+  }
+
+  calDistance(item1, item2) {
+    return turfDistance(point(item1), point(item2), { units: 'meters' });
+  }
+
+  getUniqueSiteCount(array) {
+    let duplicateCount = 0;
+    const totalSitesCount = array.length;
+    const coordinatesArr = array.map(({ geometry: { coordinates } }) => {
+      return coordinates;
+    });
+
+    for (let i = 0; i < totalSitesCount; i++) {
+      if (i !== totalSitesCount - 1) {
+        for (let y = i + 1; y < totalSitesCount; y++) {
+          if (this.calDistance(coordinatesArr[i], coordinatesArr[y]) < 150) {
+            duplicateCount += 1;
+          }
+        }
+      }
+    }
+
+    return totalSitesCount - duplicateCount;
   }
 
   getTransectCount(array, key) {
