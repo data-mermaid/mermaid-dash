@@ -405,12 +405,11 @@ class MermaidDash extends Component {
       return coordinates;
     });
 
-    for (let i = 0; i < totalSitesCount; i++) {
-      if (i !== totalSitesCount - 1) {
-        for (let y = i + 1; y < totalSitesCount; y++) {
-          if (this.calDistance(coordinatesArr[i], coordinatesArr[y]) < 150) {
-            duplicateCount += 1;
-          }
+    for (let j = 0; j < totalSitesCount - 1; j++) {
+      for (let k = j + 1; k < totalSitesCount; k++) {
+        if (this.calDistance(coordinatesArr[j], coordinatesArr[k]) < 150) {
+          // Assumes coordinates that are within 150m of each other are duplicate
+          duplicateCount += 1;
         }
       }
     }
@@ -419,9 +418,8 @@ class MermaidDash extends Component {
   }
 
   getTransectCount(array, key) {
-    const protocols = array.map(item => {
-      return item.properties[key];
-    });
+    const protocols = array.map(item => item.properties[key]);
+
     const protocolCount = protocols
       .map(protocol => {
         const beltfishProtocol = protocol.beltfish;
