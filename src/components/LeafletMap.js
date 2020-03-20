@@ -100,7 +100,8 @@ const mapProperty = {
   minZoom: 2,
   maxZoom: 16,
   zoomControl: true,
-  layers: [worldImageryMapLayer, labelLayer]
+  layers: [worldImageryMapLayer, labelLayer],
+  maxBoundsViscosity: 0.5
 };
 
 const miniMapProperty = {
@@ -172,9 +173,11 @@ class LeafletMap extends Component {
     if (siteDetail === null && prevSiteDetailId) {
       this.map.closePopup();
     }
+
     if (popupOpen && siteDetailId !== prevSiteDetailId) {
       this.popupHighlightSelect(popUpList, siteDetailId);
     }
+
     if (miniMap !== null) {
       if (hideMiniMap) {
         miniMap.remove();
@@ -188,7 +191,13 @@ class LeafletMap extends Component {
   }
 
   componentDidMount() {
+    const southWest = L.latLng(-80.917578, -195.322512),
+      northEast = L.latLng(86.655118, 248.463008),
+      bounds = L.latLngBounds(southWest, northEast);
+
     this.map = L.map('map', mapProperty);
+    this.map.setMaxBounds(bounds);
+
     const { hideMiniMap } = this.props;
     const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
 
