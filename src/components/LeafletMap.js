@@ -100,6 +100,7 @@ const mapProperty = {
   minZoom: 2,
   maxZoom: 16,
   zoomControl: true,
+  worldCopyJump: true,
   layers: [worldImageryMapLayer, labelLayer]
 };
 
