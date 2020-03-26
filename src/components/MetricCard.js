@@ -65,17 +65,21 @@ const MetricCard = ({ content: { title, count }, isLoading, bottomPanelOpen }) =
 
   const contentItem =
     count !== null && count >= 0 && !isLoading ? (
-      <ContentBoxStyle bottomPanelOpen={bottomPanelOpen}>{countContent}</ContentBoxStyle>
+      <ContentBoxStyle bottomPanelOpen={bottomPanelOpen} className="value">
+        {countContent}
+      </ContentBoxStyle>
     ) : (
       <CircularProgress className={classes.progress} />
     );
 
   const titleItem = title && (
-    <TitleBoxStyle bottomPanelOpen={bottomPanelOpen}>{title}</TitleBoxStyle>
+    <TitleBoxStyle bottomPanelOpen={bottomPanelOpen} className="title">
+      {title}
+    </TitleBoxStyle>
   );
 
   return (
-    <WrapperMetricCard>
+    <WrapperMetricCard id={`metricCard${title.split(' ').join('')}`}>
       {contentItem}
       {titleItem}
     </WrapperMetricCard>

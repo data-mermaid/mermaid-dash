@@ -21,7 +21,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.js",
+    "test:e2e": "cypress open"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.1",
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "babel-plugin-macros": "^2.6.1",
+    "cypress": "^4.2.0",
     "eslint": "^6.8.0",
     "husky": "^2.3.0",
     "lint-staged": "^8.1.7",
