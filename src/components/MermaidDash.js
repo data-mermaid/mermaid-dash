@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import turfDistance from '@turf/distance';
+import tuffBuffer from '@turf/buffer';
 import { point } from '@turf/helpers';
 import summary from '../apis/summary';
 import choices from '../apis/choices';
@@ -394,27 +395,17 @@ class MermaidDash extends Component {
     return new Set(result).size;
   }
 
-  calDistance(item1, item2) {
-    return turfDistance(point(item1), point(item2), { units: 'meters' });
-  }
-
   getUniqueSiteCount(array) {
-    let duplicateCount = 0;
-    const totalSitesCount = array.length;
+    let duplicatesFound = {};
     const coordinatesArr = array.map(({ geometry: { coordinates } }) => {
       return coordinates;
     });
+    coordinatesArr.forEach(function(x) {
+      duplicatesFound[x] = (duplicatesFound[x] || 0) + 1;
+    });
 
-    for (let j = 0; j < totalSitesCount - 1; j++) {
-      for (let k = j + 1; k < totalSitesCount; k++) {
-        if (this.calDistance(coordinatesArr[j], coordinatesArr[k]) < 150) {
-          // Assumes coordinates that are within 150m of each other are duplicate
-          duplicateCount += 1;
-        }
-      }
-    }
-
-    return totalSitesCount - duplicateCount;
+    const duplicateCount = Object.keys(duplicatesFound).length;
+    return duplicateCount;
   }
 
   getTransectCount(array, key) {

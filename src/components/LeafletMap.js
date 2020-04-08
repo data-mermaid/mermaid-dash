@@ -335,7 +335,6 @@ class LeafletMap extends Component {
         getMapBounds(currBbox);
         contentLoadHandler(true);
       }
-      // }
     });
   }
 
