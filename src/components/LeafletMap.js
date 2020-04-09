@@ -190,7 +190,7 @@ class LeafletMap extends Component {
     if (miniMap !== null) {
       if (mobileDisplay) {
         miniMap.remove();
-      } else if (!mobileDisplay) {
+      } else {
         miniMap.addTo(this.map);
       }
     }
@@ -218,6 +218,7 @@ class LeafletMap extends Component {
     });
   }
 
+  //Control re-rendering of component for only certain actions
   shouldComponentUpdate(nextProps, nextStates) {
     const { markersData, sidePanelOpen, zoomFullMap, zoomToSite, siteDetail } = this.props;
     const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
