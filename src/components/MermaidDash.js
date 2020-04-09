@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import turfDistance from '@turf/distance';
-import tuffBuffer from '@turf/buffer';
-import { point } from '@turf/helpers';
 import summary from '../apis/summary';
 import choices from '../apis/choices';
 import '../customStyles.css';
@@ -121,7 +118,7 @@ class MermaidDash extends Component {
         data: { features: sites }
       } = await summary.get('sites/', {
         params: {
-          limit: 1000,
+          limit: 2000,
           country_name: countryName.join(','),
           project_id: projectId.join(','),
           tag_id: tagId.join(','),
@@ -161,17 +158,17 @@ class MermaidDash extends Component {
         this.setState({ metrics });
       }
 
-      const barchartResult = this.histogramCount(sites, histogram);
-      for (let i = 0; i < barchartResult.length; i++) {
-        histogram[i].y = barchartResult[i];
-        histogram[i].label = barchartResult[i];
+      const barChartResult = this.histogramCount(sites, histogram);
+      for (let i = 0; i < barChartResult.length; i++) {
+        histogram[i].y = barChartResult[i];
+        histogram[i].label = barChartResult[i];
       }
       this.setState({ histogram });
     }
   }
 
   async componentDidMount() {
-    const { metrics, histogram, filterParams, filterChoices } = this.state;
+    const { metrics, filterParams, filterChoices } = this.state;
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
     const projectId = params.get('project_id');
@@ -182,7 +179,7 @@ class MermaidDash extends Component {
       countryName || projectId || tagId || dateMin || dateMax ? true : false;
 
     const paramsObj = {
-      limit: 1000,
+      limit: 2000,
       country_name: countryName,
       project_id: projectId,
       tag_id: tagId,
@@ -207,18 +204,9 @@ class MermaidDash extends Component {
     } = await choices.get('/projecttags');
 
     const country_list = this.fetchChoices('countries', choices_data);
-
     filterChoices.countries = this.fetChNonTestProjectChoices(projects, 'countries', country_list);
     filterChoices.projects = projects;
     filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', tags);
-    const barchartResult = this.histogramCount(sites, histogram);
-
-    metrics[0].count = this.getCount(sites, 'country_name');
-    metrics[1].count = this.getCount(sites, 'project_id');
-    metrics[2].count = this.getCount(sites, 'project_admins');
-    metrics[3].count = this.getUniqueSiteCount(sites);
-    metrics[4].count = this.getTransectCount(sites, 'protocols');
-    metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
 
     if (countryName) {
       filterParams.country_name = countryName.split(',');
@@ -240,13 +228,11 @@ class MermaidDash extends Component {
       filterParams.date_max_before = dateMax.split('-')[0];
     }
 
-    for (let i = 0; i < barchartResult.length; i++) {
-      histogram[i].y = barchartResult[i];
-      histogram[i].label = barchartResult[i];
+    if (sites.length === 0) {
+      metrics.map(metric => (metric.count = 0));
     }
 
     this.setState({
-      histogram,
       sites,
       metrics,
       filterParams,
@@ -404,8 +390,7 @@ class MermaidDash extends Component {
       duplicatesFound[x] = (duplicatesFound[x] || 0) + 1;
     });
 
-    const duplicateCount = Object.keys(duplicatesFound).length;
-    return duplicateCount;
+    return Object.keys(duplicatesFound).length;
   }
 
   getTransectCount(array, key) {
@@ -639,7 +624,7 @@ class MermaidDash extends Component {
           setClusterActive={this.setClusterActive}
           highlightMarker={this.state.highlightMarker}
           popupOpen={this.state.popupOpen}
-          hideMiniMap={this.state.mobileDisplay}
+          mobileDisplay={this.state.mobileDisplay}
         />
         {this.state.mobileDisplay && (
           <BottomSummaryPanel
