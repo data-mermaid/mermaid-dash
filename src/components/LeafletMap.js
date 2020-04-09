@@ -128,7 +128,6 @@ class LeafletMap extends Component {
     mapBounds: null,
     siteCenterChange: false,
     popUpList: [],
-    hideMiniMap: false,
     miniMap: null,
     panToSameView: false
   };
@@ -137,9 +136,19 @@ class LeafletMap extends Component {
     const {
       markersData: prevMarkersData,
       sidePanelOpen: prevSidePanelOpen,
-      siteDetail: prevSiteDetail
+      siteDetail: prevSiteDetail,
+      zoomFullMap: prevZoomFullMap,
+      zoomToSite: prevZoomToSite
     } = prevProps;
-    const { markersData, sidePanelOpen, siteDetail, popupOpen, hideMiniMap } = this.props;
+    const {
+      markersData,
+      sidePanelOpen,
+      siteDetail,
+      popupOpen,
+      mobileDisplay,
+      zoomFullMap,
+      zoomToSite
+    } = this.props;
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
@@ -173,33 +182,61 @@ class LeafletMap extends Component {
     if (siteDetail === null && prevSiteDetailId) {
       this.map.closePopup();
     }
+
     if (popupOpen && siteDetailId !== prevSiteDetailId) {
       this.popupHighlightSelect(popUpList, siteDetailId);
     }
+
     if (miniMap !== null) {
-      if (hideMiniMap) {
+      if (mobileDisplay) {
         miniMap.remove();
-      } else if (!hideMiniMap) {
+      } else {
         miniMap.addTo(this.map);
       }
     }
 
-    this.zoomToSelectedSite();
-    this.zoomFullMap();
+    if (zoomFullMap !== prevZoomFullMap) {
+      this.zoomFullMap();
+    }
+
+    if (zoomToSite !== prevZoomToSite) {
+      this.zoomToSelectedSite();
+    }
   }
 
   componentDidMount() {
     this.map = L.map('map', mapProperty);
-    const { hideMiniMap } = this.props;
+    const { mobileDisplay } = this.props;
     const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
 
-    if (hideMiniMap) {
+    if (!mobileDisplay) {
       miniMapControl.addTo(this.map);
     }
 
     this.setState({
       miniMap: miniMapControl
     });
+  }
+
+  //Control re-rendering of component for only certain actions
+  shouldComponentUpdate(nextProps, nextStates) {
+    const { markersData, sidePanelOpen, zoomFullMap, zoomToSite, siteDetail } = this.props;
+    const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
+    const siteDetailId = siteDetail && siteDetail.id;
+    const nextSiteDetailId = nextProps.siteDetail && nextProps.siteDetail.id;
+
+    if (
+      nextProps.markersData !== markersData ||
+      nextStates.mapZoomLevel !== mapZoomLevel ||
+      nextStates.mapBoundingBoxCorner !== mapBoundingBoxCorner ||
+      nextProps.sidePanelOpen !== sidePanelOpen ||
+      nextSiteDetailId !== siteDetailId ||
+      nextProps.zoomFullMap !== zoomFullMap ||
+      nextProps.zoomToSite !== zoomToSite
+    ) {
+      return true;
+    }
+    return false;
   }
 
   // use case: For when user selects site when side panel is closed. Panel
@@ -229,7 +266,6 @@ class LeafletMap extends Component {
     //Zoom to initial load marker cluster.
     const { zoomFullMap, fullMapZoomHandler } = this.props;
     const { mapBounds } = this.state;
-
     if (zoomFullMap) {
       if (mapBounds) {
         this.map.fitBounds(mapBounds);
@@ -335,7 +371,6 @@ class LeafletMap extends Component {
         getMapBounds(currBbox);
         contentLoadHandler(true);
       }
-      // }
     });
   }
 
