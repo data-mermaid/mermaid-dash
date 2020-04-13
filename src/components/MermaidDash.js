@@ -399,15 +399,18 @@ class MermaidDash extends Component {
   }
 
   getUniqueSiteCount(array) {
-    let duplicatesFound = {};
     const coordinatesArr = array.map(({ geometry: { coordinates } }) => {
       return coordinates;
     });
-    coordinatesArr.forEach(function(x) {
-      duplicatesFound[x] = (duplicatesFound[x] || 0) + 1;
-    });
 
-    return Object.keys(duplicatesFound).length;
+    const duplicateList = coordinatesArr.reduce((duplicatesFound, coordinates) => {
+      return {
+        ...duplicatesFound,
+        [coordinates]: (duplicatesFound[coordinates] || 0) + 1
+      };
+    }, {});
+
+    return Object.keys(duplicateList).length;
   }
 
   getTransectCount(array, key) {
