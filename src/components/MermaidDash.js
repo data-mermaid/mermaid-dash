@@ -68,7 +68,8 @@ class MermaidDash extends Component {
       date_max_before: ''
     },
     filterChoices: { countries: [], projects: [], tags: [] },
-    showFilterNumbers: false
+    showFilterNumbers: false,
+    queryLimit: 1000
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -82,7 +83,8 @@ class MermaidDash extends Component {
         tag_id: tagId,
         date_min_after: dateMin,
         date_max_before: dateMax
-      }
+      },
+      queryLimit
     } = this.state;
     const {
       metrics: prevMetrics,
@@ -114,22 +116,20 @@ class MermaidDash extends Component {
     }
 
     if (bbox !== prevBbox) {
-      const {
-        data: { features: sites }
-      } = await summary.get('sites/', {
-        params: {
-          limit: 2000,
-          country_name: countryName.join(','),
-          project_id: projectId.join(','),
-          tag_id: tagId.join(','),
-          date_min_after: dateMin && `${dateMin}-01-01`,
-          date_max_before: dateMax && `${dateMax}-12-31`,
-          geometry: {
-            type: 'MultiPolygon',
-            coordinates: [[bbox]]
-          }
+      const paramObj = {
+        limit: queryLimit,
+        country_name: countryName.join(','),
+        project_id: projectId.join(','),
+        tag_id: tagId.join(','),
+        date_min_after: dateMin && `${dateMin}-01-01`,
+        date_max_before: dateMax && `${dateMax}-12-31`,
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[bbox]]
         }
-      });
+      };
+
+      const sites = await this.fetchEntiresSites(paramObj);
 
       this.setState({ isLoading: false });
       if (prevMetricCountriesCount !== this.getCount(sites, 'country_name')) {
@@ -168,7 +168,7 @@ class MermaidDash extends Component {
   }
 
   async componentDidMount() {
-    const { metrics, filterParams, filterChoices } = this.state;
+    const { metrics, filterParams, filterChoices, queryLimit } = this.state;
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
     const projectId = params.get('project_id');
@@ -179,7 +179,7 @@ class MermaidDash extends Component {
       countryName || projectId || tagId || dateMin || dateMax ? true : false;
 
     const paramsObj = {
-      limit: 2000,
+      limit: queryLimit,
       country_name: countryName,
       project_id: projectId,
       tag_id: tagId,
@@ -187,11 +187,7 @@ class MermaidDash extends Component {
       date_max_before: dateMax
     };
 
-    const {
-      data: { features: sites }
-    } = await summary.get('/sites/', {
-      params: paramsObj
-    });
+    const sites = await this.fetchEntiresSites(paramsObj);
 
     const {
       data: { results: projects }
@@ -243,6 +239,27 @@ class MermaidDash extends Component {
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
   }
+
+  fetchSitesChunk = async (params, pageNo = 1) => {
+    let siteResults = {};
+    const apiResults = await summary.get('/sites/', {
+      params: {
+        page: pageNo,
+        ...params
+      }
+    });
+    siteResults = apiResults;
+    return Object.keys(siteResults).length === 0 ? [] : siteResults.data.features;
+  };
+
+  fetchEntiresSites = async (params, pageNo = 1) => {
+    const results = await this.fetchSitesChunk(params, pageNo);
+    if (results.length === this.state.queryLimit) {
+      return [...results].concat(await this.fetchEntiresSites(params, pageNo + 1));
+    } else {
+      return results;
+    }
+  };
 
   resize() {
     let currentMobileDisplay = window.innerWidth < 960;
