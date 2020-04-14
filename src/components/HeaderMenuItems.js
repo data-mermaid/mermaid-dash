@@ -47,7 +47,7 @@ const MenuIcon = ({ name }) => {
   let Icon;
 
   switch (name) {
-    case 'ABOUT THIS DATA':
+    case 'ABOUT':
       Icon = HelpIcon;
       break;
     case 'PRIVACY':
@@ -84,8 +84,8 @@ const HeaderMenuItems = ({ anchorEl, handleClose, modalToggleHandler }) => {
       onClose={handleClose}
     >
       <StyledMenuItem onClick={modalToggleHandler}>
-        <MenuIcon name={'ABOUT THIS DATA'} />
-        {'ABOUT THIS DATA'}
+        <MenuIcon name={'ABOUT'} />
+        {'ABOUT'}
       </StyledMenuItem>
       {MenuItems}
     </StyledMenu>

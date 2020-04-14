@@ -50,7 +50,7 @@ const IntroModal = ({ open, modalToggleHandler }) => {
     </InlineButtonImage>
   );
 
-  const aboutThisData = <MenuBoxItem onClick={modalToggleHandler}>ABOUT THIS DATA</MenuBoxItem>;
+  const aboutThisData = <MenuBoxItem onClick={modalToggleHandler}>ABOUT</MenuBoxItem>;
   return (
     <div>
       {aboutThisData}
@@ -61,7 +61,7 @@ const IntroModal = ({ open, modalToggleHandler }) => {
         PaperProps={{ style: { margin: '8px' } }}
       >
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>About This Data</DialogText>
+          <DialogText dialogTitle={true}>About</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent>
           <DialogText>
