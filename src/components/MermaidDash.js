@@ -249,15 +249,17 @@ class MermaidDash extends Component {
       }
     });
     siteResults = apiResults;
-    return Object.keys(siteResults).length === 0 ? [] : siteResults.data.features;
+    return Object.keys(siteResults).length === 0 ? [] : siteResults.data;
   };
 
   fetchEntiresSites = async (params, pageNo = 1) => {
     const results = await this.fetchSitesChunk(params, pageNo);
-    if (results.length === this.state.queryLimit) {
-      return [...results].concat(await this.fetchEntiresSites(params, pageNo + 1));
+    const { features, count } = results;
+
+    if (pageNo * this.state.queryLimit < count) {
+      return [...features].concat(await this.fetchEntiresSites(params, pageNo + 1));
     } else {
-      return results;
+      return features;
     }
   };
 
