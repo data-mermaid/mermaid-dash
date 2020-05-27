@@ -61,8 +61,8 @@ const HeaderItems = headerContent.map(({ name, link }) => {
 
 const Header = () => {
   const classes = headerStyles();
-  const [modalStageOpen, setModalStage] = useState(true);
-
+  const introModalStage = JSON.parse(sessionStorage.getItem('intro')) === false ? false : true;
+  const [modalStageOpen, setModalStage] = useState(introModalStage);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = event => {
@@ -75,6 +75,7 @@ const Header = () => {
 
   const modalToggleHandler = () => {
     setModalStage(!modalStageOpen);
+    sessionStorage.setItem('intro', !modalStageOpen);
     if (!modalStageOpen) {
       setAnchorEl(null);
     }
