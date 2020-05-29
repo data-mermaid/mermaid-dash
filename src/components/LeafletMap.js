@@ -100,7 +100,7 @@ const mapProperty = {
   minZoom: 2,
   maxZoom: 16,
   zoomControl: true,
-  worldCopyJump: true,
+  worldCopyJump: false,
   layers: [worldImageryMapLayer, labelLayer]
 };
 
@@ -318,25 +318,31 @@ class LeafletMap extends Component {
     return coordinatesSizeResult && siteNamesSizeResult;
   }
 
-  checkSimilarBoundingBox(box1, box2) {
-    const boxLat1 = box1 && box1.lat;
-    const boxLat2 = box2 && box2.lat;
-    if (boxLat1 === boxLat2) {
-      return true;
+  splitWestEast(w, e) {
+    if (e > 180) {
+      return [[w, 180], [-180, e - 360]];
     }
-    return false;
+    return [[w, e]];
+  }
+
+  buildBbox(n, e, s, w) {
+    const swBound = [w, s];
+    const seBound = [e, s];
+    const neBound = [e, n];
+    const nwBound = [w, n];
+    return [[swBound, seBound, neBound, nwBound, swBound]];
   }
 
   createBoundingBox(boundingBox) {
-    const south = boundingBox.getSouth(),
-      west = boundingBox.getWest(),
-      north = boundingBox.getNorth(),
-      east = boundingBox.getEast();
-    const swArr = [west, south];
-    const seArr = [east, south];
-    const neArr = [east, north];
-    const nwArr = [west, north];
-    const bbox = [swArr, seArr, neArr, nwArr, swArr];
+    const north = boundingBox.getNorth();
+    const east = boundingBox.getEast();
+    const south = boundingBox.getSouth();
+    const west = boundingBox.getWest();
+
+    const bbox = this.splitWestEast(west, east).map(bound => {
+      return this.buildBbox(north, bound[1], south, bound[0]);
+    });
+
     return bbox;
   }
 
@@ -526,10 +532,14 @@ class LeafletMap extends Component {
     });
 
     markersData.forEach(marker => {
-      const markerPoint = L.marker(
-        [marker.geometry.coordinates[1], marker.geometry.coordinates[0]],
-        { icon: leafletProperty.icon, marker }
-      );
+      const markerLatitude = marker.geometry.coordinates[1];
+      const markerLongitude = L.Util.wrapNum(marker.geometry.coordinates[0], [0, 360], true); //Wrap longitude from [-180, 180] to [0, 360]
+
+      const markerPoint = L.marker([markerLatitude, markerLongitude], {
+        icon: leafletProperty.icon,
+        marker
+      });
+
       markerPoint._leaflet_id = marker.id;
       markersCluster.addLayer(
         markerPoint.on('click', e => {

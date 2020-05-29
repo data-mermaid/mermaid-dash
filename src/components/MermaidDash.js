@@ -125,7 +125,7 @@ class MermaidDash extends Component {
         date_max_before: dateMax && `${dateMax}-12-31`,
         geometry: {
           type: 'MultiPolygon',
-          coordinates: [[bbox]]
+          coordinates: bbox
         }
       };
 
@@ -136,33 +136,40 @@ class MermaidDash extends Component {
         metrics[0].count = this.getCount(sites, 'country_name');
         this.setState({ metrics });
       }
+
       if (prevMetricProjectsCount !== this.getCount(sites, 'project_id')) {
         metrics[1].count = this.getCount(sites, 'project_id');
         metrics[1].isLoading = false;
         this.setState({ metrics });
       }
+
       if (prevMetricUsersCount !== this.getCount(sites, 'project_admins')) {
         metrics[2].count = this.getCount(sites, 'project_admins');
         this.setState({ metrics });
       }
+
       if (prevMetricSitesCount !== this.getUniqueSiteCount(sites)) {
         metrics[3].count = this.getUniqueSiteCount(sites);
         this.setState({ metrics });
       }
+
       if (prevMetricTransectsCount !== this.getTransectCount(sites, 'protocols')) {
         metrics[4].count = this.getTransectCount(sites, 'protocols');
         this.setState({ metrics });
       }
+
       if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(sites, 'protocols')) {
         metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
         this.setState({ metrics });
       }
 
       const barChartResult = this.histogramCount(sites, histogram);
+
       for (let i = 0; i < barChartResult.length; i++) {
         histogram[i].y = barChartResult[i];
         histogram[i].label = barChartResult[i];
       }
+
       this.setState({ histogram });
     }
   }
@@ -266,7 +273,10 @@ class MermaidDash extends Component {
   resize() {
     let currentMobileDisplay = window.innerWidth < 960;
     if (currentMobileDisplay !== this.state.mobileDisplay) {
-      this.setState({ mobileDisplay: currentMobileDisplay, sidePanelOpen: !currentMobileDisplay });
+      this.setState({
+        mobileDisplay: currentMobileDisplay,
+        sidePanelOpen: !currentMobileDisplay
+      });
     }
   }
 
