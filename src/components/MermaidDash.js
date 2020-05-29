@@ -116,8 +116,6 @@ class MermaidDash extends Component {
       this.filterUpdate();
     }
 
-    // console.log('bbox ', bbox);
-    // console.log('prevBbox ', prevBbox);
     if (bbox !== prevBbox) {
       const filteredSites = this.filterSites(sites, bbox);
 
