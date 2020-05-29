@@ -128,8 +128,7 @@ class LeafletMap extends Component {
     mapBounds: null,
     siteCenterChange: false,
     popUpList: [],
-    miniMap: null,
-    panToSameView: false
+    miniMap: null
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -140,6 +139,7 @@ class LeafletMap extends Component {
       zoomFullMap: prevZoomFullMap,
       zoomToSite: prevZoomToSite
     } = prevProps;
+
     const {
       markersData,
       sidePanelOpen,
@@ -149,11 +149,13 @@ class LeafletMap extends Component {
       zoomFullMap,
       zoomToSite
     } = this.props;
+
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap, panToSameView } = this.state;
+
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
 
@@ -165,7 +167,7 @@ class LeafletMap extends Component {
       this.updateBoundingBoxFromZoom();
     }
 
-    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner || panToSameView) {
+    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) {
       this.updateBoundingBoxFromPan();
     }
 
@@ -343,6 +345,10 @@ class LeafletMap extends Component {
   updateBoundingBoxFromZoom() {
     const { getMapBounds, contentLoadHandler } = this.props;
 
+    this.map.once('zoomstart', e => {
+      contentLoadHandler(true);
+    });
+
     this.map.once('zoomend', e => {
       const currBounds = e.target.getBounds();
       const currZoom = e.target.getZoom();
@@ -350,7 +356,6 @@ class LeafletMap extends Component {
 
       this.setState({ mapZoomLevel: currZoom });
       getMapBounds(currBbox);
-      contentLoadHandler(true);
     });
   }
 
@@ -358,19 +363,24 @@ class LeafletMap extends Component {
     const { mapBoundingBoxCorner } = this.state;
     const { getMapBounds, contentLoadHandler } = this.props;
 
+    this.map.once('dragstart', e => {
+      contentLoadHandler(true);
+    });
+
     this.map.once('dragend', e => {
       const currBounds = e.target.getBounds();
       const southBound = currBounds.getSouth();
       const currBbox = this.createBoundingBox(currBounds);
 
-      if (mapBoundingBoxCorner === southBound) {
-        this.setState({ panToSameView: true });
-        contentLoadHandler(false);
-      } else {
-        this.setState({ mapBoundingBoxCorner: southBound, panToSameView: false });
-        getMapBounds(currBbox);
-        contentLoadHandler(true);
-      }
+      setTimeout(() => {
+        if (mapBoundingBoxCorner === southBound) {
+          this.setState({ mapBoundingBoxCorner: southBound + 0.1 });
+          contentLoadHandler(false);
+        } else {
+          this.setState({ mapBoundingBoxCorner: southBound });
+          getMapBounds(currBbox);
+        }
+      }, 750);
     });
   }
 
