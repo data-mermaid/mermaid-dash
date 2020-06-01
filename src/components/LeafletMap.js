@@ -48,6 +48,7 @@ const generateClusterIconStyle = ({
 }) => {
   const radius = String(numberMarkers).length * baseRadius + basePadding;
   let backgroundColor;
+
   switch (numberMarkers.length) {
     case 1:
       backgroundColor = 'red';
@@ -58,6 +59,7 @@ const generateClusterIconStyle = ({
     default:
       backgroundColor = defaultMarkerColor;
   }
+
   return `
     width: ${radius}px;
     height: ${radius}px;
@@ -139,6 +141,7 @@ class LeafletMap extends Component {
       zoomFullMap: prevZoomFullMap,
       zoomToSite: prevZoomToSite
     } = prevProps;
+
     const {
       markersData,
       sidePanelOpen,
@@ -148,10 +151,12 @@ class LeafletMap extends Component {
       zoomFullMap,
       zoomToSite
     } = this.props;
+
     const {
       mapZoomLevel: prevMapZoomLevel,
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
+
     const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
@@ -235,6 +240,7 @@ class LeafletMap extends Component {
     ) {
       return true;
     }
+
     return false;
   }
 
@@ -246,6 +252,7 @@ class LeafletMap extends Component {
 
     if (sidePanelOpen && siteDetail && siteCenterChange) {
       const siteLatlng = [siteDetail.geometry.coordinates[1], siteDetail.geometry.coordinates[0]];
+
       this.map.setView(siteLatlng, zoom);
       this.setState({ siteCenterChange: false });
     }
@@ -265,6 +272,7 @@ class LeafletMap extends Component {
     //Zoom to initial load marker cluster.
     const { zoomFullMap, fullMapZoomHandler } = this.props;
     const { mapBounds } = this.state;
+
     if (zoomFullMap) {
       if (mapBounds) {
         this.map.fitBounds(mapBounds);
@@ -278,6 +286,7 @@ class LeafletMap extends Component {
 
   zoomToSelectedSite() {
     const { highlightMarker, zoomToSite, zoomToSiteHandler } = this.props;
+
     if (zoomToSite && highlightMarker) {
       const markerLatlng = highlightMarker._latlng;
       this.map.setView([markerLatlng.lat, markerLatlng.lng], 16);
@@ -290,10 +299,12 @@ class LeafletMap extends Component {
     const regToSetSignificant = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
     const a = number.toString().match(regToSetSignificant)[0];
     const dot = a.indexOf('.');
+
     if (dot === -1) {
       return a + '.' + '0'.repeat(n);
     }
     const b = n - (a.length - dot) + 1;
+
     return b > 0 ? a + '0'.repeat(b) : a;
   }
 
@@ -306,6 +317,7 @@ class LeafletMap extends Component {
     const coordinatesArr = markersArr.map(({ geometry }) => {
       const latStr = `${this.toFixedNoRounding(geometry.coordinates[0], 3)}`;
       const lngStr = `${this.toFixedNoRounding(geometry.coordinates[1], 3)}`;
+
       return `${latStr},${lngStr}`;
     });
     const siteNamesArr = markersArr.map(({ properties }) => properties.site_name);
@@ -321,6 +333,7 @@ class LeafletMap extends Component {
     if (e > 180) {
       return [[w, 180], [-180, e - 360]];
     }
+
     return [[w, e]];
   }
 
@@ -329,6 +342,7 @@ class LeafletMap extends Component {
     const seBound = [e, s];
     const neBound = [e, n];
     const nwBound = [w, n];
+
     return [[swBound, seBound, neBound, nwBound, swBound]];
   }
 
@@ -419,6 +433,7 @@ class LeafletMap extends Component {
     const clusterSiteNameArray = clusterArray.map(item => {
       return `${item.properties.site_name} - ${item.properties.project_name}`;
     });
+
     return clusterSiteNameArray.toString().length;
   }
 
@@ -486,6 +501,7 @@ class LeafletMap extends Component {
       setClusterActive,
       getMapBounds
     } = this.props;
+
     const allClusterStyle = {
       radius: 10,
       padding: 10,

@@ -84,9 +84,9 @@ class MermaidDash extends Component {
         tag_id: tagId,
         date_min_after: dateMin,
         date_max_before: dateMax
-      },
-      queryLimit
+      }
     } = this.state;
+
     const {
       metrics: prevMetrics,
       bbox: prevBbox,
@@ -121,32 +121,38 @@ class MermaidDash extends Component {
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_name')) {
         metrics[0].count = this.getCount(updatedSites, 'country_name');
+
         this.setState({ metrics });
       }
 
       if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id')) {
         metrics[1].count = this.getCount(updatedSites, 'project_id');
         metrics[1].isLoading = false;
+
         this.setState({ metrics });
       }
 
       if (prevMetricUsersCount !== this.getCount(updatedSites, 'project_admins')) {
         metrics[2].count = this.getCount(updatedSites, 'project_admins');
+
         this.setState({ metrics });
       }
 
       if (prevMetricSitesCount !== this.getUniqueSiteCount(updatedSites)) {
         metrics[3].count = this.getUniqueSiteCount(updatedSites);
+
         this.setState({ metrics });
       }
 
       if (prevMetricTransectsCount !== this.getTransectCount(updatedSites, 'protocols')) {
         metrics[4].count = this.getTransectCount(updatedSites, 'protocols');
+
         this.setState({ metrics });
       }
 
       if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSites, 'protocols')) {
         metrics[5].count = this.getAvgCoralCount(updatedSites, 'protocols');
+
         this.setState({ metrics });
       }
 
@@ -258,6 +264,7 @@ class MermaidDash extends Component {
           newSites.push(site);
         }
       }
+
       return newSites;
     }, []);
 
@@ -265,14 +272,14 @@ class MermaidDash extends Component {
   };
 
   fetchSitesChunk = async (params, pageNo = 1) => {
-    let siteResults = {};
-    const apiResults = await summary.get('/sites/', {
-      params: {
-        page: pageNo,
-        ...params
-      }
-    });
-    siteResults = apiResults;
+    const siteResults =
+      (await summary.get('/sites/', {
+        params: {
+          page: pageNo,
+          ...params
+        }
+      })) || {};
+
     return Object.keys(siteResults).length === 0 ? [] : siteResults.data;
   };
 
@@ -301,10 +308,10 @@ class MermaidDash extends Component {
     this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
   };
 
-  siteClickHandler = selectedSite => {
+  siteClickHandler = site => {
     const { highlightCluster, siteDropDownData, sidePanelOpen, mobileDisplay } = this.state;
     const siteDropdownList = siteDropDownData.map(site => site.id);
-    selectedSite = selectedSite.key ? this.siteLookup(selectedSite) : selectedSite;
+    const selectedSite = site.key ? this.siteLookup(site) : site;
     const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
       ? true
       : false;
@@ -354,14 +361,17 @@ class MermaidDash extends Component {
 
   clearSelectedSiteHandler = () => {
     const { highlightMarker, highlightCluster } = this.state;
+
     if (highlightMarker !== null) {
       highlightMarker.setIcon(leafletProperty.icon);
       this.setState({ highlightMarker: null });
     }
+
     if (highlightCluster !== null) {
       highlightCluster.clearLayers();
       this.setState({ highlightCluster: null });
     }
+
     this.setState({
       showSiteDetail: false,
       zoomFullMap: false,
@@ -373,16 +383,19 @@ class MermaidDash extends Component {
 
   fullMapZoomHandler = zoomOffOption => {
     const zoomFullMap = zoomOffOption ? true : false;
+
     this.setState({ zoomFullMap });
   };
 
   zoomToSiteHandler = zoomToOption => {
     const zoomToSite = zoomToOption ? true : false;
+
     this.setState({ zoomToSite });
   };
 
   removeHighlight = () => {
     const { highlightMarker } = this.state;
+
     if (highlightMarker !== null) {
       highlightMarker.setIcon(leafletProperty.icon);
       this.setState({ highlightMarker: null });
@@ -457,6 +470,7 @@ class MermaidDash extends Component {
 
   getHardCoralValue(benthiclit, benthicpit) {
     let hardCoralValue;
+
     if (benthicpit && benthiclit) {
       const benthicpitCoralCover = benthicpit.coral_cover;
       const benthiclitCoralCover = benthiclit.coral_cover;
@@ -529,6 +543,7 @@ class MermaidDash extends Component {
 
     const histogramResult = histogramArr.map(item => {
       let count = 0;
+
       for (let i = 0; i < protocolArr.length; i++) {
         const calDiff = parseFloat((item - protocolArr[i]).toFixed(3));
 
@@ -549,6 +564,7 @@ class MermaidDash extends Component {
 
   siteLookup({ key: siteId }) {
     const { sites } = this.state;
+
     return sites.filter(site => site.id === siteId)[0];
   }
 
@@ -559,6 +575,7 @@ class MermaidDash extends Component {
     newParams.tag_id = params.tag_id;
     newParams.date_min_after = params.date_min_after;
     newParams.date_max_before = params.date_max_before;
+
     this.setState({ filterParams: newParams });
   };
 
