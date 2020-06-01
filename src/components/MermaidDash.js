@@ -74,6 +74,7 @@ class MermaidDash extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const {
+      sites,
       bbox,
       metrics,
       histogram,
@@ -116,61 +117,47 @@ class MermaidDash extends Component {
     }
 
     if (bbox !== prevBbox) {
-      const paramObj = {
-        limit: queryLimit,
-        country_name: countryName.join(','),
-        project_id: projectId.join(','),
-        tag_id: tagId.join(','),
-        date_min_after: dateMin && `${dateMin}-01-01`,
-        date_max_before: dateMax && `${dateMax}-12-31`,
-        geometry: {
-          type: 'MultiPolygon',
-          coordinates: bbox
-        }
-      };
+      const updatedSites = this.filterSites(sites, bbox);
 
-      const sites = await this.fetchEntiresSites(paramObj);
-
-      this.setState({ isLoading: false });
-      if (prevMetricCountriesCount !== this.getCount(sites, 'country_name')) {
-        metrics[0].count = this.getCount(sites, 'country_name');
+      if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_name')) {
+        metrics[0].count = this.getCount(updatedSites, 'country_name');
         this.setState({ metrics });
       }
 
-      if (prevMetricProjectsCount !== this.getCount(sites, 'project_id')) {
-        metrics[1].count = this.getCount(sites, 'project_id');
+      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id')) {
+        metrics[1].count = this.getCount(updatedSites, 'project_id');
         metrics[1].isLoading = false;
         this.setState({ metrics });
       }
 
-      if (prevMetricUsersCount !== this.getCount(sites, 'project_admins')) {
-        metrics[2].count = this.getCount(sites, 'project_admins');
+      if (prevMetricUsersCount !== this.getCount(updatedSites, 'project_admins')) {
+        metrics[2].count = this.getCount(updatedSites, 'project_admins');
         this.setState({ metrics });
       }
 
-      if (prevMetricSitesCount !== this.getUniqueSiteCount(sites)) {
-        metrics[3].count = this.getUniqueSiteCount(sites);
+      if (prevMetricSitesCount !== this.getUniqueSiteCount(updatedSites)) {
+        metrics[3].count = this.getUniqueSiteCount(updatedSites);
         this.setState({ metrics });
       }
 
-      if (prevMetricTransectsCount !== this.getTransectCount(sites, 'protocols')) {
-        metrics[4].count = this.getTransectCount(sites, 'protocols');
+      if (prevMetricTransectsCount !== this.getTransectCount(updatedSites, 'protocols')) {
+        metrics[4].count = this.getTransectCount(updatedSites, 'protocols');
         this.setState({ metrics });
       }
 
-      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(sites, 'protocols')) {
-        metrics[5].count = this.getAvgCoralCount(sites, 'protocols');
+      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSites, 'protocols')) {
+        metrics[5].count = this.getAvgCoralCount(updatedSites, 'protocols');
         this.setState({ metrics });
       }
 
-      const barChartResult = this.histogramCount(sites, histogram);
+      const barChartResult = this.histogramCount(updatedSites, histogram);
 
       for (let i = 0; i < barChartResult.length; i++) {
         histogram[i].y = barChartResult[i];
         histogram[i].label = barChartResult[i];
       }
 
-      this.setState({ histogram });
+      this.setState({ histogram, isLoading: false });
     }
   }
 
@@ -200,11 +187,11 @@ class MermaidDash extends Component {
       data: { results: projects }
     } = await choices.get('/projects/?showall&status=90&limit=1000');
 
-    const { data: choices_data } = await choices.get('/choices');
+    const { data: choices_data } = await choices.get('/choices/');
 
     const {
       data: { results: tags }
-    } = await choices.get('/projecttags');
+    } = await choices.get('/projecttags/');
 
     const country_list = this.fetchChoices('countries', choices_data);
     filterChoices.countries = this.fetChNonTestProjectChoices(projects, 'countries', country_list);
@@ -243,9 +230,39 @@ class MermaidDash extends Component {
       showFilterNumbers: queryStringsFound,
       isFiltering: false
     });
+
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
   }
+
+  getBboxXY = bbox => {
+    return bbox.map(item => {
+      const bboxItem = item[0];
+      return { x: [bboxItem[0][0], bboxItem[1][0]], y: [bboxItem[0][1], bboxItem[2][1]] };
+    });
+  };
+
+  filterSites = (sites, bbox) => {
+    const bboxList = this.getBboxXY(bbox);
+
+    const reducedSites = sites.reduce((newSites, site) => {
+      const point = site.geometry.coordinates;
+
+      for (const bbox of bboxList) {
+        if (
+          point[0] >= bbox.x[0] &&
+          point[0] <= bbox.x[1] &&
+          point[1] >= bbox.y[0] &&
+          point[1] <= bbox.y[1]
+        ) {
+          newSites.push(site);
+        }
+      }
+      return newSites;
+    }, []);
+
+    return reducedSites;
+  };
 
   fetchSitesChunk = async (params, pageNo = 1) => {
     let siteResults = {};
