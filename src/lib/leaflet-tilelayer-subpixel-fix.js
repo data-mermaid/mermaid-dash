@@ -1,6 +1,4 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable object-shorthand */
-/* eslint-disable func-names */
 // Fix via https://github.com/Leaflet/Leaflet/issues/3575#issuecomment-150544739
 import L from 'leaflet';
 
