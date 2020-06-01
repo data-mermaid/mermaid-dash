@@ -3,9 +3,9 @@ import React from 'react';
 import AutocompleteFilter from './AutocompleteFilter';
 
 const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => {
-  const country_names = filterChoices.countries.map(country => country.name);
-  const project_names = filterChoices.projects.map(project => project.name);
-  const tag_names = filterChoices.tags.map(tag => tag.name);
+  const country_names = filterChoices.countries.map(country => country.name).sort();
+  const project_names = filterChoices.projects.map(project => project.name).sort();
+  const tag_names = filterChoices.tags.map(tag => tag.name).sort();
 
   const convertToName = (ids, filtered_options) => {
     const result = filtered_options.reduce((newArr, obj) => {
