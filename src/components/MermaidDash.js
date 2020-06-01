@@ -163,7 +163,8 @@ class MermaidDash extends Component {
         histogram[i].label = barChartResult[i];
       }
 
-      this.setState({ histogram, isLoading: false });
+      this.setState({ isLoading: false });
+      this.setState({ histogram });
     }
   }
 
@@ -554,6 +555,8 @@ class MermaidDash extends Component {
 
       return count;
     });
+
+    console.log('histogram result ', histogramResult);
 
     return histogramResult;
   }
