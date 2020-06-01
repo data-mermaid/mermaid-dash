@@ -5,6 +5,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
+import '../lib/leaflet-tilelayer-subpixel-fix';
 import * as leafletProperty from '../constants/leaflet-properties';
 import styled from 'styled-components/macro';
 
