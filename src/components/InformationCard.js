@@ -42,7 +42,8 @@ const InformationCard = ({
   type,
   bleachingSubItems,
   pieChartContent,
-  textContent
+  textContent,
+  isFiltering
 }) => {
   const classes = cardStyle();
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
@@ -108,6 +109,7 @@ const InformationCard = ({
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
         histogramContent={histogramContent}
+        isFiltering={isFiltering}
       />
     );
 
@@ -145,7 +147,8 @@ InformationCard.propTypes = {
   bleachingSubItems: PropTypes.object,
   pieChartContent: PropTypes.array,
   textContent: PropTypes.object,
-  classes: PropTypes.object
+  classes: PropTypes.object,
+  isFiltering: PropTypes.bool
 };
 
 export default InformationCard;

@@ -12,11 +12,12 @@ const CardChartContent = ({
   pieChartContent,
   setToPrivate,
   privateLabel,
-  histogramContent
+  histogramContent,
+  isFiltering
 }) => {
   const chart =
     chartType === 'histogramChart' ? (
-      <BarChart chartContent={histogramContent} />
+      <BarChart chartContent={histogramContent} isFiltering={isFiltering} />
     ) : (
       <PieChart
         protocolName={protocolName}
@@ -34,7 +35,8 @@ CardChartContent.propTypes = {
   pieChartContent: PropTypes.array,
   setToPrivate: PropTypes.bool,
   privateLabel: PropTypes.string,
-  histogramContent: PropTypes.array
+  histogramContent: PropTypes.array,
+  isFiltering: PropTypes.bool
 };
 
 export default CardChartContent;

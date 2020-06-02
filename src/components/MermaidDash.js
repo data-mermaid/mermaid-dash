@@ -27,28 +27,7 @@ class MermaidDash extends Component {
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
     ],
-    histogram: [
-      { x: 0.05, y: 0, label: 0 },
-      { x: 0.1, y: 0, label: 0 },
-      { x: 0.15, y: 0, label: 0 },
-      { x: 0.2, y: 0, label: 0 },
-      { x: 0.25, y: 0, label: 0 },
-      { x: 0.3, y: 0, label: 0 },
-      { x: 0.35, y: 0, label: 0 },
-      { x: 0.4, y: 0, label: 0 },
-      { x: 0.45, y: 0, label: 0 },
-      { x: 0.5, y: 0, label: 0 },
-      { x: 0.55, y: 0, label: 0 },
-      { x: 0.6, y: 0, label: 0 },
-      { x: 0.65, y: 0, label: 0 },
-      { x: 0.7, y: 0, label: 0 },
-      { x: 0.75, y: 0, label: 0 },
-      { x: 0.8, y: 0, label: 0 },
-      { x: 0.85, y: 0, label: 0 },
-      { x: 0.9, y: 0, label: 0 },
-      { x: 0.95, y: 0, label: 0 },
-      { x: 1, y: 0, label: 0 }
-    ],
+    histogram: [],
     bbox: null,
     zoomFullMap: false,
     zoomToSite: false,
@@ -127,7 +106,6 @@ class MermaidDash extends Component {
 
       if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id')) {
         metrics[1].count = this.getCount(updatedSites, 'project_id');
-        metrics[1].isLoading = false;
 
         this.setState({ metrics });
       }
@@ -221,11 +199,35 @@ class MermaidDash extends Component {
       metrics.map(metric => (metric.count = 0));
     }
 
+    const histogram = [
+      { x: 0.05, y: 0, label: 0 },
+      { x: 0.1, y: 0, label: 0 },
+      { x: 0.15, y: 0, label: 0 },
+      { x: 0.2, y: 0, label: 0 },
+      { x: 0.25, y: 0, label: 0 },
+      { x: 0.3, y: 0, label: 0 },
+      { x: 0.35, y: 0, label: 0 },
+      { x: 0.4, y: 0, label: 0 },
+      { x: 0.45, y: 0, label: 0 },
+      { x: 0.5, y: 0, label: 0 },
+      { x: 0.55, y: 0, label: 0 },
+      { x: 0.6, y: 0, label: 0 },
+      { x: 0.65, y: 0, label: 0 },
+      { x: 0.7, y: 0, label: 0 },
+      { x: 0.75, y: 0, label: 0 },
+      { x: 0.8, y: 0, label: 0 },
+      { x: 0.85, y: 0, label: 0 },
+      { x: 0.9, y: 0, label: 0 },
+      { x: 0.95, y: 0, label: 0 },
+      { x: 1, y: 0, label: 0 }
+    ];
+
     this.setState({
       sites,
       metrics,
       filterParams,
       filterChoices,
+      histogram,
       showFilterNumbers: queryStringsFound,
       isFiltering: false
     });
@@ -648,6 +650,7 @@ class MermaidDash extends Component {
           zoomToSiteHandler={this.zoomToSiteHandler}
           isLoading={this.state.isLoading}
           hideDrawer={this.state.mobileDisplay}
+          isFiltering={this.state.isFiltering}
         />
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}

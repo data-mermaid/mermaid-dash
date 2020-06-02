@@ -90,7 +90,8 @@ const DrawerDashBoard = ({
   histogramContent,
   siteDetail,
   clearSelectedSiteHandler,
-  hideDrawer
+  hideDrawer,
+  isFiltering
 }) => {
   const classes = drawerStyleProperties();
 
@@ -135,6 +136,7 @@ const DrawerDashBoard = ({
       <InformationCard
         title={histogram.title}
         type={histogram.type}
+        isFiltering={isFiltering}
         histogramContent={histogramContent}
       />
     </div>
@@ -183,6 +185,7 @@ DrawerDashBoard.propTypes = {
   histogramContent: PropTypes.array,
   siteDetail: PropTypes.object,
   clearSelectedSiteHandler: PropTypes.func,
+  isFiltering: PropTypes.bool,
   classes: PropTypes.object
 };
 
