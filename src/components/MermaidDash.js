@@ -156,7 +156,9 @@ class MermaidDash extends Component {
         this.setState({ metrics });
       }
 
-      this.setState({ histogram: this.histogramCount(updatedSites, histogram), isLoading: false });
+      const test = this.histogramCount(updatedSites, histogram);
+      console.log(test);
+      this.setState({ histogram: test, isLoading: false });
     }
   }
 
