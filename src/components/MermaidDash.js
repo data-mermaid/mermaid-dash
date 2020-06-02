@@ -72,7 +72,7 @@ class MermaidDash extends Component {
     queryLimit: 1000
   };
 
-  async componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       sites,
       bbox,
