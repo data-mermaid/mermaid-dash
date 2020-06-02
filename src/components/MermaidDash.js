@@ -33,7 +33,7 @@ class MermaidDash extends Component {
     zoomToSite: false,
     highlightMarker: null,
     highlightCluster: null,
-    isLoading: false,
+    isLoading: true,
     isFiltering: true,
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
