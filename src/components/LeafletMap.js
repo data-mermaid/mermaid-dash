@@ -372,8 +372,13 @@ class LeafletMap extends Component {
       const currZoom = e.target.getZoom();
       const currBbox = this.createBoundingBox(currBounds);
 
-      this.setState({ mapZoomLevel: currZoom });
-      getMapBounds(currBbox);
+      if (this.state.mapZoomLevel === currZoom) {
+        this.setState({ mapZoomLevel: currZoom + 1 });
+        contentLoadHandler(false);
+      } else {
+        this.setState({ mapZoomLevel: currZoom });
+        getMapBounds(currBbox);
+      }
     });
   }
 

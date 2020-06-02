@@ -72,7 +72,7 @@ class MermaidDash extends Component {
     queryLimit: 1000
   };
 
-  async componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       sites,
       bbox,
@@ -156,14 +156,7 @@ class MermaidDash extends Component {
         this.setState({ metrics });
       }
 
-      const barChartResult = this.histogramCount(updatedSites, histogram);
-
-      for (let i = 0; i < barChartResult.length; i++) {
-        histogram[i].y = barChartResult[i];
-        histogram[i].label = barChartResult[i];
-      }
-
-      this.setState({ histogram, isLoading: false });
+      this.setState({ histogram: this.histogramCount(updatedSites, histogram), isLoading: false });
     }
   }
 
@@ -522,12 +515,8 @@ class MermaidDash extends Component {
     return Math.round(avgCoralCover);
   }
 
-  histogramCount(array, histogramData) {
-    const histogramArr = histogramData.map(data => {
-      return data.x;
-    });
-
-    const protocols = array.map(item => {
+  histogramCount(sites, histogramData) {
+    const protocols = sites.map(item => {
       return item.properties.protocols;
     });
 
@@ -541,18 +530,18 @@ class MermaidDash extends Component {
       return result;
     });
 
-    const histogramResult = histogramArr.map(item => {
+    const histogramResult = histogramData.map(({ x }) => {
       let count = 0;
 
       for (let i = 0; i < protocolArr.length; i++) {
-        const calDiff = parseFloat((item - protocolArr[i]).toFixed(3));
+        const calDiff = parseFloat((x - protocolArr[i]).toFixed(3));
 
         if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 0.05)) {
           count += 1;
         }
       }
 
-      return count;
+      return { x, y: count, label: count };
     });
 
     return histogramResult;
