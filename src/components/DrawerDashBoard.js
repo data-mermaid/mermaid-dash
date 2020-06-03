@@ -140,11 +140,7 @@ const DrawerDashBoard = ({
     </div>
   );
 
-  const siteDashboard = siteDetail && (
-    <div>
-      <SiteDetail selectSite={siteDetail} />
-    </div>
-  );
+  const siteDashboard = siteDetail && <SiteDetail selectSite={siteDetail} />;
 
   const result = sidePanelOpen ? (
     <>
