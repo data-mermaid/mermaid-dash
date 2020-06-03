@@ -73,7 +73,6 @@ class MermaidDash extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('component did update');
     const {
       sites,
       bbox,
@@ -118,6 +117,7 @@ class MermaidDash extends Component {
     }
 
     if (bbox !== prevBbox) {
+      console.log('bbox updates ====> sites in update now ', sites);
       const updatedSites = this.filterSites(sites, bbox);
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_name')) {
@@ -157,8 +157,8 @@ class MermaidDash extends Component {
       }
 
       const histogramData = this.histogramCount(updatedSites, histogram);
-      console.log(histogramData);
-      console.log('isFiltering in update ', this.state.isFiltering);
+      console.log('histogram data update in bbox update ', histogramData);
+
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
@@ -268,18 +268,21 @@ class MermaidDash extends Component {
     }
   };
 
-  fetchAllSites = params => {
+  fetchAllSites = async params => {
+    console.log('fetchAllSites');
     const { metrics } = this.state;
-    this.fetchEntiresSites(params).then(sites => {
-      if (sites.length === 0) {
-        metrics.map(metric => (metric.count = 0));
-        this.setState({ metrics, isFiltering: false });
-      }
-      this.setState({ sites, isFiltering: false });
-    });
+    const sites = await this.fetchEntiresSites(params);
+
+    if (sites.length === 0) {
+      metrics.map(metric => (metric.count = 0));
+      this.setState({ metrics, isFiltering: false });
+    }
+
+    this.setState({ sites, isFiltering: false });
   };
 
   fetchAllChoices = async () => {
+    console.log('fetchAllChoices');
     const { filterChoices } = this.state;
 
     const {
