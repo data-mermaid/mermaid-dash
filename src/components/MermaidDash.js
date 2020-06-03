@@ -468,9 +468,20 @@ class MermaidDash extends Component {
     const protocols = array.map(item => item.properties[key]);
 
     const protocolCount = protocols
-      .map(protocol => {
-        const beltfishProtocol = protocol.beltfish;
-        return beltfishProtocol ? beltfishProtocol.sample_unit_count : 0;
+      .map(({ beltfish, benthicpit, benthiclit, habitatcomplexity, colonies_bleached }) => {
+        const beltfishCount = beltfish ? beltfish.sample_unit_count : 0;
+        const benthicPitCount = benthicpit ? benthicpit.sample_unit_count : 0;
+        const benthicLitCount = benthiclit ? benthiclit.sample_unit_count : 0;
+        const habitatComplexityCount = habitatcomplexity ? habitatcomplexity.sample_unit_count : 0;
+        const coloniesBleachedCount = colonies_bleached ? colonies_bleached.sample_unit_count : 0;
+
+        return (
+          beltfishCount +
+          benthicPitCount +
+          benthicLitCount +
+          habitatComplexityCount +
+          coloniesBleachedCount
+        );
       })
       .reduce((acc, val) => acc + val, 0);
 
