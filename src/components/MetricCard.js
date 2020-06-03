@@ -28,17 +28,17 @@ const TitleBoxStyle = styled.div`
     border-top: 1px solid;
     height: 55px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 18px;
   }
 `;
 
 const ContentBoxStyle = styled.div`
   color: #5080ad;
   padding: ${props => props.bottomPanelOpen && '30px 0px 0px 0'};
-  font-size: ${props => (props.bottomPanelOpen ? '36px' : '32px')};
+  font-size: ${props => (props.bottomPanelOpen ? '35px' : '32px')};
   @media (min-width: 960px) {
     padding: 30px 0px 30px 0;
-    font-size: 36px;
+    font-size: 50px;
   }
 `;
 
@@ -49,9 +49,9 @@ const WrapperMetricCard = styled(Paper)`
 
 const cardStyle = makeStyles(theme => ({
   progress: {
-    margin: '37px',
-    width: '59px !important',
-    height: '59px !important',
+    margin: '34px',
+    width: '58px !important',
+    height: '58px !important',
     [theme.breakpoints.down('sm')]: {
       margin: '6px',
       width: '28px !important',
@@ -65,7 +65,7 @@ const MetricCard = ({ content: { title, count }, isLoading, bottomPanelOpen }) =
 
   const countContent = title === 'Avg Coral Coverage' ? `${count}%` : numberWithCommas(count);
 
-  const contentItem =
+  let contentItem =
     count !== null && count >= 0 && !isLoading ? (
       <ContentBoxStyle bottomPanelOpen={bottomPanelOpen}>{countContent}</ContentBoxStyle>
     ) : (
