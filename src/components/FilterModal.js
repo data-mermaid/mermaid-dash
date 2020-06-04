@@ -34,7 +34,7 @@ const FilterModal = ({
   filterParams,
   filterChoices,
   showFilterNumbers,
-  isFiltering
+  isFilteringChoices
 }) => {
   const classes = filterModalStyles();
   const isNumericAndEmpty = n => {
@@ -116,7 +116,7 @@ const FilterModal = ({
   const filterSites = (
     <ThemeProvider theme={theme.mapControl}>
       <ButtonStyle
-        disabled={isFiltering}
+        disabled={isFilteringChoices}
         buttonBorder={!showFilterNumbers}
         filterButton={showFilterNumbers}
         setWiggle={true}
@@ -128,7 +128,7 @@ const FilterModal = ({
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 200 }}
         >
-          {!isFiltering ? (
+          {!isFilteringChoices ? (
             <FilterListIcon />
           ) : (
             <CircularProgress size={20} className={classes.buttonProgress} />
