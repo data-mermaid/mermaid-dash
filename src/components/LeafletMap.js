@@ -158,7 +158,7 @@ class LeafletMap extends Component {
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
 
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap, mapBounds } = this.state;
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
 
