@@ -164,7 +164,6 @@ class LeafletMap extends Component {
 
     if (markersData !== prevMarkersData) {
       this.updateMarkers(markersData);
-      console.log(mapBounds);
     }
 
     if (mapZoomLevel !== prevMapZoomLevel) {
@@ -276,7 +275,6 @@ class LeafletMap extends Component {
     const { mapBounds } = this.state;
 
     if (zoomFullMap) {
-      console.log('init map bounds ', mapBounds);
       if (mapBounds) {
         this.map.fitBounds(mapBounds);
         fullMapZoomHandler(false);
@@ -333,33 +331,34 @@ class LeafletMap extends Component {
   }
 
   splitWestEast(w, e) {
-    console.log('-------------split west eat bounds--------------');
     const { mapBounds } = this.state;
     const maxBounds = mapBounds && mapBounds.getEast();
     const minBounds = mapBounds && mapBounds.getWest();
-    console.log('west ', w);
-    console.log('east ', e);
-    console.log('maxBounds ', maxBounds);
-    console.log('minBounds ', minBounds);
+    const eastSide = maxBounds || e;
 
     if (mapBounds && (e < minBounds || w > maxBounds)) {
-      console.log('Out of bounds');
+      // Out of bounds case
       return [[]];
-    } else {
-      console.log('Inbounds');
-      if (e > 180) {
-        const eastSide = maxBounds || e;
-        // const westSide = minBounds || w;
-        if (w > 180) {
-          return [[w - 360, maxBounds - 360]];
-        }
-        console.log('eastSide ', eastSide);
-        console.log('westSide ', w);
-        return [[w, 180], [-180, eastSide - 360]]; //FIX THIS PART
-      } else if (w < minBounds) {
-        return [[0, e]];
-      }
+    } else if (eastSide < 180) {
+      // When all markers initially load and locates on the east where it is < 180 degree
       return [[w, e]];
+    } else if (eastSide > 180) {
+      // When all markers initially load and locates on the east where it is > 180 degree
+      if (w > 180) {
+        // Markers west and east are > 180, example: Belize.
+        return [[w - 360, eastSide - 360]];
+      } else if (minBounds && w < minBounds) {
+        // When map is moving to west (left) side
+        if (e < 180) {
+          // Markers west and east stay between minBounds and east
+          return [[minBounds, e]];
+        }
+        return [[minBounds, 180], [-180, e - 360]];
+      } else if (w > 0 && e < 180) {
+        // Markers west and east stay between 0 and 180. example: Indonesia
+        return [[w, e]];
+      }
+      return [[w, 180], [-180, eastSide - 360]]; // When map is moving to east (right) side
     }
   }
 
@@ -381,7 +380,7 @@ class LeafletMap extends Component {
     const bbox = this.splitWestEast(west, east).map(bound => {
       return this.buildBbox(north, bound[1], south, bound[0]);
     });
-    console.log('box is created ', bbox);
+
     return bbox;
   }
 
