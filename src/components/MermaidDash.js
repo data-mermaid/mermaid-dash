@@ -295,7 +295,7 @@ class MermaidDash extends Component {
     const country_list = this.fetchChoices('countries', choices_data);
     filterChoices.projects = projects;
     filterChoices.countries = this.fetChNonTestProjectChoices(projects, 'countries', country_list);
-    filterChoices.tagsChoices = this.fetChNonTestProjectChoices(projects, 'tags', tags);
+    filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', tags);
 
     this.setState({ filterChoices, isFilteringChoices: false });
   };
