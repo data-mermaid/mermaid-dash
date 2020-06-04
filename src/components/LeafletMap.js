@@ -339,28 +339,36 @@ class LeafletMap extends Component {
     const eastSide = maxBounds || e;
 
     if (mapBounds && (e < minBounds || w > maxBounds)) {
-      // Out of bounds case
+      // console.log('Out of bounds case');
       return [[]];
     } else if (eastSide < 180) {
-      // When all markers initially load and locates on the east where it is < 180 degree
+      // console.log('When all markers locates on [0, 180]');
       return [[w, e]];
     } else if (eastSide > 180) {
-      // When all markers initially load and locates on the east where it is > 180 degree
+      // console.log('When all markers locates on [0, 360]');
       if (w > 180) {
-        // Markers west and east are > 180, example: Belize.
+        // console.log('Markers west and east are > 180, example: Belize');
         return [[w - 360, eastSide - 360]];
       } else if (minBounds && w < minBounds) {
-        // When map is moving to west (left) side
         if (e < 180) {
-          // Markers west and east stay between minBounds and east
+          // console.log('Markers west and east stay between minBounds and east');
           return [[minBounds, e]];
+        } else if (e > maxBounds) {
+          // console.log('When map is moving to right, and east is at maxBounds');
+          return [[minBounds, 180], [-180, maxBounds - 360]];
         }
+
+        // console.log('When map is moving to west (LEFT) side');
         return [[minBounds, 180], [-180, e - 360]];
       } else if (w > 0 && e < 180) {
-        // Markers west and east stay between 0 and 180. example: Indonesia
+        // console.log('Markers west and east stay between 0 and 180. example: Indonesia');
         return [[w, e]];
+      } else if (e < maxBounds) {
+        // console.log('Left side of Belize');
+        return [[w, 180], [-180, e - 360]];
       }
-      return [[w, 180], [-180, eastSide - 360]]; // When map is moving to east (right) side
+      // console.log('When map is moving to east (RIGHT) side');
+      return [[w, 180], [-180, eastSide - 360]];
     }
   }
 
