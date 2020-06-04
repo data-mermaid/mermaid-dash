@@ -42,10 +42,6 @@ const SvgWrapper = styled('svg')`
     `}
 `;
 
-const capitalizeFirstChar = str => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
 const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
   const mediaMin600 = useMediaQuery('(min-width:600px)');
   const mediaMax600 = useMediaQuery('(max-width:600px)');
@@ -65,7 +61,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
   const attributeColorScale = filteredAttributeCollection.map(({ color }) => color);
   const contentData = filteredAttributeCollection.map(({ name }) => {
     const foundAttribute = chartContent.find(({ x }) => x === name);
-    return { x: capitalizeFirstChar(name), y: foundAttribute.y };
+    return { x: name, y: foundAttribute.y };
   });
 
   const labelUnit = protocolName === 'beltfish' ? 'kg/ha' : '%';
@@ -112,6 +108,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
                 stroke: 'transparent',
                 fill: 'transparent'
               }}
+              style={{ textTransform: 'capitalize' }}
             />
           }
           colorScale={setToPrivate ? privateColorScale : attributeColorScale}
@@ -134,7 +131,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
                     },
                     {
                       target: 'labels',
-                      mutation: () => ({ active: true, fontSize: 20 })
+                      mutation: () => ({ active: true, fontSize: 30 })
                     }
                   ];
                 },
@@ -164,7 +161,8 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
             style={{
               labels: {
                 fontSize: mediaMin1281 ? 15 : mediaMin600_Max960 ? 14 : 11,
-                fontFamily: 'Arial'
+                fontFamily: 'Arial',
+                textTransform: 'capitalize'
               }
             }}
             data={legendData}
