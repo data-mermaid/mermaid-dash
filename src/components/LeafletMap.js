@@ -271,14 +271,16 @@ class LeafletMap extends Component {
 
   zoomFullMap() {
     //Zoom to initial load marker cluster.
-    const { zoomFullMap, fullMapZoomHandler } = this.props;
+    const { zoomFullMap, fullMapZoomHandler, getMapBounds } = this.props;
     const { mapBounds } = this.state;
 
     if (zoomFullMap) {
       if (mapBounds) {
+        const bbox = this.createBoundingBox(mapBounds);
         this.map.fitBounds(mapBounds);
         fullMapZoomHandler(false);
         this.map.closePopup();
+        getMapBounds(bbox);
       } else {
         this.map.setView(mapProperty.center, mapProperty.zoom);
       }
