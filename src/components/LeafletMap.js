@@ -271,14 +271,16 @@ class LeafletMap extends Component {
 
   zoomFullMap() {
     //Zoom to initial load marker cluster.
-    const { zoomFullMap, fullMapZoomHandler } = this.props;
+    const { zoomFullMap, fullMapZoomHandler, getMapBounds } = this.props;
     const { mapBounds } = this.state;
 
     if (zoomFullMap) {
       if (mapBounds) {
+        const bbox = this.createBoundingBox(mapBounds);
         this.map.fitBounds(mapBounds);
         fullMapZoomHandler(false);
         this.map.closePopup();
+        getMapBounds(bbox);
       } else {
         this.map.setView(mapProperty.center, mapProperty.zoom);
       }
@@ -331,11 +333,35 @@ class LeafletMap extends Component {
   }
 
   splitWestEast(w, e) {
-    if (e > 180) {
-      return [[w, 180], [-180, e - 360]];
-    }
+    const { mapBounds } = this.state;
+    const maxBounds = mapBounds && mapBounds.getEast();
+    const minBounds = mapBounds && mapBounds.getWest();
+    const eastSide = maxBounds || e;
 
-    return [[w, e]];
+    if (mapBounds && (e < minBounds || w > maxBounds)) {
+      // Out of bounds case
+      return [[]];
+    } else if (eastSide < 180) {
+      // When all markers initially load and locates on the east where it is < 180 degree
+      return [[w, e]];
+    } else if (eastSide > 180) {
+      // When all markers initially load and locates on the east where it is > 180 degree
+      if (w > 180) {
+        // Markers west and east are > 180, example: Belize.
+        return [[w - 360, eastSide - 360]];
+      } else if (minBounds && w < minBounds) {
+        // When map is moving to west (left) side
+        if (e < 180) {
+          // Markers west and east stay between minBounds and east
+          return [[minBounds, e]];
+        }
+        return [[minBounds, 180], [-180, e - 360]];
+      } else if (w > 0 && e < 180) {
+        // Markers west and east stay between 0 and 180. example: Indonesia
+        return [[w, e]];
+      }
+      return [[w, 180], [-180, eastSide - 360]]; // When map is moving to east (right) side
+    }
   }
 
   buildBbox(n, e, s, w) {

@@ -56,6 +56,7 @@ class MermaidDash extends Component {
     highlightCluster: null,
     isLoading: false,
     isFiltering: true,
+    isFilteringChoices: true,
     sidePanelOpen: window.innerWidth >= 960,
     popupOpen: false,
     mobileDisplay: window.innerWidth < 960,
@@ -117,7 +118,6 @@ class MermaidDash extends Component {
     }
 
     if (bbox !== prevBbox) {
-      console.log('bbox updates ====> sites in update now ', sites);
       const updatedSites = this.filterSites(sites, bbox);
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_name')) {
@@ -157,14 +157,12 @@ class MermaidDash extends Component {
       }
 
       const histogramData = this.histogramCount(updatedSites, histogram);
-      console.log('histogram data update in bbox update ', histogramData);
 
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
 
   componentDidMount() {
-    console.log('component did mount');
     const { filterParams, queryLimit } = this.state;
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
@@ -183,8 +181,9 @@ class MermaidDash extends Component {
       date_min_after: dateMin,
       date_max_before: dateMax
     };
-    this.fetchAllSites(paramsObj);
+
     this.fetchAllChoices();
+    this.fetchAllSites(paramsObj);
 
     if (countryName) {
       filterParams.country_name = countryName.split(',');
@@ -269,7 +268,6 @@ class MermaidDash extends Component {
   };
 
   fetchAllSites = async params => {
-    console.log('fetchAllSites');
     const { metrics } = this.state;
     const sites = await this.fetchEntiresSites(params);
 
@@ -282,7 +280,6 @@ class MermaidDash extends Component {
   };
 
   fetchAllChoices = async () => {
-    console.log('fetchAllChoices');
     const { filterChoices } = this.state;
 
     const {
@@ -300,7 +297,7 @@ class MermaidDash extends Component {
     filterChoices.countries = this.fetChNonTestProjectChoices(projects, 'countries', country_list);
     filterChoices.tagsChoices = this.fetChNonTestProjectChoices(projects, 'tags', tags);
 
-    this.setState({ filterChoices });
+    this.setState({ filterChoices, isFilteringChoices: false });
   };
 
   resize() {
@@ -684,7 +681,7 @@ class MermaidDash extends Component {
           filterChoices={this.state.filterChoices}
           showFilterNumbers={this.state.showFilterNumbers}
           numberOfFilteredSites={this.state.sites.length}
-          isFiltering={this.state.isFiltering}
+          isFilteringChoices={this.state.isFilteringChoices}
         />
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}
