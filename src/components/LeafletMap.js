@@ -158,12 +158,13 @@ class LeafletMap extends Component {
       mapBoundingBoxCorner: prevMapBoundingBoxCorner
     } = prevState;
 
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap, mapBounds } = this.state;
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail.id;
     const siteDetailId = siteDetail && siteDetail.id;
 
     if (markersData !== prevMarkersData) {
       this.updateMarkers(markersData);
+      console.log(mapBounds);
     }
 
     if (mapZoomLevel !== prevMapZoomLevel) {
@@ -275,6 +276,7 @@ class LeafletMap extends Component {
     const { mapBounds } = this.state;
 
     if (zoomFullMap) {
+      console.log('init map bounds ', mapBounds);
       if (mapBounds) {
         this.map.fitBounds(mapBounds);
         fullMapZoomHandler(false);
@@ -331,11 +333,34 @@ class LeafletMap extends Component {
   }
 
   splitWestEast(w, e) {
-    if (e > 180) {
-      return [[w, 180], [-180, e - 360]];
-    }
+    console.log('-------------split west eat bounds--------------');
+    const { mapBounds } = this.state;
+    const maxBounds = mapBounds && mapBounds.getEast();
+    const minBounds = mapBounds && mapBounds.getWest();
+    console.log('west ', w);
+    console.log('east ', e);
+    console.log('maxBounds ', maxBounds);
+    console.log('minBounds ', minBounds);
 
-    return [[w, e]];
+    if (mapBounds && (e < minBounds || w > maxBounds)) {
+      console.log('Out of bounds');
+      return [[]];
+    } else {
+      console.log('Inbounds');
+      if (e > 180) {
+        const eastSide = maxBounds || e;
+        // const westSide = minBounds || w;
+        if (w > 180) {
+          return [[w - 360, maxBounds - 360]];
+        }
+        console.log('eastSide ', eastSide);
+        console.log('westSide ', w);
+        return [[w, 180], [-180, eastSide - 360]]; //FIX THIS PART
+      } else if (w < minBounds) {
+        return [[0, e]];
+      }
+      return [[w, e]];
+    }
   }
 
   buildBbox(n, e, s, w) {
@@ -356,7 +381,7 @@ class LeafletMap extends Component {
     const bbox = this.splitWestEast(west, east).map(bound => {
       return this.buildBbox(north, bound[1], south, bound[0]);
     });
-
+    console.log('box is created ', bbox);
     return bbox;
   }
 

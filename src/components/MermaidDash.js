@@ -117,7 +117,6 @@ class MermaidDash extends Component {
     }
 
     if (bbox !== prevBbox) {
-      console.log('bbox updates ====> sites in update now ', sites);
       const updatedSites = this.filterSites(sites, bbox);
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_name')) {
@@ -157,14 +156,12 @@ class MermaidDash extends Component {
       }
 
       const histogramData = this.histogramCount(updatedSites, histogram);
-      console.log('histogram data update in bbox update ', histogramData);
 
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
 
   componentDidMount() {
-    console.log('component did mount');
     const { filterParams, queryLimit } = this.state;
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country_name');
@@ -269,7 +266,6 @@ class MermaidDash extends Component {
   };
 
   fetchAllSites = async params => {
-    console.log('fetchAllSites');
     const { metrics } = this.state;
     const sites = await this.fetchEntiresSites(params);
 
@@ -282,7 +278,6 @@ class MermaidDash extends Component {
   };
 
   fetchAllChoices = async () => {
-    console.log('fetchAllChoices');
     const { filterChoices } = this.state;
 
     const {
