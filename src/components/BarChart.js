@@ -35,7 +35,7 @@ const BarChart = ({ chartContent }) => {
         <VictoryBar
           data={chartContent}
           barWidth={17}
-          style={{ data: { fill: '#024D76' } }}
+          style={{ data: { fill: '#004C76' } }}
           animate={{
             duration: 1000,
             onLoad: { duration: 500 },

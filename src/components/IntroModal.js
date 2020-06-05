@@ -16,7 +16,7 @@ import { DialogText } from '../styles/MermaidStyledComponents';
 const InlineButtonImage = styled('span')`
   color: white;
   display: inline-flex;
-  background: #468dae;
+  background: #004c76;
   align-items: center;
   justify-content: center;
   padding: 2px 6px 4px 6px;
