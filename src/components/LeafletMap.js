@@ -98,9 +98,9 @@ const miniMapLayer = L.tileLayer(
   );
 
 const mapProperty = {
-  center: [-20, 100],
-  zoom: 3,
-  minZoom: 3,
+  center: [-2, 0],
+  zoom: 2,
+  minZoom: 2,
   maxZoom: 16,
   zoomControl: true,
   worldCopyJump: false,
@@ -126,8 +126,9 @@ const miniMapProperty = {
 
 class LeafletMap extends Component {
   state = {
-    mapZoomLevel: mapProperty.zoom,
+    mapZoomLevel: null,
     mapBoundingBoxCorner: null,
+    mapBounds: null,
     siteCenterChange: false,
     popUpList: [],
     miniMap: null
@@ -162,7 +163,7 @@ class LeafletMap extends Component {
     const siteDetailId = siteDetail && siteDetail.id;
 
     if (markersData !== prevMarkersData) {
-      this.updateMarkers(this.props.markersData);
+      this.updateMarkers(markersData);
     }
 
     if (mapZoomLevel !== prevMapZoomLevel) {
@@ -212,21 +213,14 @@ class LeafletMap extends Component {
     this.map = L.map('map', mapProperty);
     const { mobileDisplay } = this.props;
     const miniMapControl = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
-    const initMapBounds = this.map.getBounds();
-    const initBbox = this.createBoundingBox(initMapBounds);
-    const initSouthBbox = initMapBounds.getSouth();
 
     if (!mobileDisplay) {
       miniMapControl.addTo(this.map);
     }
 
     this.setState({
-      mapZoomLevel: this.map.getZoom(),
-      mapBoundingBoxCorner: initSouthBbox,
       miniMap: miniMapControl
     });
-    this.props.getMapBounds(initBbox);
-    this.updateBoundingBoxFromZoom();
   }
 
   //Control re-rendering of component for only certain actions
@@ -401,7 +395,6 @@ class LeafletMap extends Component {
   }
 
   updateBoundingBoxFromZoom() {
-    const { mapZoomLevel } = this.state;
     const { getMapBounds, contentLoadHandler } = this.props;
 
     this.map.once('zoomstart', e => {
@@ -545,7 +538,8 @@ class LeafletMap extends Component {
       removeHighlight,
       setIconActive,
       removeHighlightCluster,
-      setClusterActive
+      setClusterActive,
+      getMapBounds
     } = this.props;
 
     const allClusterStyle = {
@@ -623,6 +617,24 @@ class LeafletMap extends Component {
     });
 
     this.map.addLayer(markersCluster);
+
+    if (markersData.length === 0) {
+      this.map.setView(mapProperty.center, mapProperty.zoom);
+    } else {
+      const mapBounds = markersCluster.getBounds().pad(0.1);
+      const mapBoundingBox = this.createBoundingBox(mapBounds);
+      const mapBoundingBoxCorner = mapBounds.getSouth();
+
+      this.setState({
+        mapZoomLevel: this.map.getZoom(),
+        mapCenterLevel: markersCluster.getBounds().getCenter(),
+        mapBoundingBoxCorner: mapBoundingBoxCorner,
+        mapBounds: mapBounds
+      });
+
+      this.map.fitBounds(mapBounds);
+      getMapBounds(mapBoundingBox);
+    }
   }
 
   render() {

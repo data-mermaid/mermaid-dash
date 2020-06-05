@@ -88,6 +88,9 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
         policy={setToPrivate}
       >
         <VictoryPie
+          animate={{
+            duration: 2000
+          }}
           innerRadius={mediaMax1280 ? 90 : 110}
           height={mediaMax1280 ? 300 : 400}
           width={mediaMax1280 ? 400 : 450}
