@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/macro';
 
 export const ButtonStyle = styled('button')`
   color: ${props => props.theme.color};
-  border: 2px solid ${props => props.theme.borderColor};
+  border: 1px solid ${props => props.theme.borderColor};
   ${props =>
     props.buttonBorder &&
     css`

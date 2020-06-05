@@ -35,7 +35,7 @@ const BarChart = ({ chartContent }) => {
         <VictoryBar
           data={chartContent}
           barWidth={17}
-          style={{ data: { fill: '#1E90FF' } }}
+          style={{ data: { fill: '#024D76' } }}
           animate={{
             duration: 1000,
             onLoad: { duration: 500 },
@@ -46,7 +46,7 @@ const BarChart = ({ chartContent }) => {
               cornerRadius={10}
               pointerLength={0}
               flyoutStyle={{
-                stroke: 'cadetblue',
+                stroke: '#FF6347',
                 strokeWidth: 2,
                 fill: 'skyblue',
                 opacity: 0.75
@@ -65,7 +65,7 @@ const BarChart = ({ chartContent }) => {
                   return [
                     {
                       target: 'data',
-                      mutation: () => ({ style: { fill: 'tomato', width: 30 } })
+                      mutation: () => ({ style: { fill: '#FF6347', width: 30 } })
                     },
                     {
                       target: 'labels',

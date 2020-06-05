@@ -1,7 +1,8 @@
 const color = {
   mermaidDark: '#2C3742',
   mermaidWhite: 'white',
-  mermaidBlue: '#468DAE',
+  mermaidBlue: '#337ab7',
+  mermaidDarkBlue: '#024D76',
   mermaidBlack: 'black',
   mermaidNotAllowed: '#9C9C9C',
   mermaidGray: '#585858',
@@ -21,7 +22,7 @@ export const theme = {
   },
   cardButton: {
     color: color.mermaidWhite,
-    bgColor: color.mermaidBlue,
+    bgColor: color.mermaidDarkBlue,
     notAllowedBgColor: color.mermaidNotAllowed,
     flexDirection: 'row',
     padding: '10px'
