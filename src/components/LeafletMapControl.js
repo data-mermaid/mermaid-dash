@@ -67,7 +67,16 @@ const mapControlStyleProperty = makeStyles(theme => ({
   }
 }));
 
-const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
+const LeafletMapControl = ({
+  fullMapZoomHandler,
+  zoomToSiteHandler,
+  filterHandler,
+  filterParams,
+  filterChoices,
+  showFilterNumbers,
+  numberOfFilteredSites,
+  isFilteringChoices
+}) => {
   const classes = mapControlStyleProperty();
 
   const fullMapToggle = (
@@ -102,6 +111,21 @@ const LeafletMapControl = ({ fullMapZoomHandler, zoomToSiteHandler }) => {
 
   const fullMapControl = <Box className={classes.zoomOutIconWrapperProperty}>{fullMapToggle}</Box>;
   const zoomToControl = <Box className={classes.zoomToIconWrapperProperty}>{zoomToSelectSite}</Box>;
+  const filterControl = (
+    <Box className={classes.filterIconWrapperProperty}>
+      <FilterModal
+        filterHandler={filterHandler}
+        filterParams={filterParams}
+        filterChoices={filterChoices}
+        showFilterNumbers={showFilterNumbers}
+        isFilteringChoices={isFilteringChoices}
+      />
+    </Box>
+  );
+  const numberFiltered = showFilterNumbers && (
+    <Box className={classes.numberOfFilteredSitesWrapperProperty}>{numberOfFilteredSites}</Box>
+  );
+
   const mapLegend = (
     <Paper className={classes.legendProperty}>
       <Box display="flex" flexDirection="column" className={classes.legendItemProperty}>

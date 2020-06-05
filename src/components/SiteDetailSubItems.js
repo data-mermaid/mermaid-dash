@@ -25,7 +25,7 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
       <MenuLink target="_blank" href={loadedSiteProperties.contact_link} rel="noopener noreferrer">
-        <ButtonStyle setHover={true} boxShadow={true}>
+        <ButtonStyle setHover={true}>
           <ContactIcon fontSize="small" className={classes.iconProperty} />
           <Box fontWeight="fontWeightMedium">Contact Admins</Box>
         </ButtonStyle>

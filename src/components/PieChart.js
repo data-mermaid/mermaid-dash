@@ -105,6 +105,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
                 stroke: 'transparent',
                 fill: 'transparent'
               }}
+              style={{ textTransform: 'capitalize' }}
             />
           }
           colorScale={setToPrivate ? privateColorScale : attributeColorScale}
@@ -127,7 +128,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
                     },
                     {
                       target: 'labels',
-                      mutation: () => ({ active: true, fontSize: 20 })
+                      mutation: () => ({ active: true, fontSize: 30 })
                     }
                   ];
                 },
@@ -157,7 +158,8 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
             style={{
               labels: {
                 fontSize: mediaMin1281 ? 15 : mediaMin600_Max960 ? 14 : 11,
-                fontFamily: 'Arial'
+                fontFamily: 'Arial',
+                textTransform: 'capitalize'
               }
             }}
             data={legendData}

@@ -44,7 +44,7 @@ const HeaderItem = ({ children, link }) => {
 
   return (
     <Box className={classes.headerItemStyle}>
-      <MenuLink target="_blank" href={link} rel="noopener noreferrer">
+      <MenuLink target="_blank" href={link} rel="nomodalStageOpener noreferrer">
         {children}
       </MenuLink>
     </Box>
@@ -61,9 +61,9 @@ const HeaderItems = headerContent.map(({ name, link }) => {
 
 const Header = () => {
   const classes = headerStyles();
-  const [open, setModalStage] = useState(true);
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const introModalStage = JSON.parse(sessionStorage.getItem('intro')) === false ? false : true;
+  const [modalStageOpen, setModalStage] = useState(introModalStage);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -74,8 +74,9 @@ const Header = () => {
   };
 
   const modalToggleHandler = () => {
-    setModalStage(!open);
-    if (!open) {
+    setModalStage(!modalStageOpen);
+    sessionStorage.setItem('intro', !modalStageOpen);
+    if (!modalStageOpen) {
       setAnchorEl(null);
     }
   };
@@ -86,7 +87,7 @@ const Header = () => {
         <Box p={1} flexGrow={1}>
           <MermaidLogo height="38px" />
         </Box>
-        <IntroModal open={open} modalToggleHandler={modalToggleHandler} />
+        <IntroModal open={modalStageOpen} modalToggleHandler={modalToggleHandler} />
         {HeaderItems}
         <HeaderMenu
           anchorEl={anchorEl}

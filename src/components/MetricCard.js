@@ -1,5 +1,7 @@
 import React from 'react';
 
+import numberWithCommas from '../lib/number-format';
+
 import { makeStyles } from '@material-ui/core/styles';
 import styled, { css } from 'styled-components/macro';
 
@@ -13,30 +15,30 @@ const TitleBoxStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 11px;
+  font-size: 10px;
   ${props =>
     props.bottomPanelOpen &&
     css`
-      height: 58px;
+      height: 55px;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 14px;
     `}
 
   @media (min-width: 960px) {
     border-top: 1px solid;
-    height: 58px;
+    height: 55px;
     font-weight: bold;
     font-size: 18px;
   }
 `;
 
 const ContentBoxStyle = styled.div`
-  color: #5080ad;
+  color: #024d76;
   padding: ${props => props.bottomPanelOpen && '30px 0px 0px 0'};
-  font-size: ${props => (props.bottomPanelOpen ? '55px' : '32px')};
+  font-size: ${props => (props.bottomPanelOpen ? '35px' : '32px')};
   @media (min-width: 960px) {
     padding: 30px 0px 30px 0;
-    font-size: 55px;
+    font-size: 50px;
   }
 `;
 
@@ -47,9 +49,9 @@ const WrapperMetricCard = styled(Paper)`
 
 const cardStyle = makeStyles(theme => ({
   progress: {
-    margin: '39px',
-    width: '60px !important',
-    height: '60px !important',
+    margin: '34px',
+    width: '58px !important',
+    height: '58px !important',
     [theme.breakpoints.down('sm')]: {
       margin: '7px',
       width: '31px !important',
@@ -61,9 +63,9 @@ const cardStyle = makeStyles(theme => ({
 const MetricCard = ({ content: { title, count }, isLoading, bottomPanelOpen }) => {
   const classes = cardStyle();
 
-  const countContent = title === 'Avg Coral Coverage' ? `${count}%` : count;
+  const countContent = title === 'Avg Coral Coverage' ? `${count}%` : numberWithCommas(count);
 
-  const contentItem =
+  let contentItem =
     count !== null && count >= 0 && !isLoading ? (
       <ContentBoxStyle bottomPanelOpen={bottomPanelOpen}>{countContent}</ContentBoxStyle>
     ) : (
