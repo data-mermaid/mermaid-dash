@@ -33,7 +33,7 @@ const TitleBoxStyle = styled.div`
 `;
 
 const ContentBoxStyle = styled.div`
-  color: #024d76;
+  color: #004c76;
   padding: ${props => props.bottomPanelOpen && '30px 0px 0px 0'};
   font-size: ${props => (props.bottomPanelOpen ? '35px' : '32px')};
   @media (min-width: 960px) {

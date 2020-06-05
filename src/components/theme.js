@@ -2,7 +2,7 @@ const color = {
   mermaidDark: '#2C3742',
   mermaidWhite: 'white',
   mermaidBlue: '#337ab7',
-  mermaidDarkBlue: '#024D76',
+  mermaidDarkBlue: '#004C76',
   mermaidBlack: 'black',
   mermaidNotAllowed: '#9C9C9C',
   mermaidGray: '#585858',
