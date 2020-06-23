@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import styled from 'styled-components/macro';
 
 import { TextLoader, ChartLoader } from './Loader';
@@ -124,7 +126,11 @@ const InformationCard = ({
             <Box className={classes.cardTitleProperty}>
               <Typography variant="h4">{title}</Typography>
               {type === 'histogramChart' && (
-                <HelpIcon style={{ fontSize: '30px', marginLeft: '10px' }} />
+                <Tooltip title="More Information & References" placement="right">
+                  <IconButton>
+                    <HelpIcon style={{ color: '#004C76', fontSize: '30px' }} />
+                  </IconButton>
+                </Tooltip>
               )}
             </Box>
             {subItems}
