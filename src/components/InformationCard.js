@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import styled from 'styled-components/macro';
 
 import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
-import HelpIcon from '@material-ui/icons/Help';
+import LiveCoralCoverModal from './LiveCoralCoverModal';
 // import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
@@ -62,6 +60,12 @@ const InformationCard = ({
     const hardCoralPercentage = hardCoralResult * 100;
 
     return hardCoralPercentage.toFixed(1);
+  };
+
+  const [modalStageOpen, setModalStage] = useState(false);
+
+  const modalToggleHandler = () => {
+    setModalStage(!modalStageOpen);
   };
 
   const subAttributeItem = !setToPrivate && (
@@ -126,11 +130,10 @@ const InformationCard = ({
             <Box className={classes.cardTitleProperty}>
               <Typography variant="h4">{title}</Typography>
               {type === 'histogramChart' && (
-                <Tooltip title="More Information & References" placement="right">
-                  <IconButton>
-                    <HelpIcon style={{ color: '#004C76', fontSize: '30px' }} />
-                  </IconButton>
-                </Tooltip>
+                <LiveCoralCoverModal
+                  open={modalStageOpen}
+                  modalToggleHandler={modalToggleHandler}
+                />
               )}
             </Box>
             {subItems}

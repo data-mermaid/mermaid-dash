@@ -32,7 +32,7 @@ const Note = ({ children, content }) => {
   const classes = modalStyles();
   const contentLengthCheck = content.length > 0;
 
-  const noteTitle = contentLengthCheck && <DialogText dialogTitle={true}>{children}</DialogText>;
+  const noteTitle = contentLengthCheck && <DialogText dialogHeader={true}>{children}</DialogText>;
   const noteBody = contentLengthCheck && (
     <DialogText className={classes.noteContentProperty}>{content}</DialogText>
   );
@@ -55,7 +55,7 @@ const ManagementRegimeNote = ({ children, content }) => {
       })
       .reduce((acc, val) => acc + val, 0);
   const mrNoteLengthCheck = management_regime_notes_length > 0;
-  const noteTitle = mrNoteLengthCheck && <DialogText dialogTitle={true}>{children}</DialogText>;
+  const noteTitle = mrNoteLengthCheck && <DialogText dialogHeader={true}>{children}</DialogText>;
   const noteBody =
     mrNoteLengthCheck &&
     content.map(mr => {
