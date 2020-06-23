@@ -9,6 +9,7 @@ import styled from 'styled-components/macro';
 import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
+import HelpIcon from '@material-ui/icons/Help';
 // import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
@@ -28,6 +29,10 @@ const cardStyle = makeStyles(theme => ({
   },
   iconProperty: {
     paddingRight: '5px'
+  },
+  cardTitleProperty: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
@@ -116,11 +121,15 @@ const InformationCard = ({
       <Paper className={classes.cardWrapper}>
         <Box display="flex" borderBottom={1}>
           <Box flexGrow={1}>
-            <Box>
+            <Box className={classes.cardTitleProperty}>
               <Typography variant="h4">{title}</Typography>
+              {type === 'histogramChart' && (
+                <HelpIcon style={{ fontSize: '30px', marginLeft: '10px' }} />
+              )}
             </Box>
             {subItems}
           </Box>
+
           {/* temporarily Hide download data buttons */}
           {/* {downLoadButton} */}
         </Box>
