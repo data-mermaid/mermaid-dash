@@ -8,7 +8,6 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import styled from 'styled-components/macro';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
 
