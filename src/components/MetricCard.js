@@ -34,7 +34,7 @@ const TitleBoxStyle = styled.div`
 
 const ContentBoxStyle = styled.div`
   color: #004c76;
-  padding: ${props => props.bottomPanelOpen && '30px 0px 0px 0'};
+  padding: ${props => props.bottomPanelOpen && '30px 0px 0px 0px'};
   font-size: ${props => (props.bottomPanelOpen ? '35px' : '32px')};
   @media (min-width: 960px) {
     padding: 30px 0px 30px 0;
@@ -53,9 +53,9 @@ const cardStyle = makeStyles(theme => ({
     width: '58px !important',
     height: '58px !important',
     [theme.breakpoints.down('sm')]: {
-      margin: '7px',
-      width: '31px !important',
-      height: '31px !important'
+      margin: '8px',
+      width: '24px !important',
+      height: '24px !important'
     }
   }
 }));
