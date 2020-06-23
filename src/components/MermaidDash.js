@@ -28,26 +28,56 @@ class MermaidDash extends Component {
       { title: 'Avg Coral Coverage', count: null }
     ],
     histogram: [
-      { x: 0.05, y: 0, label: 0 },
-      { x: 0.1, y: 0, label: 0 },
-      { x: 0.15, y: 0, label: 0 },
-      { x: 0.2, y: 0, label: 0 },
-      { x: 0.25, y: 0, label: 0 },
-      { x: 0.3, y: 0, label: 0 },
-      { x: 0.35, y: 0, label: 0 },
-      { x: 0.4, y: 0, label: 0 },
-      { x: 0.45, y: 0, label: 0 },
-      { x: 0.5, y: 0, label: 0 },
-      { x: 0.55, y: 0, label: 0 },
-      { x: 0.6, y: 0, label: 0 },
-      { x: 0.65, y: 0, label: 0 },
-      { x: 0.7, y: 0, label: 0 },
-      { x: 0.75, y: 0, label: 0 },
-      { x: 0.8, y: 0, label: 0 },
-      { x: 0.85, y: 0, label: 0 },
-      { x: 0.9, y: 0, label: 0 },
-      { x: 0.95, y: 0, label: 0 },
-      { x: 1, y: 0, label: 0 }
+      { x: 2, y: 0, label: 0 },
+      { x: 4, y: 0, label: 0 },
+      { x: 6, y: 0, label: 0 },
+      { x: 8, y: 0, label: 0 },
+      { x: 10, y: 0, label: 0 },
+      { x: 12, y: 0, label: 0 },
+      { x: 14, y: 0, label: 0 },
+      { x: 16, y: 0, label: 0 },
+      { x: 18, y: 0, label: 0 },
+      { x: 20, y: 0, label: 0 },
+      { x: 22, y: 0, label: 0 },
+      { x: 24, y: 0, label: 0 },
+      { x: 26, y: 0, label: 0 },
+      { x: 28, y: 0, label: 0 },
+      { x: 30, y: 0, label: 0 },
+      { x: 32, y: 0, label: 0 },
+      { x: 34, y: 0, label: 0 },
+      { x: 36, y: 0, label: 0 },
+      { x: 38, y: 0, label: 0 },
+      { x: 40, y: 0, label: 0 },
+      { x: 42, y: 0, label: 0 },
+      { x: 44, y: 0, label: 0 },
+      { x: 46, y: 0, label: 0 },
+      { x: 48, y: 0, label: 0 },
+      { x: 50, y: 0, label: 0 },
+      { x: 52, y: 0, label: 0 },
+      { x: 54, y: 0, label: 0 },
+      { x: 56, y: 0, label: 0 },
+      { x: 58, y: 0, label: 0 },
+      { x: 60, y: 0, label: 0 },
+      { x: 62, y: 0, label: 0 },
+      { x: 64, y: 0, label: 0 },
+      { x: 66, y: 0, label: 0 },
+      { x: 68, y: 0, label: 0 },
+      { x: 70, y: 0, label: 0 },
+      { x: 72, y: 0, label: 0 },
+      { x: 74, y: 0, label: 0 },
+      { x: 76, y: 0, label: 0 },
+      { x: 78, y: 0, label: 0 },
+      { x: 80, y: 0, label: 0 },
+      { x: 82, y: 0, label: 0 },
+      { x: 84, y: 0, label: 0 },
+      { x: 86, y: 0, label: 0 },
+      { x: 88, y: 0, label: 0 },
+      { x: 90, y: 0, label: 0 },
+      { x: 92, y: 0, label: 0 },
+      { x: 94, y: 0, label: 0 },
+      { x: 96, y: 0, label: 0 },
+      { x: 98, y: 0, label: 0 },
+      { x: 100, y: 0, label: 0 }
     ],
     bbox: null,
     zoomFullMap: false,
@@ -551,23 +581,21 @@ class MermaidDash extends Component {
           ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
           : null;
 
-      return result;
+      return result * 100;
     });
 
     const histogramResult = histogramData.map(({ x }) => {
       let count = 0;
 
       for (let i = 0; i < protocolArr.length; i++) {
-        const calDiff = parseFloat((x - protocolArr[i]).toFixed(3));
-
-        if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 0.05)) {
+        const calDiff = parseFloat(x - protocolArr[i]).toFixed(2);
+        if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 2)) {
           count += 1;
         }
       }
 
       return { x, y: count, label: count };
     });
-
     return histogramResult;
   }
 
