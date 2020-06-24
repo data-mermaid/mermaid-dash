@@ -168,10 +168,13 @@ class MermaidDash extends Component {
     const countryName = params.get('country');
     const projectId = params.get('project');
     const organizationId = params.get('organization');
-    const dateMin = params.get('date_min_after');
-    const dateMax = params.get('date_max_before');
+    const date = params.get('date');
+    const dateMinMax = date ? date.split(',') : [];
+    const dateMin = dateMinMax[0] && `${dateMinMax[0]}-01-01`;
+    const dateMax = dateMinMax[1] && `${dateMinMax[1]}-12-31`;
+
     const queryStringsFound =
-      countryName || projectId || organizationId || dateMin || dateMax ? true : false;
+      countryName || projectId || organizationId || dateMinMax ? true : false;
 
     const paramsObj = {
       limit: queryLimit,
@@ -198,11 +201,11 @@ class MermaidDash extends Component {
     }
 
     if (dateMin) {
-      filterParams.date_min_after = dateMin.split('-')[0];
+      filterParams.date_min_after = dateMinMax[0];
     }
 
     if (dateMax) {
-      filterParams.date_max_before = dateMax.split('-')[0];
+      filterParams.date_max_before = dateMinMax[1];
     }
 
     this.setState({
@@ -612,12 +615,9 @@ class MermaidDash extends Component {
       queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='));
     }
 
-    if (dateMinProperty[1].length > 0) {
-      queryStrings.push([dateMinProperty[0], `${dateMinProperty[1]}-01-01`].join('='));
-    }
-
-    if (dateMaxProperty[1].length > 0) {
-      queryStrings.push([dateMaxProperty[0], `${dateMaxProperty[1]}-12-31`].join('='));
+    if (dateMinProperty[1].length > 0 || dateMaxProperty[1].length > 0) {
+      const dateString = [`${dateMinProperty[1]}`, `${dateMaxProperty[1]}`].join(',');
+      queryStrings.push(['date', dateString].join('='));
     }
 
     this.props.history.push({
