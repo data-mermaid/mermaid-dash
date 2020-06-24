@@ -74,24 +74,10 @@ const FilterModal = ({
     setEndYearGreater(option);
   };
 
-  const convertToId = (names, filtered_options) => {
-    const result = filtered_options.reduce((newArr, obj) => {
-      if (names.includes(obj.name)) {
-        newArr.push(obj.id);
-      }
-      return newArr;
-    }, []);
-    return result;
-  };
-
   const addQueryStrings = (property, options) => {
     const params = { ...queryStrings };
 
-    if (property === 'organization') {
-      params[property] = convertToId(options, filterChoices.tags);
-    } else {
-      params[property] = options;
-    }
+    params[property] = options;
 
     setQueryStrings(params);
   };

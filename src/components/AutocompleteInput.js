@@ -8,16 +8,6 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
   const project_names = filterChoices.projects.map(project => project.name).sort(byCaseSensitive);
   const tag_names = filterChoices.tags.map(tag => tag.name).sort(byCaseSensitive);
 
-  const convertToName = (ids, filtered_options) => {
-    const result = filtered_options.reduce((newArr, obj) => {
-      if (ids.includes(obj.id)) {
-        newArr.push(obj.name);
-      }
-      return newArr;
-    }, []);
-    return result;
-  };
-
   return (
     <>
       <AutocompleteFilter
@@ -38,7 +28,7 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
         id="organization"
         label="Organization"
         options={tag_names}
-        preFilledValues={convertToName(filterParams.organization, filterChoices.tags)}
+        preFilledValues={filterParams.organization}
         addQueryStrings={addQueryStrings}
       />
     </>
