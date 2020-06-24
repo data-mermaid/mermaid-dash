@@ -94,6 +94,7 @@ const FilterModal = ({
     } else {
       params[property] = options;
     }
+    console.log(params);
     setQueryStrings(params);
   };
 

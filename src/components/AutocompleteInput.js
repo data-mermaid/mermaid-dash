@@ -21,10 +21,10 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
   return (
     <>
       <AutocompleteFilter
-        id="country_name"
+        id="country"
         label="Country"
         options={country_names}
-        preFilledValues={filterParams.country_name}
+        preFilledValues={filterParams.country}
         addQueryStrings={addQueryStrings}
       />
       <AutocompleteFilter
