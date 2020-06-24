@@ -63,7 +63,7 @@ class MermaidDash extends Component {
     dragPanelPosition: { x: 0, y: -175 },
     filterParams: {
       country: [],
-      project_id: [],
+      project: [],
       organization: [],
       date_min_after: '',
       date_max_before: ''
@@ -81,7 +81,7 @@ class MermaidDash extends Component {
       histogram,
       filterParams: {
         country: countryName,
-        project_id: projectId,
+        project: projectId,
         organization: organizationId,
         date_min_after: dateMin,
         date_max_before: dateMax
@@ -93,7 +93,7 @@ class MermaidDash extends Component {
       bbox: prevBbox,
       filterParams: {
         country: prevCountryName,
-        project_id: prevProjectId,
+        project: prevProjectId,
         organization: prevOrganizationId,
         date_min_after: prevDateMin,
         date_max_before: prevDateMax
@@ -126,8 +126,8 @@ class MermaidDash extends Component {
         this.setState({ metrics });
       }
 
-      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id')) {
-        metrics[1].count = this.getCount(updatedSites, 'project_id');
+      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project')) {
+        metrics[1].count = this.getCount(updatedSites, 'project');
 
         this.setState({ metrics });
       }
@@ -166,7 +166,7 @@ class MermaidDash extends Component {
     const { filterParams, queryLimit } = this.state;
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country');
-    const projectId = params.get('project_id');
+    const projectId = params.get('project');
     const organizationId = params.get('organization');
     const dateMin = params.get('date_min_after');
     const dateMax = params.get('date_max_before');
@@ -190,7 +190,7 @@ class MermaidDash extends Component {
     }
 
     if (projectId) {
-      filterParams.project_id = projectId.split(',');
+      filterParams.project = projectId.split(',');
     }
 
     if (organizationId) {
@@ -584,7 +584,7 @@ class MermaidDash extends Component {
   filterHandler = params => {
     const newParams = { ...this.state.filterParams };
     newParams.country = params.country;
-    newParams.project_id = params.project_id;
+    newParams.project = params.project;
     newParams.organization = params.organization;
     newParams.date_min_after = params.date_min_after;
     newParams.date_max_before = params.date_max_before;
