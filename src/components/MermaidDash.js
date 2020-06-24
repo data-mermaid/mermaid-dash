@@ -64,7 +64,7 @@ class MermaidDash extends Component {
     filterParams: {
       country: [],
       project_id: [],
-      tag_id: [],
+      organization: [],
       date_min_after: '',
       date_max_before: ''
     },
@@ -82,7 +82,7 @@ class MermaidDash extends Component {
       filterParams: {
         country: countryName,
         project_id: projectId,
-        tag_id: tagId,
+        organization: organizationId,
         date_min_after: dateMin,
         date_max_before: dateMax
       }
@@ -94,7 +94,7 @@ class MermaidDash extends Component {
       filterParams: {
         country: prevCountryName,
         project_id: prevProjectId,
-        tag_id: prevTagId,
+        organization: prevOrganizationId,
         date_min_after: prevDateMin,
         date_max_before: prevDateMax
       }
@@ -110,7 +110,7 @@ class MermaidDash extends Component {
     if (
       countryName !== prevCountryName ||
       projectId !== prevProjectId ||
-      tagId !== prevTagId ||
+      organizationId !== prevOrganizationId ||
       dateMin !== prevDateMin ||
       dateMax !== prevDateMax
     ) {
@@ -167,17 +167,17 @@ class MermaidDash extends Component {
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country');
     const projectId = params.get('project_id');
-    const tagId = params.get('tag_id');
+    const organizationId = params.get('organization');
     const dateMin = params.get('date_min_after');
     const dateMax = params.get('date_max_before');
     const queryStringsFound =
-      countryName || projectId || tagId || dateMin || dateMax ? true : false;
+      countryName || projectId || organizationId || dateMin || dateMax ? true : false;
 
     const paramsObj = {
       limit: queryLimit,
       country_name: countryName,
       project_id: projectId,
-      tag_id: tagId,
+      tag_id: organizationId,
       date_min_after: dateMin,
       date_max_before: dateMax
     };
@@ -193,8 +193,8 @@ class MermaidDash extends Component {
       filterParams.project_id = projectId.split(',');
     }
 
-    if (tagId) {
-      filterParams.tag_id = tagId.split(',');
+    if (organizationId) {
+      filterParams.organization = organizationId.split(',');
     }
 
     if (dateMin) {
@@ -585,7 +585,7 @@ class MermaidDash extends Component {
     const newParams = { ...this.state.filterParams };
     newParams.country = params.country;
     newParams.project_id = params.project_id;
-    newParams.tag_id = params.tag_id;
+    newParams.organization = params.organization;
     newParams.date_min_after = params.date_min_after;
     newParams.date_max_before = params.date_max_before;
 
@@ -596,7 +596,7 @@ class MermaidDash extends Component {
     const queryStrings = [];
     const countryProperty = Object.entries(this.state.filterParams)[0];
     const projectIdProperty = Object.entries(this.state.filterParams)[1];
-    const tagIdProperty = Object.entries(this.state.filterParams)[2];
+    const organizationIdProperty = Object.entries(this.state.filterParams)[2];
     const dateMinProperty = Object.entries(this.state.filterParams)[3];
     const dateMaxProperty = Object.entries(this.state.filterParams)[4];
 
@@ -608,8 +608,8 @@ class MermaidDash extends Component {
       queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='));
     }
 
-    if (tagIdProperty[1].length > 0) {
-      queryStrings.push([tagIdProperty[0], tagIdProperty[1].join(',')].join('='));
+    if (organizationIdProperty[1].length > 0) {
+      queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='));
     }
 
     if (dateMinProperty[1].length > 0) {

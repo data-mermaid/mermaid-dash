@@ -35,10 +35,10 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
         addQueryStrings={addQueryStrings}
       />
       <AutocompleteFilter
-        id="tag_id"
+        id="organization"
         label="Organization"
         options={tag_names}
-        preFilledValues={convertToName(filterParams.tag_id, filterChoices.tags)}
+        preFilledValues={convertToName(filterParams.organization, filterChoices.tags)}
         addQueryStrings={addQueryStrings}
       />
     </>

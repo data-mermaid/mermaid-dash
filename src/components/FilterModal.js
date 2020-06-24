@@ -89,7 +89,7 @@ const FilterModal = ({
 
     if (property === 'project_id') {
       params[property] = convertToId(options, filterChoices.projects);
-    } else if (property === 'tag_id') {
+    } else if (property === 'organization') {
       params[property] = convertToId(options, filterChoices.tags);
     } else {
       params[property] = options;
