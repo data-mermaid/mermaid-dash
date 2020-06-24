@@ -172,9 +172,8 @@ class MermaidDash extends Component {
     const dateMinMax = date ? date.split(',') : [];
     const dateMin = dateMinMax[0] && `${dateMinMax[0]}-01-01`;
     const dateMax = dateMinMax[1] && `${dateMinMax[1]}-12-31`;
-
     const queryStringsFound =
-      countryName || projectId || organizationId || dateMinMax ? true : false;
+      countryName || projectId || organizationId || dateMinMax.length > 0 ? true : false;
 
     const paramsObj = {
       limit: queryLimit,
