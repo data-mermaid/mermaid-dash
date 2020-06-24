@@ -164,6 +164,7 @@ class MermaidDash extends Component {
 
   componentDidMount() {
     const { filterParams, queryLimit } = this.state;
+
     const params = new URLSearchParams(this.props.location.search);
     const countryName = params.get('country');
     const projectId = params.get('project');
@@ -172,9 +173,9 @@ class MermaidDash extends Component {
     const dateMinMax = date ? date.split(',') : [];
     const dateMin = dateMinMax[0] && `${dateMinMax[0]}-01-01`;
     const dateMax = dateMinMax[1] && `${dateMinMax[1]}-12-31`;
+
     const queryStringsFound =
       countryName || projectId || organizationId || dateMinMax.length > 0 ? true : false;
-
     const paramsObj = {
       limit: queryLimit,
       country_name: countryName,
@@ -184,7 +185,6 @@ class MermaidDash extends Component {
       date_max_before: dateMax
     };
 
-    this.fetchAllChoices();
     this.fetchAllSites(paramsObj);
 
     if (countryName) {
@@ -200,11 +200,11 @@ class MermaidDash extends Component {
     }
 
     if (dateMin) {
-      filterParams.date_min_after = dateMinMax[0];
+      filterParams.date_min_after = dateMin[0];
     }
 
     if (dateMax) {
-      filterParams.date_max_before = dateMinMax[1];
+      filterParams.date_max_before = dateMax[1];
     }
 
     this.setState({
@@ -215,6 +215,18 @@ class MermaidDash extends Component {
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
   }
+
+  convertToId = (names, filtered_options) => {
+    const result = filtered_options.reduce((newArr, obj) => {
+      for (let name of names) {
+        if (obj.name === name) {
+          newArr.push(obj.id);
+        }
+      }
+      return newArr;
+    }, []);
+    return result.join(',');
+  };
 
   getBboxXY = bbox => {
     return bbox.map(item => {
@@ -271,7 +283,10 @@ class MermaidDash extends Component {
 
   fetchAllSites = async params => {
     const { metrics } = this.state;
-    const sites = await this.fetchEntiresSites(params);
+
+    const choices = await this.fetchAllChoices(params);
+
+    const sites = await this.fetchEntiresSites(choices);
 
     if (sites.length === 0) {
       metrics.map(metric => (metric.count = 0));
@@ -281,25 +296,41 @@ class MermaidDash extends Component {
     this.setState({ sites, isFiltering: false });
   };
 
-  fetchAllChoices = async () => {
+  fetchAllChoices = params => {
     const { filterChoices } = this.state;
+    const projectsParam = params.project_id && params.project_id.split(',');
+    const projectApi = choices.get('/projects/?showall&status=90&limit=1000');
+    const organizationApi = choices.get('/projecttags/');
+    const choicesApi = choices.get('/choices/');
 
-    const {
-      data: { results: projects }
-    } = await choices.get('/projects/?showall&status=90&limit=1000');
+    return Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
+      const {
+        data: { results: projects }
+      } = response[0];
 
-    const { data: choices_data } = await choices.get('/choices/');
+      const {
+        data: { results: organizations }
+      } = response[1];
 
-    const {
-      data: { results: tags }
-    } = await choices.get('/projecttags/');
+      const { data: countries } = response[2];
+      const country_list = this.getChoices('countries', countries);
 
-    const country_list = this.fetchChoices('countries', choices_data);
-    filterChoices.projects = projects;
-    filterChoices.countries = this.fetChNonTestProjectChoices(projects, 'countries', country_list);
-    filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', tags);
+      filterChoices.projects = projects;
+      filterChoices.countries = this.fetChNonTestProjectChoices(
+        projects,
+        'countries',
+        country_list
+      );
+      filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', organizations);
 
-    this.setState({ filterChoices, isFilteringChoices: false });
+      if (projectsParam) {
+        //when project are set, convert to project id for querying
+        params.project_id = this.convertToId(projectsParam, projects);
+      }
+
+      this.setState({ filterChoices, isFilteringChoices: false });
+      return params;
+    });
   };
 
   resize() {
@@ -596,11 +627,12 @@ class MermaidDash extends Component {
 
   filterUpdate = () => {
     const queryStrings = [];
-    const countryProperty = Object.entries(this.state.filterParams)[0];
-    const projectIdProperty = Object.entries(this.state.filterParams)[1];
-    const organizationIdProperty = Object.entries(this.state.filterParams)[2];
-    const dateMinProperty = Object.entries(this.state.filterParams)[3];
-    const dateMaxProperty = Object.entries(this.state.filterParams)[4];
+    const { filterParams } = this.state;
+    const countryProperty = Object.entries(filterParams)[0];
+    const projectIdProperty = Object.entries(filterParams)[1];
+    const organizationIdProperty = Object.entries(filterParams)[2];
+    const dateMinProperty = Object.entries(filterParams)[3];
+    const dateMaxProperty = Object.entries(filterParams)[4];
 
     if (countryProperty[1].length > 0) {
       queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
@@ -627,7 +659,7 @@ class MermaidDash extends Component {
     window.location.reload();
   };
 
-  fetchChoices = (choice_name, choices) => {
+  getChoices = (choice_name, choices) => {
     return choices
       .reduce((newArray, obj) => {
         if (obj.name === choice_name) {

@@ -87,13 +87,12 @@ const FilterModal = ({
   const addQueryStrings = (property, options) => {
     const params = { ...queryStrings };
 
-    if (property === 'project') {
-      params[property] = convertToId(options, filterChoices.projects);
-    } else if (property === 'organization') {
+    if (property === 'organization') {
       params[property] = convertToId(options, filterChoices.tags);
     } else {
       params[property] = options;
     }
+
     setQueryStrings(params);
   };
 
