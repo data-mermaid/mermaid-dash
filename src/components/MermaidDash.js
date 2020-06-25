@@ -104,7 +104,6 @@ class MermaidDash extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(`%cComponent Did Update `, `color:blue`);
     const {
       sites,
       bbox,
@@ -189,14 +188,11 @@ class MermaidDash extends Component {
       }
 
       const histogramData = this.histogramCount(updatedSites, histogram);
-      console.log('histogram data ', histogramData);
-      console.log(`%cSetstate histogram with this data`, `color:green`);
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
 
   componentDidMount() {
-    console.log(`%cComponent Did Mount `, `color:blue`);
     const { filterParams, queryLimit } = this.state;
 
     const params = new URLSearchParams(this.props.location.search);
@@ -306,7 +302,6 @@ class MermaidDash extends Component {
   };
 
   fetchEntiresSites = async (params, pageNo = 1) => {
-    console.log(`%cFetch Entire Sites `, `color:red`);
     const results = await this.fetchSitesChunk(params, pageNo);
     const { features, count } = results;
 
@@ -318,7 +313,6 @@ class MermaidDash extends Component {
   };
 
   fetchAllSites = async params => {
-    console.log(`%cFetch All Sites `, `color:red`);
     const { metrics } = this.state;
 
     const updatedParams = await this.fetchAllChoices(params);
@@ -329,13 +323,11 @@ class MermaidDash extends Component {
       metrics.map(metric => (metric.count = 0));
       this.setState({ metrics, isFiltering: false });
     }
-    console.log(sites);
-    console.log(`%cSetstate Sites `, `color:green`);
+
     this.setState({ sites, isFiltering: false });
   };
 
   fetchAllChoices = async params => {
-    console.log(`%cFetch All Choices `, `color:red`);
     const { filterChoices } = this.state;
     const projectsParam = params.project_id && params.project_id.split(',');
     const organizationsParam = params.tag_id && params.tag_id.split(',');
@@ -374,7 +366,6 @@ class MermaidDash extends Component {
       }
 
       this.setState({ filterChoices, isFilteringChoices: false });
-      console.log('promise all returns params');
       return params;
     });
   };
@@ -670,7 +661,6 @@ class MermaidDash extends Component {
   };
 
   filterUpdate = () => {
-    console.log(`%cFilter Update`, `color:red`);
     const queryStrings = [];
     const { filterParams } = this.state;
     const countryProperty = Object.entries(filterParams)[0];

@@ -10,7 +10,6 @@ const calculateYs = content => {
 };
 
 const BarChart = ({ chartContent }) => {
-  console.log('BarChart content ', chartContent);
   const nonZeroContent = calculateYs(chartContent);
 
   return (
