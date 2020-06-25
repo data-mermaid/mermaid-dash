@@ -104,6 +104,7 @@ class MermaidDash extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(`%cComponent Did Update `, `color:blue`);
     const {
       sites,
       bbox,
@@ -115,7 +116,8 @@ class MermaidDash extends Component {
         organization: organizationId,
         date_min_after: dateMin,
         date_max_before: dateMax
-      }
+      },
+      isFiltering
     } = this.state;
 
     const {
@@ -147,7 +149,7 @@ class MermaidDash extends Component {
       this.filterUpdate();
     }
 
-    if (bbox !== prevBbox) {
+    if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country')) {
@@ -187,12 +189,14 @@ class MermaidDash extends Component {
       }
 
       const histogramData = this.histogramCount(updatedSites, histogram);
-
+      console.log('histogram data ', histogramData);
+      console.log(`%cSetstate histogram with this data`, `color:green`);
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
 
   componentDidMount() {
+    console.log(`%cComponent Did Mount `, `color:blue`);
     const { filterParams, queryLimit } = this.state;
 
     const params = new URLSearchParams(this.props.location.search);
@@ -302,6 +306,7 @@ class MermaidDash extends Component {
   };
 
   fetchEntiresSites = async (params, pageNo = 1) => {
+    console.log(`%cFetch Entire Sites `, `color:red`);
     const results = await this.fetchSitesChunk(params, pageNo);
     const { features, count } = results;
 
@@ -313,6 +318,7 @@ class MermaidDash extends Component {
   };
 
   fetchAllSites = async params => {
+    console.log(`%cFetch All Sites `, `color:red`);
     const { metrics } = this.state;
 
     const updatedParams = await this.fetchAllChoices(params);
@@ -323,11 +329,13 @@ class MermaidDash extends Component {
       metrics.map(metric => (metric.count = 0));
       this.setState({ metrics, isFiltering: false });
     }
-
+    console.log(sites);
+    console.log(`%cSetstate Sites `, `color:green`);
     this.setState({ sites, isFiltering: false });
   };
 
-  fetchAllChoices = params => {
+  fetchAllChoices = async params => {
+    console.log(`%cFetch All Choices `, `color:red`);
     const { filterChoices } = this.state;
     const projectsParam = params.project_id && params.project_id.split(',');
     const organizationsParam = params.tag_id && params.tag_id.split(',');
@@ -335,7 +343,7 @@ class MermaidDash extends Component {
     const organizationApi = choices.get('/projecttags/');
     const choicesApi = choices.get('/choices/');
 
-    return Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
+    return await Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
       const {
         data: { results: projects }
       } = response[0];
@@ -356,15 +364,17 @@ class MermaidDash extends Component {
       filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', organizations);
 
       if (projectsParam) {
-        //when project are set, convert to project id for querying
+        //when project names are set, convert to project ids for querying
         params.project_id = this.convertToId(projectsParam, projects);
       }
 
       if (organizationsParam) {
+        //when organization names are set, convert to tag ids for querying
         params.tag_id = this.convertToId(organizationsParam, organizations);
       }
 
       this.setState({ filterChoices, isFilteringChoices: false });
+      console.log('promise all returns params');
       return params;
     });
   };
@@ -660,6 +670,7 @@ class MermaidDash extends Component {
   };
 
   filterUpdate = () => {
+    console.log(`%cFilter Update`, `color:red`);
     const queryStrings = [];
     const { filterParams } = this.state;
     const countryProperty = Object.entries(filterParams)[0];
