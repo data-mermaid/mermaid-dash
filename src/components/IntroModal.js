@@ -63,7 +63,7 @@ const IntroModal = ({ open, modalToggleHandler }) => {
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>About</DialogText>
         </MuiDialogTitle>
-        <MuiDialogContent>
+        <MuiDialogContent dividers>
           <DialogText>
             Welcome to the MERMAID dashboard. This information represents the time, resources and
             expertise of hundreds of coral reef scientists around the world.

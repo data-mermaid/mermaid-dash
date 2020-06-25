@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -9,6 +9,7 @@ import styled from 'styled-components/macro';
 import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
+import LiveCoralCoverModal from './LiveCoralCoverModal';
 // import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
@@ -28,6 +29,10 @@ const cardStyle = makeStyles(theme => ({
   },
   iconProperty: {
     paddingRight: '5px'
+  },
+  cardTitleProperty: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
@@ -38,6 +43,7 @@ const InformationCard = ({
   setToPrivate,
   privateLabel,
   histogramContent,
+  isFiltering,
   title,
   type,
   bleachingSubItems,
@@ -55,6 +61,12 @@ const InformationCard = ({
     const hardCoralPercentage = hardCoralResult * 100;
 
     return hardCoralPercentage.toFixed(1);
+  };
+
+  const [modalStageOpen, setModalStage] = useState(false);
+
+  const modalToggleHandler = () => {
+    setModalStage(!modalStageOpen);
   };
 
   const subAttributeItem = !setToPrivate && (
@@ -108,19 +120,27 @@ const InformationCard = ({
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
         histogramContent={histogramContent}
+        isFiltering={isFiltering}
       />
     );
 
   const cardContent =
-    histogramContent || pieChartContent || textContent ? (
+    (histogramContent || pieChartContent || textContent) && !isFiltering ? (
       <Paper className={classes.cardWrapper}>
         <Box display="flex" borderBottom={1}>
           <Box flexGrow={1}>
-            <Box>
+            <Box className={classes.cardTitleProperty}>
               <Typography variant="h4">{title}</Typography>
+              {type === 'histogramChart' && (
+                <LiveCoralCoverModal
+                  open={modalStageOpen}
+                  modalToggleHandler={modalToggleHandler}
+                />
+              )}
             </Box>
             {subItems}
           </Box>
+
           {/* temporarily Hide download data buttons */}
           {/* {downLoadButton} */}
         </Box>
