@@ -43,6 +43,7 @@ const InformationCard = ({
   setToPrivate,
   privateLabel,
   histogramContent,
+  isFiltering,
   title,
   type,
   bleachingSubItems,
@@ -119,11 +120,12 @@ const InformationCard = ({
         setToPrivate={setToPrivate}
         privateLabel={privateLabel}
         histogramContent={histogramContent}
+        isFiltering={isFiltering}
       />
     );
 
   const cardContent =
-    histogramContent || pieChartContent || textContent ? (
+    (histogramContent || pieChartContent || textContent) && !isFiltering ? (
       <Paper className={classes.cardWrapper}>
         <Box display="flex" borderBottom={1}>
           <Box flexGrow={1}>

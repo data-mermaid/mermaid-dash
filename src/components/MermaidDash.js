@@ -743,6 +743,7 @@ class MermaidDash extends Component {
           showSiteDetail={this.state.showSiteDetail}
           metrics={this.state.metrics}
           histogramContent={this.state.histogram}
+          isFiltering={this.state.isFiltering}
           clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
