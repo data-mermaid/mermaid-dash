@@ -90,7 +90,8 @@ const DrawerDashBoard = ({
   histogramContent,
   siteDetail,
   clearSelectedSiteHandler,
-  hideDrawer
+  hideDrawer,
+  isFiltering
 }) => {
   const classes = drawerStyleProperties();
 
@@ -130,12 +131,18 @@ const DrawerDashBoard = ({
 
   const dashboard = (
     <div className={classes.summaryDashboardProperty}>
-      <InformationCard title={summary.title} type={summary.type} textContent={summary} />
+      <InformationCard
+        title={summary.title}
+        type={summary.type}
+        textContent={summary}
+        isFiltering={isFiltering}
+      />
       <MetricCards metrics={metrics} isLoading={isLoading} />
       <InformationCard
         title={histogram.title}
         type={histogram.type}
         histogramContent={histogramContent}
+        isFiltering={isFiltering}
       />
     </div>
   );

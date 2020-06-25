@@ -115,7 +115,8 @@ class MermaidDash extends Component {
         organization: organizationId,
         date_min_after: dateMin,
         date_max_before: dateMax
-      }
+      },
+      isFiltering
     } = this.state;
 
     const {
@@ -147,7 +148,7 @@ class MermaidDash extends Component {
       this.filterUpdate();
     }
 
-    if (bbox !== prevBbox) {
+    if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country')) {
@@ -187,7 +188,6 @@ class MermaidDash extends Component {
       }
 
       const histogramData = this.histogramCount(updatedSites, histogram);
-
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
@@ -327,7 +327,7 @@ class MermaidDash extends Component {
     this.setState({ sites, isFiltering: false });
   };
 
-  fetchAllChoices = params => {
+  fetchAllChoices = async params => {
     const { filterChoices } = this.state;
     const projectsParam = params.project_id && params.project_id.split(',');
     const organizationsParam = params.tag_id && params.tag_id.split(',');
@@ -335,7 +335,7 @@ class MermaidDash extends Component {
     const organizationApi = choices.get('/projecttags/');
     const choicesApi = choices.get('/choices/');
 
-    return Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
+    return await Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
       const {
         data: { results: projects }
       } = response[0];
@@ -356,11 +356,12 @@ class MermaidDash extends Component {
       filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', organizations);
 
       if (projectsParam) {
-        //when project are set, convert to project id for querying
+        //when project names are set, convert to project ids for querying
         params.project_id = this.convertToId(projectsParam, projects);
       }
 
       if (organizationsParam) {
+        //when organization names are set, convert to tag ids for querying
         params.tag_id = this.convertToId(organizationsParam, organizations);
       }
 
@@ -732,6 +733,7 @@ class MermaidDash extends Component {
           showSiteDetail={this.state.showSiteDetail}
           metrics={this.state.metrics}
           histogramContent={this.state.histogram}
+          isFiltering={this.state.isFiltering}
           clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSiteHandler={this.zoomToSiteHandler}
