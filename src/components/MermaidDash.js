@@ -151,14 +151,14 @@ class MermaidDash extends Component {
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
 
-      if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country')) {
-        metrics[0].count = this.getCount(updatedSites, 'country');
+      if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_id')) {
+        metrics[0].count = this.getCount(updatedSites, 'country_id');
 
         this.setState({ metrics });
       }
 
-      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project')) {
-        metrics[1].count = this.getCount(updatedSites, 'project');
+      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id')) {
+        metrics[1].count = this.getCount(updatedSites, 'project_id');
 
         this.setState({ metrics });
       }
