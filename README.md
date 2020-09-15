@@ -10,8 +10,12 @@ If you've been onboarded, or have worked with a Node-based project that uses NPM
 
 ### Base Requirements
 A .env file is required in the root, with these vars defined:
+
+```
 SKIP_PREFLIGHT_CHECK=true
-REACT_APP_API_URL=
+REACT_APP_MERMAID_API_URL=
+REACT_APP_SUMMARY_API_URL=
+```
 
 #### Node
 
