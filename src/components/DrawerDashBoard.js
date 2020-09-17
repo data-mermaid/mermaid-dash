@@ -14,7 +14,7 @@ import Box from '@material-ui/core/Box';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { summary, histogram, drawerWidth } from '../constants/summary-information';
 import SidePanelControl from './SidePanelControl';

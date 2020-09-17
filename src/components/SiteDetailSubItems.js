@@ -5,7 +5,7 @@ import ContactIcon from '@material-ui/icons/Email';
 import { ThemeProvider } from 'styled-components/macro';
 import { makeStyles } from '@material-ui/core/styles';
 import { ButtonStyle, MenuLink } from '../styles/MermaidStyledComponents';
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
