@@ -18,7 +18,7 @@ class MermaidDash extends Component {
     showDropDown: false,
     sites: [],
     siteDetail: null,
-    siteDropDownData: [],
+    popupSiteList: [],
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
@@ -150,6 +150,9 @@ class MermaidDash extends Component {
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
+      const updatedSiteProtocols = updatedSites.map(({ protocols }) => {
+        return protocols;
+      });
 
       if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_id')) {
         metrics[0].count = this.getCount(updatedSites, 'country_id');
@@ -175,19 +178,19 @@ class MermaidDash extends Component {
         this.setState({ metrics });
       }
 
-      if (prevMetricTransectsCount !== this.getTransectCount(updatedSites, 'protocols')) {
-        metrics[4].count = this.getTransectCount(updatedSites, 'protocols');
+      if (prevMetricTransectsCount !== this.getTransectCount(updatedSites)) {
+        metrics[4].count = this.getTransectCount(updatedSites);
 
         this.setState({ metrics });
       }
 
-      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSites, 'protocols')) {
-        metrics[5].count = this.getAvgCoralCount(updatedSites, 'protocols');
+      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSiteProtocols)) {
+        metrics[5].count = this.getAvgCoralCount(updatedSiteProtocols);
 
         this.setState({ metrics });
       }
 
-      const histogramData = this.histogramCount(updatedSites, histogram);
+      const histogramData = this.histogramCount(updatedSiteProtocols, histogram);
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
@@ -215,28 +218,17 @@ class MermaidDash extends Component {
       date_min_after: dateMin,
       date_max_before: dateMax
     };
-
     this.fetchAllSites(paramsObj);
 
-    if (countryName) {
-      filterParams.country = countryName.split(',');
-    }
+    if (countryName) filterParams.country = countryName.split(',');
 
-    if (projectId) {
-      filterParams.project = projectId.split(',');
-    }
+    if (projectId) filterParams.project = projectId.split(',');
 
-    if (organizationId) {
-      filterParams.organization = organizationId.split(',');
-    }
+    if (organizationId) filterParams.organization = organizationId.split(',');
 
-    if (dateMin) {
-      filterParams.date_min_after = dateMin.split('-')[0];
-    }
+    if (dateMin) filterParams.date_min_after = dateMin.split('-')[0];
 
-    if (dateMax) {
-      filterParams.date_max_before = dateMax.split('-')[0];
-    }
+    if (dateMax) filterParams.date_max_before = dateMax.split('-')[0];
 
     this.setState({
       filterParams,
@@ -248,15 +240,14 @@ class MermaidDash extends Component {
   }
 
   convertToId = (names, filtered_options) => {
-    const result = filtered_options.reduce((newArr, obj) => {
-      for (let name of names) {
-        if (obj.name === name) {
-          newArr.push(obj.id);
+    return filtered_options
+      .reduce((newArr, obj) => {
+        for (let name of names) {
+          if (obj.name === name) newArr.push(obj.id);
         }
-      }
-      return newArr;
-    }, []);
-    return result.join(',');
+        return newArr;
+      }, [])
+      .join(',');
   };
 
   getBboxXY = bbox => {
@@ -270,17 +261,11 @@ class MermaidDash extends Component {
     const bboxList = this.getBboxXY(bbox);
 
     const reducedSites = sites.reduce((newSites, site) => {
-      const point = site.geometry.coordinates;
+      const point = [site.longitude, site.latitude];
 
-      for (const bbox of bboxList) {
-        if (
-          point[0] >= bbox.x[0] &&
-          point[0] <= bbox.x[1] &&
-          point[1] >= bbox.y[0] &&
-          point[1] <= bbox.y[1]
-        ) {
+      for (const { x, y } of bboxList) {
+        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1])
           newSites.push(site);
-        }
       }
 
       return newSites;
@@ -290,41 +275,26 @@ class MermaidDash extends Component {
   };
 
   fetchSitesChunk = async (params, pageNo = 1) => {
-    const siteResults =
-      (await summary.get('/sites/', {
+    const { data } =
+      (await summary.get('/summarysites/', {
         params: {
           page: pageNo,
           ...params
         }
       })) || {};
 
-    return Object.keys(siteResults).length === 0 ? [] : siteResults.data;
+    return data;
   };
 
   fetchEntiresSites = async (params, pageNo = 1) => {
-    const results = await this.fetchSitesChunk(params, pageNo);
-    const { features, count } = results;
+    const fetchResults = await this.fetchSitesChunk(params, pageNo);
+    const { results, count } = fetchResults;
 
     if (pageNo * this.state.queryLimit < count) {
-      return [...features].concat(await this.fetchEntiresSites(params, pageNo + 1));
+      return [...results].concat(await this.fetchEntiresSites(params, pageNo + 1));
     } else {
-      return features;
+      return results;
     }
-  };
-
-  fetchAllSites = async params => {
-    const { metrics } = this.state;
-
-    const updatedParams = await this.fetchAllChoices(params);
-
-    const sites = await this.fetchEntiresSites(updatedParams);
-
-    if (sites.length === 0) {
-      metrics.map(metric => (metric.count = 0));
-      this.setState({ metrics, isFiltering: false });
-    }
-
-    this.setState({ sites, isFiltering: false });
   };
 
   fetchAllChoices = async params => {
@@ -355,19 +325,29 @@ class MermaidDash extends Component {
       );
       filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', organizations);
 
-      if (projectsParam) {
-        //when project names are set, convert to project ids for querying
-        params.project_id = this.convertToId(projectsParam, projects);
-      }
+      //when project names are set, convert to project ids for querying
+      if (projectsParam) params.project_id = this.convertToId(projectsParam, projects);
 
-      if (organizationsParam) {
-        //when organization names are set, convert to tag ids for querying
-        params.tag_id = this.convertToId(organizationsParam, organizations);
-      }
+      //when organization names are set, convert to tag ids for querying
+      if (organizationsParam) params.tag_id = this.convertToId(organizationsParam, organizations);
 
       this.setState({ filterChoices, isFilteringChoices: false });
       return params;
     });
+  };
+
+  fetchAllSites = async params => {
+    const { metrics } = this.state;
+
+    const updatedParams = await this.fetchAllChoices(params);
+
+    const sites = await this.fetchEntiresSites(updatedParams);
+    if (sites.length === 0) {
+      metrics.map(metric => (metric.count = 0));
+      this.setState({ metrics, isFiltering: false });
+    }
+
+    this.setState({ sites, isFiltering: false });
   };
 
   resize() {
@@ -380,30 +360,23 @@ class MermaidDash extends Component {
     }
   }
 
-  handleDrawerChange = () => {
-    this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
-  };
+  handleDrawerChange = () => this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
 
   siteClickHandler = site => {
-    const { highlightCluster, siteDropDownData, sidePanelOpen, mobileDisplay } = this.state;
-    const siteDropdownList = siteDropDownData.map(site => site.id);
+    const { highlightCluster, popupSiteList, sidePanelOpen, mobileDisplay } = this.state;
+    const siteDropdownList = popupSiteList.map(site => site.site_id);
     const selectedSite = site.key ? this.siteLookup(site) : site;
-    const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.id)
+    const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.site_id)
       ? true
       : false;
 
     if (highlightCluster !== null && !siteExistsInCluster) {
       highlightCluster.clearLayers();
       this.setState({ highlightCluster: null, popupOpen: true });
-    } else if (highlightCluster !== null && siteExistsInCluster) {
-      this.setState({ popupOpen: true });
-    } else if (highlightCluster === null) {
-      this.setState({ popupOpen: false });
-    }
+    } else if (highlightCluster !== null && siteExistsInCluster) this.setState({ popupOpen: true });
+    else if (highlightCluster === null) this.setState({ popupOpen: false });
 
-    if (!mobileDisplay && !sidePanelOpen) {
-      this.setState({ sidePanelOpen: true });
-    }
+    if (!mobileDisplay && !sidePanelOpen) this.setState({ sidePanelOpen: true });
 
     this.setState({
       siteDetail: selectedSite,
@@ -416,13 +389,11 @@ class MermaidDash extends Component {
   siteDropDownHandler = selectedSites => {
     const { sidePanelOpen, mobileDisplay } = this.state;
 
-    if (!(mobileDisplay || sidePanelOpen)) {
-      this.setState({ sidePanelOpen: true });
-    }
+    if (!(mobileDisplay || sidePanelOpen)) this.setState({ sidePanelOpen: true });
 
     this.setState({
       siteDetail: selectedSites[0],
-      siteDropDownData: selectedSites,
+      popupSiteList: selectedSites,
       popupOpen: true,
       showSiteDetail: true,
       showDropDown: true,
@@ -491,36 +462,23 @@ class MermaidDash extends Component {
     }
   };
 
-  setClusterActive = clusterMarker => {
-    this.setState({ highlightCluster: clusterMarker });
-  };
+  setClusterActive = clusterMarker => this.setState({ highlightCluster: clusterMarker });
 
-  getMapBounds = bbox => {
-    this.setState({ bbox });
-  };
+  getMapBounds = bbox => this.setState({ bbox });
 
   getCount(array, key) {
-    let result = array.map(item => {
-      return item.properties[key];
-    });
+    let result = array.map(item => item[key]);
 
     if (key === 'project_admins') {
-      const tempResult = array.map(item => {
-        return item.properties[key].map(secItem => {
-          return secItem.name;
-        });
-      });
-      result = [].concat.apply([], tempResult);
+      const adminList = array.map(item => item[key].map(secItem => secItem.name));
+      result = [].concat.apply([], adminList);
     }
 
     return new Set(result).size;
   }
 
   getUniqueSiteCount(array) {
-    const coordinatesArr = array.map(({ geometry: { coordinates } }) => {
-      return coordinates;
-    });
-
+    const coordinatesArr = array.map(({ latitude, longitude }) => [latitude, longitude]);
     const duplicateList = coordinatesArr.reduce((duplicatesFound, coordinates) => {
       return {
         ...duplicatesFound,
@@ -531,8 +489,8 @@ class MermaidDash extends Component {
     return Object.keys(duplicateList).length;
   }
 
-  getTransectCount(array, key) {
-    const protocols = array.map(item => item.properties[key]);
+  getTransectCount(array) {
+    const protocols = array.map(item => item.protocols);
 
     const protocolCount = protocols
       .map(({ beltfish, benthicpit, benthiclit, habitatcomplexity, colonies_bleached }) => {
@@ -555,98 +513,59 @@ class MermaidDash extends Component {
     return protocolCount;
   }
 
-  getHardCoralValue(benthiclit, benthicpit) {
-    let hardCoralValue;
+  getBenthicHardCoralCount = protocols => {
+    return protocols.map(({ benthiclit, benthicpit }) => {
+      if (benthiclit || benthicpit) {
+        const benthicpitPercentCover =
+          benthicpit !== undefined && benthicpit.percent_cover_by_benthic_category_avg;
+        const benthiclitPercentCover =
+          benthiclit !== undefined && benthiclit.percent_cover_by_benthic_category_avg;
+        const benthicPercentCover = benthicpit ? benthicpitPercentCover : benthiclitPercentCover;
+        let hardCoralValue = benthicPercentCover && benthicPercentCover['Hard coral'];
 
-    if (benthicpit && benthiclit) {
-      const benthicpitCoralCover = benthicpit.coral_cover;
-      const benthiclitCoralCover = benthiclit.coral_cover;
-      const benthicpitHardCoral = benthicpitCoralCover
-        .map(coralItem => {
-          return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
-        })
-        .reduce((acc, val) => acc + val, 0);
-      const benthiclitHardCoral = benthiclitCoralCover
-        .map(coralItem => {
-          return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
-        })
-        .reduce((acc, val) => acc + val, 0);
-      hardCoralValue = (benthicpitHardCoral + benthiclitHardCoral) / 2;
-    } else {
-      const benthicCoralCover = benthicpit ? benthicpit.coral_cover : benthiclit.coral_cover;
-      hardCoralValue =
-        benthicCoralCover !== undefined &&
-        benthicCoralCover
-          .map(coralItem => {
-            return coralItem['Hard coral'] ? coralItem['Hard coral'] : 0;
-          })
-          .reduce((acc, val) => acc + val, 0);
-    }
-    return hardCoralValue;
-  }
-
-  getAvgCoralCount(array, key) {
-    const protocols = array.map(item => {
-      return item.properties[key];
+        if (benthicpit !== undefined && benthiclit !== undefined) {
+          hardCoralValue =
+            (benthicpitPercentCover['Hard coral'] + benthiclitPercentCover['Hard coral']) / 2;
+        }
+        return hardCoralValue;
+      }
     });
+  };
 
-    const protocolCount = protocols.map(protocol => {
-      const hasProtocols = Object.getOwnPropertyNames(protocol).length !== 0;
-      const result =
-        hasProtocols &&
-        (protocol.benthiclit || protocol.benthicpit) &&
-        this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit);
-      return result;
-    });
-
-    const filteredProtocol = protocolCount.filter(val => val !== undefined);
-
-    const sumOfCoralCover = filteredProtocol.reduce((acc, val) => acc + val, 0);
+  getAvgCoralCount(protocols) {
+    const benthicHardCoralCount = this.getBenthicHardCoralCount(protocols);
+    const filteredBenthicHardCoralCount = benthicHardCoralCount.filter(val => val !== undefined);
+    const sumOfCoralCover = filteredBenthicHardCoralCount.reduce((acc, val) => acc + val, 0);
     const avgCoralCover = sumOfCoralCover
-      ? (sumOfCoralCover / filteredProtocol.length) * 100
+      ? sumOfCoralCover / filteredBenthicHardCoralCount.length
       : sumOfCoralCover;
 
     return Math.round(avgCoralCover);
   }
 
-  histogramCount(sites, histogramData) {
-    const protocols = sites.map(item => {
-      return item.properties.protocols;
-    });
+  histogramCount(protocols, histogramData) {
+    const benthicHardCoralCount = this.getBenthicHardCoralCount(protocols);
 
-    const protocolArr = protocols.map(protocol => {
-      const hasProtocols = Object.getOwnPropertyNames(protocol).length !== 0;
-      const result =
-        hasProtocols && (protocol.benthiclit || protocol.benthicpit)
-          ? this.getHardCoralValue(protocol.benthiclit, protocol.benthicpit)
-          : null;
-
-      return result * 100;
-    });
-
-    const histogramResult = histogramData.map(({ x }) => {
+    return histogramData.map(({ x }) => {
       let count = 0;
 
-      for (let i = 0; i < protocolArr.length; i++) {
-        const calDiff = parseFloat(x - protocolArr[i]).toFixed(2);
-        if (protocolArr[i] !== null && (0 <= calDiff && calDiff < 2)) {
+      for (let i = 0; i < benthicHardCoralCount.length; i++) {
+        const calDiff = parseFloat(x - benthicHardCoralCount[i]).toFixed(2);
+        if (benthicHardCoralCount[i] && (0 <= calDiff && calDiff < 2)) {
           count += 1;
         }
       }
 
       return { x, y: count, label: count };
     });
-    return histogramResult;
   }
 
-  contentLoadHandler = option => {
-    this.setState({ isLoading: option });
-  };
+  contentLoadHandler = option => this.setState({ isLoading: option });
 
   siteLookup({ key: siteId }) {
     const { sites } = this.state;
 
-    return sites.filter(site => site.id === siteId)[0];
+    return sites.filter(site => site.site_id === siteId)[0];
   }
 
   filterHandler = params => {
@@ -669,17 +588,14 @@ class MermaidDash extends Component {
     const dateMinProperty = Object.entries(filterParams)[3];
     const dateMaxProperty = Object.entries(filterParams)[4];
 
-    if (countryProperty[1].length > 0) {
+    if (countryProperty[1].length > 0)
       queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
-    }
 
-    if (projectIdProperty[1].length > 0) {
+    if (projectIdProperty[1].length > 0)
       queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='));
-    }
 
-    if (organizationIdProperty[1].length > 0) {
+    if (organizationIdProperty[1].length > 0)
       queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='));
-    }
 
     if (dateMinProperty[1].length > 0 || dateMaxProperty[1].length > 0) {
       const dateString = [`${dateMinProperty[1]}`, `${dateMaxProperty[1]}`].join(',');
@@ -703,7 +619,7 @@ class MermaidDash extends Component {
         return newArray;
       }, [])
       .map(val => {
-        return { id: val.id, name: val.name };
+        return { id: val.site_id, name: val.name };
       });
   };
 
