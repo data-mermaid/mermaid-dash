@@ -540,20 +540,21 @@ class MermaidDash extends Component {
 
   getBenthicHardCoralCount = protocols => {
     return protocols.map(({ benthiclit, benthicpit }) => {
+      let hardCoralValue;
       if (benthiclit || benthicpit) {
         const benthicpitPercentCover =
           benthicpit !== undefined && benthicpit.percent_cover_by_benthic_category_avg;
         const benthiclitPercentCover =
           benthiclit !== undefined && benthiclit.percent_cover_by_benthic_category_avg;
         const benthicPercentCover = benthicpit ? benthicpitPercentCover : benthiclitPercentCover;
-        let hardCoralValue = benthicPercentCover && benthicPercentCover['Hard coral'];
+        hardCoralValue = benthicPercentCover && benthicPercentCover['Hard coral'];
 
         if (benthicpit !== undefined && benthiclit !== undefined) {
           hardCoralValue =
             (benthicpitPercentCover['Hard coral'] + benthiclitPercentCover['Hard coral']) / 2;
         }
-        return hardCoralValue;
       }
+      return hardCoralValue;
     });
   };
 
