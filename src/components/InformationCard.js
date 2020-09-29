@@ -71,12 +71,17 @@ const InformationCard = ({
       ) : (
         <Typography m={1}>Reef fish biomass: {protocol.biomass_kgha_avg} kg/ha</Typography>
       )}
-      {protocolName === 'beltfish' && (
-        <FishFamilyModal
-          open={fishFamilyModalStageOpen}
-          modalToggleHandler={fishFamilyModalToggleHandler}
-          projectFishFamilies={projectFishFamilies}
-        />
+      {protocolName === 'beltfish' && projectFishFamilies.length > 0 && (
+        <>
+          <Typography m={1} display="inline">
+            Restricted set of fish families surveyed{' '}
+          </Typography>
+          <FishFamilyModal
+            open={fishFamilyModalStageOpen}
+            modalToggleHandler={fishFamilyModalToggleHandler}
+            projectFishFamilies={projectFishFamilies}
+          />
+        </>
       )}
     </>
   );

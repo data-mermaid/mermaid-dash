@@ -6,9 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ModalContent from './ModalContent';
@@ -19,27 +16,22 @@ const modalStyles = makeStyles(theme => ({
     color: '#2614AF'
   }
 }));
+
 const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
   const classes = modalStyles();
 
-  const clickToViewModal =
-    projectFishFamilies.length > 0 ? (
-      <Typography className={classes.familyRecordInfoStyle} onClick={modalToggleHandler}>
-        Click to view number of families recorded
-      </Typography>
-    ) : (
-      <Typography>No fish families recorded</Typography>
-    );
+  const clickToViewModal = (
+    <Typography
+      display="inline"
+      className={classes.familyRecordInfoStyle}
+      onClick={modalToggleHandler}
+    >
+      [View]
+    </Typography>
+  );
 
   const fishFamiliesContent = projectFishFamilies.map(family => {
-    return (
-      <ListItem key={family}>
-        <ListItemText>
-          {'- '}
-          {family}
-        </ListItemText>
-      </ListItem>
-    );
+    return <li key={family}>{family}</li>;
   });
 
   return (
@@ -47,10 +39,15 @@ const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
       {clickToViewModal}
       <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>Fish Families</DialogText>
+          <DialogText dialogTitle={true}>Fish Families Surveyed</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
-          <List>{fishFamiliesContent}</List>
+          <DialogText subtext>
+            This project's biomass reflects only fish from a restricted set of families; by design,
+            not all fish were recorded by this project's surveyors. Biomass should be compared to
+            that of other projects with care.
+          </DialogText>
+          <ul>{fishFamiliesContent}</ul>
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={modalToggleHandler} color="primary">
