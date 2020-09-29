@@ -388,7 +388,7 @@ class MermaidDash extends Component {
     const foundRelatedProject = projects.find(project => project.id === selectedSite.project_id);
 
     const fishFamilyList = foundRelatedProject?.data?.settings?.fishFamilies.map(family => {
-      return fishFamilies.find(fish => fish.id === family).name;
+      return fishFamilies.find(fish => fish.id === family)?.name || `Missing name for id ${family}`;
     });
 
     if (highlightCluster !== null && !siteExistsInCluster) {
