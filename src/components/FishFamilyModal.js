@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -12,6 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
+import ModalContent from './ModalContent';
 
 const modalStyles = makeStyles(theme => ({
   familyRecordInfoStyle: {
@@ -21,6 +21,16 @@ const modalStyles = makeStyles(theme => ({
 }));
 const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
   const classes = modalStyles();
+
+  const clickToViewModal =
+    projectFishFamilies.length > 0 ? (
+      <Typography className={classes.familyRecordInfoStyle} onClick={modalToggleHandler}>
+        Click to view number of families recorded
+      </Typography>
+    ) : (
+      <Typography>No fish families recorded</Typography>
+    );
+
   const fishFamiliesContent = projectFishFamilies.map(family => {
     return (
       <ListItem key={family}>
@@ -31,22 +41,11 @@ const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
       </ListItem>
     );
   });
+
   return (
     <>
-      <Typography
-        variant="body2"
-        display="inline"
-        className={classes.familyRecordInfoStyle}
-        onClick={modalToggleHandler}
-      >
-        Click to view number of families recorded
-      </Typography>
-      <Dialog
-        onClose={modalToggleHandler}
-        open={open}
-        scroll={'paper'}
-        PaperProps={{ style: { margin: '8px', minWidth: '300px' } }}
-      >
+      {clickToViewModal}
+      <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>Fish Families</DialogText>
         </MuiDialogTitle>
@@ -58,7 +57,7 @@ const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
             close
           </Button>
         </MuiDialogActions>
-      </Dialog>
+      </ModalContent>
     </>
   );
 };

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -11,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import PropTypes from 'prop-types';
 import { DialogText } from '../styles/MermaidStyledComponents';
+import ModalContent from './ModalContent';
 
 const modalStyles = makeStyles(theme => ({
   modalContainer: {
@@ -47,6 +47,7 @@ const Note = ({ children, content }) => {
 
 const ManagementRegimeNote = ({ children, content }) => {
   const classes = modalStyles();
+
   const management_regime_notes_length =
     content &&
     content
@@ -104,18 +105,14 @@ const SiteModal = ({ loadedSiteProperties, readMoreAvailability }) => {
     setModalStage(!open);
   };
 
+  const clickToViewModal = (
+    <ReadMore modalToggleHandler={modalToggleHandler} readMoreAvailability={readMoreAvailability} />
+  );
+
   return (
     <div className={classes.modalContainer}>
-      <ReadMore
-        modalToggleHandler={modalToggleHandler}
-        readMoreAvailability={readMoreAvailability}
-      />
-      <Dialog
-        onClose={modalToggleHandler}
-        open={open}
-        scroll={'paper'}
-        PaperProps={{ style: { margin: '8px' } }}
-      >
+      {clickToViewModal}
+      <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>Notes</DialogText>
         </MuiDialogTitle>
@@ -131,7 +128,7 @@ const SiteModal = ({ loadedSiteProperties, readMoreAvailability }) => {
             close
           </Button>
         </MuiDialogActions>
-      </Dialog>
+      </ModalContent>
     </div>
   );
 };
