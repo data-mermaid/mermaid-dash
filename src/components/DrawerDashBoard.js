@@ -91,7 +91,8 @@ const DrawerDashBoard = ({
   siteDetail,
   clearSelectedSiteHandler,
   hideDrawer,
-  isFiltering
+  isFiltering,
+  projectFishFamilies
 }) => {
   const classes = drawerStyleProperties();
 
@@ -147,7 +148,9 @@ const DrawerDashBoard = ({
     </div>
   );
 
-  const siteDashboard = siteDetail && <SiteDetail selectSite={siteDetail} />;
+  const siteDashboard = siteDetail && (
+    <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} />
+  );
 
   const result = sidePanelOpen ? (
     <>

@@ -18,6 +18,7 @@ class MermaidDash extends Component {
     showDropDown: false,
     sites: [],
     siteDetail: null,
+    projectFishFamilies: [],
     popupSiteList: [],
     metrics: [
       { title: 'Countries', count: null },
@@ -98,7 +99,7 @@ class MermaidDash extends Component {
       date_min_after: '',
       date_max_before: ''
     },
-    filterChoices: { countries: [], projects: [], tags: [] },
+    filterChoices: { countries: [], projects: [], tags: [], fishFamilies: [] },
     showFilterNumbers: false,
     queryLimit: 1000
   };
@@ -304,36 +305,44 @@ class MermaidDash extends Component {
     const projectApi = choices.get('/projects/?showall&status=90&limit=1000');
     const organizationApi = choices.get('/projecttags/');
     const choicesApi = choices.get('/choices/');
+    const fishFamiliesApi = choices.get('fishfamilies/?limit=500');
 
-    return await Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
-      const {
-        data: { results: projects }
-      } = response[0];
+    return await Promise.all([projectApi, organizationApi, choicesApi, fishFamiliesApi]).then(
+      response => {
+        const {
+          data: { results: projects }
+        } = response[0];
 
-      const {
-        data: { results: organizations }
-      } = response[1];
+        const {
+          data: { results: organizations }
+        } = response[1];
 
-      const { data: countries } = response[2];
-      const country_list = this.getChoices('countries', countries);
+        const { data: countries } = response[2];
+        const {
+          data: { results: fishFamilies }
+        } = response[3];
 
-      filterChoices.projects = projects;
-      filterChoices.countries = this.fetChNonTestProjectChoices(
-        projects,
-        'countries',
-        country_list
-      );
-      filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', organizations);
+        const country_list = this.getChoices('countries', countries);
 
-      //when project names are set, convert to project ids for querying
-      if (projectsParam) params.project_id = this.convertToId(projectsParam, projects);
+        filterChoices.projects = projects;
+        filterChoices.countries = this.fetChNonTestProjectChoices(
+          projects,
+          'countries',
+          country_list
+        );
+        filterChoices.tags = this.fetChNonTestProjectChoices(projects, 'tags', organizations);
+        filterChoices.fishFamilies = fishFamilies;
 
-      //when organization names are set, convert to tag ids for querying
-      if (organizationsParam) params.tag_id = this.convertToId(organizationsParam, organizations);
+        //when project names are set, convert to project ids for querying
+        if (projectsParam) params.project_id = this.convertToId(projectsParam, projects);
 
-      this.setState({ filterChoices, isFilteringChoices: false });
-      return params;
-    });
+        //when organization names are set, convert to tag ids for querying
+        if (organizationsParam) params.tag_id = this.convertToId(organizationsParam, organizations);
+
+        this.setState({ filterChoices, isFilteringChoices: false });
+        return params;
+      }
+    );
   };
 
   fetchAllSites = async params => {
@@ -363,12 +372,24 @@ class MermaidDash extends Component {
   handleDrawerChange = () => this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
 
   siteClickHandler = site => {
-    const { highlightCluster, popupSiteList, sidePanelOpen, mobileDisplay } = this.state;
+    const {
+      highlightCluster,
+      popupSiteList,
+      sidePanelOpen,
+      mobileDisplay,
+      filterChoices: { projects, fishFamilies }
+    } = this.state;
     const siteDropdownList = popupSiteList.map(site => site.site_id);
     const selectedSite = site.key ? this.siteLookup(site) : site;
     const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.site_id)
       ? true
       : false;
+
+    const foundRelatedProject = projects.find(project => project.id === selectedSite.project_id);
+
+    const fishFamilyList = foundRelatedProject?.data?.settings?.fishFamilies.map(family => {
+      return fishFamilies.find(fish => fish.id === family).name;
+    });
 
     if (highlightCluster !== null && !siteExistsInCluster) {
       highlightCluster.clearLayers();
@@ -380,6 +401,7 @@ class MermaidDash extends Component {
 
     this.setState({
       siteDetail: selectedSite,
+      projectFishFamilies: fishFamilyList,
       showSiteDetail: true,
       zoomFullMap: false,
       dragPanelPosition: { x: 0, y: -70 }
@@ -655,6 +677,7 @@ class MermaidDash extends Component {
           zoomToSiteHandler={this.zoomToSiteHandler}
           isLoading={this.state.isLoading}
           hideDrawer={this.state.mobileDisplay}
+          projectFishFamilies={this.state.projectFishFamilies}
         />
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}
