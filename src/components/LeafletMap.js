@@ -35,7 +35,7 @@ const MapContainer = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
+const MapStyle = styled.div`
   height: calc(100vh - 49px);
 `;
 
@@ -227,9 +227,9 @@ class LeafletMap extends Component {
     const { siteCenterChange } = this.state;
 
     if (sidePanelOpen && siteDetail && siteCenterChange) {
-      const siteLatlng = [siteDetail.latitude, siteDetail.longitude];
+      const siteLatLng = [siteDetail.latitude, siteDetail.longitude];
 
-      this.map.setView(siteLatlng, zoom);
+      this.map.setView(siteLatLng, zoom);
       this.setState({ siteCenterChange: false });
     }
   }
@@ -597,7 +597,7 @@ class LeafletMap extends Component {
   render() {
     return (
       <MapContainer sidePanelOpen={this.props.sidePanelOpen}>
-        <Wrapper id="map" />
+        <MapStyle id="map" />
       </MapContainer>
     );
   }
