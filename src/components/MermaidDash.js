@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import summary from '../apis/summary';
-import choices from '../apis/choices';
 import '../customStyles.css';
 import * as leafletProperty from '../constants/leaflet-properties';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -280,9 +279,9 @@ class MermaidDash extends Component {
     const { filterChoices } = this.state;
     const projectsParam = params.project_id && params.project_id.split(',');
     const organizationsParam = params.tag_id && params.tag_id.split(',');
-    const projectApi = choices.get('/projects/?showall&status=90&limit=1000');
-    const organizationApi = choices.get('/projecttags/');
-    const choicesApi = choices.get('/choices/');
+    const projectApi = summary.get('/projects/?showall&status=90&limit=1000');
+    const organizationApi = summary.get('/projecttags/');
+    const choicesApi = summary.get('/choices/');
 
     return await Promise.all([projectApi, organizationApi, choicesApi]).then(response => {
       const {
