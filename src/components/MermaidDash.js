@@ -276,8 +276,8 @@ class MermaidDash extends Component {
 
   fetchAllChoices = async params => {
     const { filterChoices } = this.state;
-    const projectsParam = params.project_id && params.project_id.split(',');
-    const organizationsParam = params.tag_id && params.tag_id.split(',');
+    const projectsParam = params.project_id && params.project_id.split(/,(?=\S)|:/);
+    const organizationsParam = params.tag_id && params.tag_id.split(/,(?=\S)|:/);
     const projectApi = summary.get('/projects/?showall&status=90&limit=1000');
     const organizationApi = summary.get('/projecttags/');
     const choicesApi = summary.get('/choices/');
@@ -315,9 +315,7 @@ class MermaidDash extends Component {
 
   fetchAllSites = async params => {
     const { metrics } = this.state;
-
     const updatedParams = await this.fetchAllChoices(params);
-
     const sites = await this.fetchEntiresSites(updatedParams);
 
     if (sites.length === 0) {
