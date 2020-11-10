@@ -187,7 +187,6 @@ class MermaidDash extends Component {
     const dateMinMax = date ? date.split(',') : [];
     const dateMin = dateMinMax[0] && `${dateMinMax[0]}-01-01`;
     const dateMax = dateMinMax[1] && `${dateMinMax[1]}-12-31`;
-
     const queryStringsFound =
       countryName || projectId || organizationId || dateMinMax.length > 0 ? true : false;
 
@@ -203,9 +202,9 @@ class MermaidDash extends Component {
 
     if (countryName) filterParams.country = countryName.split(',');
 
-    if (projectId) filterParams.project = projectId.split(',');
+    if (projectId) filterParams.project = projectId.split(/,(?=\S)|:/);
 
-    if (organizationId) filterParams.organization = organizationId.split(',');
+    if (organizationId) filterParams.organization = organizationId.split(/,(?=\S)|:/);
 
     if (dateMin) filterParams.date_min_after = dateMin.split('-')[0];
 
@@ -277,8 +276,8 @@ class MermaidDash extends Component {
 
   fetchAllChoices = async params => {
     const { filterChoices } = this.state;
-    const projectsParam = params.project_id && params.project_id.split(',');
-    const organizationsParam = params.tag_id && params.tag_id.split(',');
+    const projectsParam = params.project_id && params.project_id.split(/,(?=\S)|:/);
+    const organizationsParam = params.tag_id && params.tag_id.split(/,(?=\S)|:/);
     const projectApi = summary.get('/projects/?showall&status=90&limit=1000');
     const organizationApi = summary.get('/projecttags/');
     const choicesApi = summary.get('/choices/');
@@ -316,9 +315,7 @@ class MermaidDash extends Component {
 
   fetchAllSites = async params => {
     const { metrics } = this.state;
-
     const updatedParams = await this.fetchAllChoices(params);
-
     const sites = await this.fetchEntiresSites(updatedParams);
 
     if (sites.length === 0) {
