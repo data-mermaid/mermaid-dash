@@ -109,6 +109,7 @@ class MermaidDash extends Component {
       bbox,
       metrics,
       histogram,
+      filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
         project: projectId,
@@ -163,8 +164,8 @@ class MermaidDash extends Component {
         this.setState({ metrics });
       }
 
-      if (prevMetricUsersCount !== this.getCount(updatedSites, 'project_admins')) {
-        metrics[2].count = this.getCount(updatedSites, 'project_admins');
+      if (prevMetricUsersCount !== this.getUserCount(updatedSites, projectChoices)) {
+        metrics[2].count = this.getUserCount(updatedSites, projectChoices);
 
         this.setState({ metrics });
       }
@@ -504,16 +505,21 @@ class MermaidDash extends Component {
       return item.properties[key];
     });
 
-    if (key === 'project_admins') {
-      const tempResult = array.map(item => {
-        return item.properties[key].map(secItem => {
-          return secItem.name;
-        });
-      });
-      result = [].concat.apply([], tempResult);
-    }
-
     return new Set(result).size;
+  }
+
+  getUserCount(array, choices) {
+    let projectFilter = array.map(item => {
+      return item.properties.project_id;
+    });
+
+    const projectSet = [...new Set(projectFilter)];
+    const memberExtract = choices.reduce((memberList, project) => {
+      if (projectSet.find(id => id === project.id)) memberList.push(...project.members);
+      return memberList;
+    }, []);
+
+    return new Set(memberExtract).size;
   }
 
   getUniqueSiteCount(array) {
