@@ -159,43 +159,20 @@ class MermaidDash extends Component {
       const avgCoralCoverCount = this.getAvgCoralCount(updatedSites, 'protocols');
       const histogramData = this.histogramCount(updatedSites, histogram);
 
-      if (prevMetricCountriesCount !== countryCount) {
-        metrics[0].count = countryCount;
+      if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
 
-        this.setState({ metrics });
-      }
+      if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
 
-      if (prevMetricProjectsCount !== projectCount) {
-        metrics[1].count = projectCount;
+      if (prevMetricUsersCount !== userCount) metrics[2].count = userCount;
 
-        this.setState({ metrics });
-      }
+      if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
 
-      if (prevMetricUsersCount !== userCount) {
-        metrics[2].count = userCount;
+      if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
 
-        this.setState({ metrics });
-      }
-
-      if (prevMetricSitesCount !== uniqueSiteCount) {
-        metrics[3].count = uniqueSiteCount;
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricTransectsCount !== transectCount) {
-        metrics[4].count = transectCount;
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount) {
+      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
         metrics[5].count = avgCoralCoverCount;
 
-        this.setState({ metrics });
-      }
-
-      this.setState({ histogram: histogramData, isLoading: false });
+      this.setState({ metrics, histogram: histogramData, isLoading: false });
     }
   }
 
