@@ -151,44 +151,50 @@ class MermaidDash extends Component {
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
-
-      if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_id')) {
-        metrics[0].count = this.getCount(updatedSites, 'country_id');
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id')) {
-        metrics[1].count = this.getCount(updatedSites, 'project_id');
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricUsersCount !== this.getUserCount(updatedSites, projectChoices)) {
-        metrics[2].count = this.getUserCount(updatedSites, projectChoices);
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricSitesCount !== this.getUniqueSiteCount(updatedSites)) {
-        metrics[3].count = this.getUniqueSiteCount(updatedSites);
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricTransectsCount !== this.getTransectCount(updatedSites, 'protocols')) {
-        metrics[4].count = this.getTransectCount(updatedSites, 'protocols');
-
-        this.setState({ metrics });
-      }
-
-      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSites, 'protocols')) {
-        metrics[5].count = this.getAvgCoralCount(updatedSites, 'protocols');
-
-        this.setState({ metrics });
-      }
-
+      const countryCount = this.getCount(updatedSites, 'country_id');
+      const projectCount = this.getCount(updatedSites, 'project_id');
+      const userCount = this.getUserCount(updatedSites, projectChoices);
+      const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
+      const transectCount = this.getTransectCount(updatedSites, 'protocols');
+      const avgCoralCoverCount = this.getAvgCoralCount(updatedSites, 'protocols');
       const histogramData = this.histogramCount(updatedSites, histogram);
+
+      if (prevMetricCountriesCount !== countryCount) {
+        metrics[0].count = countryCount;
+
+        this.setState({ metrics });
+      }
+
+      if (prevMetricProjectsCount !== projectCount) {
+        metrics[1].count = projectCount;
+
+        this.setState({ metrics });
+      }
+
+      if (prevMetricUsersCount !== userCount) {
+        metrics[2].count = userCount;
+
+        this.setState({ metrics });
+      }
+
+      if (prevMetricSitesCount !== uniqueSiteCount) {
+        metrics[3].count = uniqueSiteCount;
+
+        this.setState({ metrics });
+      }
+
+      if (prevMetricTransectsCount !== transectCount) {
+        metrics[4].count = transectCount;
+
+        this.setState({ metrics });
+      }
+
+      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount) {
+        metrics[5].count = avgCoralCoverCount;
+
+        this.setState({ metrics });
+      }
+
       this.setState({ histogram: histogramData, isLoading: false });
     }
   }
