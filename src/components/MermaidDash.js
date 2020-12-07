@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { histogramContext } from '../context/histogramContext';
 
 import summary from '../apis/summary';
 import choices from '../apis/choices';
@@ -13,6 +14,8 @@ import LeafletMapControl from './LeafletMapControl';
 import BottomSummaryPanel from './BottomSummaryPanel';
 
 class MermaidDash extends Component {
+  static contextType = histogramContext;
+
   state = {
     showSiteDetail: false,
     showDropDown: false,
@@ -26,58 +29,6 @@ class MermaidDash extends Component {
       { title: 'Sites', count: null },
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
-    ],
-    histogram: [
-      { x: 2, y: 0, label: 0 },
-      { x: 4, y: 0, label: 0 },
-      { x: 6, y: 0, label: 0 },
-      { x: 8, y: 0, label: 0 },
-      { x: 10, y: 0, label: 0 },
-      { x: 12, y: 0, label: 0 },
-      { x: 14, y: 0, label: 0 },
-      { x: 16, y: 0, label: 0 },
-      { x: 18, y: 0, label: 0 },
-      { x: 20, y: 0, label: 0 },
-      { x: 22, y: 0, label: 0 },
-      { x: 24, y: 0, label: 0 },
-      { x: 26, y: 0, label: 0 },
-      { x: 28, y: 0, label: 0 },
-      { x: 30, y: 0, label: 0 },
-      { x: 32, y: 0, label: 0 },
-      { x: 34, y: 0, label: 0 },
-      { x: 36, y: 0, label: 0 },
-      { x: 38, y: 0, label: 0 },
-      { x: 40, y: 0, label: 0 },
-      { x: 42, y: 0, label: 0 },
-      { x: 44, y: 0, label: 0 },
-      { x: 46, y: 0, label: 0 },
-      { x: 48, y: 0, label: 0 },
-      { x: 50, y: 0, label: 0 },
-      { x: 52, y: 0, label: 0 },
-      { x: 54, y: 0, label: 0 },
-      { x: 56, y: 0, label: 0 },
-      { x: 58, y: 0, label: 0 },
-      { x: 60, y: 0, label: 0 },
-      { x: 62, y: 0, label: 0 },
-      { x: 64, y: 0, label: 0 },
-      { x: 66, y: 0, label: 0 },
-      { x: 68, y: 0, label: 0 },
-      { x: 70, y: 0, label: 0 },
-      { x: 72, y: 0, label: 0 },
-      { x: 74, y: 0, label: 0 },
-      { x: 76, y: 0, label: 0 },
-      { x: 78, y: 0, label: 0 },
-      { x: 80, y: 0, label: 0 },
-      { x: 82, y: 0, label: 0 },
-      { x: 84, y: 0, label: 0 },
-      { x: 86, y: 0, label: 0 },
-      { x: 88, y: 0, label: 0 },
-      { x: 90, y: 0, label: 0 },
-      { x: 92, y: 0, label: 0 },
-      { x: 94, y: 0, label: 0 },
-      { x: 96, y: 0, label: 0 },
-      { x: 98, y: 0, label: 0 },
-      { x: 100, y: 0, label: 0 }
     ],
     bbox: null,
     zoomFullMap: false,
@@ -108,7 +59,6 @@ class MermaidDash extends Component {
       sites,
       bbox,
       metrics,
-      histogram,
       filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
@@ -119,6 +69,8 @@ class MermaidDash extends Component {
       },
       isFiltering
     } = this.state;
+
+    const { histogram } = this.context;
 
     const {
       metrics: prevMetrics,
@@ -151,13 +103,14 @@ class MermaidDash extends Component {
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
+      this.context.setHistogram(this.histogramCount(updatedSites, histogram));
+
       const countryCount = this.getCount(updatedSites, 'country_id');
       const projectCount = this.getCount(updatedSites, 'project_id');
       const userCount = this.getUserCount(updatedSites, projectChoices);
       const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
       const transectCount = this.getTransectCount(updatedSites, 'protocols');
       const avgCoralCoverCount = this.getAvgCoralCount(updatedSites, 'protocols');
-      const histogramData = this.histogramCount(updatedSites, histogram);
 
       if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
 
@@ -172,7 +125,7 @@ class MermaidDash extends Component {
       if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
         metrics[5].count = avgCoralCoverCount;
 
-      this.setState({ metrics, histogram: histogramData, isLoading: false });
+      this.setState({ metrics, isLoading: false });
     }
   }
 
@@ -497,8 +450,10 @@ class MermaidDash extends Component {
     });
 
     const projectSet = [...new Set(projectFilter)];
+
     const memberExtract = choices.reduce((memberList, project) => {
-      if (projectSet.find(id => id === project.id)) memberList.push(...project.members);
+      if (projectSet.find(id => id === project.id) && Array.isArray(project.members))
+        memberList.push(...project.members);
       return memberList;
     }, []);
 
@@ -721,7 +676,6 @@ class MermaidDash extends Component {
           siteDetail={this.state.siteDetail}
           showSiteDetail={this.state.showSiteDetail}
           metrics={this.state.metrics}
-          histogramContent={this.state.histogram}
           isFiltering={this.state.isFiltering}
           clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
@@ -765,7 +719,6 @@ class MermaidDash extends Component {
           <BottomSummaryPanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
-            histogramContent={this.state.histogram}
             siteDetail={this.state.siteDetail}
             showSiteDetail={this.state.showSiteDetail}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import styled, { css } from 'styled-components/macro';
@@ -11,11 +11,13 @@ import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 
 import Box from '@material-ui/core/Box';
 
+import { histogramContext } from '../context/histogramContext';
+
 import PropTypes from 'prop-types';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-import { histogram } from '../constants/summary-information';
+import { histogram as histogramSummary } from '../constants/summary-information';
 
 const bottomPanelStyleProperties = makeStyles(theme => ({
   selectedSiteProperty: {
@@ -73,11 +75,11 @@ const BottomPanelContainer = styled('div')`
 const BottomSummaryPanel = ({
   metrics,
   isLoading,
-  histogramContent,
   showSiteDetail,
   siteDetail,
   clearSelectedSiteHandler
 }) => {
+  const { histogram } = useContext(histogramContext);
   const classes = bottomPanelStyleProperties();
   const [loadedSite, setLoadedSite] = useState(null);
   const [open, setOpen] = useState(false);
@@ -94,9 +96,9 @@ const BottomSummaryPanel = ({
       <MetricCards metrics={metrics} isLoading={isLoading} bottomPanelOpen={open} />
       {open && (
         <InformationCard
-          title={histogram.title}
-          type={histogram.type}
-          histogramContent={histogramContent}
+          title={histogramSummary.title}
+          type={histogramSummary.type}
+          histogramContent={histogram}
         />
       )}
     </>
