@@ -17,7 +17,6 @@ class MermaidDash extends Component {
 
   state = {
     showSiteDetail: false,
-    showDropDown: false,
     sites: [],
     siteDetail: null,
     popupSiteList: [],
@@ -320,13 +319,10 @@ class MermaidDash extends Component {
       popupSiteList: selectedSites,
       popupOpen: true,
       showSiteDetail: true,
-      showDropDown: true,
       zoomFullMap: false,
       dragPanelPosition: { x: 0, y: -70 }
     });
   };
-
-  sitesDropDownToggle = option => this.setState({ showDropDown: option });
 
   clearSelectedSiteHandler = () => {
     const { highlightMarker, highlightCluster } = this.state;
@@ -601,7 +597,6 @@ class MermaidDash extends Component {
           siteDetail={this.state.siteDetail}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
-          sitesDropDownToggle={this.sitesDropDownToggle}
           zoomFullMap={this.state.zoomFullMap}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSite={this.state.zoomToSite}
