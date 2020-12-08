@@ -23,7 +23,7 @@ class MermaidDash extends Component {
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
-      { title: 'Users', count: null },
+      { title: 'People', count: null },
       { title: 'Sites', count: null },
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
