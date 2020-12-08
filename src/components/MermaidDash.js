@@ -108,6 +108,7 @@ class MermaidDash extends Component {
       bbox,
       metrics,
       histogram,
+      filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
         project: projectId,
@@ -149,27 +150,26 @@ class MermaidDash extends Component {
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
-      const updatedSiteProtocols = updatedSites.map(({ protocols }) => {
-        return protocols;
-      });
+      const updatedSiteProtocols = updatedSites.map(({ protocols }) => protocols);
+      const countryCount = this.getCount(updatedSites, 'country_id');
+      const projectCount = this.getCount(updatedSites, 'project_id');
+      const userCount = this.getUserCount(updatedSites, projectChoices);
+      const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
+      const transectCount = this.getTransectCount(updatedSites);
+      const avgCoralCoverCount = this.getAvgCoralCount(updatedSiteProtocols);
 
-      if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_id'))
-        metrics[0].count = this.getCount(updatedSites, 'country_id');
+      if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
 
-      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id'))
-        metrics[1].count = this.getCount(updatedSites, 'project_id');
+      if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
 
-      if (prevMetricUsersCount !== this.getCount(updatedSites, 'project_admins'))
-        metrics[2].count = this.getCount(updatedSites, 'project_admins');
+      if (prevMetricUsersCount !== userCount) metrics[2].count = userCount;
 
-      if (prevMetricSitesCount !== this.getUniqueSiteCount(updatedSites))
-        metrics[3].count = this.getUniqueSiteCount(updatedSites);
+      if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
 
-      if (prevMetricTransectsCount !== this.getTransectCount(updatedSites))
-        metrics[4].count = this.getTransectCount(updatedSites);
+      if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
 
-      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSiteProtocols))
-        metrics[5].count = this.getAvgCoralCount(updatedSiteProtocols);
+      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
+        metrics[5].count = avgCoralCoverCount;
 
       const histogramData = this.histogramCount(updatedSiteProtocols, histogram);
       this.setState({ histogram: histogramData, isLoading: false, metrics });
@@ -449,6 +449,18 @@ class MermaidDash extends Component {
     }
 
     return new Set(result).size;
+  }
+
+  getUserCount(array, choices) {
+    const projectFilter = array.map(({ project_id }) => project_id);
+    const projectSet = [...new Set(projectFilter)];
+    const memberExtract = choices.reduce((memberList, project) => {
+      if (projectSet.find(id => id === project.id) && Array.isArray(project.members))
+        memberList.push(...project.members);
+      return memberList;
+    }, []);
+
+    return new Set(memberExtract).size;
   }
 
   getUniqueSiteCount(array) {
