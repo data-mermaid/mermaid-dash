@@ -17,7 +17,6 @@ import PropTypes from 'prop-types';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-// import { histogram } from '../constants/summary-information';
 import { histogram as histogramSummary } from '../constants/summary-information';
 
 const bottomPanelStyleProperties = makeStyles(theme => ({
