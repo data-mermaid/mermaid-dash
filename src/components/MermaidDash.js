@@ -409,6 +409,7 @@ class MermaidDash extends Component {
 
   getUniqueSiteCount(array) {
     const coordinatesArr = array.map(({ latitude, longitude }) => [latitude, longitude]);
+    console.log(coordinatesArr);
     const duplicateList = coordinatesArr.reduce((duplicatesFound, coordinates) => {
       return {
         ...duplicatesFound,

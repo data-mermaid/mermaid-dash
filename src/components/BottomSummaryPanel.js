@@ -75,7 +75,6 @@ const BottomPanelContainer = styled('div')`
 const BottomSummaryPanel = ({
   metrics,
   isLoading,
-  histogramContent,
   showSiteDetail,
   siteDetail,
   clearSelectedSiteHandler
