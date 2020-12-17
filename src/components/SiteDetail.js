@@ -34,16 +34,15 @@ const SiteDetail = ({ selectSite }) => {
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const [loadedSite, setLoadedSite] = useState(null);
 
-  if (selectSite && (!loadedSite || loadedSite.id !== selectSite.id)) {
+  if (selectSite && (!loadedSite || loadedSite.site_id !== selectSite.site_id))
     setLoadedSite(selectSite);
-  }
 
-  const siteAdmins = loadedSite && loadedSite.properties.project_admins && (
+  const siteAdmins = loadedSite && loadedSite.project_admins && (
     <Box borderTop={1} pt={1} display="flex">
       <AdminIcon width="20px" height="20px" />
       <Typography variant="body1">
         Admins:{' '}
-        {loadedSite.properties.project_admins
+        {loadedSite.project_admins
           .map(admin => {
             return admin.name;
           })
@@ -52,12 +51,12 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
-  const siteOrganizations = loadedSite && loadedSite.properties.tags && (
+  const siteOrganizations = loadedSite && loadedSite.tags && (
     <Box pt={1} display="flex">
       <OrganizationIcon width="23px" />
       <Typography variant="body1">
         Organizations:{' '}
-        {loadedSite.properties.tags
+        {loadedSite.tags
           .map(organization => {
             return organization.name;
           })
@@ -66,66 +65,68 @@ const SiteDetail = ({ selectSite }) => {
     </Box>
   );
 
-  const siteChartCards = protocolsArray.map(protocol => {
-    const bleachingProtocol = protocol.name === 'bleachingqc';
-    const fishBeltProtocol = protocol.name === 'beltfish';
-    const transectProperty = bleachingProtocol ? protocol.property : protocol.name;
-    const bleachingSubItems = loadedSite && loadedSite.properties.protocols['colonies_bleached'];
-    const loadedSiteProtocol = loadedSite && loadedSite.properties.protocols[transectProperty];
+  const siteChartCards = protocolsArray.map(({ name, property, title, type }) => {
+    const bleachingProtocol = name === 'bleachingqc';
+    const transectName = bleachingProtocol ? property : name;
+    const loadedSiteProtocol = loadedSite && loadedSite.protocols[transectName];
+    const bleachingSubItems = loadedSite && loadedSite.protocols['colonies_bleached'];
 
-    const dataPolicy = loadedSiteProtocol && loadedSite.properties[`data_policy_${protocol.name}`];
+    const dataPolicy = loadedSiteProtocol && loadedSite[`data_policy_${name}`];
     const setToPrivate = dataPolicy === 'private';
 
     const generatePrivateLabel = protocolTitle =>
       `This data is unavailable because ${protocolTitle} Sample Units are set to Private for this project.`;
 
     const convertContent = content => {
+      let contentArr = [];
+      for (const item in content) {
+        const newObject = {};
+        newObject[item] = content[item];
+        contentArr.push(newObject);
+      }
+
       return (
         content &&
         (bleachingProtocol
-          ? bleachingCategories.map(item => {
-              return { x: item.name, y: content[item.type] };
+          ? bleachingCategories.map(({ name, type }) => {
+              return { x: name, y: content[type] };
             })
-          : content.map(item => {
+          : contentArr.map(item => {
               const attribute = Object.keys(item)[0];
-              const value = fishBeltProtocol
-                ? Object.values(item)[0]
-                : Object.values(item)[0] * 100;
+              const value = Object.values(item)[0];
               return { x: attribute, y: value };
             }))
       );
     };
 
     const protocolContent =
-      loadedSiteProtocol &&
-      (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[protocol.property]);
-    const sourceData = convertContent(protocolContent);
-    const sourceContent = setToPrivate ? defaultPieChartContent : sourceData;
+      loadedSiteProtocol && (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[property]);
+    const sourceContent = setToPrivate ? defaultPieChartContent : convertContent(protocolContent);
 
     const cardsComponent = loadedSiteProtocol && (
       <InformationCard
         dataPolicy={dataPolicy}
         protocol={loadedSiteProtocol}
-        protocolName={protocol.name}
+        protocolName={name}
         pieChartContent={sourceContent}
         setToPrivate={setToPrivate}
-        privateLabel={generatePrivateLabel(protocol.title)}
+        privateLabel={generatePrivateLabel(title)}
         bleachingSubItems={bleachingSubItems}
-        title={protocol.title}
-        type={protocol.type}
+        title={title}
+        type={type}
       />
     );
 
-    return <div key={protocol.name}>{cardsComponent}</div>;
+    return <div key={name}>{cardsComponent}</div>;
   });
 
   const siteInfoCard = loadedSite ? (
     <SiteInfoWrapper>
-      <SiteDetailSubItems loadedSiteProperties={loadedSite.properties} />
+      <SiteDetailSubItems loadedSiteProperties={loadedSite} />
       {siteAdmins}
       {siteOrganizations}
-      <CoralAttributes loadedSiteProperties={loadedSite.properties} />
-      <SiteNote loadedSiteProperties={loadedSite.properties} />
+      <CoralAttributes loadedSiteProperties={loadedSite} />
+      <SiteNote loadedSiteProperties={loadedSite} />
     </SiteInfoWrapper>
   ) : (
     <SiteInfoWrapper>
@@ -143,7 +144,7 @@ const SiteDetail = ({ selectSite }) => {
 
 SiteDetail.propTypes = {
   selectSite: PropTypes.shape({
-    id: PropTypes.string.isRequired
+    site_id: PropTypes.string.isRequired
   })
 };
 

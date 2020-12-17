@@ -15,6 +15,7 @@ const ellipsisHelper = note => {
 
 const SiteNote = ({ loadedSiteProperties }) => {
   const { site_notes, project_notes, management_regimes } = loadedSiteProperties;
+
   let availableNote = '';
   const management_regime_notes_length =
     management_regimes &&
@@ -23,9 +24,11 @@ const SiteNote = ({ loadedSiteProperties }) => {
         return mr.notes ? mr.notes.length : 0;
       })
       .reduce((acc, val) => acc + val, 0);
+
   const siteNoteLengthCheck = site_notes.length > 0,
     projectNoteLengthCheck = project_notes.length > 0,
     mrNoteLengthCheck = management_regime_notes_length > 0;
+
   const moreThanOneCombinedNote =
     (siteNoteLengthCheck && projectNoteLengthCheck) ||
     (mrNoteLengthCheck && projectNoteLengthCheck) ||

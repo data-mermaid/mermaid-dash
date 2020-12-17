@@ -52,32 +52,20 @@ const InformationCard = ({
 }) => {
   const classes = cardStyle();
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
-  const findHardCoralValue = coral => {
-    const hardCoralResult = coral
-      .map(item => {
-        return item['Hard coral'] ? item['Hard coral'] : 0;
-      })
-      .reduce((acc, val) => acc + val, 0);
-    const hardCoralPercentage = hardCoralResult * 100;
-
-    return hardCoralPercentage.toFixed(1);
-  };
 
   const [modalStageOpen, setModalStage] = useState(false);
 
-  const modalToggleHandler = () => {
-    setModalStage(!modalStageOpen);
-  };
+  const modalToggleHandler = () => setModalStage(!modalStageOpen);
 
-  const subAttributeItem = !setToPrivate && (
+  const subAttributeItem = !setToPrivate && protocol && (
     <>
-      <Typography m={1}>Sample units: {protocol && protocol.sample_unit_count} </Typography>
+      <Typography m={1}>Sample units: {protocol.sample_unit_count} </Typography>
       {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
-        <Typography m={1}>Hard coral cover: {findHardCoralValue(protocol.coral_cover)}%</Typography>
-      ) : (
         <Typography m={1}>
-          Reef fish biomass: {protocolName === 'beltfish' && protocol.biomass_kgha} kg/ha
+          Hard coral cover: {protocol.percent_cover_by_benthic_category_avg['Hard coral']}%
         </Typography>
+      ) : (
+        <Typography m={1}>Reef fish biomass: {protocol.biomass_kgha_avg} kg/ha</Typography>
       )}
     </>
   );
@@ -85,10 +73,10 @@ const InformationCard = ({
   const bleachingSubAttributeItem = !setToPrivate && bleachingSubItems && (
     <>
       <Typography m={1}>
-        Bleached colonies: {bleachingSubItems.avg_percent_bleached.toFixed(1)}%
+        Bleached colonies: {bleachingSubItems.percent_bleached_avg.toFixed(1)}%
       </Typography>
-      <Typography m={1}>Hard coral genera: {bleachingSubItems.avg_count_genera}</Typography>
-      <Typography m={1}>Observed coral colonies: {bleachingSubItems.avg_count_total}</Typography>
+      <Typography m={1}>Hard coral genera: {bleachingSubItems.count_genera_avg}</Typography>
+      <Typography m={1}>Observed coral colonies: {bleachingSubItems.count_total_avg}</Typography>
     </>
   );
 
@@ -140,7 +128,6 @@ const InformationCard = ({
             </Box>
             {subItems}
           </Box>
-
           {/* temporarily Hide download data buttons */}
           {/* {downLoadButton} */}
         </Box>

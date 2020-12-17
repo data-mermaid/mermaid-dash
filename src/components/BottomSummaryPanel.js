@@ -84,13 +84,11 @@ const BottomSummaryPanel = ({
   const [loadedSite, setLoadedSite] = useState(null);
   const [open, setOpen] = useState(false);
 
-  if (siteDetail && (!loadedSite || loadedSite.id !== siteDetail.id)) {
+  if (siteDetail && (!loadedSite || loadedSite.site_id !== siteDetail.site_id))
     setLoadedSite(siteDetail);
-  }
 
-  const toggleExpand = () => {
-    setOpen(!open);
-  };
+  const toggleExpand = () => setOpen(!open);
+
   const summary = (
     <>
       <MetricCards metrics={metrics} isLoading={isLoading} bottomPanelOpen={open} />
@@ -112,7 +110,7 @@ const BottomSummaryPanel = ({
       <Box className={classes.selectedSiteProperty}>
         <SelectMarkerIcon className={classes.selectMarkerIconStyle} />
         <Box className={classes.siteNameStyle}>
-          {loadedSite.properties.site_name} - {loadedSite.properties.project_name}
+          {loadedSite.site_name} - {loadedSite.project_name}
         </Box>
         <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
           <ClearIcon className={classes.clearIconStyle} />
