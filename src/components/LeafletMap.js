@@ -492,7 +492,6 @@ class LeafletMap extends Component {
       siteClickHandler,
       fullMapZoomHandler,
       siteDropDownHandler,
-      sitesDropDownToggle,
       removeHighlight,
       setIconActive,
       removeHighlightCluster,
@@ -568,7 +567,6 @@ class LeafletMap extends Component {
           removeHighlightCluster();
           setIconActive(markerPoint);
           siteClickHandler(marker);
-          sitesDropDownToggle(false);
           this.panToCenter(e, { animate: true });
         })
       );

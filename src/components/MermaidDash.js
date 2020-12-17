@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { histogramContext } from '../context/histogramContext';
 
 import summary from '../apis/summary';
 import '../customStyles.css';
@@ -12,71 +13,20 @@ import LeafletMapControl from './LeafletMapControl';
 import BottomSummaryPanel from './BottomSummaryPanel';
 
 class MermaidDash extends Component {
+  static contextType = histogramContext;
+
   state = {
     showSiteDetail: false,
-    showDropDown: false,
     sites: [],
     siteDetail: null,
     popupSiteList: [],
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
-      { title: 'Users', count: null },
+      { title: 'People', count: null },
       { title: 'Sites', count: null },
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
-    ],
-    histogram: [
-      { x: 2, y: 0, label: 0 },
-      { x: 4, y: 0, label: 0 },
-      { x: 6, y: 0, label: 0 },
-      { x: 8, y: 0, label: 0 },
-      { x: 10, y: 0, label: 0 },
-      { x: 12, y: 0, label: 0 },
-      { x: 14, y: 0, label: 0 },
-      { x: 16, y: 0, label: 0 },
-      { x: 18, y: 0, label: 0 },
-      { x: 20, y: 0, label: 0 },
-      { x: 22, y: 0, label: 0 },
-      { x: 24, y: 0, label: 0 },
-      { x: 26, y: 0, label: 0 },
-      { x: 28, y: 0, label: 0 },
-      { x: 30, y: 0, label: 0 },
-      { x: 32, y: 0, label: 0 },
-      { x: 34, y: 0, label: 0 },
-      { x: 36, y: 0, label: 0 },
-      { x: 38, y: 0, label: 0 },
-      { x: 40, y: 0, label: 0 },
-      { x: 42, y: 0, label: 0 },
-      { x: 44, y: 0, label: 0 },
-      { x: 46, y: 0, label: 0 },
-      { x: 48, y: 0, label: 0 },
-      { x: 50, y: 0, label: 0 },
-      { x: 52, y: 0, label: 0 },
-      { x: 54, y: 0, label: 0 },
-      { x: 56, y: 0, label: 0 },
-      { x: 58, y: 0, label: 0 },
-      { x: 60, y: 0, label: 0 },
-      { x: 62, y: 0, label: 0 },
-      { x: 64, y: 0, label: 0 },
-      { x: 66, y: 0, label: 0 },
-      { x: 68, y: 0, label: 0 },
-      { x: 70, y: 0, label: 0 },
-      { x: 72, y: 0, label: 0 },
-      { x: 74, y: 0, label: 0 },
-      { x: 76, y: 0, label: 0 },
-      { x: 78, y: 0, label: 0 },
-      { x: 80, y: 0, label: 0 },
-      { x: 82, y: 0, label: 0 },
-      { x: 84, y: 0, label: 0 },
-      { x: 86, y: 0, label: 0 },
-      { x: 88, y: 0, label: 0 },
-      { x: 90, y: 0, label: 0 },
-      { x: 92, y: 0, label: 0 },
-      { x: 94, y: 0, label: 0 },
-      { x: 96, y: 0, label: 0 },
-      { x: 98, y: 0, label: 0 },
-      { x: 100, y: 0, label: 0 }
     ],
     bbox: null,
     zoomFullMap: false,
@@ -107,7 +57,7 @@ class MermaidDash extends Component {
       sites,
       bbox,
       metrics,
-      histogram,
+      filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
         project: projectId,
@@ -117,6 +67,8 @@ class MermaidDash extends Component {
       },
       isFiltering
     } = this.state;
+
+    const { histogram } = this.context;
 
     const {
       metrics: prevMetrics,
@@ -149,30 +101,25 @@ class MermaidDash extends Component {
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
-      const updatedSiteProtocols = updatedSites.map(({ protocols }) => {
-        return protocols;
-      });
+      const updatedSiteProtocols = updatedSites.map(({ protocols }) => protocols);
+      this.context.setHistogram(this.histogramCount(updatedSiteProtocols, histogram));
 
-      if (prevMetricCountriesCount !== this.getCount(updatedSites, 'country_id'))
-        metrics[0].count = this.getCount(updatedSites, 'country_id');
+      const countryCount = this.getCount(updatedSites, 'country_id');
+      const projectCount = this.getCount(updatedSites, 'project_id');
+      const userCount = this.getUserCount(updatedSites, projectChoices);
+      const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
+      const transectCount = this.getTransectCount(updatedSites);
+      const avgCoralCoverCount = this.getAvgCoralCount(updatedSiteProtocols);
 
-      if (prevMetricProjectsCount !== this.getCount(updatedSites, 'project_id'))
-        metrics[1].count = this.getCount(updatedSites, 'project_id');
+      if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
+      if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
+      if (prevMetricUsersCount !== userCount) metrics[2].count = userCount;
+      if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
+      if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
+      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
+        metrics[5].count = avgCoralCoverCount;
 
-      if (prevMetricUsersCount !== this.getCount(updatedSites, 'project_admins'))
-        metrics[2].count = this.getCount(updatedSites, 'project_admins');
-
-      if (prevMetricSitesCount !== this.getUniqueSiteCount(updatedSites))
-        metrics[3].count = this.getUniqueSiteCount(updatedSites);
-
-      if (prevMetricTransectsCount !== this.getTransectCount(updatedSites))
-        metrics[4].count = this.getTransectCount(updatedSites);
-
-      if (prevMetricAvgCoralCoverCount !== this.getAvgCoralCount(updatedSiteProtocols))
-        metrics[5].count = this.getAvgCoralCount(updatedSiteProtocols);
-
-      const histogramData = this.histogramCount(updatedSiteProtocols, histogram);
-      this.setState({ histogram: histogramData, isLoading: false, metrics });
+      this.setState({ metrics, isLoading: false });
     }
   }
 
@@ -372,13 +319,10 @@ class MermaidDash extends Component {
       popupSiteList: selectedSites,
       popupOpen: true,
       showSiteDetail: true,
-      showDropDown: true,
       zoomFullMap: false,
       dragPanelPosition: { x: 0, y: -70 }
     });
   };
-
-  sitesDropDownToggle = option => this.setState({ showDropDown: option });
 
   clearSelectedSiteHandler = () => {
     const { highlightMarker, highlightCluster } = this.state;
@@ -449,6 +393,18 @@ class MermaidDash extends Component {
     }
 
     return new Set(result).size;
+  }
+
+  getUserCount(array, choices) {
+    const projectFilter = array.map(({ project_id }) => project_id);
+    const projectSet = [...new Set(projectFilter)];
+    const memberExtract = choices.reduce((memberList, project) => {
+      if (projectSet.find(id => id === project.id) && Array.isArray(project.members))
+        memberList.push(...project.members);
+      return memberList;
+    }, []);
+
+    return new Set(memberExtract).size;
   }
 
   getUniqueSiteCount(array) {
@@ -618,7 +574,6 @@ class MermaidDash extends Component {
           siteDetail={this.state.siteDetail}
           showSiteDetail={this.state.showSiteDetail}
           metrics={this.state.metrics}
-          histogramContent={this.state.histogram}
           isFiltering={this.state.isFiltering}
           clearSelectedSiteHandler={this.clearSelectedSiteHandler}
           fullMapZoomHandler={this.fullMapZoomHandler}
@@ -642,7 +597,6 @@ class MermaidDash extends Component {
           siteDetail={this.state.siteDetail}
           siteClickHandler={this.siteClickHandler}
           siteDropDownHandler={this.siteDropDownHandler}
-          sitesDropDownToggle={this.sitesDropDownToggle}
           zoomFullMap={this.state.zoomFullMap}
           fullMapZoomHandler={this.fullMapZoomHandler}
           zoomToSite={this.state.zoomToSite}
@@ -662,7 +616,6 @@ class MermaidDash extends Component {
           <BottomSummaryPanel
             metrics={this.state.metrics}
             isLoading={this.state.isLoading}
-            histogramContent={this.state.histogram}
             siteDetail={this.state.siteDetail}
             showSiteDetail={this.state.showSiteDetail}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
