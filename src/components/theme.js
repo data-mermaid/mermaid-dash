@@ -6,7 +6,8 @@ const color = {
   mermaidBlack: 'black',
   mermaidNotAllowed: '#9C9C9C',
   mermaidGray: '#585858',
-  mermaidWhiteGray: '#F4F4F4'
+  mermaidWhiteGray: '#F4F4F4',
+  mermaidDarkGray: '#BBB'
 };
 
 export const theme = {
@@ -31,6 +32,8 @@ export const theme = {
     color: color.mermaidGray,
     bgColor: color.mermaidWhite,
     borderColor: color.mermaidWhiteGray,
+    disabledColor: color.mermaidDarkGray,
+    disabledBgColor: color.mermaidWhiteGray,
     padding: '0',
     width: '32px',
     height: '32px'
