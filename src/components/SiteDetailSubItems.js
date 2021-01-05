@@ -18,13 +18,21 @@ const subItemStyles = makeStyles(theme => ({
 
 const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const classes = subItemStyles();
-  const startDate = loadedSiteProperties.date_min && loadedSiteProperties.date_min.substring(0, 4);
-  const endDate = loadedSiteProperties.date_max && loadedSiteProperties.date_max.substring(0, 4);
+  const {
+    date_min,
+    date_max,
+    site_name,
+    project_name,
+    management_regimes,
+    contact_link
+  } = loadedSiteProperties;
+  const startDate = date_min && date_min.substring(0, 4);
+  const endDate = date_max && date_max.substring(0, 4);
   const siteYear = endDate === startDate ? endDate : `${startDate} - ${endDate}`;
 
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
-      <MenuLink target="_blank" href={loadedSiteProperties.contact_link} rel="noopener noreferrer">
+      <MenuLink target="_blank" href={contact_link} rel="noopener noreferrer">
         <ButtonStyle setHover={true}>
           <ContactIcon fontSize="small" className={classes.iconProperty} />
           <Box fontWeight="fontWeightMedium">Contact Admins</Box>
@@ -36,26 +44,18 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   return (
     <Box display="flex">
       <Box flexGrow={1}>
-        <Box>
-          <Typography variant="h4">{loadedSiteProperties.site_name}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="body1">{loadedSiteProperties.project_name}</Typography>
-        </Box>
-        <Box>
-          <Typography variant="body1">
-            {loadedSiteProperties.management_regimes
-              ? loadedSiteProperties.management_regimes
-                  .map(mr => {
-                    return mr.name;
-                  })
-                  .join(', ')
-              : 'No managements'}
-          </Typography>
-        </Box>
-        <Box>
-          <Typography variant="body1">{siteYear}</Typography>
-        </Box>
+        <Typography variant="h4">{site_name}</Typography>
+        <Typography variant="body1">{project_name}</Typography>
+        <Typography variant="body1">
+          {management_regimes
+            ? management_regimes
+                .map(mr => {
+                  return mr.name;
+                })
+                .join(', ')
+            : 'No managements'}
+        </Typography>
+        <Typography variant="body1">{siteYear}</Typography>
       </Box>
       <Box>{contactButton}</Box>
     </Box>

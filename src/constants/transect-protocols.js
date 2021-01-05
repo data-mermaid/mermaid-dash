@@ -2,19 +2,19 @@ export const protocolsArray = [
   {
     name: 'benthiclit',
     title: 'Benthic % Cover (LIT)',
-    property: 'coral_cover',
+    property: 'percent_cover_by_benthic_category_avg',
     type: 'pieChart'
   },
   {
     name: 'benthicpit',
     title: 'Benthic % Cover (PIT)',
-    property: 'coral_cover',
+    property: 'percent_cover_by_benthic_category_avg',
     type: 'pieChart'
   },
   {
     name: 'beltfish',
     title: 'Fish Belt',
-    property: 'biomass_kgha_tg',
+    property: 'biomass_kgha_by_trophic_group_avg',
     type: 'pieChart'
   },
   {
@@ -26,7 +26,7 @@ export const protocolsArray = [
 ];
 
 export const bleachingCategories = [
-  { type: 'avg_percent_hard', name: 'Hard coral' },
-  { type: 'avg_percent_soft', name: 'Soft coral' },
-  { type: 'avg_percent_algae', name: 'Macroalgae' }
+  { type: 'percent_hard_avg_avg', name: 'Hard coral' },
+  { type: 'percent_soft_avg_avg', name: 'Soft coral' },
+  { type: 'percent_algae_avg_avg', name: 'Macroalgae' }
 ];
