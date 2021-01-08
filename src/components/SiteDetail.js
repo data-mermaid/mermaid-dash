@@ -30,7 +30,7 @@ const SiteInfoWrapper = styled(Paper)`
   border-radius: 0;
 `;
 
-const SiteDetail = ({ selectSite }) => {
+const SiteDetail = ({ selectSite, projectFishFamilies }) => {
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const [loadedSite, setLoadedSite] = useState(null);
 
@@ -114,6 +114,7 @@ const SiteDetail = ({ selectSite }) => {
         bleachingSubItems={bleachingSubItems}
         title={title}
         type={type}
+        projectFishFamilies={projectFishFamilies}
       />
     );
 
