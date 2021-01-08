@@ -10,7 +10,7 @@ import { DialogText } from '../styles/MermaidStyledComponents';
 
 import { ThemeProvider } from 'styled-components/macro';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -37,10 +37,10 @@ const FilterModal = ({
   isFilteringChoices
 }) => {
   const classes = filterModalStyles();
+
   const isNumericAndEmpty = n => {
-    if (n.length === 0) {
-      return true;
-    }
+    if (n.length === 0) return true;
+
     return !isNaN(parseFloat(n)) && isFinite(n);
   };
 
@@ -55,24 +55,18 @@ const FilterModal = ({
   const [startYearGreaterThanEndYear, setEndYearGreater] = useState(false);
 
   const checkStartYear = input => {
-    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input)) {
+    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input))
       setStartYearValidation(false);
-    } else {
-      setStartYearValidation(true);
-    }
+    else setStartYearValidation(true);
   };
 
   const checkEndYear = input => {
-    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input)) {
+    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input))
       setEndYearValidation(false);
-    } else {
-      setEndYearValidation(true);
-    }
+    else setEndYearValidation(true);
   };
 
-  const checkEndYearGreater = option => {
-    setEndYearGreater(option);
-  };
+  const checkEndYearGreater = option => setEndYearGreater(option);
 
   const addQueryStrings = (property, options) => {
     const params = { ...queryStrings };
@@ -82,9 +76,7 @@ const FilterModal = ({
     setQueryStrings(params);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const handleClickOpen = () => setOpen(true);
 
   const handleClose = () => {
     setOpen(false);

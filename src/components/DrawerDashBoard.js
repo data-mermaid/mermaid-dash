@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -10,16 +10,20 @@ import Drawer from '@material-ui/core/Drawer';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
+import PropTypes from 'prop-types';
 
+import { histogramContext } from '../context/histogramContext';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import { summary, histogram, drawerWidth } from '../constants/summary-information';
+import {
+  summary,
+  histogram as histogramSummary,
+  drawerWidth
+} from '../constants/summary-information';
 import SidePanelControl from './SidePanelControl';
-
-import PropTypes from 'prop-types';
 
 const drawerStyleProperties = makeStyles(theme => ({
   summaryDashboardProperty: {
@@ -87,12 +91,12 @@ const DrawerDashBoard = ({
   isLoading,
   showSiteDetail,
   metrics,
-  histogramContent,
   siteDetail,
   clearSelectedSiteHandler,
   hideDrawer,
   isFiltering
 }) => {
+  const { histogram } = useContext(histogramContext);
   const classes = drawerStyleProperties();
 
   const collapseSidePanel = (
@@ -139,9 +143,9 @@ const DrawerDashBoard = ({
       />
       <MetricCards metrics={metrics} isLoading={isLoading} />
       <InformationCard
-        title={histogram.title}
-        type={histogram.type}
-        histogramContent={histogramContent}
+        title={histogramSummary.title}
+        type={histogramSummary.type}
+        histogramContent={histogram}
         isFiltering={isFiltering}
       />
     </div>
@@ -183,7 +187,6 @@ DrawerDashBoard.propTypes = {
   isLoading: PropTypes.bool,
   showSiteDetail: PropTypes.bool,
   metrics: PropTypes.array,
-  histogramContent: PropTypes.array,
   siteDetail: PropTypes.object,
   clearSelectedSiteHandler: PropTypes.func,
   classes: PropTypes.object

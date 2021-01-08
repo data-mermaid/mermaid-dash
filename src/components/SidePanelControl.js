@@ -10,7 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
 
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 
 const sidePanelStyleProperties = makeStyles(theme => ({
