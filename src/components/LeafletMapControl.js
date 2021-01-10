@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 
 import PropTypes from 'prop-types';
 

@@ -56,6 +56,11 @@ export const DialogText = styled('p')`
   font-size: ${props => (props.dialogTitle ? '1.5rem' : props.dialogHeader ? '1.1rem' : '0.85rem')};
   text-decoration: ${props => props.dialogHeader && 'underline'};
   ${props =>
+    props.subtext &&
+    css`
+      color: darkgrey;
+    `}
+  ${props =>
     (props.dialogTitle || props.mrTitleItem || props.dialogHeader) &&
     css`
       font-weight: 800;
