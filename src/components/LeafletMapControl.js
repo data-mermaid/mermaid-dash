@@ -96,7 +96,8 @@ const LeafletMapControl = ({
   filterChoices,
   showFilterNumbers,
   numberOfFilteredSites,
-  isFilteringChoices
+  isFilteringChoices,
+  highlightMarker
 }) => {
   const classes = mapControlStyleProperty();
 
@@ -117,7 +118,12 @@ const LeafletMapControl = ({
 
   const zoomToSelectSite = (
     <ThemeProvider theme={theme.mapControl}>
-      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+      <ButtonStyle
+        buttonBorder={true}
+        setWiggle={true}
+        onClick={() => zoomToSiteHandler(true)}
+        disabled={highlightMarker === null}
+      >
         <Tooltip
           title="Zoom to Selected Site"
           placement="right"

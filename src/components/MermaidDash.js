@@ -618,6 +618,7 @@ class MermaidDash extends Component {
           showFilterNumbers={this.state.showFilterNumbers}
           numberOfFilteredSites={this.state.sites.length}
           isFilteringChoices={this.state.isFilteringChoices}
+          highlightMarker={this.state.highlightMarker}
         />
         <LeafletMap
           sidePanelOpen={this.state.sidePanelOpen}
