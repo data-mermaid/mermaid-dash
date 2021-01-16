@@ -16,7 +16,7 @@ import { histogramContext } from '../context/histogramContext';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-import { theme } from '../constants/theme';
+import { color, theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import {
   summary,
@@ -35,7 +35,7 @@ const drawerStyleProperties = makeStyles(theme => ({
     flexShrink: 0
   },
   drawerPaper: {
-    backgroundColor: '#F4F4F4',
+    backgroundColor: color.mermaidWhiteGray,
     width: drawerWidth,
     top: 49,
     [theme.breakpoints.down('sm')]: {

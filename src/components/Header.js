@@ -12,11 +12,12 @@ import { MenuLink } from '../styles/MermaidStyledComponents';
 import HeaderMenu from './HeaderMenu';
 import IntroModal from './IntroModal';
 import headerContent from '../constants/header-content';
+import { color } from '../constants/theme';
 
 const headerStyles = makeStyles(theme => ({
   appBarProperty: {
     position: 'fixed',
-    background: '#2C3742',
+    background: color.mermaidDark,
     height: 49,
     justifyContent: 'center'
   },

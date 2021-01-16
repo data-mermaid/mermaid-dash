@@ -1,6 +1,7 @@
 import React from 'react';
 
 import numberWithCommas from '../lib/number-format';
+import { color } from '../constants/theme';
 
 import { makeStyles } from '@material-ui/core/styles';
 import styled, { css } from 'styled-components/macro';
@@ -33,7 +34,7 @@ const TitleBoxStyle = styled.div`
 `;
 
 const ContentBoxStyle = styled.div`
-  color: #004c76;
+  color: ${color.mermaidDarkBlue};
   padding: ${props => props.bottomPanelOpen && '30px 0px 0px 0px'};
   font-size: ${props => (props.bottomPanelOpen ? '35px' : '32px')};
   @media (min-width: 960px) {

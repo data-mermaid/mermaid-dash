@@ -1,4 +1,4 @@
-const color = {
+export const color = {
   mermaidDark: '#2C3742',
   mermaidWhite: 'white',
   mermaidBlue: '#337ab7',
