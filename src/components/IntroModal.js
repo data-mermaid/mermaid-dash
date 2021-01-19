@@ -12,11 +12,12 @@ import Box from '@material-ui/core/Box';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ModalContent from './ModalContent';
+import { color } from '../constants/theme';
 
 const InlineButtonImage = styled('span')`
   color: white;
   display: inline-flex;
-  background: #004c76;
+  background: ${color.mermaidDarkBlue};
   align-items: center;
   justify-content: center;
   padding: 2px 6px 4px 6px;

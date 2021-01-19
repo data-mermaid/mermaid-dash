@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import { theme } from '../constants/theme';
+import { color, theme } from '../constants/theme';
 
 import PropTypes from 'prop-types';
 
@@ -34,7 +34,7 @@ const mapControlStyleProperty = makeStyles(theme => ({
     borderRadius: '0 0 4px 4px',
     fontSize: '80%',
     zIndex: 1000,
-    backgroundColor: '#F4F4F4'
+    backgroundColor: color.mermaidWhiteGray
   },
   filterIconWrapperProperty: {
     position: 'fixed',

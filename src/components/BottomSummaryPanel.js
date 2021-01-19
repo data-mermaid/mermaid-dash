@@ -18,6 +18,7 @@ import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
 import { histogram as histogramSummary } from '../constants/summary-information';
+import { color } from '../constants/theme';
 
 const bottomPanelStyleProperties = makeStyles(theme => ({
   selectedSiteProperty: {
@@ -66,7 +67,7 @@ const BottomPanelContainer = styled('div')`
     props.open &&
     css`
       top: 49px;
-      background-color: #f4f4f4;
+      background-color: ${color.mermaidWhiteGray};
       overflow-x: hidden;
       overflow-y: overlay;
     `}
