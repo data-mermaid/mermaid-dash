@@ -648,6 +648,7 @@ class MermaidDash extends Component {
             siteDetail={this.state.siteDetail}
             showSiteDetail={this.state.showSiteDetail}
             clearSelectedSiteHandler={this.clearSelectedSiteHandler}
+            projectFishFamilies={this.state.projectFishFamilies}
           />
         )}
       </>
