@@ -78,7 +78,8 @@ const BottomSummaryPanel = ({
   isLoading,
   showSiteDetail,
   siteDetail,
-  clearSelectedSiteHandler
+  clearSelectedSiteHandler,
+  projectFishFamilies
 }) => {
   const { histogram } = useContext(histogramContext);
   const classes = bottomPanelStyleProperties();
@@ -106,7 +107,7 @@ const BottomSummaryPanel = ({
   const selectedSiteName =
     loadedSite &&
     (open ? (
-      <SiteDetail selectSite={loadedSite} />
+      <SiteDetail selectSite={loadedSite} projectFishFamilies={projectFishFamilies} />
     ) : (
       <Box className={classes.selectedSiteProperty}>
         <SelectMarkerIcon className={classes.selectMarkerIconStyle} />
