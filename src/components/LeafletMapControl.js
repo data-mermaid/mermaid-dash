@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
 
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import { theme } from './theme';
+import { color, theme } from '../constants/theme';
 
 import PropTypes from 'prop-types';
 
@@ -34,7 +34,7 @@ const mapControlStyleProperty = makeStyles(theme => ({
     borderRadius: '0 0 4px 4px',
     fontSize: '80%',
     zIndex: 1000,
-    backgroundColor: '#F4F4F4'
+    backgroundColor: color.mermaidWhiteGray
   },
   filterIconWrapperProperty: {
     position: 'fixed',
@@ -96,7 +96,8 @@ const LeafletMapControl = ({
   filterChoices,
   showFilterNumbers,
   numberOfFilteredSites,
-  isFilteringChoices
+  isFilteringChoices,
+  highlightMarker
 }) => {
   const classes = mapControlStyleProperty();
 
@@ -117,7 +118,12 @@ const LeafletMapControl = ({
 
   const zoomToSelectSite = (
     <ThemeProvider theme={theme.mapControl}>
-      <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => zoomToSiteHandler(true)}>
+      <ButtonStyle
+        buttonBorder={true}
+        setWiggle={true}
+        onClick={() => zoomToSiteHandler(true)}
+        disabled={highlightMarker === null}
+      >
         <Tooltip
           title="Zoom to Selected Site"
           placement="right"

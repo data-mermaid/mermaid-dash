@@ -1,5 +1,6 @@
 import React from 'react';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTooltip, VictoryLine } from 'victory';
+import { color } from '../constants/theme';
 
 import PropTypes from 'prop-types';
 
@@ -50,7 +51,7 @@ const BarChart = ({ chartContent }) => {
             cornerRadius={4}
             pointerLength={7}
             flyoutStyle={{
-              stroke: '#004C76',
+              stroke: color.mermaidDarkBlue,
               strokeWidth: 2,
               fill: 'skyblue',
               opacity: 0.75
@@ -69,7 +70,7 @@ const BarChart = ({ chartContent }) => {
                 return [
                   {
                     target: 'data',
-                    mutation: () => ({ style: { fill: '#004C76' } })
+                    mutation: () => ({ style: { fill: color.mermaidDarkBlue } })
                   },
                   {
                     target: 'labels',
@@ -95,8 +96,14 @@ const BarChart = ({ chartContent }) => {
         x="x"
         y="y"
       />
-      <VictoryLine x={() => 11} style={{ data: { stroke: '#004C76', strokeDasharray: [1, 2] } }} />
-      <VictoryLine x={() => 31} style={{ data: { stroke: '#004C76', strokeDasharray: [1, 2] } }} />
+      <VictoryLine
+        x={() => 11}
+        style={{ data: { stroke: color.mermaidDarkBlue, strokeDasharray: [1, 2] } }}
+      />
+      <VictoryLine
+        x={() => 31}
+        style={{ data: { stroke: color.mermaidDarkBlue, strokeDasharray: [1, 2] } }}
+      />
     </VictoryChart>
   );
 };

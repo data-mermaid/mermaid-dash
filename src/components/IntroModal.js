@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components/macro';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -12,11 +11,13 @@ import ContactIcon from '@material-ui/icons/Email';
 import Box from '@material-ui/core/Box';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
+import ModalContent from './ModalContent';
+import { color } from '../constants/theme';
 
 const InlineButtonImage = styled('span')`
   color: white;
   display: inline-flex;
-  background: #004c76;
+  background: ${color.mermaidDarkBlue};
   align-items: center;
   justify-content: center;
   padding: 2px 6px 4px 6px;
@@ -43,6 +44,8 @@ const MenuBoxItem = styled(Box)`
 `;
 
 const IntroModal = ({ open, modalToggleHandler }) => {
+  const clickToViewModal = <MenuBoxItem onClick={modalToggleHandler}>ABOUT</MenuBoxItem>;
+
   const contactButton = (
     <InlineButtonImage>
       <InlineButtonIcon />
@@ -50,16 +53,10 @@ const IntroModal = ({ open, modalToggleHandler }) => {
     </InlineButtonImage>
   );
 
-  const aboutThisData = <MenuBoxItem onClick={modalToggleHandler}>ABOUT</MenuBoxItem>;
   return (
-    <div>
-      {aboutThisData}
-      <Dialog
-        onClose={modalToggleHandler}
-        open={open}
-        scroll={'paper'}
-        PaperProps={{ style: { margin: '8px' } }}
-      >
+    <>
+      {clickToViewModal}
+      <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>About</DialogText>
         </MuiDialogTitle>
@@ -84,8 +81,8 @@ const IntroModal = ({ open, modalToggleHandler }) => {
             Get Started
           </Button>
         </MuiDialogActions>
-      </Dialog>
-    </div>
+      </ModalContent>
+    </>
   );
 };
 

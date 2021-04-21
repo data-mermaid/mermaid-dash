@@ -10,6 +10,7 @@ import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
 import LiveCoralCoverModal from './LiveCoralCoverModal';
+import FishFamilyModal from './FishFamilyModal';
 // import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
@@ -48,14 +49,17 @@ const InformationCard = ({
   type,
   bleachingSubItems,
   pieChartContent,
-  textContent
+  textContent,
+  projectFishFamilies
 }) => {
   const classes = cardStyle();
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
 
   const [modalStageOpen, setModalStage] = useState(false);
+  const [fishFamilyModalStageOpen, setFishFamilyModalStageOpen] = useState(false);
 
   const modalToggleHandler = () => setModalStage(!modalStageOpen);
+  const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen);
 
   const subAttributeItem = !setToPrivate && protocol && (
     <>
@@ -66,6 +70,18 @@ const InformationCard = ({
         </Typography>
       ) : (
         <Typography m={1}>Reef fish biomass: {protocol.biomass_kgha_avg} kg/ha</Typography>
+      )}
+      {protocolName === 'beltfish' && projectFishFamilies.length > 0 && (
+        <>
+          <Typography m={1} display="inline">
+            Restricted set of fish families surveyed{' '}
+          </Typography>
+          <FishFamilyModal
+            open={fishFamilyModalStageOpen}
+            modalToggleHandler={fishFamilyModalToggleHandler}
+            projectFishFamilies={projectFishFamilies}
+          />
+        </>
       )}
     </>
   );

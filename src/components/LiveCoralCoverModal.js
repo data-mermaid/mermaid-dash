@@ -4,31 +4,27 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import HelpIcon from '@material-ui/icons/Help';
-import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 
 import { DialogText } from '../styles/MermaidStyledComponents';
+import ModalContent from './ModalContent';
+import { color } from '../constants/theme';
 
 const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
-  const liveCoralCoverButton = (
+  const clickToViewModal = (
     <Tooltip title="More Information & References" placement="right">
       <IconButton onClick={modalToggleHandler}>
-        <HelpIcon style={{ color: '#004C76', fontSize: '30px' }} />
+        <HelpIcon style={{ color: color.mermaidDarkBlue, fontSize: '30px' }} />
       </IconButton>
     </Tooltip>
   );
 
   return (
     <>
-      {liveCoralCoverButton}
-      <Dialog
-        onClose={modalToggleHandler}
-        open={open}
-        scroll={'paper'}
-        PaperProps={{ style: { margin: '8px' } }}
-      >
+      {clickToViewModal}
+      <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>Live Coral Cover</DialogText>
         </MuiDialogTitle>
@@ -91,7 +87,7 @@ const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
             Close
           </Button>
         </MuiDialogActions>
-      </Dialog>
+      </ModalContent>
     </>
   );
 };

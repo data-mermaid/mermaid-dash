@@ -16,7 +16,7 @@ import { histogramContext } from '../context/histogramContext';
 import MetricCards from './MetricCardsContainer';
 import InformationCard from './InformationCard';
 import SiteDetail from './SiteDetail';
-import { theme } from './theme';
+import { color, theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import {
   summary,
@@ -35,7 +35,7 @@ const drawerStyleProperties = makeStyles(theme => ({
     flexShrink: 0
   },
   drawerPaper: {
-    backgroundColor: '#F4F4F4',
+    backgroundColor: color.mermaidWhiteGray,
     width: drawerWidth,
     top: 49,
     [theme.breakpoints.down('sm')]: {
@@ -94,7 +94,8 @@ const DrawerDashBoard = ({
   siteDetail,
   clearSelectedSiteHandler,
   hideDrawer,
-  isFiltering
+  isFiltering,
+  projectFishFamilies
 }) => {
   const { histogram } = useContext(histogramContext);
   const classes = drawerStyleProperties();
@@ -151,7 +152,9 @@ const DrawerDashBoard = ({
     </div>
   );
 
-  const siteDashboard = siteDetail && <SiteDetail selectSite={siteDetail} />;
+  const siteDashboard = siteDetail && (
+    <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} />
+  );
 
   const result = sidePanelOpen ? (
     <>

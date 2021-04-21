@@ -10,7 +10,7 @@ import { DialogText } from '../styles/MermaidStyledComponents';
 
 import { ThemeProvider } from 'styled-components/macro';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import { theme } from './theme';
+import { theme } from '../constants/theme';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
