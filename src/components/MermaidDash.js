@@ -168,15 +168,15 @@ class MermaidDash extends Component {
   }
 
   convertToId = (names, filtered_options) => {
-    return filtered_options
-      .reduce((newArr, obj) => {
-        for (let name of names) {
-          if (obj.name === name) newArr.push(obj.id);
-        }
-
-        return newArr;
-      }, [])
+    const result = names
+      .map(name => {
+        return filtered_options.find(item => item.name === name)?.id;
+      })
       .join(',');
+
+    const unknownResult = result.length === 0;
+
+    return unknownResult ? 'undefined' : result;
   };
 
   getBboxXY = bbox => {
