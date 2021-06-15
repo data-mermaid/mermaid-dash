@@ -9,7 +9,8 @@ export const benthicAttributeColors = [
   { name: 'Bare substrate', color: '#F2F3F3' },
   { name: 'Sand', color: '#C2B280' },
   { name: 'Other invertebrates', color: '#4E4E4E' },
-  { name: 'Seagrass', color: '#494949' }
+  { name: 'Seagrass', color: '#494949' },
+  { name: 'trash', color: '#CBD0D1' }
 ];
 export const fishBeltAttributeColors = [
   { name: 'herbivore-detritivore', color: '#D9ED8B' },

@@ -4,7 +4,7 @@ export const summary = {
   title: 'Summary Statistics',
   header: 'Data is more powerful when shared',
   body:
-    'Mermaid believes in coral reef conservation through collaboration. We use cutting edge technology to visualize, analyse and share data about coral reefs in near real time, and for free.',
+    'MERMAID believes in coral reef conservation through collaboration. We use cutting edge technology to visualize, analyse and share data about coral reefs in near real time, and for free.',
   type: 'text'
 };
 
