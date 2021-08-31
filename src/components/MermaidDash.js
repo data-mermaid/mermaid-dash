@@ -24,7 +24,7 @@ class MermaidDash extends Component {
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
-      { title: 'Years', count: null },
+      { title: 'People', count: null },
       { title: 'Sites', count: null },
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
@@ -58,6 +58,7 @@ class MermaidDash extends Component {
       sites,
       bbox,
       metrics,
+      filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
         project: projectId,
@@ -106,14 +107,14 @@ class MermaidDash extends Component {
 
       const countryCount = this.getCount(updatedSites, 'country_id');
       const projectCount = this.getCount(updatedSites, 'project_id');
-      const yearCount = this.getUniqueYearCount(updatedSites);
+      const userCount = this.getUserCount(updatedSites, projectChoices);
       const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
       const transectCount = this.getTransectCount(updatedSites);
       const avgCoralCoverCount = this.getAvgCoralCount(updatedSiteProtocols);
 
       if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
       if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
-      if (prevMetricUsersCount !== yearCount) metrics[2].count = yearCount;
+      if (prevMetricUsersCount !== userCount) metrics[2].count = userCount;
       if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
       if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
       if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
@@ -422,20 +423,18 @@ class MermaidDash extends Component {
     return new Set(result).size;
   }
 
-  getUniqueYearCount(array) {
-    const allYearsFromMinMaxRanges = array.reduce((allYears, item) => {
-      let minYear = Number(item.date_min.substring(0, 4));
-      const maxYear = Number(item.date_max.substring(0, 4));
+  getUserCount(array, choices) {
+    const projectFilter = array.map(({ project_id }) => project_id);
+    const projectSet = [...new Set(projectFilter)];
 
-      while (minYear < maxYear + 1) {
-        allYears.push(minYear);
-        minYear += 1;
-      }
+    const memberExtract = choices.reduce((memberList, project) => {
+      if (projectSet.find(id => id === project.id) && Array.isArray(project.members))
+        memberList.push(...project.members);
 
-      return allYears;
+      return memberList;
     }, []);
 
-    return new Set(allYearsFromMinMaxRanges).size;
+    return new Set(memberExtract).size;
   }
 
   getUniqueSiteCount(array) {

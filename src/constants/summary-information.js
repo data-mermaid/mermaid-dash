@@ -2,8 +2,9 @@ export const drawerWidth = 650;
 
 export const summary = {
   title: 'Summary Statistics',
-  header: 'Summaries are dynamic',
-  body: 'Use the map and the filters to explore the data in your areas of interest.',
+  header: 'Data is more powerful when shared',
+  body:
+    'MERMAID believes in coral reef conservation through collaboration. We use cutting edge technology to visualize, analyse and share data about coral reefs in near real time, and for free.',
   type: 'text'
 };
 
