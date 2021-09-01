@@ -24,7 +24,7 @@ class MermaidDash extends Component {
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
-      { title: 'People', count: null },
+      { title: 'Years', count: null },
       { title: 'Sites', count: null },
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
@@ -58,7 +58,6 @@ class MermaidDash extends Component {
       sites,
       bbox,
       metrics,
-      filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
         project: projectId,
@@ -85,7 +84,7 @@ class MermaidDash extends Component {
 
     const prevMetricCountriesCount = prevMetrics[0].count;
     const prevMetricProjectsCount = prevMetrics[1].count;
-    const prevMetricUsersCount = prevMetrics[2].count;
+    const prevMetricYearsCount = prevMetrics[2].count;
     const prevMetricSitesCount = prevMetrics[3].count;
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
@@ -107,14 +106,14 @@ class MermaidDash extends Component {
 
       const countryCount = this.getCount(updatedSites, 'country_id');
       const projectCount = this.getCount(updatedSites, 'project_id');
-      const userCount = this.getUserCount(updatedSites, projectChoices);
+      const yearCount = this.getUniqueYearCount(updatedSites);
       const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
       const transectCount = this.getTransectCount(updatedSites);
       const avgCoralCoverCount = this.getAvgCoralCount(updatedSiteProtocols);
 
       if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
       if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
-      if (prevMetricUsersCount !== userCount) metrics[2].count = userCount;
+      if (prevMetricYearsCount !== yearCount) metrics[2].count = yearCount;
       if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
       if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
       if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
@@ -423,18 +422,20 @@ class MermaidDash extends Component {
     return new Set(result).size;
   }
 
-  getUserCount(array, choices) {
-    const projectFilter = array.map(({ project_id }) => project_id);
-    const projectSet = [...new Set(projectFilter)];
+  getUniqueYearCount(array) {
+    const allYearsFromMinMaxRanges = array.reduce((allYears, item) => {
+      let minYear = new Date(item.date_min).getFullYear();
+      const maxYear = new Date(item.date_max).getFullYear();
 
-    const memberExtract = choices.reduce((memberList, project) => {
-      if (projectSet.find(id => id === project.id) && Array.isArray(project.members))
-        memberList.push(...project.members);
+      while (minYear < maxYear + 1) {
+        allYears.push(minYear);
+        minYear += 1;
+      }
 
-      return memberList;
+      return allYears;
     }, []);
 
-    return new Set(memberExtract).size;
+    return new Set(allYearsFromMinMaxRanges).size;
   }
 
   getUniqueSiteCount(array) {
