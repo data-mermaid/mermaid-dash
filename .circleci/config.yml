@@ -9,7 +9,7 @@ install_dependencies: &install_dependencies
       name: Install Dependencies
       command: |
           sudo apt-get update
-          sudo apt-get install awscli python3-requests
+          sudo apt-get install awscli python-requests
           npm install
 jobs:
   test:
