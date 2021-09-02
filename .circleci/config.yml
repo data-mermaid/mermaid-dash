@@ -2,14 +2,14 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: circleci/node:dubnium-stretch
+    - image: cimg/node:14.17.6
 
 install_dependencies: &install_dependencies
     run:
       name: Install Dependencies
       command: |
           sudo apt-get update
-          sudo apt-get install awscli python-requests
+          sudo apt-get install awscli python3-requests
           npm install
 jobs:
   test:
