@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: cimg/node:fermium-stretch
+    - image: cimg/node:fermium
 
 install_dependencies: &install_dependencies
     run:
