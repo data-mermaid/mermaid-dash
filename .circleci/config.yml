@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: cimg/node:14.17-browsers
+    - image: cimg/node:fermium-stretch
 
 install_dependencies: &install_dependencies
     run:
