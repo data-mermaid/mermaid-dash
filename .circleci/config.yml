@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: cimg/node:14.17
+    - image: cimg/node:v14.17-stretch
 
 install_dependencies: &install_dependencies
     run:
