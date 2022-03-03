@@ -30,7 +30,7 @@
     "@turf/turf": "^5.1.6",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.21.1",
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "leaflet": "^1.5.1",
     "leaflet-minimap": "^3.6.1",
     "leaflet.markercluster": "^1.4.1",
