@@ -16,19 +16,42 @@ const subItemStyles = makeStyles(theme => ({
   }
 }));
 
+const formatDate = siteDate => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  const dateParts = siteDate.split('-').join(',');
+  const dateObject = new Date(dateParts);
+  const year = dateObject.getFullYear();
+  const date = dateObject.getDate();
+  const month = months[dateObject.getMonth()];
+
+  return `${month} ${date}, ${year}`;
+};
+
 const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   const classes = subItemStyles();
   const {
-    date_min,
-    date_max,
     site_name,
     project_name,
     management_regimes,
-    contact_link
+    contact_link,
+    sample_date
   } = loadedSiteProperties;
-  const startDate = date_min && date_min.substring(0, 4);
-  const endDate = date_max && date_max.substring(0, 4);
-  const siteYear = endDate === startDate ? endDate : `${startDate} - ${endDate}`;
+  console.log('sample_date ', sample_date);
+  const siteDate = formatDate(sample_date);
 
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
@@ -55,7 +78,7 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
                 .join(', ')
             : 'No managements'}
         </Typography>
-        <Typography variant="body1">{siteYear}</Typography>
+        <Typography variant="body1">{siteDate}</Typography>
       </Box>
       <Box>{contactButton}</Box>
     </Box>

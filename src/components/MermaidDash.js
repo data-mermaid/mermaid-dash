@@ -45,8 +45,8 @@ class MermaidDash extends Component {
       country: [],
       project: [],
       organization: [],
-      date_min_after: '',
-      date_max_before: ''
+      sample_date_after: '',
+      sample_date_before: ''
     },
     filterChoices: { countries: [], projects: [], tags: [], fishFamilies: [] },
     showFilterNumbers: false,
@@ -62,8 +62,8 @@ class MermaidDash extends Component {
         country: countryName,
         project: projectId,
         organization: organizationId,
-        date_min_after: dateMin,
-        date_max_before: dateMax
+        sample_date_after: sampleDateAfter,
+        sample_date_before: sampleDateBefore
       },
       isFiltering
     } = this.state;
@@ -77,8 +77,8 @@ class MermaidDash extends Component {
         country: prevCountryName,
         project: prevProjectId,
         organization: prevOrganizationId,
-        date_min_after: prevDateMin,
-        date_max_before: prevDateMax
+        sample_date_after: prevSampleDateAfter,
+        sample_date_before: prevSampleDateBefore
       }
     } = prevState;
 
@@ -93,8 +93,8 @@ class MermaidDash extends Component {
       countryName !== prevCountryName ||
       projectId !== prevProjectId ||
       organizationId !== prevOrganizationId ||
-      dateMin !== prevDateMin ||
-      dateMax !== prevDateMax
+      sampleDateAfter !== prevSampleDateAfter ||
+      sampleDateBefore !== prevSampleDateBefore
     ) {
       this.filterUpdate();
     }
@@ -130,20 +130,20 @@ class MermaidDash extends Component {
     const countryName = params.get('country');
     const projectId = params.get('project');
     const organizationId = params.get('organization');
-    const date = params.get('date');
-    const dateMinMax = date ? date.split(',') : [];
-    const dateMin = dateMinMax[0] && `${dateMinMax[0]}-01-01`;
-    const dateMax = dateMinMax[1] && `${dateMinMax[1]}-12-31`;
+    const sampleDateAfter = params.get('sample_date_after');
+    const sampleDateBefore = params.get('sample_date_before');
     const queryStringsFound =
-      countryName || projectId || organizationId || dateMinMax.length > 0 ? true : false;
+      countryName || projectId || organizationId || sampleDateAfter || sampleDateBefore
+        ? true
+        : false;
 
     const paramsObj = {
       limit: queryLimit,
       country_name: countryName,
       project_id: projectId,
       tag_id: organizationId,
-      date_min_after: dateMin,
-      date_max_before: dateMax
+      sample_date_after: sampleDateAfter,
+      sample_date_before: sampleDateBefore
     };
     this.fetchAllSites(paramsObj);
 
@@ -153,9 +153,9 @@ class MermaidDash extends Component {
 
     if (organizationId) filterParams.organization = organizationId.split(/,(?=\S)|:/);
 
-    if (dateMin) filterParams.date_min_after = dateMin.split('-')[0];
+    if (sampleDateAfter) filterParams.sample_date_after = sampleDateAfter;
 
-    if (dateMax) filterParams.date_max_before = dateMax.split('-')[0];
+    if (sampleDateBefore) filterParams.sample_date_before = sampleDateBefore;
 
     this.setState({
       filterParams,
@@ -213,12 +213,35 @@ class MermaidDash extends Component {
     return data;
   };
 
+  fetchSampleEventsChunk = async (params, pageNo = 1) => {
+    const { data } =
+      (await summary.get('/summarysampleevents/', {
+        params: {
+          page: pageNo,
+          ...params
+        }
+      })) || {};
+
+    return data;
+  };
+
   fetchEntiresSites = async (params, pageNo = 1) => {
     const fetchResults = await this.fetchSitesChunk(params, pageNo);
     const { results, count } = fetchResults;
 
     if (pageNo * this.state.queryLimit < count)
       return [...results].concat(await this.fetchEntiresSites(params, pageNo + 1));
+
+    return results;
+  };
+
+  fetchEntiresSampleEvents = async (params, pageNo = 1) => {
+    const fetchResults = await this.fetchSampleEventsChunk(params, pageNo);
+    const { results, count } = fetchResults;
+
+    if (pageNo * this.state.queryLimit < count) {
+      return [...results].concat(await this.fetchEntiresSampleEvents(params, pageNo + 1));
+    }
 
     return results;
   };
@@ -273,14 +296,15 @@ class MermaidDash extends Component {
   fetchAllSites = async params => {
     const { metrics } = this.state;
     const updatedParams = await this.fetchAllChoices(params);
-    const sites = await this.fetchEntiresSites(updatedParams);
+    const sampleevents = await this.fetchEntiresSampleEvents(updatedParams);
 
-    if (sites.length === 0) {
+    console.log('sampleevents ', sampleevents);
+
+    if (sampleevents.length === 0) {
       metrics.map(metric => (metric.count = 0));
-      this.setState({ metrics, isFiltering: false });
     }
 
-    this.setState({ sites, isFiltering: false });
+    this.setState({ sites: sampleevents, metrics, isFiltering: false });
   };
 
   resize() {
@@ -423,19 +447,9 @@ class MermaidDash extends Component {
   }
 
   getUniqueYearCount(array) {
-    const allYearsFromMinMaxRanges = array.reduce((allYears, item) => {
-      let minYear = new Date(item.date_min).getFullYear();
-      const maxYear = new Date(item.date_max).getFullYear();
+    console.log('get unique year count from array ', array);
 
-      while (minYear < maxYear + 1) {
-        allYears.push(minYear);
-        minYear += 1;
-      }
-
-      return allYears;
-    }, []);
-
-    return new Set(allYearsFromMinMaxRanges).size;
+    return 0;
   }
 
   getUniqueSiteCount(array) {
@@ -527,13 +541,13 @@ class MermaidDash extends Component {
 
   siteLookup = ({ key: siteId }) => this.state.sites.filter(({ site_id }) => site_id === siteId)[0];
 
-  filterHandler = ({ country, project, organization, date_min_after, date_max_before }) => {
+  filterHandler = ({ country, project, organization, sample_date_after, sample_date_before }) => {
     const filterParams = { ...this.state.filterParams };
     filterParams.country = country;
     filterParams.project = project;
     filterParams.organization = organization;
-    filterParams.date_min_after = date_min_after;
-    filterParams.date_max_before = date_max_before;
+    filterParams.sample_date_after = sample_date_after;
+    filterParams.sample_date_before = sample_date_before;
 
     this.setState({ filterParams });
   };
@@ -543,8 +557,8 @@ class MermaidDash extends Component {
     const countryProperty = Object.entries(filterParams)[0];
     const projectIdProperty = Object.entries(filterParams)[1];
     const organizationIdProperty = Object.entries(filterParams)[2];
-    const dateMinProperty = Object.entries(filterParams)[3];
-    const dateMaxProperty = Object.entries(filterParams)[4];
+    const sampleDateAfterProperty = Object.entries(filterParams)[3];
+    const sampleDateBeforeProperty = Object.entries(filterParams)[4];
 
     if (countryProperty[1].length > 0)
       queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
@@ -555,9 +569,11 @@ class MermaidDash extends Component {
     if (organizationIdProperty[1].length > 0)
       queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='));
 
-    if (dateMinProperty[1].length > 0 || dateMaxProperty[1].length > 0) {
-      const dateString = [`${dateMinProperty[1]}`, `${dateMaxProperty[1]}`].join(',');
-      queryStrings.push(['date', dateString].join('='));
+    if (sampleDateAfterProperty[1].length > 0) {
+      queryStrings.push([sampleDateAfterProperty[0], sampleDateAfterProperty[1]].join('='));
+    }
+    if (sampleDateBeforeProperty[1].length > 0) {
+      queryStrings.push([sampleDateBeforeProperty[0], sampleDateBeforeProperty[1]].join('='));
     }
 
     this.props.history.push({

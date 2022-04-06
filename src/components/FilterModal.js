@@ -17,6 +17,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { makeStyles } from '@material-ui/core/styles';
 
 import DateInput from './DateInput';
+import DatePickerComponent from './DatePickerComponent';
 import AutocompleteInput from './AutocompleteInput';
 
 const filterModalStyles = makeStyles(theme => ({
@@ -38,37 +39,11 @@ const FilterModal = ({
 }) => {
   const classes = filterModalStyles();
 
-  const isNumericAndEmpty = n => {
-    if (n.length === 0) return true;
-
-    return !isNaN(parseFloat(n)) && isFinite(n);
-  };
-
   const [open, setOpen] = useState(false);
   const [queryStrings, setQueryStrings] = useState(filterParams);
-  const [startYearValidation, setStartYearValidation] = useState(
-    !isNumericAndEmpty(filterParams.date_min_after)
-  );
-  const [endYearValidation, setEndYearValidation] = useState(
-    !isNumericAndEmpty(filterParams.date_max_before)
-  );
-  const [startYearGreaterThanEndYear, setEndYearGreater] = useState(false);
-
-  const checkStartYear = input => {
-    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input))
-      setStartYearValidation(false);
-    else setStartYearValidation(true);
-  };
-
-  const checkEndYear = input => {
-    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input))
-      setEndYearValidation(false);
-    else setEndYearValidation(true);
-  };
-
-  const checkEndYearGreater = option => setEndYearGreater(option);
 
   const addQueryStrings = (property, options) => {
+    console.log('options ', options);
     const params = { ...queryStrings };
 
     params[property] = options;
@@ -80,8 +55,6 @@ const FilterModal = ({
 
   const handleClose = () => {
     setOpen(false);
-    setStartYearValidation(false);
-    setEndYearValidation(false);
   };
 
   const handleFilter = () => {
@@ -128,25 +101,13 @@ const FilterModal = ({
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
           />
-          <DateInput
-            filterParams={filterParams}
-            addQueryStrings={addQueryStrings}
-            startYearValidation={startYearValidation}
-            endYearValidation={endYearValidation}
-            checkStartYear={checkStartYear}
-            checkEndYear={checkEndYear}
-            checkEndYearGreater={checkEndYearGreater}
-          />
+          <DatePickerComponent filterParams={filterParams} addQueryStrings={addQueryStrings} />
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleFilter}
-            color="primary"
-            disabled={startYearValidation || endYearValidation || startYearGreaterThanEndYear}
-          >
+          <Button onClick={handleFilter} color="primary">
             Done
           </Button>
         </MuiDialogActions>
