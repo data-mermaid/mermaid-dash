@@ -16,8 +16,7 @@ import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { makeStyles } from '@material-ui/core/styles';
 
-import DateInput from './DateInput';
-import DatePickerComponent from './DatePickerComponent';
+import DatePickerInputs from './DatePickerInputs';
 import AutocompleteInput from './AutocompleteInput';
 
 const filterModalStyles = makeStyles(theme => ({
@@ -43,7 +42,6 @@ const FilterModal = ({
   const [queryStrings, setQueryStrings] = useState(filterParams);
 
   const addQueryStrings = (property, options) => {
-    console.log('options ', options);
     const params = { ...queryStrings };
 
     params[property] = options;
@@ -101,14 +99,14 @@ const FilterModal = ({
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
           />
-          <DatePickerComponent filterParams={filterParams} addQueryStrings={addQueryStrings} />
+          <DatePickerInputs filterParams={filterParams} addQueryStrings={addQueryStrings} />
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button onClick={handleFilter} color="primary">
-            Done
+            Apply
           </Button>
         </MuiDialogActions>
       </Dialog>

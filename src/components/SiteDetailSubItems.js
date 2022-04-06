@@ -50,7 +50,6 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
     contact_link,
     sample_date
   } = loadedSiteProperties;
-  console.log('sample_date ', sample_date);
   const siteDate = formatDate(sample_date);
 
   const contactButton = (
