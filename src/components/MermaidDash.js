@@ -101,15 +101,23 @@ class MermaidDash extends Component {
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
-      const updatedSiteProtocols = updatedSites.map(({ protocols }) => protocols);
-      this.context.setHistogram(this.histogramCount(updatedSiteProtocols, histogram));
+      const sampleEventsFromSites = updatedSites.reduce((sampleEvents, site) => {
+        for (const sampleEvent of site[1]) {
+          sampleEvents.push(sampleEvent);
+        }
+        return sampleEvents;
+      }, []);
 
-      const countryCount = this.getCount(updatedSites, 'country_id');
-      const projectCount = this.getCount(updatedSites, 'project_id');
-      const yearCount = this.getUniqueYearCount(updatedSites);
-      const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
-      const transectCount = this.getTransectCount(updatedSites);
-      const avgCoralCoverCount = this.getAvgCoralCount(updatedSiteProtocols);
+      const sampleEventProtocols = sampleEventsFromSites.map(({ protocols }) => protocols);
+
+      this.context.setHistogram(this.histogramCount(sampleEventProtocols, histogram));
+
+      const countryCount = this.getCount(sampleEventsFromSites, 'country_id');
+      const projectCount = this.getCount(sampleEventsFromSites, 'project_id');
+      const yearCount = this.getCount(sampleEventsFromSites, 'sample_date');
+      const uniqueSiteCount = updatedSites.length;
+      const transectCount = this.getTransectCount(sampleEventProtocols);
+      const avgCoralCoverCount = this.getAvgCoralCount(sampleEventProtocols);
 
       if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
       if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
@@ -190,7 +198,8 @@ class MermaidDash extends Component {
     const bboxList = this.getBboxXY(bbox);
 
     return sites.reduce((newSites, site) => {
-      const point = [site.longitude, site.latitude];
+      const { longitude, latitude } = site[1][0];
+      const point = [longitude, latitude];
 
       for (const { x, y } of bboxList) {
         if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1])
@@ -199,18 +208,6 @@ class MermaidDash extends Component {
 
       return newSites;
     }, []);
-  };
-
-  fetchSitesChunk = async (params, pageNo = 1) => {
-    const { data } =
-      (await summary.get('/summarysites/', {
-        params: {
-          page: pageNo,
-          ...params
-        }
-      })) || {};
-
-    return data;
   };
 
   fetchSampleEventsChunk = async (params, pageNo = 1) => {
@@ -223,16 +220,6 @@ class MermaidDash extends Component {
       })) || {};
 
     return data;
-  };
-
-  fetchEntiresSites = async (params, pageNo = 1) => {
-    const fetchResults = await this.fetchSitesChunk(params, pageNo);
-    const { results, count } = fetchResults;
-
-    if (pageNo * this.state.queryLimit < count)
-      return [...results].concat(await this.fetchEntiresSites(params, pageNo + 1));
-
-    return results;
   };
 
   fetchEntiresSampleEvents = async (params, pageNo = 1) => {
@@ -296,15 +283,27 @@ class MermaidDash extends Component {
   fetchAllSites = async params => {
     const { metrics } = this.state;
     const updatedParams = await this.fetchAllChoices(params);
-    const sampleevents = await this.fetchEntiresSampleEvents(updatedParams);
+    const sampleEvents = await this.fetchEntiresSampleEvents(updatedParams);
+    const sortedSampleEvents = sampleEvents.sort((a, b) =>
+      a.sample_date > b.sample_date ? 1 : -1
+    );
 
-    console.log('sampleevents ', sampleevents);
+    const reducedSites = sortedSampleEvents.reduce((result, sample) => {
+      let key = sample.site_id;
+      if (!result[key]) {
+        result[key] = [];
+      }
+      result[key].push(sample);
+      return result;
+    }, {});
 
-    if (sampleevents.length === 0) {
+    const siteEntries = Object.entries(reducedSites);
+
+    if (siteEntries.length === 0) {
       metrics.map(metric => (metric.count = 0));
     }
 
-    this.setState({ sites: sampleevents, metrics, isFiltering: false });
+    this.setState({ sites: siteEntries, metrics, isFiltering: false });
   };
 
   resize() {
@@ -321,19 +320,13 @@ class MermaidDash extends Component {
 
   siteClickHandler = site => {
     const {
-      highlightCluster,
-      popupSiteList,
       sidePanelOpen,
       mobileDisplay,
       filterChoices: { projects, fishFamilies }
     } = this.state;
-    const siteDropdownList = popupSiteList.map(({ site_id }) => site_id);
-    const selectedSite = site.key ? this.siteLookup(site) : site;
-    const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.site_id)
-      ? true
-      : false;
+    const selectedSiteDetail = site[1];
 
-    const foundRelatedProject = projects.find(({ id }) => id === selectedSite.project_id);
+    const foundRelatedProject = projects.find(({ id }) => id === selectedSiteDetail.project_id);
 
     const fishFamilyList =
       foundRelatedProject?.data?.settings?.fishFamilySubset.map(family_id => {
@@ -343,16 +336,10 @@ class MermaidDash extends Component {
         );
       }) || [];
 
-    if (highlightCluster !== null && !siteExistsInCluster) {
-      highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null, popupOpen: true });
-    } else if (highlightCluster !== null && siteExistsInCluster) this.setState({ popupOpen: true });
-    else if (highlightCluster === null) this.setState({ popupOpen: false });
-
     if (!mobileDisplay && !sidePanelOpen) this.setState({ sidePanelOpen: true });
 
     this.setState({
-      siteDetail: selectedSite,
+      siteDetail: selectedSiteDetail,
       projectFishFamilies: fishFamilyList,
       showSiteDetail: true,
       zoomFullMap: false,
@@ -362,11 +349,11 @@ class MermaidDash extends Component {
 
   siteDropDownHandler = selectedSites => {
     const { sidePanelOpen, mobileDisplay } = this.state;
+    const firstSiteInPopupDropdown = selectedSites[0][1];
 
     if (!(mobileDisplay || sidePanelOpen)) this.setState({ sidePanelOpen: true });
-
     this.setState({
-      siteDetail: selectedSites[0],
+      siteDetail: firstSiteInPopupDropdown,
       popupSiteList: selectedSites,
       popupOpen: true,
       showSiteDetail: true,
@@ -435,39 +422,16 @@ class MermaidDash extends Component {
 
   getMapBounds = bbox => this.setState({ bbox });
 
-  getCount(array, key) {
-    let result = array.map(item => item[key]);
-
-    if (key === 'project_admins') {
-      const adminList = array.map(item => item[key].map(secItem => secItem.name));
-      result = [].concat.apply([], adminList);
-    }
+  getCount(sampleEvents, key) {
+    let result =
+      key === 'sample_date'
+        ? sampleEvents.map(({ sample_date }) => sample_date.substring(0, 4))
+        : sampleEvents.map(sampleEvent => sampleEvent[key]);
 
     return new Set(result).size;
   }
 
-  getUniqueYearCount(array) {
-    console.log('get unique year count from array ', array);
-
-    return 0;
-  }
-
-  getUniqueSiteCount(array) {
-    const coordinatesArr = array.map(({ latitude, longitude }) => [latitude, longitude]);
-
-    const duplicateList = coordinatesArr.reduce((duplicatesFound, coordinates) => {
-      return {
-        ...duplicatesFound,
-        [coordinates]: (duplicatesFound[coordinates] || 0) + 1
-      };
-    }, {});
-
-    return Object.keys(duplicateList).length;
-  }
-
-  getTransectCount(array) {
-    const protocols = array.map(({ protocols }) => protocols);
-
+  getTransectCount(protocols) {
     const protocolCount = protocols
       .map(({ beltfish, benthicpit, benthiclit, habitatcomplexity, colonies_bleached }) => {
         const beltfishCount = beltfish ? beltfish.sample_unit_count : 0;
@@ -538,8 +502,6 @@ class MermaidDash extends Component {
   }
 
   contentLoadHandler = option => this.setState({ isLoading: option });
-
-  siteLookup = ({ key: siteId }) => this.state.sites.filter(({ site_id }) => site_id === siteId)[0];
 
   filterHandler = ({ country, project, organization, sample_date_after, sample_date_before }) => {
     const filterParams = { ...this.state.filterParams };

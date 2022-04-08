@@ -83,11 +83,12 @@ const BottomSummaryPanel = ({
 }) => {
   const { histogram } = useContext(histogramContext);
   const classes = bottomPanelStyleProperties();
-  const [loadedSite, setLoadedSite] = useState(null);
+  // const [loadedSite, setLoadedSite] = useState(null);
   const [open, setOpen] = useState(false);
 
-  if (siteDetail && (!loadedSite || loadedSite.site_id !== siteDetail.site_id))
-    setLoadedSite(siteDetail);
+  // const [currentSelectedSite, setCurrentSelectedSite] = useState(siteDetail[0]);
+  // if (siteDetail && (!loadedSite || loadedSite.site_id !== siteDetail.site_id))
+  //   setLoadedSite(siteDetail);
 
   const toggleExpand = () => setOpen(!open);
 
@@ -105,14 +106,14 @@ const BottomSummaryPanel = ({
   );
 
   const selectedSiteName =
-    loadedSite &&
+    siteDetail &&
     (open ? (
-      <SiteDetail selectSite={loadedSite} projectFishFamilies={projectFishFamilies} />
+      <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} />
     ) : (
       <Box className={classes.selectedSiteProperty}>
         <SelectMarkerIcon className={classes.selectMarkerIconStyle} />
         <Box className={classes.siteNameStyle}>
-          {loadedSite.site_name} - {loadedSite.project_name}
+          {siteDetail[0].site_name} - {siteDetail[0].project_name}
         </Box>
         <IconButton className={classes.iconButtonStyle} onClick={clearSelectedSiteHandler}>
           <ClearIcon className={classes.clearIconStyle} />
@@ -142,7 +143,7 @@ BottomSummaryPanel.propTypes = {
   metrics: PropTypes.array,
   isLoading: PropTypes.bool,
   histogramContent: PropTypes.array,
-  siteDetail: PropTypes.object,
+  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
   showSiteDetail: PropTypes.bool,
   clearSelectedSiteHandler: PropTypes.func
 };

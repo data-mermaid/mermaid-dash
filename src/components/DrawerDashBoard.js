@@ -190,7 +190,7 @@ DrawerDashBoard.propTypes = {
   isLoading: PropTypes.bool,
   showSiteDetail: PropTypes.bool,
   metrics: PropTypes.array,
-  siteDetail: PropTypes.object,
+  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
   clearSelectedSiteHandler: PropTypes.func,
   classes: PropTypes.object
 };

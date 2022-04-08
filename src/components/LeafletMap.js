@@ -159,8 +159,8 @@ class LeafletMap extends Component {
     } = prevState;
 
     const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
-    const prevSiteDetailId = prevSiteDetail && prevSiteDetail.site_id;
-    const siteDetailId = siteDetail && siteDetail.site_id;
+    const prevSiteDetailId = prevSiteDetail && prevSiteDetail[0].site_id;
+    const siteDetailId = siteDetail && siteDetail[0].site_id;
 
     if (markersData !== prevMarkersData) this.updateMarkers(markersData);
 
@@ -177,8 +177,9 @@ class LeafletMap extends Component {
 
     if (siteDetail === null && prevSiteDetailId) this.map.closePopup();
 
-    if (popupOpen && siteDetailId !== prevSiteDetailId)
+    if (popupOpen && siteDetailId !== prevSiteDetailId) {
       this.popupHighlightSelect(popUpList, siteDetailId);
+    }
 
     if (miniMap !== null) {
       if (mobileDisplay) miniMap.remove();
@@ -206,8 +207,8 @@ class LeafletMap extends Component {
   shouldComponentUpdate(nextProps, nextStates) {
     const { markersData, sidePanelOpen, zoomFullMap, zoomToSite, siteDetail } = this.props;
     const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
-    const siteDetailId = siteDetail && siteDetail.site_id;
-    const nextSiteDetailId = nextProps.siteDetail && nextProps.siteDetail.site_id;
+    const siteDetailId = siteDetail && siteDetail[0].site_id;
+    const nextSiteDetailId = nextProps.siteDetail && nextProps.siteDetail[0].site_id;
 
     return (
       nextProps.markersData !== markersData ||
@@ -226,8 +227,10 @@ class LeafletMap extends Component {
     const { sidePanelOpen, siteDetail } = this.props;
     const { siteCenterChange } = this.state;
 
-    if (sidePanelOpen && siteDetail && siteCenterChange) {
-      const siteLatLng = [siteDetail.latitude, siteDetail.longitude];
+    if (sidePanelOpen && siteDetail[0] && siteCenterChange) {
+      const { latitude, longitude } = siteDetail[0];
+      const longitudeWithinRange = longitude >= 0 && longitude <= 180 ? longitude : 360 + longitude;
+      const siteLatLng = [latitude, longitudeWithinRange];
 
       this.map.setView(siteLatLng, zoom);
       this.setState({ siteCenterChange: false });
@@ -285,7 +288,8 @@ class LeafletMap extends Component {
     //check sites in cluster by their coordinates and names
     const markersArr = arr.map(item => item.options.marker);
 
-    const coordinatesArr = markersArr.map(({ latitude, longitude }) => {
+    const coordinatesArr = markersArr.map(marker => {
+      const { latitude, longitude } = marker[1][0];
       const latStr = `${this.toFixedNoRounding(latitude, 3)}`;
       const lngStr = `${this.toFixedNoRounding(longitude, 3)}`;
 
@@ -448,9 +452,12 @@ class LeafletMap extends Component {
           ? leafletProperty.popUpContentLastItemStyles
           : leafletProperty.popUpContentItemStyles;
 
+      const siteId = item[0];
+      const { site_name, project_name } = item[1][0];
+
       return `
-            <div style="${itemStyle}" id="${item.site_id}" class="popup-cluster-site">
-              ${item.site_name} - ${item.project_name}
+            <div style="${itemStyle}" id="${siteId}" class="popup-cluster-site">
+              ${site_name} - ${project_name}
             </div>`;
     });
 
@@ -464,9 +471,10 @@ class LeafletMap extends Component {
   popupClickHandler(popupCluster, markersData) {
     popupCluster.openOn(this.map);
     const { siteClickHandler } = this.props;
+
     const el = popupCluster.getElement().children[0].children[0].children[0].children;
     const handleInteraction = ({ target }) => {
-      const resultMarker = markersData.filter(site => site.site_id === target.id)[0];
+      const resultMarker = markersData.filter(site => site[0] === target.id)[0];
       siteClickHandler(resultMarker);
     };
 
@@ -475,8 +483,8 @@ class LeafletMap extends Component {
       i.addEventListener('click', handleInteraction);
     }
 
-    const popUpList = document.getElementsByClassName('popup-cluster-site');
-    this.setState({ popUpList });
+    const popUpListItem = document.getElementsByClassName('popup-cluster-site');
+    this.setState({ popUpList: popUpListItem });
   }
 
   popupHighlightSelect(popupContent, siteHighlight) {
@@ -484,7 +492,7 @@ class LeafletMap extends Component {
       elem.classList.remove('active');
     }
     const findSiteId = document.getElementById(`${siteHighlight}`);
-    findSiteId.classList.add('active');
+    if (findSiteId) findSiteId.classList.add('active');
   }
 
   updateMarkers(markersData) {
@@ -522,6 +530,7 @@ class LeafletMap extends Component {
 
       //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
       if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
+        // if (currentZoom === mapProperty.maxZoom) {
         const selectedMarkersCluster = this.createCluster(selectedClusterStyle);
         const markersData = markerCluster.map(item => item.options.marker);
         const popUpCluster = this.createPopup(markersData, clusterCoordinates);
@@ -533,7 +542,7 @@ class LeafletMap extends Component {
           selectedMarkersCluster.on('clusterclick', () => {
             const { popUpList } = this.state;
             const { siteDetail } = this.props;
-            const siteDetailId = siteDetail && siteDetail.site_id;
+            const siteDetailId = siteDetail && siteDetail[0].site_id;
             this.popupClickHandler(popUpCluster, markersData);
             this.popupHighlightSelect(popUpList, siteDetailId);
           });
@@ -552,8 +561,8 @@ class LeafletMap extends Component {
     });
 
     markersData.forEach(marker => {
-      const markerLatitude = marker.latitude;
-      const markerLongitude = L.Util.wrapNum(marker.longitude, [0, 360], true); //Wrap longitude from [-180, 180] to [0, 360]
+      const markerLatitude = marker[1][0].latitude;
+      const markerLongitude = L.Util.wrapNum(marker[1][0].longitude, [0, 360], true); //Wrap longitude from [-180, 180] to [0, 360]
 
       const markerPoint = L.marker([markerLatitude, markerLongitude], {
         icon: leafletProperty.icon,
@@ -574,8 +583,9 @@ class LeafletMap extends Component {
 
     this.map.addLayer(markersCluster);
 
-    if (markersData.length === 0) this.map.setView(mapProperty.center, mapProperty.zoom);
-    else {
+    if (markersData.length === 0) {
+      this.map.setView(mapProperty.center, mapProperty.zoom);
+    } else {
       const mapBounds = markersCluster.getBounds().pad(0.1);
       const mapBoundingBox = this.createBoundingBox(mapBounds);
       const mapBoundingBoxCorner = mapBounds.getSouth();
