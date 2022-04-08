@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -16,10 +17,14 @@ import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { makeStyles } from '@material-ui/core/styles';
 
-import DateInput from './DateInput';
+import DatePickerInputs from './DatePickerInputs';
 import AutocompleteInput from './AutocompleteInput';
 
 const filterModalStyles = makeStyles(theme => ({
+  dialogStyles: {
+    minWidth: '1000px',
+    maxWidth: '1500px'
+  },
   buttonProgress: {
     position: 'absolute',
     top: '50%',
@@ -38,36 +43,19 @@ const FilterModal = ({
 }) => {
   const classes = filterModalStyles();
 
-  const isNumericAndEmpty = n => {
-    if (n.length === 0) return true;
-
-    return !isNaN(parseFloat(n)) && isFinite(n);
-  };
-
   const [open, setOpen] = useState(false);
   const [queryStrings, setQueryStrings] = useState(filterParams);
-  const [startYearValidation, setStartYearValidation] = useState(
-    !isNumericAndEmpty(filterParams.date_min_after)
-  );
-  const [endYearValidation, setEndYearValidation] = useState(
-    !isNumericAndEmpty(filterParams.date_max_before)
-  );
-  const [startYearGreaterThanEndYear, setEndYearGreater] = useState(false);
+  const [isStartDateGreaterThanEndDate, setIsStartDateGreaterThanEndDate] = useState(false);
 
-  const checkStartYear = input => {
-    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input))
-      setStartYearValidation(false);
-    else setStartYearValidation(true);
-  };
+  useEffect(() => {
+    const { sample_date_after, sample_date_before } = filterParams;
+    if (sample_date_after && sample_date_before) {
+      const sampleDateAfter = new Date(sample_date_after).getTime();
+      const sampleDateBefore = new Date(sample_date_before).getTime();
 
-  const checkEndYear = input => {
-    if ((input.length === 4 || input.length === 0) && isNumericAndEmpty(input))
-      setEndYearValidation(false);
-    else setEndYearValidation(true);
-  };
-
-  const checkEndYearGreater = option => setEndYearGreater(option);
-
+      setIsStartDateGreaterThanEndDate(sampleDateAfter > sampleDateBefore);
+    }
+  }, [filterParams]);
   const addQueryStrings = (property, options) => {
     const params = { ...queryStrings };
 
@@ -80,8 +68,6 @@ const FilterModal = ({
 
   const handleClose = () => {
     setOpen(false);
-    setStartYearValidation(false);
-    setEndYearValidation(false);
   };
 
   const handleFilter = () => {
@@ -89,6 +75,8 @@ const FilterModal = ({
 
     filterHandler(queryStrings);
   };
+
+  const setDateValidation = value => setIsStartDateGreaterThanEndDate(value);
 
   const filterSites = (
     <ThemeProvider theme={theme.mapControl}>
@@ -118,7 +106,7 @@ const FilterModal = ({
   return (
     <>
       {filterSites}
-      <Dialog open={open} aria-labelledby="form-dialog-title">
+      <Dialog open={open} aria-labelledby="form-dialog-title" className={classes.dialogStyles}>
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>Filter By</DialogText>
         </MuiDialogTitle>
@@ -128,26 +116,23 @@ const FilterModal = ({
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
           />
-          <DateInput
+          <DatePickerInputs
             filterParams={filterParams}
             addQueryStrings={addQueryStrings}
-            startYearValidation={startYearValidation}
-            endYearValidation={endYearValidation}
-            checkStartYear={checkStartYear}
-            checkEndYear={checkEndYear}
-            checkEndYearGreater={checkEndYearGreater}
+            setDateValidation={setDateValidation}
           />
+          {isStartDateGreaterThanEndDate && (
+            <Typography variant="caption" color="error">
+              Start date is greater than end date!
+            </Typography>
+          )}
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleFilter}
-            color="primary"
-            disabled={startYearValidation || endYearValidation || startYearGreaterThanEndYear}
-          >
-            Done
+          <Button onClick={handleFilter} color="primary" disabled={isStartDateGreaterThanEndDate}>
+            Apply
           </Button>
         </MuiDialogActions>
       </Dialog>

@@ -1,40 +1,130 @@
 import React from 'react';
 
-import ContactIcon from '@material-ui/icons/Email';
-
+import styled from 'styled-components/macro';
 import { ThemeProvider } from 'styled-components/macro';
-import { makeStyles } from '@material-ui/core/styles';
 import { ButtonStyle, MenuLink } from '../styles/MermaidStyledComponents';
 import { theme } from '../constants/theme';
+import ContactIcon from '@material-ui/icons/Email';
 
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-const subItemStyles = makeStyles(theme => ({
-  iconProperty: {
-    paddingRight: '5px'
-  }
-}));
+const ContactIconWrapper = styled(ContactIcon)`
+  padding-right: 5px;
+  font-size: small;
+`;
 
-const SiteDetailSubItems = ({ loadedSiteProperties }) => {
-  const classes = subItemStyles();
+const SiteDetailSubItemWrapper = styled('div')`
+  div {
+    padding-bottom: 5px;
+    &:first-child {
+      display: flex;
+      width: 100%;
+      h4 {
+        flex-grow: 1;
+      }
+    }
+  }
+`;
+
+const SampleDateDropdownWrapper = styled('div')`
+  padding-bottom: 5px;
+  label,
+  select {
+    font-size: 1rem;
+    padding-right: 5px;
+  }
+`;
+
+const formatDate = siteDate => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  const dateParts = siteDate.split('-').join(',');
+  const dateObject = new Date(dateParts);
+  const year = dateObject.getFullYear();
+  const date = dateObject.getDate();
+  const month = months[dateObject.getMonth()];
+
+  return `${month} ${date}, ${year}`;
+};
+
+const SampleDateDropdown = ({
+  currentSelectedSite,
+  markerSelectSites,
+  handleCurrentSelectedSiteChange
+}) => {
+  const sampleDateCounts = {};
+  for (const event of markerSelectSites) {
+    sampleDateCounts[event.sample_date] = sampleDateCounts[event.sample_date]
+      ? sampleDateCounts[event.sample_date] + 1
+      : 1;
+  }
+
+  const sampleDates = markerSelectSites.map(site => {
+    return (
+      <option key={site.sample_event_id} value={site.sample_event_id}>
+        {formatDate(site.sample_date)}
+        {sampleDateCounts[site.sample_date] > 1 && ` - ${site.management_name}`}
+      </option>
+    );
+  });
+
+  return (
+    <SampleDateDropdownWrapper>
+      <label htmlFor="sample-date-select">Sample date:</label>
+      <select
+        id="sample-date-select"
+        value={currentSelectedSite.sample_event_id}
+        onChange={handleCurrentSelectedSiteChange}
+      >
+        {sampleDates}
+      </select>
+    </SampleDateDropdownWrapper>
+  );
+};
+
+const SiteDetailSubItems = ({
+  currentSelectedSite,
+  markerSelectSites,
+  handleCurrentSelectedSiteChange
+}) => {
   const {
-    date_min,
-    date_max,
     site_name,
     project_name,
-    management_regimes,
-    contact_link
-  } = loadedSiteProperties;
-  const startDate = date_min && date_min.substring(0, 4);
-  const endDate = date_max && date_max.substring(0, 4);
-  const siteYear = endDate === startDate ? endDate : `${startDate} - ${endDate}`;
+    management_name,
+    contact_link,
+    sample_date
+  } = currentSelectedSite;
+
+  const siteDate =
+    markerSelectSites.length > 1 ? (
+      <SampleDateDropdown
+        currentSelectedSite={currentSelectedSite}
+        markerSelectSites={markerSelectSites}
+        handleCurrentSelectedSiteChange={handleCurrentSelectedSiteChange}
+      />
+    ) : (
+      <Typography variant="body1">{formatDate(sample_date)}</Typography>
+    );
 
   const contactButton = (
     <ThemeProvider theme={theme.cardButton}>
       <MenuLink target="_blank" href={contact_link} rel="noopener noreferrer">
         <ButtonStyle setHover={true}>
-          <ContactIcon fontSize="small" className={classes.iconProperty} />
+          <ContactIconWrapper />
           <Box fontWeight="fontWeightMedium">Contact Admins</Box>
         </ButtonStyle>
       </MenuLink>
@@ -42,23 +132,17 @@ const SiteDetailSubItems = ({ loadedSiteProperties }) => {
   );
 
   return (
-    <Box display="flex">
-      <Box flexGrow={1}>
+    <SiteDetailSubItemWrapper>
+      <div>
         <Typography variant="h4">{site_name}</Typography>
+        {contactButton}
+      </div>
+      <div>
         <Typography variant="body1">{project_name}</Typography>
-        <Typography variant="body1">
-          {management_regimes
-            ? management_regimes
-                .map(mr => {
-                  return mr.name;
-                })
-                .join(', ')
-            : 'No managements'}
-        </Typography>
-        <Typography variant="body1">{siteYear}</Typography>
-      </Box>
-      <Box>{contactButton}</Box>
-    </Box>
+        <Typography variant="body1">{management_name}</Typography>
+        {siteDate}
+      </div>
+    </SiteDetailSubItemWrapper>
   );
 };
 

@@ -13,8 +13,8 @@ const ellipsisHelper = note => {
   return newNote.length > MAX_CHAR ? newNote.substr(0, MAX_CHAR) + '...' : newNote;
 };
 
-const SiteNote = ({ loadedSiteProperties }) => {
-  const { site_notes, project_notes, management_regimes } = loadedSiteProperties;
+const SiteNote = ({ currentSelectedSite }) => {
+  const { site_notes, project_notes, management_regimes } = currentSelectedSite;
 
   let availableNote = '';
   const management_regime_notes_length =
@@ -57,14 +57,14 @@ const SiteNote = ({ loadedSiteProperties }) => {
       </Typography>
       <SiteModal
         readMoreAvailability={readMoreAvailability}
-        loadedSiteProperties={loadedSiteProperties}
+        currentSelectedSite={currentSelectedSite}
       />
     </Box>
   );
 };
 
 SiteNote.propTypes = {
-  loadedSiteProperties: PropTypes.shape({
+  currentSelectedSite: PropTypes.shape({
     site_notes: PropTypes.string,
     project_notes: PropTypes.string,
     management_regimes: PropTypes.array

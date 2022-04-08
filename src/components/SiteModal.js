@@ -30,46 +30,11 @@ const modalStyles = makeStyles(theme => ({
 
 const Note = ({ children, content }) => {
   const classes = modalStyles();
-  const contentLengthCheck = content.length > 0;
 
-  const noteTitle = contentLengthCheck && <DialogText dialogHeader={true}>{children}</DialogText>;
-  const noteBody = contentLengthCheck && (
+  const noteTitle = content && <DialogText dialogHeader={true}>{children}</DialogText>;
+  const noteBody = content && (
     <DialogText className={classes.noteContentProperty}>{content}</DialogText>
   );
-
-  return (
-    <>
-      {noteTitle}
-      {noteBody}
-    </>
-  );
-};
-
-const ManagementRegimeNote = ({ children, content }) => {
-  const classes = modalStyles();
-
-  const management_regime_notes_length =
-    content &&
-    content
-      .map(mr => {
-        return mr.notes ? mr.notes.length : 0;
-      })
-      .reduce((acc, val) => acc + val, 0);
-  const mrNoteLengthCheck = management_regime_notes_length > 0;
-  const noteTitle = mrNoteLengthCheck && <DialogText dialogHeader={true}>{children}</DialogText>;
-  const noteBody =
-    mrNoteLengthCheck &&
-    content.map(mr => {
-      return (
-        <div key={mr.id} className={classes.noteContentProperty}>
-          <DialogText mrTitleItem={true}>
-            {'- '}
-            {mr.name}
-          </DialogText>
-          <DialogText>{mr.notes}</DialogText>
-        </div>
-      );
-    });
 
   return (
     <>
@@ -96,9 +61,9 @@ const ReadMore = ({ modalToggleHandler, readMoreAvailability }) => {
   return <>{readMoreContent}</>;
 };
 
-const SiteModal = ({ loadedSiteProperties, readMoreAvailability }) => {
+const SiteModal = ({ currentSelectedSite, readMoreAvailability }) => {
   const classes = modalStyles();
-  const { site_notes, project_notes, management_regimes } = loadedSiteProperties;
+  const { site_notes, management_notes, project_notes } = currentSelectedSite;
   const [open, setModalStage] = useState(false);
 
   const modalToggleHandler = () => {
@@ -119,9 +84,7 @@ const SiteModal = ({ loadedSiteProperties, readMoreAvailability }) => {
         <MuiDialogContent dividers>
           <Note content={project_notes}>{'Project Notes'}</Note>
           <Note content={site_notes}>{'Site Notes'}</Note>
-          <ManagementRegimeNote content={management_regimes}>
-            {'Management Regime Notes'}
-          </ManagementRegimeNote>
+          <Note content={management_notes}>{'Management Regime Notes'}</Note>
         </MuiDialogContent>
         <MuiDialogActions>
           <Button onClick={modalToggleHandler} color="primary">
@@ -134,10 +97,10 @@ const SiteModal = ({ loadedSiteProperties, readMoreAvailability }) => {
 };
 
 SiteModal.propTypes = {
-  loadedSiteProperties: PropTypes.shape({
+  currentSelectedSite: PropTypes.shape({
     site_notes: PropTypes.string,
     project_notes: PropTypes.string,
-    management_regimes: PropTypes.array
+    management_notes: PropTypes.string
   }),
   readMoreAvailability: PropTypes.bool
 };
