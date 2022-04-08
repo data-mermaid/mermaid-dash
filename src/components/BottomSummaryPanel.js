@@ -83,12 +83,7 @@ const BottomSummaryPanel = ({
 }) => {
   const { histogram } = useContext(histogramContext);
   const classes = bottomPanelStyleProperties();
-  // const [loadedSite, setLoadedSite] = useState(null);
   const [open, setOpen] = useState(false);
-
-  // const [currentSelectedSite, setCurrentSelectedSite] = useState(siteDetail[0]);
-  // if (siteDetail && (!loadedSite || loadedSite.site_id !== siteDetail.site_id))
-  //   setLoadedSite(siteDetail);
 
   const toggleExpand = () => setOpen(!open);
 

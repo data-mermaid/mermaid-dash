@@ -119,13 +119,24 @@ class MermaidDash extends Component {
       const transectCount = this.getTransectCount(sampleEventProtocols);
       const avgCoralCoverCount = this.getAvgCoralCount(sampleEventProtocols);
 
-      if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
-      if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
-      if (prevMetricYearsCount !== yearCount) metrics[2].count = yearCount;
-      if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
-      if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
-      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
+      if (prevMetricCountriesCount !== countryCount) {
+        metrics[0].count = countryCount;
+      }
+      if (prevMetricProjectsCount !== projectCount) {
+        metrics[1].count = projectCount;
+      }
+      if (prevMetricYearsCount !== yearCount) {
+        metrics[2].count = yearCount;
+      }
+      if (prevMetricSitesCount !== uniqueSiteCount) {
+        metrics[3].count = uniqueSiteCount;
+      }
+      if (prevMetricTransectsCount !== transectCount) {
+        metrics[4].count = transectCount;
+      }
+      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount) {
         metrics[5].count = avgCoralCoverCount;
+      }
 
       this.setState({ metrics, isLoading: false });
     }
@@ -155,15 +166,25 @@ class MermaidDash extends Component {
     };
     this.fetchAllSites(paramsObj);
 
-    if (countryName) filterParams.country = countryName.split(',');
+    if (countryName) {
+      filterParams.country = countryName.split(',');
+    }
 
-    if (projectId) filterParams.project = projectId.split(/,(?=\S)|:/);
+    if (projectId) {
+      filterParams.project = projectId.split(/,(?=\S)|:/);
+    }
 
-    if (organizationId) filterParams.organization = organizationId.split(/,(?=\S)|:/);
+    if (organizationId) {
+      filterParams.organization = organizationId.split(/,(?=\S)|:/);
+    }
 
-    if (sampleDateAfter) filterParams.sample_date_after = sampleDateAfter;
+    if (sampleDateAfter) {
+      filterParams.sample_date_after = sampleDateAfter;
+    }
 
-    if (sampleDateBefore) filterParams.sample_date_before = sampleDateBefore;
+    if (sampleDateBefore) {
+      filterParams.sample_date_before = sampleDateBefore;
+    }
 
     this.setState({
       filterParams,
@@ -202,8 +223,9 @@ class MermaidDash extends Component {
       const point = [longitude, latitude];
 
       for (const { x, y } of bboxList) {
-        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1])
+        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1]) {
           newSites.push(site);
+        }
       }
 
       return newSites;
@@ -269,10 +291,14 @@ class MermaidDash extends Component {
         filterChoices.fishFamilies = fishFamilies;
 
         //when project names are set, convert to project ids for querying
-        if (projectsParam) params.project_id = this.convertToId(projectsParam, projects);
+        if (projectsParam) {
+          params.project_id = this.convertToId(projectsParam, projects);
+        }
 
         //when organization names are set, convert to tag ids for querying
-        if (organizationsParam) params.tag_id = this.convertToId(organizationsParam, organizations);
+        if (organizationsParam) {
+          params.tag_id = this.convertToId(organizationsParam, organizations);
+        }
 
         this.setState({ filterChoices, isFilteringChoices: false });
         return params;
@@ -309,11 +335,12 @@ class MermaidDash extends Component {
   resize() {
     let currentMobileDisplay = window.innerWidth < 960;
 
-    if (currentMobileDisplay !== this.state.mobileDisplay)
+    if (currentMobileDisplay !== this.state.mobileDisplay) {
       this.setState({
         mobileDisplay: currentMobileDisplay,
         sidePanelOpen: !currentMobileDisplay
       });
+    }
   }
 
   handleDrawerChange = () => this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
@@ -325,8 +352,7 @@ class MermaidDash extends Component {
       filterChoices: { projects, fishFamilies }
     } = this.state;
     const selectedSiteDetail = site[1];
-
-    const foundRelatedProject = projects.find(({ id }) => id === selectedSiteDetail.project_id);
+    const foundRelatedProject = projects.find(({ id }) => id === selectedSiteDetail[0].project_id);
 
     const fishFamilyList =
       foundRelatedProject?.data?.settings?.fishFamilySubset.map(family_id => {
@@ -336,7 +362,9 @@ class MermaidDash extends Component {
         );
       }) || [];
 
-    if (!mobileDisplay && !sidePanelOpen) this.setState({ sidePanelOpen: true });
+    if (!mobileDisplay && !sidePanelOpen) {
+      this.setState({ sidePanelOpen: true });
+    }
 
     this.setState({
       siteDetail: selectedSiteDetail,
@@ -351,7 +379,10 @@ class MermaidDash extends Component {
     const { sidePanelOpen, mobileDisplay } = this.state;
     const firstSiteInPopupDropdown = selectedSites[0][1];
 
-    if (!(mobileDisplay || sidePanelOpen)) this.setState({ sidePanelOpen: true });
+    if (!(mobileDisplay || sidePanelOpen)) {
+      this.setState({ sidePanelOpen: true });
+    }
+
     this.setState({
       siteDetail: firstSiteInPopupDropdown,
       popupSiteList: selectedSites,
@@ -522,14 +553,17 @@ class MermaidDash extends Component {
     const sampleDateAfterProperty = Object.entries(filterParams)[3];
     const sampleDateBeforeProperty = Object.entries(filterParams)[4];
 
-    if (countryProperty[1].length > 0)
+    if (countryProperty[1].length > 0) {
       queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
+    }
 
-    if (projectIdProperty[1].length > 0)
+    if (projectIdProperty[1].length > 0) {
       queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='));
+    }
 
-    if (organizationIdProperty[1].length > 0)
+    if (organizationIdProperty[1].length > 0) {
       queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='));
+    }
 
     if (sampleDateAfterProperty[1].length > 0) {
       queryStrings.push([sampleDateAfterProperty[0], sampleDateAfterProperty[1]].join('='));
@@ -549,7 +583,9 @@ class MermaidDash extends Component {
   getChoices = (choice_name, choices) => {
     return choices
       .reduce((resultArray, obj) => {
-        if (obj.name === choice_name) resultArray = obj.data;
+        if (obj.name === choice_name) {
+          resultArray = obj.data;
+        }
 
         return resultArray;
       }, [])
@@ -559,7 +595,9 @@ class MermaidDash extends Component {
   fetchNonTestProjectChoices = (projects, property, property_array) => {
     const result = projects
       .reduce((nonTestProject, project) => {
-        if (project[property].length !== 0) nonTestProject.push(project[property]);
+        if (project[property].length !== 0) {
+          nonTestProject.push(project[property]);
+        }
 
         return nonTestProject;
       }, [])

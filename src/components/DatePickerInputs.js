@@ -29,16 +29,18 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
       setDateValidation(false);
     }
   }, [endDate, setDateValidation, startDate]);
-  function handleClrStartDate(e) {
+
+  const handleClrStartDate = e => {
     e.stopPropagation();
     setStateDate(null);
     addQueryStrings('sample_date_after', '');
-  }
-  function handleClrEndDate(e) {
+  };
+
+  const handleClrEndDate = e => {
     e.stopPropagation();
     setEndDate(null);
     addQueryStrings('sample_date_before', '');
-  }
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -48,7 +50,6 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
         id="start-date-picker"
         label="Start Date"
         value={startDate}
-        views={['year', 'month', 'date']}
         onChange={date => {
           const dateQuery = formatDateQuery(date);
           setStateDate(date);
