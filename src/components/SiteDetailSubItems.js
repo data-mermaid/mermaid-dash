@@ -16,7 +16,6 @@ const ContactIconWrapper = styled(ContactIcon)`
 
 const SiteDetailSubItemWrapper = styled('div')`
   div {
-    padding-bottom: 5px;
     &:first-child {
       display: flex;
       width: 100%;
@@ -52,11 +51,10 @@ const formatDate = siteDate => {
     'December'
   ];
 
-  const dateParts = siteDate.split('-').join(',');
-  const dateObject = new Date(dateParts);
-  const year = dateObject.getFullYear();
-  const date = dateObject.getDate();
-  const month = months[dateObject.getMonth()];
+  const dateParts = siteDate.split('-');
+  const year = dateParts[0];
+  const month = months[Number(dateParts[1]) - 1];
+  const date = dateParts[2];
 
   return `${month} ${date}, ${year}`;
 };
