@@ -21,10 +21,6 @@ import DatePickerInputs from './DatePickerInputs';
 import AutocompleteInput from './AutocompleteInput';
 
 const filterModalStyles = makeStyles(theme => ({
-  dialogStyles: {
-    minWidth: '1000px',
-    maxWidth: '1500px'
-  },
   buttonProgress: {
     position: 'absolute',
     top: '50%',
@@ -106,7 +102,7 @@ const FilterModal = ({
   return (
     <>
       {filterSites}
-      <Dialog open={open} aria-labelledby="form-dialog-title" className={classes.dialogStyles}>
+      <Dialog open={open} aria-labelledby="form-dialog-title">
         <MuiDialogTitle>
           <DialogText dialogTitle={true}>Filter By</DialogText>
         </MuiDialogTitle>
