@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components/macro';
@@ -32,17 +32,25 @@ const SiteInfoWrapper = styled(Paper)`
 
 const SiteDetail = ({ selectSite, projectFishFamilies }) => {
   const mediaMax960 = useMediaQuery('(max-width:960px');
-  const [loadedSite, setLoadedSite] = useState(null);
+  const [currentSelectedSite, setCurrentSelectedSite] = useState(selectSite[0]);
 
-  if (selectSite && (!loadedSite || loadedSite.site_id !== selectSite.site_id))
-    setLoadedSite(selectSite);
+  useEffect(() => {
+    setCurrentSelectedSite(selectSite[0]);
+  }, [selectSite]);
 
-  const siteAdmins = loadedSite && loadedSite.project_admins && (
+  const handleCurrentSelectedSiteChange = event => {
+    const filterSampleEventSite = selectSite.filter(
+      site => site.sample_event_id === event.target.value
+    )[0];
+    setCurrentSelectedSite(filterSampleEventSite);
+  };
+
+  const siteAdmins = currentSelectedSite && currentSelectedSite.project_admins && (
     <Box borderTop={1} pt={1} display="flex">
       <AdminIcon width="20px" height="20px" />
       <Typography variant="body1">
         Admins:{' '}
-        {loadedSite.project_admins
+        {currentSelectedSite.project_admins
           .map(admin => {
             return admin.name;
           })
@@ -51,12 +59,12 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
     </Box>
   );
 
-  const siteOrganizations = loadedSite && loadedSite.tags && (
+  const siteOrganizations = currentSelectedSite && currentSelectedSite.tags && (
     <Box pt={1} display="flex">
       <OrganizationIcon width="23px" />
       <Typography variant="body1">
         Organizations:{' '}
-        {loadedSite.tags
+        {currentSelectedSite.tags
           .map(organization => {
             return organization.name;
           })
@@ -68,10 +76,11 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
   const siteChartCards = protocolsArray.map(({ name, property, title, type }) => {
     const bleachingProtocol = name === 'bleachingqc';
     const transectName = bleachingProtocol ? property : name;
-    const loadedSiteProtocol = loadedSite && loadedSite.protocols[transectName];
-    const bleachingSubItems = loadedSite && loadedSite.protocols['colonies_bleached'];
+    const loadedSiteProtocol = currentSelectedSite && currentSelectedSite.protocols[transectName];
+    const bleachingSubItems =
+      currentSelectedSite && currentSelectedSite.protocols['colonies_bleached'];
 
-    const dataPolicy = loadedSiteProtocol && loadedSite[`data_policy_${name}`];
+    const dataPolicy = loadedSiteProtocol && currentSelectedSite[`data_policy_${name}`];
     const setToPrivate = dataPolicy === 'private';
 
     const generatePrivateLabel = protocolTitle =>
@@ -89,7 +98,7 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
         content &&
         (bleachingProtocol
           ? bleachingCategories.map(({ name, type }) => {
-              return { x: name, y: content[type] };
+              return { x: name, y: content[type] || 0 };
             })
           : contentArr.map(item => {
               const attribute = Object.keys(item)[0];
@@ -121,13 +130,17 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
     return <div key={name}>{cardsComponent}</div>;
   });
 
-  const siteInfoCard = loadedSite ? (
+  const siteInfoCard = currentSelectedSite ? (
     <SiteInfoWrapper>
-      <SiteDetailSubItems loadedSiteProperties={loadedSite} />
+      <SiteDetailSubItems
+        currentSelectedSite={currentSelectedSite}
+        markerSelectSites={selectSite}
+        handleCurrentSelectedSiteChange={handleCurrentSelectedSiteChange}
+      />
       {siteAdmins}
       {siteOrganizations}
-      <CoralAttributes loadedSiteProperties={loadedSite} />
-      <SiteNote loadedSiteProperties={loadedSite} />
+      <CoralAttributes currentSelectedSite={currentSelectedSite} />
+      <SiteNote loadedSiteProperties={selectSite} currentSelectedSite={currentSelectedSite} />
     </SiteInfoWrapper>
   ) : (
     <SiteInfoWrapper>
@@ -144,9 +157,11 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
 };
 
 SiteDetail.propTypes = {
-  selectSite: PropTypes.shape({
-    site_id: PropTypes.string.isRequired
-  })
+  selectSite: PropTypes.arrayOf(
+    PropTypes.shape({
+      site_id: PropTypes.string.isRequired
+    })
+  )
 };
 
 export default SiteDetail;

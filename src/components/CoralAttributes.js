@@ -33,10 +33,10 @@ const coralStyleProperties = makeStyles(theme => ({
   }
 }));
 
-const CoralAttributes = ({ loadedSiteProperties }) => {
+const CoralAttributes = ({ currentSelectedSite }) => {
   const classes = coralStyleProperties();
-  const { reef_zone, reef_type, reef_exposure } = loadedSiteProperties;
-  const mediaMax959 = useMediaQuery('(max-width:960px)');
+  const { reef_zone, reef_type, reef_exposure } = currentSelectedSite;
+  const mediaMax959 = useMediaQuery('(max-width:959px)');
   const spaceContent = mediaMax959 && ': ';
 
   return (
@@ -48,7 +48,7 @@ const CoralAttributes = ({ loadedSiteProperties }) => {
     >
       <Box className={classes.attributeWrapperProperty}>
         <Coral className={classes.coralIconProperty} />
-        <Box display="flex" alignItems="left" flexDirection={mediaMax959 ? 'row' : 'column'}>
+        <Box display="flex" flexDirection={mediaMax959 ? 'row' : 'column'}>
           <Typography variant="body1">Reef Zone</Typography>
           <Typography variant="body1">
             <strong>
@@ -87,7 +87,7 @@ const CoralAttributes = ({ loadedSiteProperties }) => {
 };
 
 CoralAttributes.propTypes = {
-  loadedSiteProperties: PropTypes.shape({
+  currentSelectedSite: PropTypes.shape({
     reef_exposure: PropTypes.string,
     reef_type: PropTypes.string,
     reef_zone: PropTypes.string

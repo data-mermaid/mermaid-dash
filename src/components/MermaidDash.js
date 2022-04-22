@@ -24,7 +24,7 @@ class MermaidDash extends Component {
     metrics: [
       { title: 'Countries', count: null },
       { title: 'Projects', count: null },
-      { title: 'People', count: null },
+      { title: 'Years', count: null },
       { title: 'Sites', count: null },
       { title: 'Transects', count: null },
       { title: 'Avg Coral Coverage', count: null }
@@ -45,8 +45,8 @@ class MermaidDash extends Component {
       country: [],
       project: [],
       organization: [],
-      date_min_after: '',
-      date_max_before: ''
+      sample_date_after: '',
+      sample_date_before: ''
     },
     filterChoices: { countries: [], projects: [], tags: [], fishFamilies: [] },
     showFilterNumbers: false,
@@ -58,13 +58,12 @@ class MermaidDash extends Component {
       sites,
       bbox,
       metrics,
-      filterChoices: { projects: projectChoices },
       filterParams: {
         country: countryName,
         project: projectId,
         organization: organizationId,
-        date_min_after: dateMin,
-        date_max_before: dateMax
+        sample_date_after: sampleDateAfter,
+        sample_date_before: sampleDateBefore
       },
       isFiltering
     } = this.state;
@@ -78,14 +77,14 @@ class MermaidDash extends Component {
         country: prevCountryName,
         project: prevProjectId,
         organization: prevOrganizationId,
-        date_min_after: prevDateMin,
-        date_max_before: prevDateMax
+        sample_date_after: prevSampleDateAfter,
+        sample_date_before: prevSampleDateBefore
       }
     } = prevState;
 
     const prevMetricCountriesCount = prevMetrics[0].count;
     const prevMetricProjectsCount = prevMetrics[1].count;
-    const prevMetricUsersCount = prevMetrics[2].count;
+    const prevMetricYearsCount = prevMetrics[2].count;
     const prevMetricSitesCount = prevMetrics[3].count;
     const prevMetricTransectsCount = prevMetrics[4].count;
     const prevMetricAvgCoralCoverCount = prevMetrics[5].count;
@@ -94,31 +93,50 @@ class MermaidDash extends Component {
       countryName !== prevCountryName ||
       projectId !== prevProjectId ||
       organizationId !== prevOrganizationId ||
-      dateMin !== prevDateMin ||
-      dateMax !== prevDateMax
+      sampleDateAfter !== prevSampleDateAfter ||
+      sampleDateBefore !== prevSampleDateBefore
     ) {
       this.filterUpdate();
     }
 
     if (bbox !== prevBbox && !isFiltering) {
       const updatedSites = this.filterSites(sites, bbox);
-      const updatedSiteProtocols = updatedSites.map(({ protocols }) => protocols);
-      this.context.setHistogram(this.histogramCount(updatedSiteProtocols, histogram));
+      const sampleEventsFromSites = updatedSites.reduce((sampleEvents, site) => {
+        for (const sampleEvent of site[1]) {
+          sampleEvents.push(sampleEvent);
+        }
+        return sampleEvents;
+      }, []);
 
-      const countryCount = this.getCount(updatedSites, 'country_id');
-      const projectCount = this.getCount(updatedSites, 'project_id');
-      const userCount = this.getUserCount(updatedSites, projectChoices);
-      const uniqueSiteCount = this.getUniqueSiteCount(updatedSites);
-      const transectCount = this.getTransectCount(updatedSites);
-      const avgCoralCoverCount = this.getAvgCoralCount(updatedSiteProtocols);
+      const sampleEventProtocols = sampleEventsFromSites.map(({ protocols }) => protocols);
 
-      if (prevMetricCountriesCount !== countryCount) metrics[0].count = countryCount;
-      if (prevMetricProjectsCount !== projectCount) metrics[1].count = projectCount;
-      if (prevMetricUsersCount !== userCount) metrics[2].count = userCount;
-      if (prevMetricSitesCount !== uniqueSiteCount) metrics[3].count = uniqueSiteCount;
-      if (prevMetricTransectsCount !== transectCount) metrics[4].count = transectCount;
-      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount)
+      this.context.setHistogram(this.histogramCount(sampleEventProtocols, histogram));
+
+      const countryCount = this.getCount(sampleEventsFromSites, 'country_id');
+      const projectCount = this.getCount(sampleEventsFromSites, 'project_id');
+      const yearCount = this.getCount(sampleEventsFromSites, 'sample_date');
+      const uniqueSiteCount = updatedSites.length;
+      const transectCount = this.getTransectCount(sampleEventProtocols);
+      const avgCoralCoverCount = this.getAvgCoralCount(sampleEventProtocols);
+
+      if (prevMetricCountriesCount !== countryCount) {
+        metrics[0].count = countryCount;
+      }
+      if (prevMetricProjectsCount !== projectCount) {
+        metrics[1].count = projectCount;
+      }
+      if (prevMetricYearsCount !== yearCount) {
+        metrics[2].count = yearCount;
+      }
+      if (prevMetricSitesCount !== uniqueSiteCount) {
+        metrics[3].count = uniqueSiteCount;
+      }
+      if (prevMetricTransectsCount !== transectCount) {
+        metrics[4].count = transectCount;
+      }
+      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount) {
         metrics[5].count = avgCoralCoverCount;
+      }
 
       this.setState({ metrics, isLoading: false });
     }
@@ -131,32 +149,42 @@ class MermaidDash extends Component {
     const countryName = params.get('country');
     const projectId = params.get('project');
     const organizationId = params.get('organization');
-    const date = params.get('date');
-    const dateMinMax = date ? date.split(',') : [];
-    const dateMin = dateMinMax[0] && `${dateMinMax[0]}-01-01`;
-    const dateMax = dateMinMax[1] && `${dateMinMax[1]}-12-31`;
+    const sampleDateAfter = params.get('sample_date_after');
+    const sampleDateBefore = params.get('sample_date_before');
     const queryStringsFound =
-      countryName || projectId || organizationId || dateMinMax.length > 0 ? true : false;
+      countryName || projectId || organizationId || sampleDateAfter || sampleDateBefore
+        ? true
+        : false;
 
     const paramsObj = {
       limit: queryLimit,
       country_name: countryName,
       project_id: projectId,
       tag_id: organizationId,
-      date_min_after: dateMin,
-      date_max_before: dateMax
+      sample_date_after: sampleDateAfter,
+      sample_date_before: sampleDateBefore
     };
     this.fetchAllSites(paramsObj);
 
-    if (countryName) filterParams.country = countryName.split(',');
+    if (countryName) {
+      filterParams.country = countryName.split(',');
+    }
 
-    if (projectId) filterParams.project = projectId.split(/,(?=\S)|:/);
+    if (projectId) {
+      filterParams.project = projectId.split(/,(?=\S)|:/);
+    }
 
-    if (organizationId) filterParams.organization = organizationId.split(/,(?=\S)|:/);
+    if (organizationId) {
+      filterParams.organization = organizationId.split(/,(?=\S)|:/);
+    }
 
-    if (dateMin) filterParams.date_min_after = dateMin.split('-')[0];
+    if (sampleDateAfter) {
+      filterParams.sample_date_after = sampleDateAfter;
+    }
 
-    if (dateMax) filterParams.date_max_before = dateMax.split('-')[0];
+    if (sampleDateBefore) {
+      filterParams.sample_date_before = sampleDateBefore;
+    }
 
     this.setState({
       filterParams,
@@ -191,20 +219,22 @@ class MermaidDash extends Component {
     const bboxList = this.getBboxXY(bbox);
 
     return sites.reduce((newSites, site) => {
-      const point = [site.longitude, site.latitude];
+      const { longitude, latitude } = site[1][0];
+      const point = [longitude, latitude];
 
       for (const { x, y } of bboxList) {
-        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1])
+        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1]) {
           newSites.push(site);
+        }
       }
 
       return newSites;
     }, []);
   };
 
-  fetchSitesChunk = async (params, pageNo = 1) => {
+  fetchSampleEventsChunk = async (params, pageNo = 1) => {
     const { data } =
-      (await summary.get('/summarysites/', {
+      (await summary.get('/summarysampleevents/', {
         params: {
           page: pageNo,
           ...params
@@ -214,12 +244,13 @@ class MermaidDash extends Component {
     return data;
   };
 
-  fetchEntiresSites = async (params, pageNo = 1) => {
-    const fetchResults = await this.fetchSitesChunk(params, pageNo);
+  fetchEntiresSampleEvents = async (params, pageNo = 1) => {
+    const fetchResults = await this.fetchSampleEventsChunk(params, pageNo);
     const { results, count } = fetchResults;
 
-    if (pageNo * this.state.queryLimit < count)
-      return [...results].concat(await this.fetchEntiresSites(params, pageNo + 1));
+    if (pageNo * this.state.queryLimit < count) {
+      return [...results].concat(await this.fetchEntiresSampleEvents(params, pageNo + 1));
+    }
 
     return results;
   };
@@ -260,10 +291,14 @@ class MermaidDash extends Component {
         filterChoices.fishFamilies = fishFamilies;
 
         //when project names are set, convert to project ids for querying
-        if (projectsParam) params.project_id = this.convertToId(projectsParam, projects);
+        if (projectsParam) {
+          params.project_id = this.convertToId(projectsParam, projects);
+        }
 
         //when organization names are set, convert to tag ids for querying
-        if (organizationsParam) params.tag_id = this.convertToId(organizationsParam, organizations);
+        if (organizationsParam) {
+          params.tag_id = this.convertToId(organizationsParam, organizations);
+        }
 
         this.setState({ filterChoices, isFilteringChoices: false });
         return params;
@@ -274,43 +309,50 @@ class MermaidDash extends Component {
   fetchAllSites = async params => {
     const { metrics } = this.state;
     const updatedParams = await this.fetchAllChoices(params);
-    const sites = await this.fetchEntiresSites(updatedParams);
+    const sampleEvents = await this.fetchEntiresSampleEvents(updatedParams);
+    const sortedSampleEvents = sampleEvents.sort((a, b) =>
+      a.sample_date > b.sample_date ? 1 : -1
+    );
 
-    if (sites.length === 0) {
+    const reducedSites = sortedSampleEvents.reduce((result, sample) => {
+      let key = sample.site_id;
+      if (!result[key]) {
+        result[key] = [];
+      }
+      result[key].push(sample);
+      return result;
+    }, {});
+
+    const siteEntries = Object.entries(reducedSites);
+
+    if (siteEntries.length === 0) {
       metrics.map(metric => (metric.count = 0));
-      this.setState({ metrics, isFiltering: false });
     }
 
-    this.setState({ sites, isFiltering: false });
+    this.setState({ sites: siteEntries, metrics, isFiltering: false });
   };
 
   resize() {
     let currentMobileDisplay = window.innerWidth < 960;
 
-    if (currentMobileDisplay !== this.state.mobileDisplay)
+    if (currentMobileDisplay !== this.state.mobileDisplay) {
       this.setState({
         mobileDisplay: currentMobileDisplay,
         sidePanelOpen: !currentMobileDisplay
       });
+    }
   }
 
   handleDrawerChange = () => this.setState({ sidePanelOpen: !this.state.sidePanelOpen });
 
   siteClickHandler = site => {
     const {
-      highlightCluster,
-      popupSiteList,
       sidePanelOpen,
       mobileDisplay,
       filterChoices: { projects, fishFamilies }
     } = this.state;
-    const siteDropdownList = popupSiteList.map(({ site_id }) => site_id);
-    const selectedSite = site.key ? this.siteLookup(site) : site;
-    const siteExistsInCluster = siteDropdownList.find(site => site === selectedSite.site_id)
-      ? true
-      : false;
-
-    const foundRelatedProject = projects.find(({ id }) => id === selectedSite.project_id);
+    const selectedSiteDetail = site[1];
+    const foundRelatedProject = projects.find(({ id }) => id === selectedSiteDetail[0].project_id);
 
     const fishFamilyList =
       foundRelatedProject?.data?.settings?.fishFamilySubset.map(family_id => {
@@ -320,16 +362,12 @@ class MermaidDash extends Component {
         );
       }) || [];
 
-    if (highlightCluster !== null && !siteExistsInCluster) {
-      highlightCluster.clearLayers();
-      this.setState({ highlightCluster: null, popupOpen: true });
-    } else if (highlightCluster !== null && siteExistsInCluster) this.setState({ popupOpen: true });
-    else if (highlightCluster === null) this.setState({ popupOpen: false });
-
-    if (!mobileDisplay && !sidePanelOpen) this.setState({ sidePanelOpen: true });
+    if (!mobileDisplay && !sidePanelOpen) {
+      this.setState({ sidePanelOpen: true });
+    }
 
     this.setState({
-      siteDetail: selectedSite,
+      siteDetail: selectedSiteDetail,
       projectFishFamilies: fishFamilyList,
       showSiteDetail: true,
       zoomFullMap: false,
@@ -339,11 +377,14 @@ class MermaidDash extends Component {
 
   siteDropDownHandler = selectedSites => {
     const { sidePanelOpen, mobileDisplay } = this.state;
+    const firstSiteInPopupDropdown = selectedSites[0][1];
 
-    if (!(mobileDisplay || sidePanelOpen)) this.setState({ sidePanelOpen: true });
+    if (!(mobileDisplay || sidePanelOpen)) {
+      this.setState({ sidePanelOpen: true });
+    }
 
     this.setState({
-      siteDetail: selectedSites[0],
+      siteDetail: firstSiteInPopupDropdown,
       popupSiteList: selectedSites,
       popupOpen: true,
       showSiteDetail: true,
@@ -412,47 +453,16 @@ class MermaidDash extends Component {
 
   getMapBounds = bbox => this.setState({ bbox });
 
-  getCount(array, key) {
-    let result = array.map(item => item[key]);
-
-    if (key === 'project_admins') {
-      const adminList = array.map(item => item[key].map(secItem => secItem.name));
-      result = [].concat.apply([], adminList);
-    }
+  getCount(sampleEvents, key) {
+    let result =
+      key === 'sample_date'
+        ? sampleEvents.map(({ sample_date }) => sample_date.substring(0, 4))
+        : sampleEvents.map(sampleEvent => sampleEvent[key]);
 
     return new Set(result).size;
   }
 
-  getUserCount(array, choices) {
-    const projectFilter = array.map(({ project_id }) => project_id);
-    const projectSet = [...new Set(projectFilter)];
-
-    const memberExtract = choices.reduce((memberList, project) => {
-      if (projectSet.find(id => id === project.id) && Array.isArray(project.members))
-        memberList.push(...project.members);
-
-      return memberList;
-    }, []);
-
-    return new Set(memberExtract).size;
-  }
-
-  getUniqueSiteCount(array) {
-    const coordinatesArr = array.map(({ latitude, longitude }) => [latitude, longitude]);
-
-    const duplicateList = coordinatesArr.reduce((duplicatesFound, coordinates) => {
-      return {
-        ...duplicatesFound,
-        [coordinates]: (duplicatesFound[coordinates] || 0) + 1
-      };
-    }, {});
-
-    return Object.keys(duplicateList).length;
-  }
-
-  getTransectCount(array) {
-    const protocols = array.map(({ protocols }) => protocols);
-
+  getTransectCount(protocols) {
     const protocolCount = protocols
       .map(({ beltfish, benthicpit, benthiclit, habitatcomplexity, colonies_bleached }) => {
         const beltfishCount = beltfish ? beltfish.sample_unit_count : 0;
@@ -524,15 +534,13 @@ class MermaidDash extends Component {
 
   contentLoadHandler = option => this.setState({ isLoading: option });
 
-  siteLookup = ({ key: siteId }) => this.state.sites.filter(({ site_id }) => site_id === siteId)[0];
-
-  filterHandler = ({ country, project, organization, date_min_after, date_max_before }) => {
+  filterHandler = ({ country, project, organization, sample_date_after, sample_date_before }) => {
     const filterParams = { ...this.state.filterParams };
     filterParams.country = country;
     filterParams.project = project;
     filterParams.organization = organization;
-    filterParams.date_min_after = date_min_after;
-    filterParams.date_max_before = date_max_before;
+    filterParams.sample_date_after = sample_date_after;
+    filterParams.sample_date_before = sample_date_before;
 
     this.setState({ filterParams });
   };
@@ -542,21 +550,26 @@ class MermaidDash extends Component {
     const countryProperty = Object.entries(filterParams)[0];
     const projectIdProperty = Object.entries(filterParams)[1];
     const organizationIdProperty = Object.entries(filterParams)[2];
-    const dateMinProperty = Object.entries(filterParams)[3];
-    const dateMaxProperty = Object.entries(filterParams)[4];
+    const sampleDateAfterProperty = Object.entries(filterParams)[3];
+    const sampleDateBeforeProperty = Object.entries(filterParams)[4];
 
-    if (countryProperty[1].length > 0)
+    if (countryProperty[1].length > 0) {
       queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='));
+    }
 
-    if (projectIdProperty[1].length > 0)
+    if (projectIdProperty[1].length > 0) {
       queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='));
+    }
 
-    if (organizationIdProperty[1].length > 0)
+    if (organizationIdProperty[1].length > 0) {
       queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='));
+    }
 
-    if (dateMinProperty[1].length > 0 || dateMaxProperty[1].length > 0) {
-      const dateString = [`${dateMinProperty[1]}`, `${dateMaxProperty[1]}`].join(',');
-      queryStrings.push(['date', dateString].join('='));
+    if (sampleDateAfterProperty[1].length > 0) {
+      queryStrings.push([sampleDateAfterProperty[0], sampleDateAfterProperty[1]].join('='));
+    }
+    if (sampleDateBeforeProperty[1].length > 0) {
+      queryStrings.push([sampleDateBeforeProperty[0], sampleDateBeforeProperty[1]].join('='));
     }
 
     this.props.history.push({
@@ -570,7 +583,9 @@ class MermaidDash extends Component {
   getChoices = (choice_name, choices) => {
     return choices
       .reduce((resultArray, obj) => {
-        if (obj.name === choice_name) resultArray = obj.data;
+        if (obj.name === choice_name) {
+          resultArray = obj.data;
+        }
 
         return resultArray;
       }, [])
@@ -580,7 +595,9 @@ class MermaidDash extends Component {
   fetchNonTestProjectChoices = (projects, property, property_array) => {
     const result = projects
       .reduce((nonTestProject, project) => {
-        if (project[property].length !== 0) nonTestProject.push(project[property]);
+        if (project[property].length !== 0) {
+          nonTestProject.push(project[property]);
+        }
 
         return nonTestProject;
       }, [])
