@@ -30,6 +30,7 @@
     "@material-ui/lab": "^4.0.0-alpha.41",
     "@material-ui/pickers": "^3.3.10",
     "@turf/turf": "^5.1.6",
+    "autoprefixer": "10.4.5",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.21.2",
     "date-fns": "^2.28.0",
