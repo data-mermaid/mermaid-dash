@@ -1,11 +1,11 @@
 import React from 'react';
 
 import styled from 'styled-components/macro';
-import { ThemeProvider } from 'styled-components/macro';
-import { ButtonStyle, MenuLink } from '../styles/MermaidStyledComponents';
 import { theme } from '../constants/theme';
+import { withStyles } from '@material-ui/core/styles';
 import ContactIcon from '@material-ui/icons/Email';
 
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
@@ -13,6 +13,16 @@ const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
   font-size: small;
 `;
+
+const ContactButtonWrapper = withStyles({
+  root: {
+    color: theme.cardButton.color.mermaidWhite,
+    backgroundColor: theme.cardButton.bgColor,
+    '&:hover': {
+      backgroundColor: theme.cardButton.bgColor
+    }
+  }
+})(Button);
 
 const SiteDetailSubItemWrapper = styled('div')`
   div {
@@ -119,14 +129,16 @@ const SiteDetailSubItems = ({
     );
 
   const contactButton = (
-    <ThemeProvider theme={theme.cardButton}>
-      <MenuLink target="_blank" href={contact_link} rel="noopener noreferrer">
-        <ButtonStyle setHover={true}>
-          <ContactIconWrapper />
-          <Box fontWeight="fontWeightMedium">Contact Admins</Box>
-        </ButtonStyle>
-      </MenuLink>
-    </ThemeProvider>
+    <ContactButtonWrapper
+      target="_blank"
+      size="small"
+      variant="contained"
+      color="primary"
+      href={contact_link}
+    >
+      <ContactIconWrapper />
+      <Box fontWeight="fontWeightMedium">Contact Admins</Box>
+    </ContactButtonWrapper>
   );
 
   return (
