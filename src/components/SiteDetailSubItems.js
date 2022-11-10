@@ -8,6 +8,7 @@ import ContactIcon from '@material-ui/icons/Email';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import DownloadDataModal from './DownloadDataModal';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -16,6 +17,7 @@ const ContactIconWrapper = styled(ContactIcon)`
 
 const ContactButtonWrapper = withStyles({
   root: {
+    margin: '4px',
     color: theme.cardButton.color.mermaidWhite,
     backgroundColor: theme.cardButton.bgColor,
     '&:hover': {
@@ -146,6 +148,7 @@ const SiteDetailSubItems = ({
       <div>
         <Typography variant="h4">{site_name}</Typography>
         {contactButton}
+        <DownloadDataModal />
       </div>
       <div>
         <Typography variant="body1">{project_name}</Typography>
