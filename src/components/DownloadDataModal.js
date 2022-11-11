@@ -147,7 +147,10 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
           <DialogText subtext>Download sample event data in CSV format per method</DialogText>
           {methodDownloadTable}
           <DialogText subtext>
-            To download raw observation data, contact the project's admins.
+            To download raw observation data,{' '}
+            <a target="_blank" href={currentSelectedSite.contact_link} rel="noopener noreferrer">
+              contact the project's admins.
+            </a>
           </DialogText>
         </MuiDialogContent>
         <MuiDialogActions>
