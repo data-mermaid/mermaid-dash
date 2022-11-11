@@ -148,7 +148,7 @@ const SiteDetailSubItems = ({
       <div>
         <Typography variant="h4">{site_name}</Typography>
         {contactButton}
-        <DownloadDataModal />
+        <DownloadDataModal currentSelectedSite={currentSelectedSite} />
       </div>
       <div>
         <Typography variant="body1">{project_name}</Typography>

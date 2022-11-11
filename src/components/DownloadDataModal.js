@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 import styled from 'styled-components/macro';
 import { theme } from '../constants/theme';
@@ -18,6 +18,7 @@ import { Box, Dialog } from '@material-ui/core';
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ContactIcon from '@material-ui/icons/Email';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import { protocolTitles } from '../constants/transect-protocols';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -40,8 +41,36 @@ const MermaidButton = withStyles({
   }
 })(Button);
 
-const DownloadDataModal = () => {
+const TableHeadWrapper = styled(TableHead)`
+  background-color: lightgrey;
+`;
+
+const TableCellWrapper = styled(TableCell)`
+  text-transform: capitalize;
+`;
+
+const DownloadDataModal = ({ currentSelectedSite }) => {
   const [open, setOpen] = useState(false);
+
+  const availableProtocols = useMemo(() => {
+    const protocolKeys = Object.keys(currentSelectedSite.protocols);
+
+    return protocolKeys.reduce((accumulator, protocol) => {
+      const protocolMethod = protocolTitles[protocol];
+
+      if (protocolMethod) {
+        const protocolDataPolicy =
+          protocolMethod === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${protocol}`;
+
+        const protocolInfo = {
+          method: protocolMethod,
+          policy: currentSelectedSite[protocolDataPolicy]
+        };
+        accumulator.push(protocolInfo);
+      }
+      return accumulator;
+    }, []);
+  }, [currentSelectedSite]);
 
   const handleModalOpen = () => setOpen(true);
 
@@ -49,8 +78,10 @@ const DownloadDataModal = () => {
     setOpen(false);
   };
 
-  const createData = (id, method, policy, buttonName) => {
-    return { id, method, policy, buttonName };
+  const handleDownloadCSV = () => {
+    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1//summarysampleevents/csv/?project_id=${currentSelectedSite.project_id}`;
+
+    window.open(downloadCSVApi, 'window');
   };
 
   const downloadDataButton = (
@@ -60,36 +91,44 @@ const DownloadDataModal = () => {
     </MermaidButton>
   );
 
-  const rows = [
-    createData('1', 'Benthic PIT', 'Private', 'Download CSV'),
-    createData('2', 'Fish Belt', 'Public Summary', 'Contact Admins')
-  ];
+  const downloadCSVButton = (
+    <MermaidButton size="small" variant="contained" color="primary" onClick={handleDownloadCSV}>
+      <CloudDownloadIconWrapper />
+      <Box fontWeight="fontWeightMedium">Download CSV</Box>
+    </MermaidButton>
+  );
+
+  const contactAdminsButton = (
+    <MermaidButton
+      target="_blank"
+      size="small"
+      variant="contained"
+      color="primary"
+      href={currentSelectedSite.contact_link}
+    >
+      <ContactIconWrapper />
+      <Box fontWeight="fontWeightMedium">Contact Admins</Box>
+    </MermaidButton>
+  );
 
   const methodDownloadTable = (
     <TableContainer>
       <Table>
-        <TableHead>
+        <TableHeadWrapper>
           <TableRow>
-            <TableCell>Method</TableCell>
-            <TableCell>Data Sharing Policy</TableCell>
-            <TableCell>Download</TableCell>
+            <TableCellWrapper>Method</TableCellWrapper>
+            <TableCellWrapper>Data Sharing Policy</TableCellWrapper>
+            <TableCellWrapper>Download</TableCellWrapper>
           </TableRow>
-        </TableHead>
+        </TableHeadWrapper>
         <TableBody>
-          {rows.map(row => (
-            <TableRow key={row.id}>
-              <TableCell>{row.method}</TableCell>
-              <TableCell>{row.policy}</TableCell>
-              <TableCell>
-                <MermaidButton size="small" variant="contained" color="primary" onClick={() => {}}>
-                  {row.buttonName === 'Contact Admins' ? (
-                    <ContactIconWrapper />
-                  ) : (
-                    <CloudDownloadIconWrapper />
-                  )}
-                  <Box>{row.buttonName}</Box>
-                </MermaidButton>
-              </TableCell>
+          {availableProtocols.map(row => (
+            <TableRow key={row.method}>
+              <TableCellWrapper>{row.method}</TableCellWrapper>
+              <TableCellWrapper>{row.policy}</TableCellWrapper>
+              <TableCellWrapper>
+                {row.policy === 'private' ? contactAdminsButton : downloadCSVButton}
+              </TableCellWrapper>
             </TableRow>
           ))}
         </TableBody>

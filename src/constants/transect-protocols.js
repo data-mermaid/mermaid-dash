@@ -30,3 +30,11 @@ export const bleachingCategories = [
   { type: 'percent_soft_avg_avg', name: 'Soft coral' },
   { type: 'percent_algae_avg_avg', name: 'Macroalgae' }
 ];
+
+export const protocolTitles = {
+  beltfish: 'Fish Belt',
+  benthiclit: 'Benthic LIT',
+  benthicpit: 'Benthic PIT',
+  habitatcomplexity: 'Habitat Complexity',
+  quadrat_benthic_percent: 'Bleaching'
+};
