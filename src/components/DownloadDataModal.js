@@ -79,9 +79,9 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
   };
 
   const handleDownloadCSV = () => {
-    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1//summarysampleevents/csv/?project_id=${currentSelectedSite.project_id}`;
+    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/summarysampleevents/csv/?project_id=${currentSelectedSite.project_id}`;
 
-    window.open(downloadCSVApi, 'window');
+    window.open(downloadCSVApi);
   };
 
   const downloadDataButton = (
