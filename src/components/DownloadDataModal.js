@@ -141,7 +141,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
       {downloadDataButton}
       <Dialog open={open} aria-labelledby="download-data-dialog">
         <MuiDialogTitle>
-          <DialogText dialogTitle>Great Sea Reef 2019</DialogText>
+          <DialogText dialogTitle>{currentSelectedSite.site_name}</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent>
           <DialogText subtext>Download sample event data in CSV format per method</DialogText>
