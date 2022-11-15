@@ -18,7 +18,7 @@ import { Box, Dialog } from '@material-ui/core';
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ContactIcon from '@material-ui/icons/Email';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import { protocolTitles } from '../constants/transect-protocols';
+import { protocolMethods, pluralizedProtocols } from '../constants/transect-protocols';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -56,7 +56,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
     const protocolKeys = Object.keys(currentSelectedSite.protocols);
 
     return protocolKeys.reduce((accumulator, protocol) => {
-      const protocolMethod = protocolTitles[protocol];
+      const protocolMethod = protocolMethods[protocol];
 
       if (protocolMethod) {
         const protocolDataPolicy =
@@ -64,7 +64,8 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
 
         const protocolInfo = {
           method: protocolMethod,
-          policy: currentSelectedSite[protocolDataPolicy]
+          policy: currentSelectedSite[protocolDataPolicy],
+          protocol
         };
         accumulator.push(protocolInfo);
       }
@@ -78,8 +79,9 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
     setOpen(false);
   };
 
-  const handleDownloadCSV = () => {
-    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/summarysampleevents/csv/?project_id=${currentSelectedSite.project_id}`;
+  const handleDownloadCSV = protocol => {
+    const protocolToDownload = pluralizedProtocols[protocol];
+    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`;
 
     window.open(downloadCSVApi);
   };
@@ -91,8 +93,13 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
     </MermaidButton>
   );
 
-  const downloadCSVButton = (
-    <MermaidButton size="small" variant="contained" color="primary" onClick={handleDownloadCSV}>
+  const downloadCSVButton = protocol => (
+    <MermaidButton
+      size="small"
+      variant="contained"
+      color="primary"
+      onClick={() => handleDownloadCSV(protocol)}
+    >
       <CloudDownloadIconWrapper />
       <Box fontWeight="fontWeightMedium">Download CSV</Box>
     </MermaidButton>
@@ -127,7 +134,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
               <TableCellWrapper>{row.method}</TableCellWrapper>
               <TableCellWrapper>{row.policy}</TableCellWrapper>
               <TableCellWrapper>
-                {row.policy === 'private' ? contactAdminsButton : downloadCSVButton}
+                {row.policy === 'private' ? contactAdminsButton : downloadCSVButton(row.protocol)}
               </TableCellWrapper>
             </TableRow>
           ))}

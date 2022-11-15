@@ -17,7 +17,7 @@ import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
 import { defaultPieChartContent } from '../constants/sample-data';
-import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
+import { availableProtocolsForChart, bleachingCategories } from '../constants/transect-protocols';
 
 const SiteSummaryWrapper = styled('div')`
   padding: ${props => (props.mediaMax960 ? '0 8px 0px 8px' : '16px 8px 50px 8px')};
@@ -73,7 +73,7 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
     </Box>
   );
 
-  const siteChartCards = protocolsArray.map(({ name, property, title, type }) => {
+  const siteChartCards = availableProtocolsForChart.map(({ name, property, title, type }) => {
     const bleachingProtocol = name === 'bleachingqc';
     const transectName = bleachingProtocol ? property : name;
     const loadedSiteProtocol = currentSelectedSite && currentSelectedSite.protocols[transectName];
