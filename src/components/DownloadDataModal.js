@@ -14,11 +14,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import Button from '@material-ui/core/Button';
-import { Box, Dialog } from '@material-ui/core';
+import { Box, Dialog, useMediaQuery } from '@material-ui/core';
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ContactIcon from '@material-ui/icons/Email';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { protocolMethods, pluralizedProtocols } from '../constants/transect-protocols';
+import TooltipLayout from './TooltipLayout';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -50,6 +51,7 @@ const TableCellWrapper = styled(TableCell)`
 `;
 
 const DownloadDataModal = ({ currentSelectedSite }) => {
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const [open, setOpen] = useState(false);
 
   const availableProtocols = useMemo(() => {
@@ -88,8 +90,16 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
 
   const downloadDataButton = (
     <MermaidButton size="small" variant="contained" color="primary" onClick={handleModalOpen}>
-      <CloudDownloadIconWrapper />
-      <Box fontWeight="fontWeightMedium">Download data</Box>
+      {mediaMin1281 ? (
+        <>
+          <CloudDownloadIconWrapper />
+          <Box fontWeight="fontWeightMedium">Download data</Box>
+        </>
+      ) : (
+        <TooltipLayout title="download data" placement="bottom">
+          <CloudDownloadIconWrapper />
+        </TooltipLayout>
+      )}
     </MermaidButton>
   );
 

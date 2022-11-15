@@ -10,10 +10,8 @@ import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
 import ZoomOutIcon from '@material-ui/icons/ZoomOutMap';
 import CurrentSelectLocationIcon from '@material-ui/icons/TripOrigin';
 
-import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
 
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { color, theme } from '../constants/theme';
@@ -21,6 +19,7 @@ import { color, theme } from '../constants/theme';
 import PropTypes from 'prop-types';
 
 import FilterModal from './FilterModal';
+import TooltipLayout from './TooltipLayout';
 
 const mapControlStyleProperty = makeStyles(theme => ({
   numberOfFilteredSitesWrapperProperty: {
@@ -104,14 +103,9 @@ const LeafletMapControl = ({
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
       <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
-        <Tooltip
-          title="Zoom to Full"
-          placement="right"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+        <TooltipLayout title="Zoom to Full" placement="right">
           <ZoomOutIcon />
-        </Tooltip>
+        </TooltipLayout>
       </ButtonStyle>
     </ThemeProvider>
   );
@@ -124,14 +118,9 @@ const LeafletMapControl = ({
         onClick={() => zoomToSiteHandler(true)}
         disabled={highlightMarker === null}
       >
-        <Tooltip
-          title="Zoom to Selected Site"
-          placement="right"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+        <TooltipLayout title="Zoom to Selected Site" placement="right">
           <CurrentSelectLocationIcon />
-        </Tooltip>
+        </TooltipLayout>
       </ButtonStyle>
     </ThemeProvider>
   );

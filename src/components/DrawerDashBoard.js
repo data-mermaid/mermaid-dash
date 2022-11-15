@@ -7,7 +7,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { ThemeProvider } from 'styled-components/macro';
 
 import Drawer from '@material-ui/core/Drawer';
-import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
@@ -24,6 +23,7 @@ import {
   drawerWidth
 } from '../constants/summary-information';
 import SidePanelControl from './SidePanelControl';
+import TooltipLayout from './TooltipLayout';
 
 const drawerStyleProperties = makeStyles(theme => ({
   summaryDashboardProperty: {
@@ -103,16 +103,11 @@ const DrawerDashBoard = ({
   const collapseSidePanel = (
     <Box className={classes.collapseButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <Tooltip
-          title="Hide"
-          placement="left"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+        <TooltipLayout title="Hide" placement="left">
           <ButtonStyle onClick={handleDrawerChange}>
             <ChevronRightIcon />
           </ButtonStyle>
-        </Tooltip>
+        </TooltipLayout>
       </ThemeProvider>
     </Box>
   );
@@ -120,7 +115,7 @@ const DrawerDashBoard = ({
   const clearSelectedSite = showSiteDetail && (
     <Box className={classes.clearSelectionButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <Tooltip
+        <TooltipLayout
           title="Clear selection"
           placement="left"
           TransitionComponent={Fade}
@@ -129,7 +124,7 @@ const DrawerDashBoard = ({
           <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
-        </Tooltip>
+        </TooltipLayout>
       </ThemeProvider>
     </Box>
   );

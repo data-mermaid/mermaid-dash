@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DownloadDataModal from './DownloadDataModal';
+import { useMediaQuery } from '@material-ui/core';
+import TooltipLayout from './TooltipLayout';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -111,6 +113,7 @@ const SiteDetailSubItems = ({
   markerSelectSites,
   handleCurrentSelectedSiteChange
 }) => {
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const {
     site_name,
     project_name,
@@ -138,8 +141,16 @@ const SiteDetailSubItems = ({
       color="primary"
       href={contact_link}
     >
-      <ContactIconWrapper />
-      <Box fontWeight="fontWeightMedium">Contact Admins</Box>
+      {mediaMin1281 ? (
+        <>
+          <ContactIconWrapper />
+          <Box fontWeight="fontWeightMedium">Contact Admins</Box>
+        </>
+      ) : (
+        <TooltipLayout title="contact admin" placement="bottom">
+          <ContactIconWrapper />
+        </TooltipLayout>
+      )}
     </ContactButtonWrapper>
   );
 
