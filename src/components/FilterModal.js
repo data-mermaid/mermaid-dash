@@ -12,13 +12,12 @@ import { DialogText } from '../styles/MermaidStyledComponents';
 import { ThemeProvider } from 'styled-components/macro';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
 import { theme } from '../constants/theme';
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { makeStyles } from '@material-ui/core/styles';
 
 import DatePickerInputs from './DatePickerInputs';
 import AutocompleteInput from './AutocompleteInput';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const filterModalStyles = makeStyles(theme => ({
   buttonProgress: {
@@ -83,18 +82,13 @@ const FilterModal = ({
         setWiggle={true}
         onClick={handleClickOpen}
       >
-        <Tooltip
-          title="Filter Sites"
-          placement="right"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+        <MermaidDashboardTooltip title="Filter Sites" placement="right">
           {!isFilteringChoices ? (
             <FilterListIcon />
           ) : (
             <CircularProgress size={20} className={classes.buttonProgress} />
           )}
-        </Tooltip>
+        </MermaidDashboardTooltip>
       </ButtonStyle>
     </ThemeProvider>
   );

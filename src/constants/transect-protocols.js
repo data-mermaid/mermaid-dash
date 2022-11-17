@@ -1,4 +1,4 @@
-export const protocolsArray = [
+export const availableProtocolsForChart = [
   {
     name: 'benthiclit',
     title: 'Benthic % Cover (LIT)',
@@ -30,3 +30,21 @@ export const bleachingCategories = [
   { type: 'percent_soft_avg_avg', name: 'Soft coral' },
   { type: 'percent_algae_avg_avg', name: 'Macroalgae' }
 ];
+
+export const protocolMethods = {
+  beltfish: 'Fish Belt',
+  benthiclit: 'Benthic LIT',
+  benthicpit: 'Benthic PIT',
+  benthicpqt: 'Benthic Photo Quadrat',
+  habitatcomplexity: 'Habitat Complexity',
+  quadrat_benthic_percent: 'Bleaching'
+};
+
+export const pluralizedProtocols = {
+  beltfish: 'beltfishes',
+  benthiclit: 'benthiclits',
+  benthicpit: 'benthicpits',
+  benthicpqt: 'benthicpqts',
+  habitatcomplexity: 'habitatcomplexities',
+  quadrat_benthic_percent: 'bleachingqcs'
+};

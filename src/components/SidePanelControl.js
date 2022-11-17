@@ -6,12 +6,11 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { ThemeProvider } from 'styled-components/macro';
 
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
 
 import { theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const sidePanelStyleProperties = makeStyles(theme => ({
   showPanelButtonProperty: {
@@ -40,16 +39,11 @@ const SidePanelControl = ({
   const showPanelControl = (sidePanelOpen || !hideDrawer) && (
     <Box className={classes.showPanelButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <Tooltip
-          title="Show"
-          placement="left"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 300 }}
-        >
+        <MermaidDashboardTooltip title="Show">
           <ButtonStyle onClick={handleDrawerChange}>
             <ChevronLeftIcon />
           </ButtonStyle>
-        </Tooltip>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );
@@ -57,16 +51,11 @@ const SidePanelControl = ({
   const clearSelectedSite = showSiteDetail && !hideDrawer && (
     <Box className={classes.clearSiteButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <Tooltip
-          title="Clear selection"
-          placement="left"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 300 }}
-        >
+        <MermaidDashboardTooltip title="Clear selection" placement="left">
           <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
-        </Tooltip>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );
