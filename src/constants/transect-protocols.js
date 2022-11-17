@@ -7,6 +7,7 @@ export const bleachingCategories = [
 export const chartContentProperties = {
   benthiclit: 'percent_cover_by_benthic_category_avg',
   benthicpit: 'percent_cover_by_benthic_category_avg',
+  benthicpqt: 'percent_cover_by_benthic_category_avg',
   beltfish: 'biomass_kgha_by_trophic_group_avg',
   quadrat_benthic_percent: 'quadrat_benthic_percent'
 };
@@ -14,6 +15,7 @@ export const chartContentProperties = {
 export const chartTitles = {
   benthiclit: 'Benthic % Cover (LIT)',
   benthicpit: 'Benthic % Cover (PIT)',
+  benthicpqt: 'Benthic Photo Quadrat',
   beltfish: 'Fish Belt',
   quadrat_benthic_percent: 'Bleaching'
 };
