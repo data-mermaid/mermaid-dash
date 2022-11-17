@@ -11,7 +11,6 @@ import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
 import LiveCoralCoverModal from './LiveCoralCoverModal';
 import FishFamilyModal from './FishFamilyModal';
-// import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
 
@@ -38,16 +37,15 @@ const cardStyle = makeStyles(theme => ({
 }));
 
 const InformationCard = ({
+  bleachingProtocolSubItems,
   dataPolicy,
-  protocol,
-  protocolName,
-  setToPrivate,
-  privateLabel,
   histogramContent,
   isFiltering,
+  isPrivatePolicy,
+  protocol,
+  protocolName,
   title,
   type,
-  bleachingSubItems,
   pieChartContent,
   textContent,
   projectFishFamilies
@@ -61,7 +59,7 @@ const InformationCard = ({
   const modalToggleHandler = () => setModalStage(!modalStageOpen);
   const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen);
 
-  const subAttributeItem = !setToPrivate && protocol && (
+  const subAttributeItem = !isPrivatePolicy && protocol && (
     <>
       <Typography m={1}>Sample units: {protocol.sample_unit_count} </Typography>
       {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
@@ -86,13 +84,15 @@ const InformationCard = ({
     </>
   );
 
-  const bleachingSubAttributeItem = !setToPrivate && bleachingSubItems && (
+  const bleachingSubAttributeItem = !isPrivatePolicy && bleachingProtocolSubItems && (
     <>
       <Typography m={1}>
-        Bleached colonies: {bleachingSubItems.percent_bleached_avg.toFixed(1)}%
+        Bleached colonies: {bleachingProtocolSubItems.percent_bleached_avg.toFixed(1)}%
       </Typography>
-      <Typography m={1}>Hard coral genera: {bleachingSubItems.count_genera_avg}</Typography>
-      <Typography m={1}>Observed coral colonies: {bleachingSubItems.count_total_avg}</Typography>
+      <Typography m={1}>Hard coral genera: {bleachingProtocolSubItems.count_genera_avg}</Typography>
+      <Typography m={1}>
+        Observed coral colonies: {bleachingProtocolSubItems.count_total_avg}
+      </Typography>
     </>
   );
 
@@ -106,13 +106,6 @@ const InformationCard = ({
     </Box>
   );
 
-  // eslint-disable-next-line
-  // const downLoadButton = type === 'pieChart' && (
-  //   <Box>
-  //     <DownloadButton setToPrivate={setToPrivate}/>
-  //   </Box>
-  // );
-
   const contentItem =
     type === 'text' ? (
       <CartTextContent textContent={textContent} />
@@ -121,10 +114,9 @@ const InformationCard = ({
         chartType={type}
         protocolName={protocolName}
         pieChartContent={pieChartContent}
-        setToPrivate={setToPrivate}
-        privateLabel={privateLabel}
+        isPrivatePolicy={isPrivatePolicy}
+        title={title}
         histogramContent={histogramContent}
-        isFiltering={isFiltering}
       />
     );
 
@@ -144,8 +136,6 @@ const InformationCard = ({
             </Box>
             {subItems}
           </Box>
-          {/* temporarily Hide download data buttons */}
-          {/* {downLoadButton} */}
         </Box>
         {contentItem}
       </Paper>
@@ -157,18 +147,18 @@ const InformationCard = ({
 };
 
 InformationCard.propTypes = {
+  bleachingProtocolSubItems: PropTypes.object,
   dataPolicy: PropTypes.string,
+  histogramContent: PropTypes.array,
+  isFiltering: PropTypes.bool,
+  isPrivatePolicy: PropTypes.bool,
+  pieChartContent: PropTypes.array,
+  projectFishFamilies: PropTypes.array,
   protocol: PropTypes.object,
   protocolName: PropTypes.string,
-  setToPrivate: PropTypes.bool,
-  privateLabel: PropTypes.string,
-  histogramContent: PropTypes.array,
-  title: PropTypes.string,
-  type: PropTypes.string,
-  bleachingSubItems: PropTypes.object,
-  pieChartContent: PropTypes.array,
   textContent: PropTypes.object,
-  classes: PropTypes.object
+  title: PropTypes.string,
+  type: PropTypes.string
 };
 
 export default InformationCard;

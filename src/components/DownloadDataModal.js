@@ -43,7 +43,6 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
 
   const availableProtocols = useMemo(() => {
     const protocolKeys = Object.keys(currentSelectedSite.protocols);
-    console.log('protocolKeys ', protocolKeys);
 
     return protocolKeys.reduce((accumulator, protocol) => {
       const protocolMethod = protocolMethods[protocol];
@@ -63,7 +62,6 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
     }, []);
   }, [currentSelectedSite]);
 
-  console.log(availableProtocols);
   const handleModalOpen = () => setOpen(true);
 
   const handleModalClose = () => {
