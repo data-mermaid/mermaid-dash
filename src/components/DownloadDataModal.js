@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
 
 import styled from 'styled-components/macro';
-import { theme } from '../constants/theme';
-import { withStyles } from '@material-ui/core/styles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -15,11 +13,11 @@ import TableRow from '@material-ui/core/TableRow';
 
 import Button from '@material-ui/core/Button';
 import { Box, Dialog, useMediaQuery } from '@material-ui/core';
-import { DialogText } from '../styles/MermaidStyledComponents';
+import { DialogText, MermaidButton } from '../styles/MermaidStyledComponents';
 import ContactIcon from '@material-ui/icons/Email';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { protocolMethods, pluralizedProtocols } from '../constants/transect-protocols';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -30,17 +28,6 @@ const CloudDownloadIconWrapper = styled(CloudDownloadIcon)`
   padding-right: 5px;
   font-size: small;
 `;
-
-const MermaidButton = withStyles({
-  root: {
-    margin: '4px',
-    color: theme.cardButton.color.mermaidWhite,
-    backgroundColor: theme.cardButton.bgColor,
-    '&:hover': {
-      backgroundColor: theme.cardButton.bgColor
-    }
-  }
-})(Button);
 
 const TableHeadWrapper = styled(TableHead)`
   background-color: lightgrey;
@@ -56,6 +43,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
 
   const availableProtocols = useMemo(() => {
     const protocolKeys = Object.keys(currentSelectedSite.protocols);
+    console.log('protocolKeys ', protocolKeys);
 
     return protocolKeys.reduce((accumulator, protocol) => {
       const protocolMethod = protocolMethods[protocol];
@@ -75,6 +63,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
     }, []);
   }, [currentSelectedSite]);
 
+  console.log(availableProtocols);
   const handleModalOpen = () => setOpen(true);
 
   const handleModalClose = () => {
@@ -96,9 +85,9 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
           <Box fontWeight="fontWeightMedium">Download data</Box>
         </>
       ) : (
-        <TooltipLayout title="download data" placement="bottom">
+        <MermaidDashboardTooltip title="download data" placement="bottom">
           <CloudDownloadIconWrapper />
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       )}
     </MermaidButton>
   );

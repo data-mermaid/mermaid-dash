@@ -2,7 +2,7 @@ import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 
-const TooltipLayout = ({ title, placement, children }) => {
+const MermaidDashboardTooltip = ({ title, placement, children }) => {
   return (
     <Tooltip
       title={title}
@@ -15,4 +15,4 @@ const TooltipLayout = ({ title, placement, children }) => {
   );
 };
 
-export default TooltipLayout;
+export default MermaidDashboardTooltip;

@@ -10,7 +10,7 @@ import Box from '@material-ui/core/Box';
 
 import { theme } from '../constants/theme';
 import { ButtonStyle } from '../styles/MermaidStyledComponents';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const sidePanelStyleProperties = makeStyles(theme => ({
   showPanelButtonProperty: {
@@ -39,11 +39,11 @@ const SidePanelControl = ({
   const showPanelControl = (sidePanelOpen || !hideDrawer) && (
     <Box className={classes.showPanelButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <TooltipLayout title="Show">
+        <MermaidDashboardTooltip title="Show">
           <ButtonStyle onClick={handleDrawerChange}>
             <ChevronLeftIcon />
           </ButtonStyle>
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );
@@ -51,11 +51,11 @@ const SidePanelControl = ({
   const clearSelectedSite = showSiteDetail && !hideDrawer && (
     <Box className={classes.clearSiteButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <TooltipLayout title="Clear selection" placement="left">
+        <MermaidDashboardTooltip title="Clear selection" placement="left">
           <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );

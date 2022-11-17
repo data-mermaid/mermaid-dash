@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import DatePickerInputs from './DatePickerInputs';
 import AutocompleteInput from './AutocompleteInput';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const filterModalStyles = makeStyles(theme => ({
   buttonProgress: {
@@ -82,13 +82,13 @@ const FilterModal = ({
         setWiggle={true}
         onClick={handleClickOpen}
       >
-        <TooltipLayout title="Filter Sites" placement="right">
+        <MermaidDashboardTooltip title="Filter Sites" placement="right">
           {!isFilteringChoices ? (
             <FilterListIcon />
           ) : (
             <CircularProgress size={20} className={classes.buttonProgress} />
           )}
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ButtonStyle>
     </ThemeProvider>
   );

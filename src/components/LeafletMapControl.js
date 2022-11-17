@@ -19,7 +19,7 @@ import { color, theme } from '../constants/theme';
 import PropTypes from 'prop-types';
 
 import FilterModal from './FilterModal';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const mapControlStyleProperty = makeStyles(theme => ({
   numberOfFilteredSitesWrapperProperty: {
@@ -103,9 +103,9 @@ const LeafletMapControl = ({
   const fullMapToggle = (
     <ThemeProvider theme={theme.mapControl}>
       <ButtonStyle buttonBorder={true} setWiggle={true} onClick={() => fullMapZoomHandler(true)}>
-        <TooltipLayout title="Zoom to Full" placement="right">
+        <MermaidDashboardTooltip title="Zoom to Full" placement="right">
           <ZoomOutIcon />
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ButtonStyle>
     </ThemeProvider>
   );
@@ -118,9 +118,9 @@ const LeafletMapControl = ({
         onClick={() => zoomToSiteHandler(true)}
         disabled={highlightMarker === null}
       >
-        <TooltipLayout title="Zoom to Selected Site" placement="right">
+        <MermaidDashboardTooltip title="Zoom to Selected Site" placement="right">
           <CurrentSelectLocationIcon />
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ButtonStyle>
     </ThemeProvider>
   );

@@ -23,7 +23,7 @@ import {
   drawerWidth
 } from '../constants/summary-information';
 import SidePanelControl from './SidePanelControl';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const drawerStyleProperties = makeStyles(theme => ({
   summaryDashboardProperty: {
@@ -103,11 +103,11 @@ const DrawerDashBoard = ({
   const collapseSidePanel = (
     <Box className={classes.collapseButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <TooltipLayout title="Hide" placement="left">
+        <MermaidDashboardTooltip title="Hide" placement="left">
           <ButtonStyle onClick={handleDrawerChange}>
             <ChevronRightIcon />
           </ButtonStyle>
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );
@@ -115,7 +115,7 @@ const DrawerDashBoard = ({
   const clearSelectedSite = showSiteDetail && (
     <Box className={classes.clearSelectionButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <TooltipLayout
+        <MermaidDashboardTooltip
           title="Clear selection"
           placement="left"
           TransitionComponent={Fade}
@@ -124,7 +124,7 @@ const DrawerDashBoard = ({
           <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );

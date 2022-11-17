@@ -10,15 +10,15 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ModalContent from './ModalContent';
 import { color } from '../constants/theme';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
   const clickToViewModal = (
-    <TooltipLayout title="More Information & References" placement="right">
+    <MermaidDashboardTooltip title="More Information & References" placement="right">
       <IconButton onClick={modalToggleHandler}>
         <HelpIcon style={{ color: color.mermaidDarkBlue, fontSize: '30px' }} />
       </IconButton>
-    </TooltipLayout>
+    </MermaidDashboardTooltip>
   );
 
   return (

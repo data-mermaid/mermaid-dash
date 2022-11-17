@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DownloadDataModal from './DownloadDataModal';
 import { useMediaQuery } from '@material-ui/core';
-import TooltipLayout from './TooltipLayout';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
@@ -147,9 +147,9 @@ const SiteDetailSubItems = ({
           <Box fontWeight="fontWeightMedium">Contact Admins</Box>
         </>
       ) : (
-        <TooltipLayout title="contact admin" placement="bottom">
+        <MermaidDashboardTooltip title="contact admin" placement="bottom">
           <ContactIconWrapper />
-        </TooltipLayout>
+        </MermaidDashboardTooltip>
       )}
     </ContactButtonWrapper>
   );
