@@ -137,17 +137,17 @@ const DrawerDashBoard = ({
   const dashboard = (
     <div className={classes.summaryDashboardProperty}>
       <InformationCard
+        isFiltering={isFiltering}
+        textContent={summary}
         title={summary.title}
         type={summary.type}
-        textContent={summary}
-        isFiltering={isFiltering}
       />
       <MetricCards metrics={metrics} isLoading={isLoading} />
       <InformationCard
+        isFiltering={isFiltering}
+        histogramContent={histogram}
         title={histogramSummary.title}
         type={histogramSummary.type}
-        histogramContent={histogram}
-        isFiltering={isFiltering}
       />
     </div>
   );

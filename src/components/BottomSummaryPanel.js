@@ -92,9 +92,9 @@ const BottomSummaryPanel = ({
       <MetricCards metrics={metrics} isLoading={isLoading} bottomPanelOpen={open} />
       {open && (
         <InformationCard
+          histogramContent={histogram}
           title={histogramSummary.title}
           type={histogramSummary.type}
-          histogramContent={histogram}
         />
       )}
     </>

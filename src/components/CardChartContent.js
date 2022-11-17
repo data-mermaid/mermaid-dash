@@ -10,8 +10,8 @@ const CardChartContent = ({
   chartType,
   protocolName,
   pieChartContent,
-  setToPrivate,
-  privateLabel,
+  isPrivatePolicy,
+  title,
   histogramContent
 }) => {
   const chart =
@@ -21,8 +21,8 @@ const CardChartContent = ({
       <PieChart
         protocolName={protocolName}
         chartContent={pieChartContent}
-        setToPrivate={setToPrivate}
-        privateLabel={privateLabel}
+        isPrivatePolicy={isPrivatePolicy}
+        title={title}
       />
     );
 
@@ -32,7 +32,7 @@ const CardChartContent = ({
 CardChartContent.propTypes = {
   chartType: PropTypes.string,
   pieChartContent: PropTypes.array,
-  setToPrivate: PropTypes.bool,
+  isPrivatePolicy: PropTypes.bool,
   privateLabel: PropTypes.string,
   histogramContent: PropTypes.array
 };
