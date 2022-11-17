@@ -15,7 +15,24 @@ export const chartContentProperties = {
 export const chartTitles = {
   benthiclit: 'Benthic % Cover (LIT)',
   benthicpit: 'Benthic % Cover (PIT)',
-  benthicpqt: 'Benthic Photo Quadrat',
+  benthicpqt: 'Benthic % Cover (Photo Quadrat)',
   beltfish: 'Fish Belt',
   quadrat_benthic_percent: 'Bleaching'
+};
+export const protocolMethods = {
+  beltfish: 'Fish Belt',
+  benthiclit: 'Benthic LIT',
+  benthicpit: 'Benthic PIT',
+  benthicpqt: 'Benthic Photo Quadrat',
+  habitatcomplexity: 'Habitat Complexity',
+  quadrat_benthic_percent: 'Bleaching'
+};
+
+export const pluralizedProtocols = {
+  beltfish: 'beltfishes',
+  benthiclit: 'benthiclits',
+  benthicpit: 'benthicpits',
+  benthicpqt: 'benthicpqts',
+  habitatcomplexity: 'habitatcomplexities',
+  quadrat_benthic_percent: 'bleachingqcs'
 };

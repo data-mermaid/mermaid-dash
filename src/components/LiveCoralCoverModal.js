@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import HelpIcon from '@material-ui/icons/Help';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -11,14 +10,15 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import { DialogText } from '../styles/MermaidStyledComponents';
 import ModalContent from './ModalContent';
 import { color } from '../constants/theme';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
   const clickToViewModal = (
-    <Tooltip title="More Information & References" placement="right">
+    <MermaidDashboardTooltip title="More Information & References" placement="right">
       <IconButton onClick={modalToggleHandler}>
         <HelpIcon style={{ color: color.mermaidDarkBlue, fontSize: '30px' }} />
       </IconButton>
-    </Tooltip>
+    </MermaidDashboardTooltip>
   );
 
   return (

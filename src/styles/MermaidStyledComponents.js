@@ -1,4 +1,7 @@
 import styled, { css } from 'styled-components/macro';
+import { withStyles } from '@material-ui/core/styles';
+import { theme } from '../constants/theme';
+import Button from '@material-ui/core/Button';
 
 export const ButtonStyle = styled('button')`
   color: ${props => (props.disabled ? props.theme.disabledColor : props.theme.color)};
@@ -67,3 +70,14 @@ export const DialogText = styled('p')`
       margin: 0;
     `};
 `;
+
+export const MermaidButton = withStyles({
+  root: {
+    margin: '4px',
+    color: theme.cardButton.color.mermaidWhite,
+    backgroundColor: theme.cardButton.bgColor,
+    '&:hover': {
+      backgroundColor: theme.cardButton.bgColor
+    }
+  }
+})(Button);
