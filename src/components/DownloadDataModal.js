@@ -73,7 +73,7 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
 
   const handleDownloadCSV = protocol => {
     const protocolToDownload = pluralizedProtocols[protocol];
-    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`;
+    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`;
 
     window.open(downloadCSVApi);
   };
