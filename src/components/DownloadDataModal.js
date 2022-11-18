@@ -38,6 +38,7 @@ const TableCellWrapper = styled(TableCell)`
 `;
 
 const DownloadDataModal = ({ currentSelectedSite }) => {
+  console.log('currentSelectedSite ', currentSelectedSite);
   const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const [open, setOpen] = useState(false);
 
@@ -145,7 +146,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
       {downloadDataButton}
       <Dialog open={open} aria-labelledby="download-data-dialog">
         <MuiDialogTitle>
-          <DialogText dialogTitle>{currentSelectedSite.site_name}</DialogText>
+          <DialogText dialogTitle>{currentSelectedSite.project_name}</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent>
           <DialogText subtext>Download sample event data in CSV format per method</DialogText>
