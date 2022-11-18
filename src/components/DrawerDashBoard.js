@@ -86,16 +86,17 @@ const drawerStyleProperties = makeStyles(theme => ({
 }));
 
 const DrawerDashBoard = ({
-  sidePanelOpen,
-  handleDrawerChange,
-  isLoading,
-  showSiteDetail,
-  metrics,
-  siteDetail,
   clearSelectedSiteHandler,
+  handleDrawerChange,
   hideDrawer,
   isFiltering,
-  projectFishFamilies
+  isLoading,
+  metrics,
+  projectFishFamilies,
+  showSiteDetail,
+  sidePanelOpen,
+  siteDetail,
+  sites
 }) => {
   const { histogram } = useContext(histogramContext);
   const classes = drawerStyleProperties();
@@ -148,7 +149,7 @@ const DrawerDashBoard = ({
   );
 
   const siteDashboard = siteDetail && (
-    <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} />
+    <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} sites={sites} />
   );
 
   const result = sidePanelOpen ? (
@@ -181,13 +182,17 @@ const DrawerDashBoard = ({
 };
 
 DrawerDashBoard.propTypes = {
-  sidePanelOpen: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  showSiteDetail: PropTypes.bool,
-  metrics: PropTypes.array,
-  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
   clearSelectedSiteHandler: PropTypes.func,
-  classes: PropTypes.object
+  handleDrawerChange: PropTypes.func,
+  hideDrawer: PropTypes.bool,
+  isFiltering: PropTypes.bool,
+  isLoading: PropTypes.bool,
+  metrics: PropTypes.array,
+  projectFishFamilies: PropTypes.array,
+  showSiteDetail: PropTypes.bool,
+  sidePanelOpen: PropTypes.bool,
+  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
+  sites: PropTypes.array
 };
 
 export default DrawerDashBoard;

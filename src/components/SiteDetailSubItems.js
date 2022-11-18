@@ -111,7 +111,8 @@ const SampleDateDropdown = ({
 const SiteDetailSubItems = ({
   currentSelectedSite,
   markerSelectSites,
-  handleCurrentSelectedSiteChange
+  handleCurrentSelectedSiteChange,
+  sites
 }) => {
   const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const {
@@ -159,7 +160,7 @@ const SiteDetailSubItems = ({
       <div>
         <Typography variant="h4">{site_name}</Typography>
         {contactButton}
-        <DownloadDataModal currentSelectedSite={currentSelectedSite} />
+        <DownloadDataModal currentSelectedSite={currentSelectedSite} sites={sites} />
       </div>
       <div>
         <Typography variant="body1">{project_name}</Typography>

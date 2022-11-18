@@ -31,7 +31,7 @@ const SiteInfoWrapper = styled(Paper)`
   border-radius: 0;
 `;
 
-const SiteDetail = ({ selectSite, projectFishFamilies }) => {
+const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const [currentSelectedSite, setCurrentSelectedSite] = useState(selectSite[0]);
 
@@ -121,6 +121,7 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
         currentSelectedSite={currentSelectedSite}
         markerSelectSites={selectSite}
         handleCurrentSelectedSiteChange={handleCurrentSelectedSiteChange}
+        sites={sites}
       />
       {siteAdmins}
       {siteOrganizations}
