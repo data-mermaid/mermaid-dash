@@ -10,9 +10,9 @@ import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
 import LiveCoralCoverModal from './LiveCoralCoverModal';
-import FishFamilyModal from './FishFamilyModal';
 
 import PropTypes from 'prop-types';
+import ProtocolChartSubHeading from './ProtocolChartSubHeading';
 
 const CardDiv = styled('div')`
   padding: ${props => (props.setPaddingOff ? '0 0 16px 0' : '16px 8px 16px 8px')};
@@ -54,55 +54,19 @@ const InformationCard = ({
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
 
   const [modalStageOpen, setModalStage] = useState(false);
-  const [fishFamilyModalStageOpen, setFishFamilyModalStageOpen] = useState(false);
 
   const modalToggleHandler = () => setModalStage(!modalStageOpen);
-  const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen);
 
-  const subAttributeItem = !isPrivatePolicy && protocol && (
-    <>
-      <Typography m={1}>Sample units: {protocol.sample_unit_count} </Typography>
-      {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
-        <Typography m={1}>
-          Hard coral cover: {protocol.percent_cover_by_benthic_category_avg['Hard coral']}%
-        </Typography>
-      ) : (
-        <Typography m={1}>Reef fish biomass: {protocol.biomass_kgha_avg} kg/ha</Typography>
-      )}
-      {protocolName === 'beltfish' && projectFishFamilies.length > 0 && (
-        <>
-          <Typography m={1} display="inline">
-            Restricted set of fish families surveyed{' '}
-          </Typography>
-          <FishFamilyModal
-            open={fishFamilyModalStageOpen}
-            modalToggleHandler={fishFamilyModalToggleHandler}
-            projectFishFamilies={projectFishFamilies}
-          />
-        </>
-      )}
-    </>
-  );
-
-  const bleachingSubAttributeItem = !isPrivatePolicy && bleachingProtocolSubItems && (
-    <>
-      <Typography m={1}>
-        Bleached colonies: {bleachingProtocolSubItems.percent_bleached_avg.toFixed(1)}%
-      </Typography>
-      <Typography m={1}>Hard coral genera: {bleachingProtocolSubItems.count_genera_avg}</Typography>
-      <Typography m={1}>
-        Observed coral colonies: {bleachingProtocolSubItems.count_total_avg}
-      </Typography>
-    </>
-  );
-
-  const protocolSubItem =
-    protocolName === 'bleachingqc' ? bleachingSubAttributeItem : subAttributeItem;
-
-  const subItems = type === 'pieChart' && (
+  const pieChartProtocolSubHeadingItem = type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      {protocolSubItem}
+      <ProtocolChartSubHeading
+        protocolName={protocolName}
+        protocolProperties={protocol}
+        isPrivatePolicy={isPrivatePolicy}
+        bleachingProtocolSubItems={bleachingProtocolSubItems}
+        projectFishFamilies={projectFishFamilies}
+      />
     </Box>
   );
 
@@ -134,7 +98,7 @@ const InformationCard = ({
                 />
               )}
             </Box>
-            {subItems}
+            {pieChartProtocolSubHeadingItem}
           </Box>
         </Box>
         {contentItem}

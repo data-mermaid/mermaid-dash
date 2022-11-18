@@ -73,6 +73,7 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
       </Typography>
     </Box>
   );
+
   const siteChartCards = useMemo(() => {
     const selectedSiteProtocols = currentSelectedSite?.protocols;
     const bleachingProtocolSubItems = selectedSiteProtocols['colonies_bleached'];
