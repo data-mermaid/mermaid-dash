@@ -37,14 +37,16 @@ const TableCellWrapper = styled(TableCell)`
   text-transform: capitalize;
 `;
 
-const DownloadDataModal = ({ currentSelectedSite }) => {
+const DownloadDataModal = ({ currentSelectedSite, sites }) => {
   const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const [open, setOpen] = useState(false);
 
   const availableProtocols = useMemo(() => {
-    const protocolKeys = Object.keys(currentSelectedSite.protocols);
+    const allSites = sites.map(site => site[1]).flat();
+    const allProtocols = allSites.map(site => Object.keys(site.protocols)[0]);
+    const uniqueAvailableProtocol = [...new Set(allProtocols)];
 
-    return protocolKeys.reduce((accumulator, protocol) => {
+    return uniqueAvailableProtocol.reduce((accumulator, protocol) => {
       const protocolMethod = protocolMethods[protocol];
 
       if (protocolMethod) {
@@ -58,9 +60,10 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
         };
         accumulator.push(protocolInfo);
       }
+
       return accumulator;
     }, []);
-  }, [currentSelectedSite]);
+  }, [currentSelectedSite, sites]);
 
   const handleModalOpen = () => setOpen(true);
 
@@ -131,7 +134,9 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
               <TableCellWrapper>{row.method}</TableCellWrapper>
               <TableCellWrapper>{row.policy}</TableCellWrapper>
               <TableCellWrapper>
-                {row.policy === 'private' ? contactAdminsButton : downloadCSVButton(row.protocol)}
+                {row.policy === 'public' || row.policy === 'public summary'
+                  ? downloadCSVButton(row.protocol)
+                  : contactAdminsButton}
               </TableCellWrapper>
             </TableRow>
           ))}
@@ -145,7 +150,7 @@ const DownloadDataModal = ({ currentSelectedSite }) => {
       {downloadDataButton}
       <Dialog open={open} aria-labelledby="download-data-dialog">
         <MuiDialogTitle>
-          <DialogText dialogTitle>{currentSelectedSite.site_name}</DialogText>
+          <DialogText dialogTitle>{currentSelectedSite.project_name}</DialogText>
         </MuiDialogTitle>
         <MuiDialogContent>
           <DialogText subtext>Download sample event data in CSV format per method</DialogText>
