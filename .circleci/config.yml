@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: cimg/node:14.17.6
+    - image: cimg/node:16.17.0
 
 install_dependencies: &install_dependencies
     run:
