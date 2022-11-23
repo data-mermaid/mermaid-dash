@@ -45,7 +45,7 @@
     "react-scripts": "^3.4.1",
     "react-select": "^3.0.4",
     "styled-components": "^4.2.0",
-    "victory": "^36.6.8"
+    "victory": "^32.3.7"
   },
   "devDependencies": {
     "babel-plugin-macros": "^2.6.1",
