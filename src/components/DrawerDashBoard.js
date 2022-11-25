@@ -7,7 +7,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { ThemeProvider } from 'styled-components/macro';
 
 import Drawer from '@material-ui/core/Drawer';
-import Tooltip from '@material-ui/core/Tooltip';
 import Fade from '@material-ui/core/Fade';
 import Box from '@material-ui/core/Box';
 import PropTypes from 'prop-types';
@@ -24,6 +23,7 @@ import {
   drawerWidth
 } from '../constants/summary-information';
 import SidePanelControl from './SidePanelControl';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const drawerStyleProperties = makeStyles(theme => ({
   summaryDashboardProperty: {
@@ -86,16 +86,17 @@ const drawerStyleProperties = makeStyles(theme => ({
 }));
 
 const DrawerDashBoard = ({
-  sidePanelOpen,
-  handleDrawerChange,
-  isLoading,
-  showSiteDetail,
-  metrics,
-  siteDetail,
   clearSelectedSiteHandler,
+  handleDrawerChange,
   hideDrawer,
   isFiltering,
-  projectFishFamilies
+  isLoading,
+  metrics,
+  projectFishFamilies,
+  showSiteDetail,
+  sidePanelOpen,
+  siteDetail,
+  sites
 }) => {
   const { histogram } = useContext(histogramContext);
   const classes = drawerStyleProperties();
@@ -103,16 +104,11 @@ const DrawerDashBoard = ({
   const collapseSidePanel = (
     <Box className={classes.collapseButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <Tooltip
-          title="Hide"
-          placement="left"
-          TransitionComponent={Fade}
-          TransitionProps={{ timeout: 200 }}
-        >
+        <MermaidDashboardTooltip title="Hide" placement="left">
           <ButtonStyle onClick={handleDrawerChange}>
             <ChevronRightIcon />
           </ButtonStyle>
-        </Tooltip>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );
@@ -120,7 +116,7 @@ const DrawerDashBoard = ({
   const clearSelectedSite = showSiteDetail && (
     <Box className={classes.clearSelectionButtonProperty}>
       <ThemeProvider theme={theme.sidePanelControl}>
-        <Tooltip
+        <MermaidDashboardTooltip
           title="Clear selection"
           placement="left"
           TransitionComponent={Fade}
@@ -129,7 +125,7 @@ const DrawerDashBoard = ({
           <ButtonStyle onClick={clearSelectedSiteHandler}>
             <ClearIcon />
           </ButtonStyle>
-        </Tooltip>
+        </MermaidDashboardTooltip>
       </ThemeProvider>
     </Box>
   );
@@ -137,23 +133,23 @@ const DrawerDashBoard = ({
   const dashboard = (
     <div className={classes.summaryDashboardProperty}>
       <InformationCard
+        isFiltering={isFiltering}
+        textContent={summary}
         title={summary.title}
         type={summary.type}
-        textContent={summary}
-        isFiltering={isFiltering}
       />
       <MetricCards metrics={metrics} isLoading={isLoading} />
       <InformationCard
+        isFiltering={isFiltering}
+        histogramContent={histogram}
         title={histogramSummary.title}
         type={histogramSummary.type}
-        histogramContent={histogram}
-        isFiltering={isFiltering}
       />
     </div>
   );
 
   const siteDashboard = siteDetail && (
-    <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} />
+    <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} sites={sites} />
   );
 
   const result = sidePanelOpen ? (
@@ -186,13 +182,17 @@ const DrawerDashBoard = ({
 };
 
 DrawerDashBoard.propTypes = {
-  sidePanelOpen: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  showSiteDetail: PropTypes.bool,
-  metrics: PropTypes.array,
-  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
   clearSelectedSiteHandler: PropTypes.func,
-  classes: PropTypes.object
+  handleDrawerChange: PropTypes.func,
+  hideDrawer: PropTypes.bool,
+  isFiltering: PropTypes.bool,
+  isLoading: PropTypes.bool,
+  metrics: PropTypes.array,
+  projectFishFamilies: PropTypes.array,
+  showSiteDetail: PropTypes.bool,
+  sidePanelOpen: PropTypes.bool,
+  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
+  sites: PropTypes.array
 };
 
 export default DrawerDashBoard;

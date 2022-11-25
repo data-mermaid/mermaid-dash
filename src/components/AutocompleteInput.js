@@ -1,12 +1,13 @@
 import React from 'react';
 
 import AutocompleteFilter from './AutocompleteFilter';
-import byCaseSensitive from '../lib/case-sensitive-sort-fix';
+import sortArray from '../lib/array-helpers';
 
 const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => {
-  const country_names = filterChoices.countries.map(country => country.name).sort(byCaseSensitive);
-  const project_names = filterChoices.projects.map(project => project.name).sort(byCaseSensitive);
-  const tag_names = filterChoices.tags.map(tag => tag.name).sort(byCaseSensitive);
+  const { countries, projects, tags } = filterChoices;
+  const country_names = sortArray(countries, 'name');
+  const project_names = sortArray(projects, 'name');
+  const tag_names = sortArray(tags, 'name');
 
   return (
     <>

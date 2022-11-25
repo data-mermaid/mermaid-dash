@@ -523,7 +523,7 @@ class MermaidDash extends Component {
 
       for (let i = 0; i < benthicHardCoralCount.length; i++) {
         const calDiff = parseFloat(x - benthicHardCoralCount[i]).toFixed(2);
-        if (benthicHardCoralCount[i] && (0 <= calDiff && calDiff < 2)) {
+        if (benthicHardCoralCount[i] && 0 <= calDiff && calDiff < 2) {
           count += 1;
         }
       }
@@ -613,18 +613,17 @@ class MermaidDash extends Component {
         <CssBaseline />
         <Header />
         <DrawerDashBoard
-          sidePanelOpen={this.state.sidePanelOpen}
-          handleDrawerChange={this.handleDrawerChange}
-          siteDetail={this.state.siteDetail}
-          showSiteDetail={this.state.showSiteDetail}
-          metrics={this.state.metrics}
-          isFiltering={this.state.isFiltering}
           clearSelectedSiteHandler={this.clearSelectedSiteHandler}
-          fullMapZoomHandler={this.fullMapZoomHandler}
-          zoomToSiteHandler={this.zoomToSiteHandler}
-          isLoading={this.state.isLoading}
+          handleDrawerChange={this.handleDrawerChange}
           hideDrawer={this.state.mobileDisplay}
+          isFiltering={this.state.isFiltering}
+          isLoading={this.state.isLoading}
+          metrics={this.state.metrics}
           projectFishFamilies={this.state.projectFishFamilies}
+          showSiteDetail={this.state.showSiteDetail}
+          sidePanelOpen={this.state.sidePanelOpen}
+          siteDetail={this.state.siteDetail}
+          sites={this.state.sites}
         />
         <LeafletMapControl
           fullMapZoomHandler={this.fullMapZoomHandler}

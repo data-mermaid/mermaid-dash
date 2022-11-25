@@ -1,18 +1,32 @@
 import React from 'react';
 
 import styled from 'styled-components/macro';
-import { ThemeProvider } from 'styled-components/macro';
-import { ButtonStyle, MenuLink } from '../styles/MermaidStyledComponents';
 import { theme } from '../constants/theme';
+import { withStyles } from '@material-ui/core/styles';
 import ContactIcon from '@material-ui/icons/Email';
 
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import DownloadDataModal from './DownloadDataModal';
+import { useMediaQuery } from '@material-ui/core';
+import MermaidDashboardTooltip from './MermaidDashboardTooltip';
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
   font-size: small;
 `;
+
+const ContactButtonWrapper = withStyles({
+  root: {
+    margin: '4px',
+    color: theme.cardButton.color.mermaidWhite,
+    backgroundColor: theme.cardButton.bgColor,
+    '&:hover': {
+      backgroundColor: theme.cardButton.bgColor
+    }
+  }
+})(Button);
 
 const SiteDetailSubItemWrapper = styled('div')`
   div {
@@ -97,8 +111,10 @@ const SampleDateDropdown = ({
 const SiteDetailSubItems = ({
   currentSelectedSite,
   markerSelectSites,
-  handleCurrentSelectedSiteChange
+  handleCurrentSelectedSiteChange,
+  sites
 }) => {
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
   const {
     site_name,
     project_name,
@@ -119,14 +135,24 @@ const SiteDetailSubItems = ({
     );
 
   const contactButton = (
-    <ThemeProvider theme={theme.cardButton}>
-      <MenuLink target="_blank" href={contact_link} rel="noopener noreferrer">
-        <ButtonStyle setHover={true}>
+    <ContactButtonWrapper
+      target="_blank"
+      size="small"
+      variant="contained"
+      color="primary"
+      href={contact_link}
+    >
+      {mediaMin1281 ? (
+        <>
           <ContactIconWrapper />
           <Box fontWeight="fontWeightMedium">Contact Admins</Box>
-        </ButtonStyle>
-      </MenuLink>
-    </ThemeProvider>
+        </>
+      ) : (
+        <MermaidDashboardTooltip title="contact admin" placement="bottom">
+          <ContactIconWrapper />
+        </MermaidDashboardTooltip>
+      )}
+    </ContactButtonWrapper>
   );
 
   return (
@@ -134,6 +160,7 @@ const SiteDetailSubItems = ({
       <div>
         <Typography variant="h4">{site_name}</Typography>
         {contactButton}
+        <DownloadDataModal currentSelectedSite={currentSelectedSite} sites={sites} />
       </div>
       <div>
         <Typography variant="body1">{project_name}</Typography>

@@ -10,10 +10,9 @@ import { TextLoader, ChartLoader } from './Loader';
 import CardChartContent from './CardChartContent';
 import CartTextContent from './CardTextContent';
 import LiveCoralCoverModal from './LiveCoralCoverModal';
-import FishFamilyModal from './FishFamilyModal';
-// import DownloadButton from './DownloadButton';
 
 import PropTypes from 'prop-types';
+import ProtocolChartSubHeading from './ProtocolChartSubHeading';
 
 const CardDiv = styled('div')`
   padding: ${props => (props.setPaddingOff ? '0 0 16px 0' : '16px 8px 16px 8px')};
@@ -38,16 +37,15 @@ const cardStyle = makeStyles(theme => ({
 }));
 
 const InformationCard = ({
+  bleachingProtocolSubItems,
   dataPolicy,
-  protocol,
-  protocolName,
-  setToPrivate,
-  privateLabel,
   histogramContent,
   isFiltering,
+  isPrivatePolicy,
+  protocol,
+  protocolName,
   title,
   type,
-  bleachingSubItems,
   pieChartContent,
   textContent,
   projectFishFamilies
@@ -56,62 +54,21 @@ const InformationCard = ({
   const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
 
   const [modalStageOpen, setModalStage] = useState(false);
-  const [fishFamilyModalStageOpen, setFishFamilyModalStageOpen] = useState(false);
 
   const modalToggleHandler = () => setModalStage(!modalStageOpen);
-  const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen);
 
-  const subAttributeItem = !setToPrivate && protocol && (
-    <>
-      <Typography m={1}>Sample units: {protocol.sample_unit_count} </Typography>
-      {protocolName === 'benthiclit' || protocolName === 'benthicpit' ? (
-        <Typography m={1}>
-          Hard coral cover: {protocol.percent_cover_by_benthic_category_avg['Hard coral']}%
-        </Typography>
-      ) : (
-        <Typography m={1}>Reef fish biomass: {protocol.biomass_kgha_avg} kg/ha</Typography>
-      )}
-      {protocolName === 'beltfish' && projectFishFamilies.length > 0 && (
-        <>
-          <Typography m={1} display="inline">
-            Restricted set of fish families surveyed{' '}
-          </Typography>
-          <FishFamilyModal
-            open={fishFamilyModalStageOpen}
-            modalToggleHandler={fishFamilyModalToggleHandler}
-            projectFishFamilies={projectFishFamilies}
-          />
-        </>
-      )}
-    </>
-  );
-
-  const bleachingSubAttributeItem = !setToPrivate && bleachingSubItems && (
-    <>
-      <Typography m={1}>
-        Bleached colonies: {bleachingSubItems.percent_bleached_avg.toFixed(1)}%
-      </Typography>
-      <Typography m={1}>Hard coral genera: {bleachingSubItems.count_genera_avg}</Typography>
-      <Typography m={1}>Observed coral colonies: {bleachingSubItems.count_total_avg}</Typography>
-    </>
-  );
-
-  const protocolSubItem =
-    protocolName === 'bleachingqc' ? bleachingSubAttributeItem : subAttributeItem;
-
-  const subItems = type === 'pieChart' && (
+  const pieChartProtocolSubHeadingItem = type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      {protocolSubItem}
+      <ProtocolChartSubHeading
+        protocolName={protocolName}
+        protocolProperties={protocol}
+        isPrivatePolicy={isPrivatePolicy}
+        bleachingProtocolSubItems={bleachingProtocolSubItems}
+        projectFishFamilies={projectFishFamilies}
+      />
     </Box>
   );
-
-  // eslint-disable-next-line
-  // const downLoadButton = type === 'pieChart' && (
-  //   <Box>
-  //     <DownloadButton setToPrivate={setToPrivate}/>
-  //   </Box>
-  // );
 
   const contentItem =
     type === 'text' ? (
@@ -121,10 +78,9 @@ const InformationCard = ({
         chartType={type}
         protocolName={protocolName}
         pieChartContent={pieChartContent}
-        setToPrivate={setToPrivate}
-        privateLabel={privateLabel}
+        isPrivatePolicy={isPrivatePolicy}
+        title={title}
         histogramContent={histogramContent}
-        isFiltering={isFiltering}
       />
     );
 
@@ -142,10 +98,8 @@ const InformationCard = ({
                 />
               )}
             </Box>
-            {subItems}
+            {pieChartProtocolSubHeadingItem}
           </Box>
-          {/* temporarily Hide download data buttons */}
-          {/* {downLoadButton} */}
         </Box>
         {contentItem}
       </Paper>
@@ -157,18 +111,18 @@ const InformationCard = ({
 };
 
 InformationCard.propTypes = {
+  bleachingProtocolSubItems: PropTypes.object,
   dataPolicy: PropTypes.string,
+  histogramContent: PropTypes.array,
+  isFiltering: PropTypes.bool,
+  isPrivatePolicy: PropTypes.bool,
+  pieChartContent: PropTypes.array,
+  projectFishFamilies: PropTypes.array,
   protocol: PropTypes.object,
   protocolName: PropTypes.string,
-  setToPrivate: PropTypes.bool,
-  privateLabel: PropTypes.string,
-  histogramContent: PropTypes.array,
-  title: PropTypes.string,
-  type: PropTypes.string,
-  bleachingSubItems: PropTypes.object,
-  pieChartContent: PropTypes.array,
   textContent: PropTypes.object,
-  classes: PropTypes.object
+  title: PropTypes.string,
+  type: PropTypes.string
 };
 
 export default InformationCard;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components/macro';
@@ -17,7 +17,8 @@ import SiteNote from './SiteNote';
 import InformationCard from './InformationCard';
 import { TextLoader } from './Loader';
 import { defaultPieChartContent } from '../constants/sample-data';
-import { protocolsArray, bleachingCategories } from '../constants/transect-protocols';
+import { chartContentProperties, chartTitles } from '../constants/transect-protocols';
+import getChartContent from '../lib/chart-helpers';
 
 const SiteSummaryWrapper = styled('div')`
   padding: ${props => (props.mediaMax960 ? '0 8px 0px 8px' : '16px 8px 50px 8px')};
@@ -30,7 +31,7 @@ const SiteInfoWrapper = styled(Paper)`
   border-radius: 0;
 `;
 
-const SiteDetail = ({ selectSite, projectFishFamilies }) => {
+const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
   const mediaMax960 = useMediaQuery('(max-width:960px');
   const [currentSelectedSite, setCurrentSelectedSite] = useState(selectSite[0]);
 
@@ -73,62 +74,46 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
     </Box>
   );
 
-  const siteChartCards = protocolsArray.map(({ name, property, title, type }) => {
-    const bleachingProtocol = name === 'bleachingqc';
-    const transectName = bleachingProtocol ? property : name;
-    const loadedSiteProtocol = currentSelectedSite && currentSelectedSite.protocols[transectName];
-    const bleachingSubItems =
-      currentSelectedSite && currentSelectedSite.protocols['colonies_bleached'];
+  const siteChartCards = useMemo(() => {
+    const selectedSiteProtocols = currentSelectedSite?.protocols;
+    const bleachingProtocolSubItems = selectedSiteProtocols['colonies_bleached'];
 
-    const dataPolicy = loadedSiteProtocol && currentSelectedSite[`data_policy_${name}`];
-    const setToPrivate = dataPolicy === 'private';
+    for (const [protocol, protocolProperties] of Object.entries(selectedSiteProtocols)) {
+      const ignoreProtocols = ['colonies_bleached', 'habitatcomplexity'];
 
-    const generatePrivateLabel = protocolTitle =>
-      `This data is unavailable because ${protocolTitle} Sample Units are set to Private for this project.`;
+      if (!ignoreProtocols.includes(protocol)) {
+        const isBleachingProtocol = protocol === 'quadrat_benthic_percent';
+        const protocolName = isBleachingProtocol ? 'bleachingqc' : protocol;
+        const dataPolicy = currentSelectedSite[`data_policy_${protocolName}`];
+        const isPrivatePolicy = dataPolicy === 'private';
+        const chartTitle = chartTitles[protocol];
+        const chartInfoProperty = chartContentProperties[protocol];
+        const chartInfo = isBleachingProtocol
+          ? protocolProperties
+          : protocolProperties[chartInfoProperty];
 
-    const convertContent = content => {
-      let contentArr = [];
-      for (const item in content) {
-        const newObject = {};
-        newObject[item] = content[item];
-        contentArr.push(newObject);
+        const sourceContent = isPrivatePolicy
+          ? defaultPieChartContent
+          : getChartContent(chartInfo, isBleachingProtocol);
+
+        return (
+          <div key={protocol}>
+            <InformationCard
+              bleachingProtocolSubItems={bleachingProtocolSubItems}
+              dataPolicy={dataPolicy}
+              isPrivatePolicy={isPrivatePolicy}
+              pieChartContent={sourceContent}
+              projectFishFamilies={projectFishFamilies}
+              protocol={protocolProperties}
+              protocolName={protocolName}
+              title={chartTitle}
+              type="pieChart"
+            />
+          </div>
+        );
       }
-
-      return (
-        content &&
-        (bleachingProtocol
-          ? bleachingCategories.map(({ name, type }) => {
-              return { x: name, y: content[type] || 0 };
-            })
-          : contentArr.map(item => {
-              const attribute = Object.keys(item)[0];
-              const value = Object.values(item)[0];
-              return { x: attribute, y: value };
-            }))
-      );
-    };
-
-    const protocolContent =
-      loadedSiteProtocol && (bleachingProtocol ? loadedSiteProtocol : loadedSiteProtocol[property]);
-    const sourceContent = setToPrivate ? defaultPieChartContent : convertContent(protocolContent);
-
-    const cardsComponent = loadedSiteProtocol && (
-      <InformationCard
-        dataPolicy={dataPolicy}
-        protocol={loadedSiteProtocol}
-        protocolName={name}
-        pieChartContent={sourceContent}
-        setToPrivate={setToPrivate}
-        privateLabel={generatePrivateLabel(title)}
-        bleachingSubItems={bleachingSubItems}
-        title={title}
-        type={type}
-        projectFishFamilies={projectFishFamilies}
-      />
-    );
-
-    return <div key={name}>{cardsComponent}</div>;
-  });
+    }
+  }, [currentSelectedSite, projectFishFamilies]);
 
   const siteInfoCard = currentSelectedSite ? (
     <SiteInfoWrapper>
@@ -136,6 +121,7 @@ const SiteDetail = ({ selectSite, projectFishFamilies }) => {
         currentSelectedSite={currentSelectedSite}
         markerSelectSites={selectSite}
         handleCurrentSelectedSiteChange={handleCurrentSelectedSiteChange}
+        sites={sites}
       />
       {siteAdmins}
       {siteOrganizations}

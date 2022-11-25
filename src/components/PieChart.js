@@ -42,7 +42,7 @@ const SvgWrapper = styled('svg')`
     `}
 `;
 
-const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) => {
+const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
   const mediaMin600 = useMediaQuery('(min-width:600px)');
   const mediaMax600 = useMediaQuery('(max-width:600px)');
   const mediaMax960 = useMediaQuery('(max-width:960px');
@@ -69,7 +69,9 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
     .filter(({ y }) => y > 0)
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
 
-  const privateLabelText = setToPrivate && (
+  const privateLabel = `This data is unavailable because ${title} Sample Units are set to Private for this project.`;
+
+  const privateLabelText = isPrivatePolicy && (
     <PrivateTextWrapper
       mediaMax600={mediaMax600}
       mediaMin600_Max960={mediaMin600_Max960}
@@ -85,7 +87,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
       <ChartWrapper
         mediaMin600_Max960={mediaMin600_Max960}
         mediaMax1280={mediaMax1280}
-        policy={setToPrivate}
+        policy={isPrivatePolicy}
       >
         <VictoryPie
           animate={{
@@ -111,8 +113,8 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
               style={{ textTransform: 'capitalize' }}
             />
           }
-          colorScale={setToPrivate ? privateColorScale : attributeColorScale}
-          data={setToPrivate ? chartContent : contentData}
+          colorScale={isPrivatePolicy ? privateColorScale : attributeColorScale}
+          data={isPrivatePolicy ? chartContent : contentData}
           events={[
             {
               target: 'data',
@@ -154,7 +156,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
         <SvgWrapper setHeight={mediaMin600_Max960 || !mediaMax1280}>
           <VictoryLegend
             standalone={false}
-            colorScale={setToPrivate ? privateColorScale : attributeColorScale}
+            colorScale={isPrivatePolicy ? privateColorScale : attributeColorScale}
             orientation="horizontal"
             height={mediaMin1281 ? 500 : mediaMin600_Max960 ? 310 : 140}
             itemsPerRow={mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : 2}
@@ -175,7 +177,7 @@ const PieChart = ({ protocolName, chartContent, setToPrivate, privateLabel }) =>
 
 PieChart.propTypes = {
   chartContent: PropTypes.array,
-  setToPrivate: PropTypes.bool,
+  isPrivatePolicy: PropTypes.bool,
   privateLabel: PropTypes.string
 };
 
