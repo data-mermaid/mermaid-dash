@@ -5,6 +5,7 @@
   "rules": {
     "camelcase": "off",
     "no-underscore-dangle": "off",
+    "no-undef": "off",
     "object-shorthand": "off",
     "react/state-in-constructor": "off",
     "react/jsx-props-no-spreading": "off",
