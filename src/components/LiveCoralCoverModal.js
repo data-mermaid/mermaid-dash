@@ -1,16 +1,17 @@
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import HelpIcon from '@material-ui/icons/Help';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import HelpIcon from '@material-ui/icons/Help'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import MuiDialogActions from '@material-ui/core/DialogActions'
 
-import { DialogText } from '../styles/MermaidStyledComponents';
-import ModalContent from './ModalContent';
-import { color } from '../constants/theme';
-import MermaidDashboardTooltip from './MermaidDashboardTooltip';
+import { DialogHeader, DialogText, DialogTitle } from '../styles/MermaidStyledComponents'
+import ModalContent from './ModalContent'
+import { color } from '../constants/theme'
+import MermaidDashboardTooltip from './MermaidDashboardTooltip'
 
 const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
   const clickToViewModal = (
@@ -19,19 +20,19 @@ const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
         <HelpIcon style={{ color: color.mermaidDarkBlue, fontSize: '30px' }} />
       </IconButton>
     </MermaidDashboardTooltip>
-  );
+  )
 
   return (
     <>
       {clickToViewModal}
       <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>Live Coral Cover</DialogText>
+          <DialogTitle>Live Coral Cover</DialogTitle>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
           <DialogText>
             Live coral cover maintains coral reef growth through carbonate production. Studies have
-            shown that a minimum of >10% hard coral cover is required for net-positive carbonate
+            shown that a minimum of &gt;10% hard coral cover is required for net-positive carbonate
             production. A precautionary threshold to maintain biodiversity, structural complexity
             and fisheries production is ~30% live coral cover. Analyses are currently underway to
             test and validate these thresholds. The coral cover indicator (and other indicators
@@ -45,7 +46,7 @@ const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
             indicators will support conservation and management interventions to mitigate threats
             and maintain reefs above critical functioning thresholds.
           </DialogText>
-          <DialogText dialogHeader={true}>References:</DialogText>
+          <DialogHeader>References:</DialogHeader>
           <DialogText>
             {'- '}
             <a
@@ -58,28 +59,28 @@ const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
           </DialogText>
           <DialogText>
             {'- '}
-            Darling et al. “Social–environmental drivers inform strategic management of coral reefs
-            in the Anthropocene.” Nature Ecology & Evolution, 2019.
+            Darling et al. &quot;Social–environmental drivers inform strategic management of coral
+            reefs in the Anthropocene.&quot; Nature Ecology & Evolution, 2019.
           </DialogText>
           <DialogText>
             {'- '}
-            McClanahan et al. “Critical thresholds and tangible targets for ecosystem-based
-            management of coral reef fisheries.” PNAS, 2011.
+            McClanahan et al. &quot;Critical thresholds and tangible targets for ecosystem-based
+            management of coral reef fisheries.&quot; PNAS, 2011.
           </DialogText>
           <DialogText>
             {'- '}
-            McClanahan et al. “Global baselines and benchmarks for fish biomass: comparing remote
-            reefs and fisheries closures.” MEPS, 2019
+            McClanahan et al. &quot;Global baselines and benchmarks for fish biomass: comparing
+            remote reefs and fisheries closures.&quot; MEPS, 2019
           </DialogText>
           <DialogText>
             {'- '}
-            Perry et al. "Caribbean-wide decline in carbonate production threatens coral reef
-            growth". Nature Communications, 2013.
+            Perry et al. &quot;Caribbean-wide decline in carbonate production threatens coral reef
+            growth&quot;. Nature Communications, 2013.
           </DialogText>
           <DialogText>
             {'- '}
-            Perry et al. "Loss of coral reef growth capacity to track future increases in sea
-            level". Nature, 2018.
+            Perry et al. &quot;Loss of coral reef growth capacity to track future increases in sea
+            level&quot;. Nature, 2018.
           </DialogText>
         </MuiDialogContent>
         <MuiDialogActions>
@@ -89,7 +90,12 @@ const LiveCoralCoverModal = ({ open, modalToggleHandler }) => {
         </MuiDialogActions>
       </ModalContent>
     </>
-  );
-};
+  )
+}
 
-export default LiveCoralCoverModal;
+LiveCoralCoverModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  modalToggleHandler: PropTypes.func.isRequired,
+}
+
+export default LiveCoralCoverModal

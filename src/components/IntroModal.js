@@ -1,18 +1,19 @@
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import styled from 'styled-components/macro';
+import styled from 'styled-components/macro'
 
-import Button from '@material-ui/core/Button';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import ContactIcon from '@material-ui/icons/Email';
+import Button from '@material-ui/core/Button'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import MuiDialogActions from '@material-ui/core/DialogActions'
+import ContactIcon from '@material-ui/icons/Email'
 
-import Box from '@material-ui/core/Box';
+import Box from '@material-ui/core/Box'
 
-import { DialogText } from '../styles/MermaidStyledComponents';
-import ModalContent from './ModalContent';
-import { color } from '../constants/theme';
+import { DialogText, DialogTitle } from '../styles/MermaidStyledComponents'
+import ModalContent from './ModalContent'
+import { color } from '../constants/theme'
 
 const InlineButtonImage = styled('span')`
   color: white;
@@ -21,17 +22,17 @@ const InlineButtonImage = styled('span')`
   align-items: center;
   justify-content: center;
   padding: 2px 6px 4px 6px;
-`;
+`
 
 const InlineButtonIcon = styled(ContactIcon)`
   font-size: 0.8rem !important;
   margin-right: 4px;
-`;
+`
 
 const InlineButtonText = styled('span')`
   font-size: 12px;
   margin-top: 2px;
-`;
+`
 
 const MenuBoxItem = styled(Box)`
   padding: 16px;
@@ -41,24 +42,24 @@ const MenuBoxItem = styled(Box)`
   @media (max-width: 960px) {
     display: none;
   }
-`;
+`
 
 const IntroModal = ({ open, modalToggleHandler }) => {
-  const clickToViewModal = <MenuBoxItem onClick={modalToggleHandler}>ABOUT</MenuBoxItem>;
+  const clickToViewModal = <MenuBoxItem onClick={modalToggleHandler}>ABOUT</MenuBoxItem>
 
   const contactButton = (
     <InlineButtonImage>
       <InlineButtonIcon />
       <InlineButtonText>Contact Admins</InlineButtonText>
     </InlineButtonImage>
-  );
+  )
 
   return (
     <>
       {clickToViewModal}
       <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>About</DialogText>
+          <DialogTitle>About</DialogTitle>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
           <DialogText>
@@ -83,7 +84,12 @@ const IntroModal = ({ open, modalToggleHandler }) => {
         </MuiDialogActions>
       </ModalContent>
     </>
-  );
-};
+  )
+}
 
-export default IntroModal;
+IntroModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  modalToggleHandler: PropTypes.func.isRequired,
+}
+
+export default IntroModal

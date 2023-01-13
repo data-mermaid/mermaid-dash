@@ -1,46 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components/macro';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
+import PropTypes from 'prop-types'
+import React, { useEffect, useState } from 'react'
+import styled from 'styled-components/macro'
+import DateFnsUtils from '@date-io/date-fns'
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
+import IconButton from '@material-ui/core/IconButton'
+import ClearIcon from '@material-ui/icons/Clear'
+import { filterParamsPropType } from '../lib/mermaidDataPropTypes'
 
 const DatePickerWrapper = styled(DatePicker)`
   width: 100%;
-`;
+`
 const formatDateQuery = date => {
-  const year = date?.getFullYear();
-  const month = date?.getMonth() + 1;
-  const day = date?.getDate();
+  const year = date?.getFullYear()
+  const month = date?.getMonth() + 1
+  const day = date?.getDate()
 
-  return year || month || day ? `${year}-${month}-${day}` : null;
-};
+  return year || month || day ? `${year}-${month}-${day}` : null
+}
 
 const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) => {
-  const [startDate, setStateDate] = useState(filterParams.sample_date_after || null);
-  const [endDate, setEndDate] = useState(filterParams.sample_date_before || null);
+  const [startDate, setStateDate] = useState(filterParams.sample_date_after || null)
+  const [endDate, setEndDate] = useState(filterParams.sample_date_before || null)
 
   useEffect(() => {
     if (startDate && endDate) {
-      const startDateTime = new Date(startDate).getTime();
-      const endDateTime = new Date(endDate).getTime();
-      setDateValidation(startDateTime > endDateTime);
+      const startDateTime = new Date(startDate).getTime()
+      const endDateTime = new Date(endDate).getTime()
+
+      setDateValidation(startDateTime > endDateTime)
     } else {
-      setDateValidation(false);
+      setDateValidation(false)
     }
-  }, [endDate, setDateValidation, startDate]);
+  }, [endDate, setDateValidation, startDate])
 
   const handleClrStartDate = e => {
-    e.stopPropagation();
-    setStateDate(null);
-    addQueryStrings('sample_date_after', '');
-  };
+    e.stopPropagation()
+    setStateDate(null)
+    addQueryStrings('sample_date_after', '')
+  }
 
   const handleClrEndDate = e => {
-    e.stopPropagation();
-    setEndDate(null);
-    addQueryStrings('sample_date_before', '');
-  };
+    e.stopPropagation()
+    setEndDate(null)
+    addQueryStrings('sample_date_before', '')
+  }
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -51,9 +54,10 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
         label="Start Date"
         value={startDate}
         onChange={date => {
-          const dateQuery = formatDateQuery(date);
-          setStateDate(date);
-          addQueryStrings('sample_date_after', dateQuery);
+          const dateQuery = formatDateQuery(date)
+
+          setStateDate(date)
+          addQueryStrings('sample_date_after', dateQuery)
         }}
         InputProps={
           startDate && {
@@ -61,7 +65,7 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
               <IconButton onClick={e => handleClrStartDate(e)}>
                 <ClearIcon />
               </IconButton>
-            )
+            ),
           }
         }
       />
@@ -72,9 +76,10 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
         label="End Date"
         value={endDate}
         onChange={date => {
-          const dateQuery = formatDateQuery(date);
-          setEndDate(date);
-          addQueryStrings('sample_date_before', dateQuery);
+          const dateQuery = formatDateQuery(date)
+
+          setEndDate(date)
+          addQueryStrings('sample_date_before', dateQuery)
         }}
         InputProps={
           endDate && {
@@ -82,12 +87,18 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
               <IconButton onClick={e => handleClrEndDate(e)}>
                 <ClearIcon />
               </IconButton>
-            )
+            ),
           }
         }
       />
     </MuiPickersUtilsProvider>
-  );
-};
+  )
+}
 
-export default DatePickerInputs;
+DatePickerInputs.propTypes = {
+  filterParams: filterParamsPropType.isRequired,
+  addQueryStrings: PropTypes.func.isRequired,
+  setDateValidation: PropTypes.func.isRequired,
+}
+
+export default DatePickerInputs

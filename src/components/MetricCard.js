@@ -1,15 +1,13 @@
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import numberWithCommas from '../lib/number-format';
-import { color } from '../constants/theme';
+import { makeStyles } from '@material-ui/core/styles'
+import styled, { css } from 'styled-components/macro'
 
-import { makeStyles } from '@material-ui/core/styles';
-import styled, { css } from 'styled-components/macro';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Paper from '@material-ui/core/Paper';
-
-import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Paper from '@material-ui/core/Paper'
+import { color } from '../constants/theme'
+import numberWithCommas from '../lib/number-format'
 
 const TitleBoxStyle = styled.div`
   border-top: 0;
@@ -31,7 +29,7 @@ const TitleBoxStyle = styled.div`
     font-weight: bold;
     font-size: 18px;
   }
-`;
+`
 
 const ContentBoxStyle = styled.div`
   color: ${color.mermaidDarkBlue};
@@ -41,12 +39,12 @@ const ContentBoxStyle = styled.div`
     padding: 30px 0px 30px 0;
     font-size: 50px;
   }
-`;
+`
 
 const WrapperMetricCard = styled(Paper)`
   text-align: center;
   border-radius: 4px;
-`;
+`
 
 const cardStyle = makeStyles(theme => ({
   progress: {
@@ -56,40 +54,46 @@ const cardStyle = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       margin: '8px',
       width: '24px !important',
-      height: '24px !important'
-    }
-  }
-}));
+      height: '24px !important',
+    },
+  },
+}))
 
 const MetricCard = ({ content: { title, count }, isLoading, bottomPanelOpen }) => {
-  const classes = cardStyle();
+  const classes = cardStyle()
 
-  const countContent = title === 'Avg Coral Coverage' ? `${count}%` : numberWithCommas(count);
+  const countContent = title === 'Avg Coral Coverage' ? `${count}%` : numberWithCommas(count)
 
-  let contentItem =
+  const contentItem =
     count !== null && count >= 0 && !isLoading ? (
       <ContentBoxStyle bottomPanelOpen={bottomPanelOpen}>{countContent}</ContentBoxStyle>
     ) : (
       <CircularProgress className={classes.progress} />
-    );
+    )
 
   const titleItem = title && (
     <TitleBoxStyle bottomPanelOpen={bottomPanelOpen}>{title}</TitleBoxStyle>
-  );
+  )
 
   return (
     <WrapperMetricCard>
       {contentItem}
       {titleItem}
     </WrapperMetricCard>
-  );
-};
+  )
+}
 
 MetricCard.propTypes = {
-  title: PropTypes.string,
-  count: PropTypes.number,
-  isLoading: PropTypes.bool,
-  bottomPanelOpen: PropTypes.bool
-};
+  content: PropTypes.shape({
+    title: PropTypes.string,
+    count: PropTypes.number,
+  }).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  bottomPanelOpen: PropTypes.bool,
+}
 
-export default MetricCard;
+MetricCard.defaultProps = {
+  bottomPanelOpen: false,
+}
+
+export default MetricCard

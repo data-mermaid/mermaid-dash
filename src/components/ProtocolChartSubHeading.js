@@ -1,20 +1,26 @@
-import { Typography } from '@material-ui/core';
-import React, { useState } from 'react';
-import FishFamilyModal from './FishFamilyModal';
+import PropTypes from 'prop-types'
+import React, { useState } from 'react'
+import { Typography } from '@material-ui/core'
+import FishFamilyModal from './FishFamilyModal'
+import {
+  benthicPitPropType,
+  bleachingPropType,
+  fishbeltPropType,
+} from '../lib/mermaidDataPropTypes'
 
 const ProtocolChartSubHeading = ({
   protocolName,
   protocolProperties,
   isPrivatePolicy,
   bleachingProtocolSubItems,
-  projectFishFamilies
+  projectFishFamilies,
 }) => {
-  const [fishFamilyModalStageOpen, setFishFamilyModalStageOpen] = useState(false);
+  const [fishFamilyModalStageOpen, setFishFamilyModalStageOpen] = useState(false)
 
-  const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen);
+  const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen)
 
   if (isPrivatePolicy || !protocolName) {
-    return <></>;
+    return <></>
   }
 
   if (protocolName === 'beltfish') {
@@ -37,7 +43,7 @@ const ProtocolChartSubHeading = ({
           </>
         )}
       </>
-    );
+    )
   }
 
   if (
@@ -53,7 +59,7 @@ const ProtocolChartSubHeading = ({
           %
         </Typography>
       </>
-    );
+    )
   }
 
   if (protocolName === 'bleachingqc') {
@@ -69,8 +75,29 @@ const ProtocolChartSubHeading = ({
           Observed coral colonies: {bleachingProtocolSubItems.count_total_avg}
         </Typography>
       </>
-    );
+    )
   }
-};
 
-export default ProtocolChartSubHeading;
+  return <></>
+}
+
+ProtocolChartSubHeading.propTypes = {
+  protocolName: PropTypes.string.isRequired,
+  protocolProperties: PropTypes.oneOfType([
+    fishbeltPropType,
+    benthicPitPropType,
+    bleachingPropType,
+  ]),
+  isPrivatePolicy: PropTypes.bool,
+  bleachingProtocolSubItems: bleachingPropType,
+  projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
+}
+
+ProtocolChartSubHeading.defaultProps = {
+  bleachingProtocolSubItems: {},
+  protocolProperties: {},
+  isPrivatePolicy: false,
+  projectFishFamilies: [],
+}
+
+export default ProtocolChartSubHeading

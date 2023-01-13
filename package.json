@@ -34,29 +34,32 @@
     "axios": "^0.21.2",
     "date-fns": "^2.28.0",
     "immer": "^9.0.6",
-    "leaflet": "1.5.1",
+    "leaflet": "1.9.3",
     "leaflet-minimap": "^3.6.1",
-    "leaflet.markercluster": "1.4.1",
+    "leaflet.markercluster": "1.5.3",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-content-loader": "^4.2.2",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^5.0.1",
     "react-select": "^3.0.4",
     "styled-components": "^4.2.0",
     "victory": "^32.3.7"
   },
   "devDependencies": {
+    "@sparkgeo/eslint-config-react": "^0.9.0",
     "babel-plugin-macros": "^2.6.1",
-    "eslint": "^5.16.0",
     "husky": "^2.3.0",
     "lint-staged": "^13.1.0",
     "prettier": "^1.17.1",
     "react-test-renderer": "^16.8.6"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [

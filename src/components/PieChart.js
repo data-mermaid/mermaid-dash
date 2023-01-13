@@ -1,14 +1,15 @@
-import React from 'react';
-import { VictoryPie, VictoryLegend, VictoryTooltip } from 'victory';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import styled, { css } from 'styled-components/macro';
+import React from 'react'
+import { VictoryPie, VictoryLegend, VictoryTooltip } from 'victory'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import styled, { css } from 'styled-components/macro'
 
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 import {
   privateColorScale,
   benthicAttributeColors,
-  fishBeltAttributeColors
-} from '../constants/attribute-colors';
+  fishBeltAttributeColors,
+} from '../constants/attribute-colors'
+import { pieChartContentPropType } from '../lib/mermaidDataPropTypes'
 
 const ChartWrapper = styled('div')`
   width: 100%;
@@ -19,7 +20,7 @@ const ChartWrapper = styled('div')`
   @media (min-width: 600px) and (max-width: 960px) {
     flex-direction: row;
   }
-`;
+`
 
 const PrivateTextWrapper = styled('div')`
   position: relative;
@@ -31,7 +32,7 @@ const PrivateTextWrapper = styled('div')`
   user-select: none;
   text-align: center;
   font-size: large;
-`;
+`
 
 const SvgWrapper = styled('svg')`
   width: 360px;
@@ -40,36 +41,37 @@ const SvgWrapper = styled('svg')`
     css`
       height: 380px;
     `}
-`;
+`
 
 const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
-  const mediaMin600 = useMediaQuery('(min-width:600px)');
-  const mediaMax600 = useMediaQuery('(max-width:600px)');
-  const mediaMax960 = useMediaQuery('(max-width:960px');
-  const mediaMin960 = useMediaQuery('(min-width:960px)');
-  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
-  const mediaMax1280 = useMediaQuery('(max-width:1280px)');
-  const mediaMin600_Max960 = mediaMax960 && mediaMin600;
-  const mediaMin960_Max1280 = mediaMax1280 && mediaMin960;
+  const mediaMin600 = useMediaQuery('(min-width:600px)')
+  const mediaMax600 = useMediaQuery('(max-width:600px)')
+  const mediaMax960 = useMediaQuery('(max-width:960px')
+  const mediaMin960 = useMediaQuery('(min-width:960px)')
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)')
+  const mediaMax1280 = useMediaQuery('(max-width:1280px)')
+  const mediaMin600_Max960 = mediaMax960 && mediaMin600
+  const mediaMin960_Max1280 = mediaMax1280 && mediaMin960
 
   const attributeColors =
-    protocolName === 'beltfish' ? fishBeltAttributeColors : benthicAttributeColors;
-  const attributeCollection = chartContent.map(({ x, y }) => y !== 0 && x);
+    protocolName === 'beltfish' ? fishBeltAttributeColors : benthicAttributeColors
+  const attributeCollection = chartContent.map(({ x, y }) => y !== 0 && x)
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
-    attributeCollection.includes(name)
-  );
-  const attributeColorScale = filteredAttributeCollection.map(({ color }) => color);
+    attributeCollection.includes(name),
+  )
+  const attributeColorScale = filteredAttributeCollection.map(({ color }) => color)
   const contentData = filteredAttributeCollection.map(({ name }) => {
-    const foundAttribute = chartContent.find(({ x }) => x === name);
-    return { x: name, y: foundAttribute.y };
-  });
+    const foundAttribute = chartContent.find(({ x }) => x === name)
 
-  const labelUnit = protocolName === 'beltfish' ? 'kg/ha' : '%';
+    return { x: name, y: foundAttribute.y }
+  })
+
+  const labelUnit = protocolName === 'beltfish' ? 'kg/ha' : '%'
   const legendData = contentData
     .filter(({ y }) => y > 0)
-    .map(({ x }) => ({ name: x, symbol: { type: 'square' } }));
+    .map(({ x }) => ({ name: x, symbol: { type: 'square' } }))
 
-  const privateLabel = `This data is unavailable because ${title} Sample Units are set to Private for this project.`;
+  const privateLabel = `This data is unavailable because ${title} Sample Units are set to Private for this project.`
 
   const privateLabelText = isPrivatePolicy && (
     <PrivateTextWrapper
@@ -79,7 +81,13 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
     >
       {privateLabel}
     </PrivateTextWrapper>
-  );
+  )
+
+  const legendHeightMin600Max960 = mediaMin600_Max960 ? 310 : 140
+  const legendHeight = mediaMin1281 ? 500 : legendHeightMin600Max960
+
+  const legendFontSizeMin600Max960 = mediaMin600_Max960 ? 14 : 11
+  const legendFontSize = mediaMin1281 ? 15 : legendFontSizeMin600Max960
 
   return (
     <>
@@ -91,14 +99,15 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
       >
         <VictoryPie
           animate={{
-            duration: 2000
+            duration: 2000,
           }}
           innerRadius={mediaMax1280 ? 90 : 110}
           height={mediaMax1280 ? 300 : 400}
           width={mediaMax1280 ? 400 : 450}
           padding={mediaMax1280 ? 30 : 50}
           labels={val => {
-            return val.x + '\n' + val.y.toFixed(1) + labelUnit;
+            return `${val.x} 
+            ${val.y.toFixed(1)} ${labelUnit}`
           }}
           labelComponent={
             <VictoryTooltip
@@ -108,7 +117,7 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
               pointerLength={0}
               flyoutStyle={{
                 stroke: 'transparent',
-                fill: 'transparent'
+                fill: 'transparent',
               }}
               style={{ textTransform: 'capitalize' }}
             />
@@ -127,30 +136,30 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
                         style: {
                           fill: 'smoke',
                           opacity: 0.3,
-                          transition: '0.25s ease-in-out'
-                        }
-                      })
+                          transition: '0.25s ease-in-out',
+                        },
+                      }),
                     },
                     {
                       target: 'labels',
-                      mutation: () => ({ active: true, fontSize: 30 })
-                    }
-                  ];
+                      mutation: () => ({ active: true, fontSize: 30 }),
+                    },
+                  ]
                 },
                 onMouseOut: () => {
                   return [
                     {
                       target: 'data',
-                      mutation: () => {}
+                      mutation: () => {},
                     },
                     {
                       target: 'labels',
-                      mutation: () => ({ active: false })
-                    }
-                  ];
-                }
-              }
-            }
+                      mutation: () => ({ active: false }),
+                    },
+                  ]
+                },
+              },
+            },
           ]}
         />
         <SvgWrapper setHeight={mediaMin600_Max960 || !mediaMax1280}>
@@ -158,27 +167,32 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
             standalone={false}
             colorScale={isPrivatePolicy ? privateColorScale : attributeColorScale}
             orientation="horizontal"
-            height={mediaMin1281 ? 500 : mediaMin600_Max960 ? 310 : 140}
+            height={legendHeight}
             itemsPerRow={mediaMin1281 || mediaMin600_Max960 || legendData.length <= 4 ? 1 : 2}
             style={{
               labels: {
-                fontSize: mediaMin1281 ? 15 : mediaMin600_Max960 ? 14 : 11,
+                fontSize: legendFontSize,
                 fontFamily: 'Arial',
-                textTransform: 'capitalize'
-              }
+                textTransform: 'capitalize',
+              },
             }}
             data={legendData}
           />
         </SvgWrapper>
       </ChartWrapper>
     </>
-  );
-};
+  )
+}
 
 PieChart.propTypes = {
-  chartContent: PropTypes.array,
+  chartContent: pieChartContentPropType.isRequired,
   isPrivatePolicy: PropTypes.bool,
-  privateLabel: PropTypes.string
-};
+  protocolName: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+}
 
-export default PieChart;
+PieChart.defaultProps = {
+  isPrivatePolicy: false,
+}
+
+export default PieChart

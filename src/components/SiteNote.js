@@ -1,53 +1,53 @@
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import SiteModal from './SiteModal';
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import SiteModal from './SiteModal'
 
-import PropTypes from 'prop-types';
-
-const MAX_CHAR = 200;
+const MAX_CHAR = 200
 
 const ellipsisHelper = note => {
-  const newNote = note || '';
-  return newNote.length > MAX_CHAR ? newNote.substr(0, MAX_CHAR) + '...' : newNote;
-};
+  const newNote = note || ''
+
+  return newNote.length > MAX_CHAR ? `${newNote.substr(0, MAX_CHAR)}...` : newNote
+}
 
 const SiteNote = ({ currentSelectedSite }) => {
-  const { site_notes, project_notes, management_regimes } = currentSelectedSite;
+  const { site_notes, project_notes, management_regimes } = currentSelectedSite
 
-  let availableNote = '';
+  let availableNote = ''
   const management_regime_notes_length =
     management_regimes &&
     management_regimes
       .map(mr => {
-        return mr.notes ? mr.notes.length : 0;
+        return mr.notes ? mr.notes.length : 0
       })
-      .reduce((acc, val) => acc + val, 0);
+      .reduce((acc, val) => acc + val, 0)
 
-  const siteNoteLengthCheck = site_notes.length > 0,
-    projectNoteLengthCheck = project_notes.length > 0,
-    mrNoteLengthCheck = management_regime_notes_length > 0;
+  const siteNoteLengthCheck = site_notes.length > 0
+  const projectNoteLengthCheck = project_notes.length > 0
+  const mrNoteLengthCheck = management_regime_notes_length > 0
 
   const moreThanOneCombinedNote =
     (siteNoteLengthCheck && projectNoteLengthCheck) ||
     (mrNoteLengthCheck && projectNoteLengthCheck) ||
-    (siteNoteLengthCheck && mrNoteLengthCheck);
+    (siteNoteLengthCheck && mrNoteLengthCheck)
 
   if (projectNoteLengthCheck) {
-    availableNote = project_notes;
+    availableNote = project_notes
   } else if (siteNoteLengthCheck) {
-    availableNote = site_notes;
+    availableNote = site_notes
   } else if (mrNoteLengthCheck) {
     availableNote = management_regimes
       .map(mr => {
-        return mr.notes;
+        return mr.notes
       })
-      .join(', ');
+      .join(', ')
   }
 
-  const readMoreAvailability = availableNote.length > MAX_CHAR || moreThanOneCombinedNote;
-  const note = ellipsisHelper(availableNote);
+  const readMoreAvailability = availableNote.length > MAX_CHAR || moreThanOneCombinedNote
+  const note = ellipsisHelper(availableNote)
 
   return (
     <Box>
@@ -60,15 +60,15 @@ const SiteNote = ({ currentSelectedSite }) => {
         currentSelectedSite={currentSelectedSite}
       />
     </Box>
-  );
-};
+  )
+}
 
 SiteNote.propTypes = {
   currentSelectedSite: PropTypes.shape({
     site_notes: PropTypes.string,
     project_notes: PropTypes.string,
-    management_regimes: PropTypes.array
-  })
-};
+    management_regimes: PropTypes.arrayOf(PropTypes.shape({ notes: PropTypes.string })),
+  }),
+}.isRequired
 
-export default SiteNote;
+export default SiteNote

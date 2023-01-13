@@ -1,4 +1,5 @@
-import React, { createContext, useReducer } from 'react';
+import PropTypes from 'prop-types'
+import React, { createContext, useReducer } from 'react'
 
 const initialHistogramState = [
   { x: 2, y: 0, label: 0 },
@@ -50,24 +51,28 @@ const initialHistogramState = [
   { x: 94, y: 0, label: 0 },
   { x: 96, y: 0, label: 0 },
   { x: 98, y: 0, label: 0 },
-  { x: 100, y: 0, label: 0 }
-];
-const histogramContext = createContext(initialHistogramState);
-const { Provider } = histogramContext;
+  { x: 100, y: 0, label: 0 },
+]
+const HistogramContext = createContext(initialHistogramState)
+const { Provider } = HistogramContext
 
 const HistogramProvider = ({ children }) => {
   const [histogram, dispatch] = useReducer((state, action) => {
     switch (action.type) {
       case 'update':
-        return action.histogram;
+        return action.histogram
       default:
-        throw new Error();
+        throw new Error()
     }
-  }, initialHistogramState);
+  }, initialHistogramState)
 
-  const setHistogram = histogram => dispatch({ type: 'update', histogram });
+  const setHistogram = updatedHistogram => dispatch({ type: 'update', histogram: updatedHistogram })
 
-  return <Provider value={{ histogram, setHistogram, dispatch }}>{children}</Provider>;
-};
+  return <Provider value={{ histogram, setHistogram, dispatch }}>{children}</Provider>
+}
 
-export { histogramContext, HistogramProvider };
+HistogramProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+}
+
+export { HistogramContext, HistogramProvider }

@@ -1,82 +1,84 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react'
 
-import styled from 'styled-components/macro';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import styled from 'styled-components/macro'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import MuiDialogActions from '@material-ui/core/DialogActions'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import { Box, Dialog, useMediaQuery } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import ContactIcon from '@material-ui/icons/Email'
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 
-import Button from '@material-ui/core/Button';
-import { Box, Dialog, useMediaQuery } from '@material-ui/core';
-import { DialogText, MermaidButton } from '../styles/MermaidStyledComponents';
-import ContactIcon from '@material-ui/icons/Email';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import { protocolMethods, pluralizedProtocols } from '../constants/transect-protocols';
-import MermaidDashboardTooltip from './MermaidDashboardTooltip';
+import { DialogText, DialogTitle, MermaidButton } from '../styles/MermaidStyledComponents'
+import { protocolMethods, pluralizedProtocols } from '../constants/transect-protocols'
+import MermaidDashboardTooltip from './MermaidDashboardTooltip'
+import { siteDetailPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
   font-size: small;
-`;
+`
 
 const CloudDownloadIconWrapper = styled(CloudDownloadIcon)`
   padding-right: 5px;
   font-size: small;
-`;
+`
 
 const TableHeadWrapper = styled(TableHead)`
   background-color: lightgrey;
-`;
+`
 
 const TableCellWrapper = styled(TableCell)`
   text-transform: capitalize;
-`;
+`
 
 const DownloadDataModal = ({ currentSelectedSite, sites }) => {
-  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
-  const [open, setOpen] = useState(false);
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)')
+  const [open, setOpen] = useState(false)
 
   const availableProtocols = useMemo(() => {
-    const allSites = sites.map(site => site[1]).flat();
-    const allProtocols = allSites.map(site => Object.keys(site.protocols)[0]);
-    const uniqueAvailableProtocol = [...new Set(allProtocols)];
+    const allSites = sites.map(site => site[1]).flat()
+    const allProtocols = allSites.map(site => Object.keys(site.protocols)[0])
+    const uniqueAvailableProtocol = [...new Set(allProtocols)]
 
     return uniqueAvailableProtocol.reduce((accumulator, protocol) => {
-      const protocolMethod = protocolMethods[protocol];
+      const protocolMethod = protocolMethods[protocol]
 
       if (protocolMethod) {
         const protocolDataPolicy =
-          protocolMethod === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${protocol}`;
+          protocolMethod === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${protocol}`
 
         const protocolInfo = {
           method: protocolMethod,
           policy: currentSelectedSite[protocolDataPolicy],
-          protocol
-        };
-        accumulator.push(protocolInfo);
+          protocol,
+        }
+
+        accumulator.push(protocolInfo)
       }
 
-      return accumulator;
-    }, []);
-  }, [currentSelectedSite, sites]);
+      return accumulator
+    }, [])
+  }, [currentSelectedSite, sites])
 
-  const handleModalOpen = () => setOpen(true);
+  const handleModalOpen = () => setOpen(true)
 
   const handleModalClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleDownloadCSV = protocol => {
-    const protocolToDownload = pluralizedProtocols[protocol];
-    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`;
+    const protocolToDownload = pluralizedProtocols[protocol]
+    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`
 
-    window.open(downloadCSVApi);
-  };
+    window.open(downloadCSVApi)
+  }
 
   const downloadDataButton = (
     <MermaidButton size="small" variant="contained" color="primary" onClick={handleModalOpen}>
@@ -91,7 +93,7 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
         </MermaidDashboardTooltip>
       )}
     </MermaidButton>
-  );
+  )
 
   const downloadCSVButton = protocol => (
     <MermaidButton
@@ -103,7 +105,7 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
       <CloudDownloadIconWrapper />
       <Box fontWeight="fontWeightMedium">Download CSV</Box>
     </MermaidButton>
-  );
+  )
 
   const contactAdminsButton = (
     <MermaidButton
@@ -116,7 +118,7 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
       <ContactIconWrapper />
       <Box fontWeight="fontWeightMedium">Contact Admins</Box>
     </MermaidButton>
-  );
+  )
 
   const methodDownloadTable = (
     <TableContainer>
@@ -143,22 +145,22 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
         </TableBody>
       </Table>
     </TableContainer>
-  );
+  )
 
   return (
     <>
       {downloadDataButton}
       <Dialog open={open} aria-labelledby="download-data-dialog">
         <MuiDialogTitle>
-          <DialogText dialogTitle>{currentSelectedSite.project_name}</DialogText>
+          <DialogTitle>{currentSelectedSite.project_name}</DialogTitle>
         </MuiDialogTitle>
         <MuiDialogContent>
-          <DialogText subtext>Download sample event data in CSV format per method</DialogText>
+          <DialogText>Download sample event data in CSV format per method</DialogText>
           {methodDownloadTable}
-          <DialogText subtext>
+          <DialogText>
             To download raw observation data,{' '}
             <a target="_blank" href={currentSelectedSite.contact_link} rel="noopener noreferrer">
-              contact the project's admins.
+              contact the project&apos;s admins.
             </a>
           </DialogText>
         </MuiDialogContent>
@@ -169,7 +171,12 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
         </MuiDialogActions>
       </Dialog>
     </>
-  );
-};
+  )
+}
 
-export default DownloadDataModal;
+DownloadDataModal.propTypes = {
+  currentSelectedSite: siteDetailPropType.isRequired,
+  sites: sitesPropType.isRequired,
+}
+
+export default DownloadDataModal
