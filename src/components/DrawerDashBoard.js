@@ -11,7 +11,7 @@ import Fade from '@material-ui/core/Fade'
 import Box from '@material-ui/core/Box'
 import PropTypes from 'prop-types'
 
-import { HistogramContext } from '../context/HistogramContext'
+import { HistogramContext } from '../context/histogramContext'
 import MetricCards from './MetricCards'
 import InformationCard from './InformationCard'
 import SiteDetail from './SiteDetail'

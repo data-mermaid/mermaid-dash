@@ -11,7 +11,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandLess'
 import ExpandLessIcon from '@material-ui/icons/ExpandMore'
 import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg'
 
-import { HistogramContext } from '../context/HistogramContext'
+import { HistogramContext } from '../context/histogramContext'
 import { color } from '../constants/theme'
 import { histogram as histogramSummary } from '../constants/summary-information'
 

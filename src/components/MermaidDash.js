@@ -5,7 +5,7 @@ import summary from '../apis/summary'
 import '../customStyles.css'
 import * as leafletProperty from '../constants/leaflet-properties'
 
-import { HistogramContext } from '../context/HistogramContext'
+import { HistogramContext } from '../context/histogramContext'
 import Header from './Header'
 import DrawerDashBoard from './DrawerDashBoard'
 import LeafletMap from './LeafletMap'

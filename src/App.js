@@ -2,7 +2,7 @@ import React from 'react'
 import { Route } from 'react-router-dom'
 
 import MermaidDash from './components/MermaidDash'
-import { HistogramProvider } from './context/HistogramContext'
+import { HistogramProvider } from './context/histogramContext'
 
 function App() {
   return (
