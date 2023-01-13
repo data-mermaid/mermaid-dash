@@ -1,26 +1,26 @@
-import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types'
+import React, { useContext, useState } from 'react'
 
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import styled, { css } from 'styled-components/macro';
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import styled, { css } from 'styled-components/macro'
 
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
-import ExpandMoreIcon from '@material-ui/icons/ExpandLess';
-import ExpandLessIcon from '@material-ui/icons/ExpandMore';
-import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg';
+import Box from '@material-ui/core/Box'
+import IconButton from '@material-ui/core/IconButton'
+import ClearIcon from '@material-ui/icons/Clear'
+import ExpandMoreIcon from '@material-ui/icons/ExpandLess'
+import ExpandLessIcon from '@material-ui/icons/ExpandMore'
+import { ReactComponent as SelectMarkerIcon } from '../styles/Icons/pin.svg'
 
-import Box from '@material-ui/core/Box';
+import { HistogramContext } from '../context/HistogramContext'
+import { color } from '../constants/theme'
+import { histogram as histogramSummary } from '../constants/summary-information'
 
-import { histogramContext } from '../context/histogramContext';
+import MetricCards from './MetricCards'
+import InformationCard from './InformationCard'
+import SiteDetail from './SiteDetail'
+import { siteDetailPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
-import PropTypes from 'prop-types';
-import MetricCards from './MetricCardsContainer';
-import InformationCard from './InformationCard';
-import SiteDetail from './SiteDetail';
-import { histogram as histogramSummary } from '../constants/summary-information';
-import { color } from '../constants/theme';
-
-const bottomPanelStyleProperties = makeStyles(theme => ({
+const bottomPanelStyleProperties = makeStyles(() => ({
   selectedSiteProperty: {
     display: 'flex',
     justifyContent: 'center',
@@ -29,29 +29,29 @@ const bottomPanelStyleProperties = makeStyles(theme => ({
     background: 'white',
     borderRadius: '4px',
     width: '96%',
-    padding: '8px 0'
+    padding: '8px 0',
   },
   selectMarkerIconStyle: {
     width: '14px',
     height: '14px',
-    marginRight: '5px'
+    marginRight: '5px',
   },
   siteNameStyle: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   iconButtonStyle: {
-    padding: '0px'
+    padding: '0px',
   },
   siteControlIconButtonStyle: {
-    padding: '10px'
+    padding: '10px',
   },
   clearIconStyle: {
-    fontSize: '24px'
+    fontSize: '24px',
   },
   expandLessIcon: {
-    color: 'white'
-  }
-}));
+    color: 'white',
+  },
+}))
 
 const BottomPanelContainer = styled('div')`
   position: fixed;
@@ -71,7 +71,7 @@ const BottomPanelContainer = styled('div')`
       overflow-x: hidden;
       overflow-y: overlay;
     `}
-`;
+`
 
 const BottomSummaryPanel = ({
   metrics,
@@ -79,13 +79,14 @@ const BottomSummaryPanel = ({
   showSiteDetail,
   siteDetail,
   clearSelectedSiteHandler,
-  projectFishFamilies
+  projectFishFamilies,
+  sites,
 }) => {
-  const { histogram } = useContext(histogramContext);
-  const classes = bottomPanelStyleProperties();
-  const [open, setOpen] = useState(false);
+  const { histogram } = useContext(HistogramContext)
+  const classes = bottomPanelStyleProperties()
+  const [open, setOpen] = useState(false)
 
-  const toggleExpand = () => setOpen(!open);
+  const toggleExpand = () => setOpen(!open)
 
   const summary = (
     <>
@@ -98,12 +99,12 @@ const BottomSummaryPanel = ({
         />
       )}
     </>
-  );
+  )
 
   const selectedSiteName =
     siteDetail &&
     (open ? (
-      <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} />
+      <SiteDetail selectSite={siteDetail} projectFishFamilies={projectFishFamilies} sites={sites} />
     ) : (
       <Box className={classes.selectedSiteProperty}>
         <SelectMarkerIcon className={classes.selectMarkerIconStyle} />
@@ -114,7 +115,7 @@ const BottomSummaryPanel = ({
           <ClearIcon className={classes.clearIconStyle} />
         </IconButton>
       </Box>
-    ));
+    ))
 
   return (
     <BottomPanelContainer open={open}>
@@ -131,16 +132,27 @@ const BottomSummaryPanel = ({
         </IconButton>
       )}
     </BottomPanelContainer>
-  );
-};
+  )
+}
 
 BottomSummaryPanel.propTypes = {
-  metrics: PropTypes.array,
-  isLoading: PropTypes.bool,
-  histogramContent: PropTypes.array,
-  siteDetail: PropTypes.arrayOf(PropTypes.shape({})),
-  showSiteDetail: PropTypes.bool,
-  clearSelectedSiteHandler: PropTypes.func
-};
+  metrics: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      count: PropTypes.number,
+    }),
+  ).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  siteDetail: PropTypes.arrayOf(siteDetailPropType),
+  showSiteDetail: PropTypes.bool.isRequired,
+  clearSelectedSiteHandler: PropTypes.func.isRequired,
+  projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
+  sites: sitesPropType.isRequired,
+}
 
-export default BottomSummaryPanel;
+BottomSummaryPanel.defaultProps = {
+  projectFishFamilies: [],
+  siteDetail: [],
+}
+
+export default BottomSummaryPanel

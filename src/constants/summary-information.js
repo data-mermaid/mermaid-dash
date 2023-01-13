@@ -1,11 +1,11 @@
-export const drawerWidth = 650;
+export const drawerWidth = 650
 
 export const summary = {
   title: 'Summary Statistics',
   header: 'Summaries are dynamic',
   body: 'Use the map and the filters to explore the data in your areas of interest.',
-  type: 'text'
-};
+  type: 'text',
+}
 
 export const histogram = {
   title: 'Live Coral Cover',
@@ -29,7 +29,7 @@ export const histogram = {
     { hardCorals: 17, sites: 25, label: 25 },
     { hardCorals: 18, sites: 20, label: 20 },
     { hardCorals: 19, sites: 20, label: 20 },
-    { hardCorals: 20, sites: 5, label: 5 }
+    { hardCorals: 20, sites: 5, label: 5 },
   ],
-  type: 'histogramChart'
-};
+  type: 'histogramChart',
+}

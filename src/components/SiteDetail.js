@@ -1,65 +1,64 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import PropTypes from 'prop-types'
+import React, { useState, useEffect, useMemo } from 'react'
+import styled from 'styled-components/macro'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import styled from 'styled-components/macro';
-
-import AdminIcon from '@material-ui/icons/Person';
-import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg';
-
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-
-import PropTypes from 'prop-types';
-import SiteDetailSubItems from './SiteDetailSubItems';
-import CoralAttributes from './CoralAttributes';
-import SiteNote from './SiteNote';
-import InformationCard from './InformationCard';
-import { TextLoader } from './Loader';
-import { defaultPieChartContent } from '../constants/sample-data';
-import { chartContentProperties, chartTitles } from '../constants/transect-protocols';
-import getChartContent from '../lib/chart-helpers';
+import AdminIcon from '@material-ui/icons/Person'
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import Paper from '@material-ui/core/Paper'
+import SiteDetailSubItems from './SiteDetailSubItems'
+import CoralAttributes from './CoralAttributes'
+import SiteNote from './SiteNote'
+import InformationCard from './InformationCard'
+import { TextLoader } from './Loader'
+import { defaultPieChartContent } from '../constants/sample-data'
+import { chartContentProperties, chartTitles } from '../constants/transect-protocols'
+import getChartContent from '../lib/chart-helpers'
+import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg'
+import { sitesPropType } from '../lib/mermaidDataPropTypes'
 
 const SiteSummaryWrapper = styled('div')`
   padding: ${props => (props.mediaMax960 ? '0 8px 0px 8px' : '16px 8px 50px 8px')};
   width: 100%;
-`;
+`
 
 const SiteInfoWrapper = styled(Paper)`
   padding: 16px 16px;
   margin-bottom: 16px;
   border-radius: 0;
-`;
+`
 
 const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
-  const mediaMax960 = useMediaQuery('(max-width:960px');
-  const [currentSelectedSite, setCurrentSelectedSite] = useState(selectSite[0]);
+  const mediaMax960 = useMediaQuery('(max-width:960px')
+  const [currentSelectedSite, setCurrentSelectedSite] = useState(selectSite[0])
 
   useEffect(
     function updateCurrentSelectedSiteInGroup() {
-      setCurrentSelectedSite(selectSite[0]);
+      setCurrentSelectedSite(selectSite[0])
     },
-    [selectSite]
-  );
+    [selectSite],
+  )
 
   const filteredProtocolsForSiteChartCards = useMemo(() => {
-    const ignoreProtocols = ['colonies_bleached', 'habitatcomplexity'];
+    const ignoreProtocols = ['colonies_bleached', 'habitatcomplexity']
 
     return Object.entries(currentSelectedSite?.protocols).filter(
-      protocol => !ignoreProtocols.includes(protocol[0])
-    );
-  }, [currentSelectedSite.protocols]);
+      protocol => !ignoreProtocols.includes(protocol[0]),
+    )
+  }, [currentSelectedSite.protocols])
 
   const bleachingProtocolSubItems = useMemo(() => currentSelectedSite.protocols.colonies_bleached, [
-    currentSelectedSite
-  ]);
+    currentSelectedSite,
+  ])
 
   const handleCurrentSelectedSiteChange = event => {
     const filterSampleEventSite = selectSite.filter(
-      site => site.sample_event_id === event.target.value
-    )[0];
-    setCurrentSelectedSite(filterSampleEventSite);
-  };
+      site => site.sample_event_id === event.target.value,
+    )[0]
+
+    setCurrentSelectedSite(filterSampleEventSite)
+  }
 
   const siteAdmins = currentSelectedSite?.project_admins && (
     <Box borderTop={1} pt={1} display="flex">
@@ -68,12 +67,12 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
         Admins:{' '}
         {currentSelectedSite.project_admins
           .map(admin => {
-            return admin.name;
+            return admin.name
           })
           .join(', ')}
       </Typography>
     </Box>
-  );
+  )
 
   const siteOrganizations = currentSelectedSite?.tags && (
     <Box pt={1} display="flex">
@@ -82,28 +81,28 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
         Organizations:{' '}
         {currentSelectedSite.tags
           .map(organization => {
-            return organization.name;
+            return organization.name
           })
           .join(', ')}
       </Typography>
     </Box>
-  );
+  )
 
   const siteChartCards = filteredProtocolsForSiteChartCards.map(
     ([protocol, protocolProperties]) => {
-      const isBleachingProtocol = protocol === 'quadrat_benthic_percent';
-      const protocolName = isBleachingProtocol ? 'bleachingqc' : protocol;
-      const dataPolicy = currentSelectedSite[`data_policy_${protocolName}`];
-      const isPrivatePolicy = dataPolicy === 'private';
-      const chartTitle = chartTitles[protocol];
-      const chartInfoProperty = chartContentProperties[protocol];
+      const isBleachingProtocol = protocol === 'quadrat_benthic_percent'
+      const protocolName = isBleachingProtocol ? 'bleachingqc' : protocol
+      const dataPolicy = currentSelectedSite[`data_policy_${protocolName}`]
+      const isPrivatePolicy = dataPolicy === 'private'
+      const chartTitle = chartTitles[protocol]
+      const chartInfoProperty = chartContentProperties[protocol]
       const chartInfo = isBleachingProtocol
         ? protocolProperties
-        : protocolProperties[chartInfoProperty];
+        : protocolProperties[chartInfoProperty]
 
       const sourceContent = isPrivatePolicy
         ? defaultPieChartContent
-        : getChartContent(chartInfo, isBleachingProtocol);
+        : getChartContent(chartInfo, isBleachingProtocol)
 
       return (
         <div key={protocol}>
@@ -119,9 +118,9 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
             type="pieChart"
           />
         </div>
-      );
-    }
-  );
+      )
+    },
+  )
 
   const siteInfoCard = currentSelectedSite ? (
     <SiteInfoWrapper>
@@ -140,22 +139,28 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
     <SiteInfoWrapper>
       <TextLoader />
     </SiteInfoWrapper>
-  );
+  )
 
   return (
     <SiteSummaryWrapper mediaMax960={mediaMax960}>
       {siteInfoCard}
       {siteChartCards}
     </SiteSummaryWrapper>
-  );
-};
+  )
+}
 
 SiteDetail.propTypes = {
+  projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
   selectSite: PropTypes.arrayOf(
     PropTypes.shape({
-      site_id: PropTypes.string.isRequired
-    })
-  )
-};
+      site_id: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  sites: sitesPropType.isRequired,
+}
 
-export default SiteDetail;
+SiteDetail.defaultProps = {
+  projectFishFamilies: [],
+}
+
+export default SiteDetail

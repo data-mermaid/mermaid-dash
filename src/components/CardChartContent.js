@@ -1,10 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import Box from '@material-ui/core/Box';
-import PropTypes from 'prop-types';
+import Box from '@material-ui/core/Box'
+import PropTypes from 'prop-types'
 
-import BarChart from './BarChart';
-import PieChart from './PieChart';
+import BarChart from './BarChart'
+import PieChart from './PieChart'
+import { histogramContentPropType, pieChartContentPropType } from '../lib/mermaidDataPropTypes'
 
 const CardChartContent = ({
   chartType,
@@ -12,7 +13,7 @@ const CardChartContent = ({
   pieChartContent,
   isPrivatePolicy,
   title,
-  histogramContent
+  histogramContent,
 }) => {
   const chart =
     chartType === 'histogramChart' ? (
@@ -24,17 +25,26 @@ const CardChartContent = ({
         isPrivatePolicy={isPrivatePolicy}
         title={title}
       />
-    );
+    )
 
-  return <Box>{chart}</Box>;
-};
+  return <Box>{chart}</Box>
+}
 
 CardChartContent.propTypes = {
-  chartType: PropTypes.string,
-  pieChartContent: PropTypes.array,
+  chartType: PropTypes.string.isRequired,
+  protocolName: PropTypes.string,
+  title: PropTypes.string,
   isPrivatePolicy: PropTypes.bool,
-  privateLabel: PropTypes.string,
-  histogramContent: PropTypes.array
-};
+  pieChartContent: pieChartContentPropType,
+  histogramContent: histogramContentPropType,
+}
 
-export default CardChartContent;
+CardChartContent.defaultProps = {
+  protocolName: undefined,
+  title: undefined,
+  isPrivatePolicy: undefined,
+  pieChartContent: [],
+  histogramContent: [],
+}
+
+export default CardChartContent

@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import React from 'react'
+import { Route } from 'react-router-dom'
 
-import MermaidDash from './components/MermaidDash';
-import { HistogramProvider } from './context/histogramContext';
+import MermaidDash from './components/MermaidDash'
+import { HistogramProvider } from './context/HistogramContext'
 
-class App extends Component {
-  render() {
-    return (
-      <HistogramProvider>
-        <Route path="/" component={MermaidDash} />
-      </HistogramProvider>
-    );
-  }
+function App() {
+  return (
+    <HistogramProvider>
+      <Route path="/" component={MermaidDash} />
+    </HistogramProvider>
+  )
 }
 
-export default App;
+export default App

@@ -1,17 +1,16 @@
-import React from 'react';
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryTooltip, VictoryLine } from 'victory';
-import { color } from '../constants/theme';
-
-import PropTypes from 'prop-types';
+import React from 'react'
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryTooltip, VictoryLine } from 'victory'
+import { color } from '../constants/theme'
+import { histogramContentPropType } from '../lib/mermaidDataPropTypes'
 
 const calculateYs = content => {
-  return content.reduce((total, content) => {
-    return total + content.y;
-  }, 0);
-};
+  return content.reduce((total, info) => {
+    return total + info.y
+  }, 0)
+}
 
 const BarChart = ({ chartContent }) => {
-  const nonZeroContent = calculateYs(chartContent);
+  const nonZeroContent = calculateYs(chartContent)
 
   return (
     <VictoryChart domainPadding={3}>
@@ -20,7 +19,7 @@ const BarChart = ({ chartContent }) => {
         tickValues={[11, 21, 31, 41, 51, 61, 71, 81, 91, 100]}
         tickFormat={['10', '20', '30', '40', '50', '60', '70', '80', '90', '100']}
         style={{
-          tickLabels: { fontSize: 10, padding: 8 }
+          tickLabels: { fontSize: 10, padding: 8 },
         }}
       />
 
@@ -29,7 +28,7 @@ const BarChart = ({ chartContent }) => {
         label="Number of Sites"
         tickValues={nonZeroContent > 0 ? [] : ['0', '20', '40', '60']}
         style={{
-          tickLabels: { fontSize: 10, padding: 5 }
+          tickLabels: { fontSize: 10, padding: 5 },
         }}
       />
 
@@ -38,13 +37,22 @@ const BarChart = ({ chartContent }) => {
         barWidth={6}
         style={{
           data: {
-            fill: data => (data.x > 10 ? (data.x < 31 ? '#FFA500' : '#038004') : '#d7191c')
-          }
+            fill: data => {
+              if (data.x < 11) {
+                return '#038004'
+              }
+              if (data.x > 10 && data.x < 31) {
+                return '#FFA500'
+              }
+
+              return '#d7191c'
+            },
+          },
         }}
         animate={{
           duration: 1000,
           onLoad: { duration: 500 },
-          onEnter: { duration: 400, before: () => ({ y: 0 }) }
+          onEnter: { duration: 400, before: () => ({ y: 0 }) },
         }}
         labelComponent={
           <VictoryTooltip
@@ -54,11 +62,11 @@ const BarChart = ({ chartContent }) => {
               stroke: color.mermaidDarkBlue,
               strokeWidth: 2,
               fill: 'skyblue',
-              opacity: 0.75
+              opacity: 0.75,
             }}
             style={{
               padding: 6,
-              fontSize: 12
+              fontSize: 12,
             }}
           />
         }
@@ -70,28 +78,28 @@ const BarChart = ({ chartContent }) => {
                 return [
                   {
                     target: 'data',
-                    mutation: () => ({ style: { fill: color.mermaidDarkBlue } })
+                    mutation: () => ({ style: { fill: color.mermaidDarkBlue } }),
                   },
                   {
                     target: 'labels',
-                    mutation: () => ({ active: true })
-                  }
-                ];
+                    mutation: () => ({ active: true }),
+                  },
+                ]
               },
               onMouseOut: () => {
                 return [
                   {
                     target: 'data',
-                    mutation: () => {}
+                    mutation: () => {},
                   },
                   {
                     target: 'labels',
-                    mutation: () => ({ active: false })
-                  }
-                ];
-              }
-            }
-          }
+                    mutation: () => ({ active: false }),
+                  },
+                ]
+              },
+            },
+          },
         ]}
         x="x"
         y="y"
@@ -105,11 +113,11 @@ const BarChart = ({ chartContent }) => {
         style={{ data: { stroke: color.mermaidDarkBlue, strokeDasharray: [1, 2] } }}
       />
     </VictoryChart>
-  );
-};
+  )
+}
 
 BarChart.propTypes = {
-  chartContent: PropTypes.array
-};
+  chartContent: histogramContentPropType.isRequired,
+}
 
-export default BarChart;
+export default BarChart

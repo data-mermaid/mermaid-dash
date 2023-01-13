@@ -1,24 +1,25 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import PropTypes from 'prop-types'
+import React from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
 
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MuiDialogContent from '@material-ui/core/DialogContent'
+import MuiDialogActions from '@material-ui/core/DialogActions'
 
-import { DialogText } from '../styles/MermaidStyledComponents';
-import ModalContent from './ModalContent';
+import { DialogText, DialogTitle } from '../styles/MermaidStyledComponents'
+import ModalContent from './ModalContent'
 
-const modalStyles = makeStyles(theme => ({
+const modalStyles = makeStyles(() => ({
   familyRecordInfoStyle: {
     cursor: 'pointer',
-    color: '#2614AF'
-  }
-}));
+    color: '#2614AF',
+  },
+}))
 
 const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
-  const classes = modalStyles();
+  const classes = modalStyles()
 
   const clickToViewModal = (
     <Typography
@@ -28,24 +29,24 @@ const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
     >
       [View]
     </Typography>
-  );
+  )
 
   const fishFamiliesContent = projectFishFamilies.map(family => {
-    return <li key={family}>{family}</li>;
-  });
+    return <li key={family}>{family}</li>
+  })
 
   return (
     <>
       {clickToViewModal}
       <ModalContent open={open} modalToggleHandler={modalToggleHandler}>
         <MuiDialogTitle>
-          <DialogText dialogTitle={true}>Fish Families Surveyed</DialogText>
+          <DialogTitle>Fish Families Surveyed</DialogTitle>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
-          <DialogText subtext>
-            This project's biomass reflects only fish from a restricted set of families; by design,
-            not all fish were recorded by this project's surveyors. Biomass should be compared to
-            that of other projects with care.
+          <DialogText>
+            This project&apos;s biomass reflects only fish from a restricted set of families; by
+            design, not all fish were recorded by this project&apos;s surveyors. Biomass should be
+            compared to that of other projects with care.
           </DialogText>
           <ul>{fishFamiliesContent}</ul>
         </MuiDialogContent>
@@ -56,7 +57,17 @@ const FishFamilyModal = ({ open, modalToggleHandler, projectFishFamilies }) => {
         </MuiDialogActions>
       </ModalContent>
     </>
-  );
-};
+  )
+}
 
-export default FishFamilyModal;
+FishFamilyModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  modalToggleHandler: PropTypes.func.isRequired,
+  projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
+}
+
+FishFamilyModal.defaultProps = {
+  projectFishFamilies: [],
+}
+
+export default FishFamilyModal

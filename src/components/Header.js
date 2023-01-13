@@ -1,47 +1,46 @@
-import React, { useState } from 'react';
+import PropTypes from 'prop-types'
+import React, { useState } from 'react'
 
-import PropTypes from 'prop-types';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Box from '@material-ui/core/Box'
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Box from '@material-ui/core/Box';
-
-import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg';
-import { MenuLink } from '../styles/MermaidStyledComponents';
-import HeaderMenu from './HeaderMenu';
-import IntroModal from './IntroModal';
-import headerContent from '../constants/header-content';
-import { color } from '../constants/theme';
+import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg'
+import { MenuLink } from '../styles/MermaidStyledComponents'
+import HeaderMenu from './HeaderMenu'
+import IntroModal from './IntroModal'
+import headerContent from '../constants/header-content'
+import { color } from '../constants/theme'
 
 const headerStyles = makeStyles(theme => ({
   appBarProperty: {
     position: 'fixed',
     background: color.mermaidDark,
     height: 49,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   toolBarProperty: {
-    padding: 0
+    padding: 0,
   },
   menuIconProperty: {
-    margin: 0
+    margin: 0,
   },
   hide: {
-    display: 'none'
+    display: 'none',
   },
   headerItemStyle: {
     padding: theme.spacing(2),
     fontSize: '12px',
     fontWeight: '800',
     [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  }
-}));
+      display: 'none',
+    },
+  },
+}))
 
 const HeaderItem = ({ children, link }) => {
-  const classes = headerStyles();
+  const classes = headerStyles()
 
   return (
     <Box className={classes.headerItemStyle}>
@@ -49,38 +48,38 @@ const HeaderItem = ({ children, link }) => {
         {children}
       </MenuLink>
     </Box>
-  );
-};
+  )
+}
 
 const HeaderItems = headerContent.map(({ name, link }) => {
   return (
     <HeaderItem key={name} link={link}>
       {name}
     </HeaderItem>
-  );
-});
+  )
+})
 
 const Header = () => {
-  const classes = headerStyles();
-  const introModalStage = JSON.parse(sessionStorage.getItem('intro')) === false ? false : true;
-  const [modalStageOpen, setModalStage] = useState(introModalStage);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const classes = headerStyles()
+  const introModalStage = JSON.parse(window.sessionStorage.getItem('intro')) !== false
+  const [modalStageOpen, setModalStage] = useState(introModalStage)
+  const [anchorEl, setAnchorEl] = useState(null)
 
   const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const modalToggleHandler = () => {
-    setModalStage(!modalStageOpen);
-    sessionStorage.setItem('intro', !modalStageOpen);
+    setModalStage(!modalStageOpen)
+    window.sessionStorage.setItem('intro', !modalStageOpen)
     if (!modalStageOpen) {
-      setAnchorEl(null);
+      setAnchorEl(null)
     }
-  };
+  }
 
   return (
     <AppBar className={classes.appBarProperty}>
@@ -98,12 +97,12 @@ const Header = () => {
         />
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-Header.propTypes = {
-  handleDrawerChange: PropTypes.func,
-  classes: PropTypes.object
-};
+HeaderItem.propTypes = {
+  children: PropTypes.node.isRequired,
+  link: PropTypes.string.isRequired,
+}
 
-export default Header;
+export default Header

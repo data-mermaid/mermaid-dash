@@ -1,79 +1,83 @@
-import React from 'react';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { makeStyles, withStyles } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import HelpIcon from '@material-ui/icons/Help';
-import LockIcon from '@material-ui/icons/Lock';
-import MailIcon from '@material-ui/icons/Mail';
-import { MenuLink } from '../styles/MermaidStyledComponents';
+/* eslint-disable react/jsx-props-no-spreading */
+import PropTypes from 'prop-types'
+import React from 'react'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import { makeStyles, withStyles } from '@material-ui/core'
+import EditIcon from '@material-ui/icons/Edit'
+import HelpIcon from '@material-ui/icons/Help'
+import LockIcon from '@material-ui/icons/Lock'
+import MailIcon from '@material-ui/icons/Mail'
+import { MenuLink } from '../styles/MermaidStyledComponents'
 
-import headerContent from '../constants/header-content';
+import headerContent from '../constants/header-content'
 
-const headerMenuItemsProperties = makeStyles(theme => ({
+const headerMenuItemsProperties = makeStyles(() => ({
   menuIconProperty: {
     width: '20px',
     height: '20px',
-    margin: '0 8px 2px 0'
-  }
-}));
+    margin: '0 8px 2px 0',
+  },
+}))
 
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5',
-    marginLeft: '9px'
-  }
+    marginLeft: '9px',
+  },
 })(props => (
   <Menu
     elevation={4}
     getContentAnchorEl={null}
     anchorOrigin={{
       vertical: 'bottom',
-      horizontal: 'center'
+      horizontal: 'center',
     }}
     {...props}
   />
-));
+))
 
-const StyledMenuItem = withStyles(theme => ({
+const StyledMenuItem = withStyles(() => ({
   root: {
     display: 'flex',
-    alignItems: 'center'
-  }
-}))(MenuItem);
+    alignItems: 'center',
+  },
+}))(MenuItem)
 
 const MenuIcon = ({ name }) => {
-  const { menuIconProperty } = headerMenuItemsProperties();
-  let Icon;
+  const { menuIconProperty } = headerMenuItemsProperties()
+
+  let Icon
 
   switch (name) {
     case 'ABOUT':
-      Icon = HelpIcon;
-      break;
+      Icon = HelpIcon
+      break
     case 'PRIVACY':
-      Icon = LockIcon;
-      break;
+      Icon = LockIcon
+      break
     case 'CONTACT':
-      Icon = MailIcon;
-      break;
+      Icon = MailIcon
+      break
     default:
-      Icon = EditIcon;
-      break;
+      Icon = EditIcon
+      break
   }
-  return <Icon className={menuIconProperty} />;
-};
+
+  return <Icon className={menuIconProperty} />
+}
 
 const HeaderMenuItems = ({ anchorEl, handleClose, modalToggleHandler }) => {
   const MenuItems = headerContent.map(({ name, link }) => {
     return (
-      <MenuLink target="_blank" href={link} rel="noopener noreferrer" menuButton={true} key={name}>
+      <MenuLink target="_blank" href={link} rel="noopener noreferrer" menuButton key={name}>
         <StyledMenuItem onClick={handleClose}>
           <MenuIcon name={name} />
           {name}
         </StyledMenuItem>
       </MenuLink>
-    );
-  });
+    )
+  })
 
   return (
     <StyledMenu
@@ -84,12 +88,26 @@ const HeaderMenuItems = ({ anchorEl, handleClose, modalToggleHandler }) => {
       onClose={handleClose}
     >
       <StyledMenuItem onClick={modalToggleHandler}>
-        <MenuIcon name={'ABOUT'} />
-        {'ABOUT'}
+        <MenuIcon name="ABOUT" />
+        ABOUT
       </StyledMenuItem>
       {MenuItems}
     </StyledMenu>
-  );
-};
+  )
+}
 
-export default HeaderMenuItems;
+MenuIcon.propTypes = {
+  name: PropTypes.string.isRequired,
+}
+
+HeaderMenuItems.propTypes = {
+  anchorEl: PropTypes.instanceOf(Element),
+  handleClose: PropTypes.func.isRequired,
+  modalToggleHandler: PropTypes.func.isRequired,
+}
+
+HeaderMenuItems.defaultProps = {
+  anchorEl: null,
+}
+
+export default HeaderMenuItems

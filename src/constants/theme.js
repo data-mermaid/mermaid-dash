@@ -7,8 +7,8 @@ export const color = {
   mermaidNotAllowed: '#9C9C9C',
   mermaidGray: '#585858',
   mermaidWhiteGray: '#F4F4F4',
-  mermaidDarkGray: '#BBB'
-};
+  mermaidDarkGray: '#BBB',
+}
 
 export const theme = {
   backButton: {
@@ -19,14 +19,14 @@ export const theme = {
     padding: '5px',
     flexDirection: 'column',
     initialTranslate: 'translate(0%)',
-    hoverTranslate: 'translate(-5%, 0%)'
+    hoverTranslate: 'translate(-5%, 0%)',
   },
   cardButton: {
     color: color.mermaidWhite,
     bgColor: color.mermaidDarkBlue,
     notAllowedBgColor: color.mermaidNotAllowed,
     flexDirection: 'row',
-    padding: '10px'
+    padding: '10px',
   },
   mapControl: {
     color: color.mermaidGray,
@@ -36,7 +36,7 @@ export const theme = {
     disabledBgColor: color.mermaidWhiteGray,
     padding: '0',
     width: '32px',
-    height: '32px'
+    height: '32px',
   },
   sidePanelControl: {
     color: color.mermaidGray,
@@ -44,6 +44,6 @@ export const theme = {
     borderColor: color.mermaidWhiteGray,
     padding: '0',
     width: '48px',
-    height: '48px'
-  }
-};
+    height: '48px',
+  },
+}
