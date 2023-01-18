@@ -1,21 +1,23 @@
-import React from 'react';
+import PropTypes from 'prop-types'
+import React from 'react'
 
-import styled from 'styled-components/macro';
-import { theme } from '../constants/theme';
-import { withStyles } from '@material-ui/core/styles';
-import ContactIcon from '@material-ui/icons/Email';
+import styled from 'styled-components/macro'
+import { withStyles } from '@material-ui/core/styles'
+import { useMediaQuery } from '@material-ui/core'
 
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import DownloadDataModal from './DownloadDataModal';
-import { useMediaQuery } from '@material-ui/core';
-import MermaidDashboardTooltip from './MermaidDashboardTooltip';
+import ContactIcon from '@material-ui/icons/Email'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import { theme } from '../constants/theme'
+import DownloadDataModal from './DownloadDataModal'
+import MermaidDashboardTooltip from './MermaidDashboardTooltip'
+import { siteDetailPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
 const ContactIconWrapper = styled(ContactIcon)`
   padding-right: 5px;
   font-size: small;
-`;
+`
 
 const ContactButtonWrapper = withStyles({
   root: {
@@ -23,10 +25,10 @@ const ContactButtonWrapper = withStyles({
     color: theme.cardButton.color.mermaidWhite,
     backgroundColor: theme.cardButton.bgColor,
     '&:hover': {
-      backgroundColor: theme.cardButton.bgColor
-    }
-  }
-})(Button);
+      backgroundColor: theme.cardButton.bgColor,
+    },
+  },
+})(Button)
 
 const SiteDetailSubItemWrapper = styled('div')`
   div {
@@ -38,7 +40,7 @@ const SiteDetailSubItemWrapper = styled('div')`
       }
     }
   }
-`;
+`
 
 const SampleDateDropdownWrapper = styled('div')`
   padding-bottom: 5px;
@@ -47,7 +49,7 @@ const SampleDateDropdownWrapper = styled('div')`
     font-size: 1rem;
     padding-right: 5px;
   }
-`;
+`
 
 const formatDate = siteDate => {
   const months = [
@@ -62,27 +64,28 @@ const formatDate = siteDate => {
     'September',
     'October',
     'November',
-    'December'
-  ];
+    'December',
+  ]
 
-  const dateParts = siteDate.split('-');
-  const year = dateParts[0];
-  const month = months[Number(dateParts[1]) - 1];
-  const date = dateParts[2];
+  const dateParts = siteDate.split('-')
+  const year = dateParts[0]
+  const month = months[Number(dateParts[1]) - 1]
+  const date = dateParts[2]
 
-  return `${month} ${date}, ${year}`;
-};
+  return `${month} ${date}, ${year}`
+}
 
 const SampleDateDropdown = ({
   currentSelectedSite,
   markerSelectSites,
-  handleCurrentSelectedSiteChange
+  handleCurrentSelectedSiteChange,
 }) => {
-  const sampleDateCounts = {};
+  const sampleDateCounts = {}
+
   for (const event of markerSelectSites) {
     sampleDateCounts[event.sample_date] = sampleDateCounts[event.sample_date]
       ? sampleDateCounts[event.sample_date] + 1
-      : 1;
+      : 1
   }
 
   const sampleDates = markerSelectSites.map(site => {
@@ -91,37 +94,39 @@ const SampleDateDropdown = ({
         {formatDate(site.sample_date)}
         {sampleDateCounts[site.sample_date] > 1 && ` - ${site.management_name}`}
       </option>
-    );
-  });
+    )
+  })
 
   return (
     <SampleDateDropdownWrapper>
-      <label htmlFor="sample-date-select">Sample date:</label>
-      <select
-        id="sample-date-select"
-        value={currentSelectedSite.sample_event_id}
-        onChange={handleCurrentSelectedSiteChange}
-      >
-        {sampleDates}
-      </select>
+      <label htmlFor="sample-date-select">
+        Sample date:
+        <select
+          id="sample-date-select"
+          value={currentSelectedSite.sample_event_id}
+          onChange={handleCurrentSelectedSiteChange}
+        >
+          {sampleDates}
+        </select>
+      </label>
     </SampleDateDropdownWrapper>
-  );
-};
+  )
+}
 
 const SiteDetailSubItems = ({
   currentSelectedSite,
   markerSelectSites,
   handleCurrentSelectedSiteChange,
-  sites
+  sites,
 }) => {
-  const mediaMin1281 = useMediaQuery('(min-width:1281px)');
+  const mediaMin1281 = useMediaQuery('(min-width:1281px)')
   const {
     site_name,
     project_name,
     management_name,
     contact_link,
-    sample_date
-  } = currentSelectedSite;
+    sample_date,
+  } = currentSelectedSite
 
   const siteDate =
     markerSelectSites.length > 1 ? (
@@ -132,7 +137,7 @@ const SiteDetailSubItems = ({
       />
     ) : (
       <Typography variant="body1">{formatDate(sample_date)}</Typography>
-    );
+    )
 
   const contactButton = (
     <ContactButtonWrapper
@@ -153,7 +158,7 @@ const SiteDetailSubItems = ({
         </MermaidDashboardTooltip>
       )}
     </ContactButtonWrapper>
-  );
+  )
 
   return (
     <SiteDetailSubItemWrapper>
@@ -168,7 +173,20 @@ const SiteDetailSubItems = ({
         {siteDate}
       </div>
     </SiteDetailSubItemWrapper>
-  );
-};
+  )
+}
 
-export default SiteDetailSubItems;
+SampleDateDropdown.propTypes = {
+  currentSelectedSite: siteDetailPropType.isRequired,
+  markerSelectSites: PropTypes.arrayOf(siteDetailPropType).isRequired,
+  handleCurrentSelectedSiteChange: PropTypes.func.isRequired,
+}
+
+SiteDetailSubItems.propTypes = {
+  currentSelectedSite: siteDetailPropType.isRequired,
+  markerSelectSites: PropTypes.arrayOf(siteDetailPropType).isRequired,
+  handleCurrentSelectedSiteChange: PropTypes.func.isRequired,
+  sites: sitesPropType.isRequired,
+}
+
+export default SiteDetailSubItems

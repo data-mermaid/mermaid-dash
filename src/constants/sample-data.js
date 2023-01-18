@@ -4,5 +4,5 @@ export const defaultPieChartContent = [
   { x: 'Invertivore-mobile', y: 193.0 },
   { x: 'Invertivore-sessile', y: 34.6 },
   { x: 'Omnivore', y: 74.5 },
-  { x: 'Piscivore', y: 177.4 }
-];
+  { x: 'Piscivore', y: 177.4 },
+]

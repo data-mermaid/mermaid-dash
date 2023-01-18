@@ -1,21 +1,25 @@
-import React, { Component } from 'react';
-import L from 'leaflet';
-import 'leaflet-minimap';
-import 'leaflet.markercluster';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
-import 'leaflet/dist/leaflet.css';
-import '../lib/leaflet-tilelayer-subpixel-fix';
-import * as leafletProperty from '../constants/leaflet-properties';
-import styled from 'styled-components/macro';
+/* eslint-disable global-require */
+/* eslint-disable no-else-return */
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import styled from 'styled-components/macro'
+import L from 'leaflet'
+import 'leaflet-minimap'
+import 'leaflet.markercluster'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
+import 'leaflet/dist/leaflet.css'
+import '../lib/leaflet-tilelayer-subpixel-fix'
+import * as leafletProperty from '../constants/leaflet-properties'
+import { siteDetailPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
-delete L.Icon.Default.prototype._getIconUrl;
+delete L.Icon.Default.prototype._getIconUrl
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
-});
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+})
 
 const MapContainer = styled.div`
   height: 100%;
@@ -33,11 +37,11 @@ const MapContainer = styled.div`
   @media (min-width: 1280px) {
     padding-right: ${props => (props.sidePanelOpen ? '650px' : '0px')};
   }
-`;
+`
 
 const MapStyle = styled.div`
   height: calc(100vh - 49px);
-`;
+`
 
 const generateClusterIconStyle = ({
   baseRadius,
@@ -45,20 +49,21 @@ const generateClusterIconStyle = ({
   margin,
   numberMarkers,
   defaultMarkerColor,
-  setPulseAnimation
+  setPulseAnimation,
 }) => {
-  const radius = String(numberMarkers).length * baseRadius + basePadding;
-  let backgroundColor;
+  const radius = String(numberMarkers).length * baseRadius + basePadding
+
+  let backgroundColor
 
   switch (numberMarkers.length) {
     case 1:
-      backgroundColor = 'red';
-      break;
+      backgroundColor = 'red'
+      break
     case 2:
-      backgroundColor = 'yellow';
-      break;
+      backgroundColor = 'yellow'
+      break
     default:
-      backgroundColor = defaultMarkerColor;
+      backgroundColor = defaultMarkerColor
   }
 
   return `
@@ -73,29 +78,31 @@ const generateClusterIconStyle = ({
     border: 1px solid white;
     background-color: ${backgroundColor};
     animation: ${setPulseAnimation && 'pulse 1s'} ;
-  `;
-};
+  `
+}
 
 const miniMapLayer = L.tileLayer(
-    'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
-    {
-      attribution:
-        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      subdomains: 'abcd',
-      minZoom: 0,
-      maxZoom: 13,
-      ext: 'png'
-    }
-  ),
-  worldImageryMapLayer = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    {
-      attribution: 'Tiles &copy; Esri'
-    }
-  ),
-  labelLayer = L.tileLayer(
-    'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x} '
-  );
+  'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
+  {
+    attribution:
+      'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: 'abcd',
+    minZoom: 0,
+    maxZoom: 13,
+    ext: 'png',
+  },
+)
+
+const worldImageryMapLayer = L.tileLayer(
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {
+    attribution: 'Tiles &copy; Esri',
+  },
+)
+
+const labelLayer = L.tileLayer(
+  'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x} ',
+)
 
 const mapProperty = {
   center: [-2, 0],
@@ -104,8 +111,8 @@ const mapProperty = {
   maxZoom: 17,
   zoomControl: true,
   worldCopyJump: false,
-  layers: [worldImageryMapLayer, labelLayer]
-};
+  layers: [worldImageryMapLayer, labelLayer],
+}
 
 const miniMapProperty = {
   position: 'bottomleft',
@@ -119,10 +126,10 @@ const miniMapProperty = {
     weight: 1,
     interactive: false,
     opacity: 0,
-    fillOpacity: 0
+    fillOpacity: 0,
   },
-  zoomLevelOffset: -7
-};
+  zoomLevelOffset: -7,
+}
 
 class LeafletMap extends Component {
   state = {
@@ -131,84 +138,27 @@ class LeafletMap extends Component {
     mapBounds: null,
     siteCenterChange: false,
     popUpList: [],
-    miniMap: null
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    const {
-      markersData: prevMarkersData,
-      sidePanelOpen: prevSidePanelOpen,
-      siteDetail: prevSiteDetail,
-      zoomFullMap: prevZoomFullMap,
-      zoomToSite: prevZoomToSite
-    } = prevProps;
-
-    const {
-      markersData,
-      sidePanelOpen,
-      siteDetail,
-      popupOpen,
-      mobileDisplay,
-      zoomFullMap,
-      zoomToSite
-    } = this.props;
-
-    const {
-      mapZoomLevel: prevMapZoomLevel,
-      mapBoundingBoxCorner: prevMapBoundingBoxCorner
-    } = prevState;
-
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state;
-    const prevSiteDetailId = prevSiteDetail && prevSiteDetail[0].site_id;
-    const siteDetailId = siteDetail && siteDetail[0].site_id;
-
-    if (markersData !== prevMarkersData) this.updateMarkers(markersData);
-
-    if (mapZoomLevel !== prevMapZoomLevel) this.updateBoundingBoxFromZoom();
-
-    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) this.updateBoundingBoxFromPan();
-
-    //redraw leaflet map when dashboard is open or close
-    if (sidePanelOpen !== prevSidePanelOpen) this.map.invalidateSize();
-
-    //reset when selected site view is set to center
-    if (!sidePanelOpen && sidePanelOpen !== prevSidePanelOpen)
-      this.setState({ siteCenterChange: true });
-
-    if (siteDetail === null && prevSiteDetailId) this.map.closePopup();
-
-    if (popupOpen && siteDetailId !== prevSiteDetailId) {
-      this.popupHighlightSelect(popUpList, siteDetailId);
-    }
-
-    if (miniMap !== null) {
-      if (mobileDisplay) miniMap.remove();
-      else miniMap.addTo(this.map);
-    }
-
-    if (zoomFullMap !== prevZoomFullMap) this.zoomFullMap();
-
-    if (zoomToSite !== prevZoomToSite) this.zoomToSelectedSite();
+    miniMap: null,
   }
 
   componentDidMount() {
-    this.map = L.map('map', mapProperty);
-    const { mobileDisplay } = this.props;
-    const miniMap = new L.Control.MiniMap(miniMapLayer, miniMapProperty);
+    this.map = L.map('map', mapProperty)
+    const { mobileDisplay } = this.props
+    const miniMap = new L.Control.MiniMap(miniMapLayer, miniMapProperty)
 
-    if (!mobileDisplay) miniMap.addTo(this.map);
+    if (!mobileDisplay) miniMap.addTo(this.map)
 
     this.setState({
-      miniMap
-    });
+      miniMap,
+    })
   }
 
-  //Control re-rendering of component for only certain actions
+  // Control re-rendering of component for only certain actions
   shouldComponentUpdate(nextProps, nextStates) {
-    const { markersData, sidePanelOpen, zoomFullMap, zoomToSite, siteDetail } = this.props;
-    const { mapZoomLevel, mapBoundingBoxCorner } = this.state;
-    const siteDetailId = siteDetail && siteDetail[0].site_id;
-    const nextSiteDetailId = nextProps.siteDetail && nextProps.siteDetail[0].site_id;
+    const { markersData, sidePanelOpen, zoomFullMap, zoomToSite, siteDetail } = this.props
+    const { mapZoomLevel, mapBoundingBoxCorner } = this.state
+    const siteDetailId = siteDetail && siteDetail[0].site_id
+    const nextSiteDetailId = nextProps.siteDetail && nextProps.siteDetail[0].site_id
 
     return (
       nextProps.markersData !== markersData ||
@@ -218,281 +168,357 @@ class LeafletMap extends Component {
       nextSiteDetailId !== siteDetailId ||
       nextProps.zoomFullMap !== zoomFullMap ||
       nextProps.zoomToSite !== zoomToSite
-    );
+    )
   }
 
-  // use case: For when user selects site when side panel is closed. Panel
-  // will slide in, and will adjust the center when the site is pushed left
-  recenterView(zoom) {
-    const { sidePanelOpen, siteDetail } = this.props;
-    const { siteCenterChange } = this.state;
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      markersData: prevMarkersData,
+      sidePanelOpen: prevSidePanelOpen,
+      siteDetail: prevSiteDetail,
+      zoomFullMap: prevZoomFullMap,
+      zoomToSite: prevZoomToSite,
+    } = prevProps
 
-    if (sidePanelOpen && siteDetail[0] && siteCenterChange) {
-      const { latitude, longitude } = siteDetail[0];
-      const longitudeWithinRange = longitude >= 0 && longitude <= 180 ? longitude : 360 + longitude;
-      const siteLatLng = [latitude, longitudeWithinRange];
+    const {
+      markersData,
+      sidePanelOpen,
+      siteDetail,
+      popupOpen,
+      mobileDisplay,
+      zoomFullMap,
+      zoomToSite,
+    } = this.props
 
-      this.map.setView(siteLatLng, zoom);
-      this.setState({ siteCenterChange: false });
+    const {
+      mapZoomLevel: prevMapZoomLevel,
+      mapBoundingBoxCorner: prevMapBoundingBoxCorner,
+    } = prevState
+
+    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state
+    const prevSiteDetailId = prevSiteDetail && prevSiteDetail[0].site_id
+    const siteDetailId = siteDetail && siteDetail[0].site_id
+
+    if (markersData !== prevMarkersData) this.updateMarkers(markersData)
+
+    if (mapZoomLevel !== prevMapZoomLevel) this.updateBoundingBoxFromZoom()
+
+    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) this.updateBoundingBoxFromPan()
+
+    // Redraw leaflet map when dashboard is open or close
+    if (sidePanelOpen !== prevSidePanelOpen) this.map.invalidateSize()
+
+    // Reset when selected site view is set to center
+    if (!sidePanelOpen && sidePanelOpen !== prevSidePanelOpen)
+      this.setState({ siteCenterChange: true })
+
+    if (siteDetail === null && prevSiteDetailId) this.map.closePopup()
+
+    if (popupOpen && siteDetailId !== prevSiteDetailId) {
+      this.#popupHighlightSelect(popUpList, siteDetailId)
     }
-  }
 
-  panToCenter(latlng, options) {
-    const x = latlng.containerPoint.x,
-      y = latlng.containerPoint.y,
-      currentZoom = this.map._zoom,
-      newLatlng = this.map.containerPointToLatLng([x, y]);
-
-    this.map.setView(newLatlng, currentZoom, { pan: options });
-    this.recenterView(currentZoom);
-  }
-
-  zoomFullMap() {
-    //Zoom to initial load marker cluster.
-    const { zoomFullMap, fullMapZoomHandler, getMapBounds } = this.props;
-    const { mapBounds } = this.state;
-
-    if (zoomFullMap) {
-      if (mapBounds) {
-        const bbox = this.createBoundingBox(mapBounds);
-        this.map.fitBounds(mapBounds);
-        fullMapZoomHandler(false);
-        this.map.closePopup();
-        getMapBounds(bbox);
-      } else this.map.setView(mapProperty.center, mapProperty.zoom);
+    if (miniMap !== null) {
+      if (mobileDisplay) miniMap.remove()
+      else miniMap.addTo(this.map)
     }
+
+    if (zoomFullMap !== prevZoomFullMap) this.zoomFullMap()
+
+    if (zoomToSite !== prevZoomToSite) this.zoomToSelectedSite()
   }
 
-  zoomToSelectedSite() {
-    const { highlightMarker, zoomToSite, zoomToSiteHandler } = this.props;
+  // Returns a stringified number similar to toFixed
+  #toFixedNoRounding = function toFixedNoRounding(number, n) {
+    const regToSetSignificant = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g') // eslint-disable-line prefer-template
+    const a = number.toString().match(regToSetSignificant)[0]
+    const dot = a.indexOf('.')
+    const b = n - (a.length - dot) + 1
 
-    if (zoomToSite && highlightMarker) {
-      const markerLatlng = highlightMarker._latlng;
-      this.map.setView([markerLatlng.lat, markerLatlng.lng], 16);
-      zoomToSiteHandler(false);
-    }
+    if (dot === -1) return `${a}.${'0'.repeat(n)}`
+
+    return b > 0 ? a + '0'.repeat(b) : a
   }
 
-  //returns a stringified number similar to toFixed
-  toFixedNoRounding(number, n) {
-    const regToSetSignificant = new RegExp('^-?\\d+(?:\\.\\d{0,' + n + '})?', 'g');
-    const a = number.toString().match(regToSetSignificant)[0];
-    const dot = a.indexOf('.');
-    const b = n - (a.length - dot) + 1;
+  #buildBbox = function buildBbox(n, e, s, w) {
+    const swBound = [w, s]
+    const seBound = [e, s]
+    const neBound = [e, n]
+    const nwBound = [w, n]
 
-    if (dot === -1) return a + '.' + '0'.repeat(n);
-    return b > 0 ? a + '0'.repeat(b) : a;
+    return [[swBound, seBound, neBound, nwBound, swBound]]
   }
 
-  checkSameSiteInACluster(arr) {
-    //check sites in cluster by their coordinates and names
-    const markersArr = arr.map(item => item.options.marker);
-
-    const coordinatesArr = markersArr.map(marker => {
-      const { latitude, longitude } = marker[1][0];
-      const latStr = `${this.toFixedNoRounding(latitude, 3)}`;
-      const lngStr = `${this.toFixedNoRounding(longitude, 3)}`;
-
-      return `${latStr},${lngStr}`;
-    });
-    const siteNamesArr = markersArr.map(({ site_name }) => site_name);
-
-    const coordinatesSizeResult = new Set(coordinatesArr).size === 1;
-    const siteNamesSizeResult = new Set(siteNamesArr).size === 1;
-
-    //if all sites property are the same (equals to 1), return true
-    return coordinatesSizeResult && siteNamesSizeResult;
-  }
-
-  splitWestEast(w, e) {
-    const { mapBounds } = this.state;
-    const maxBounds = mapBounds && mapBounds.getEast();
-    const minBounds = mapBounds && mapBounds.getWest();
-    const eastSide = maxBounds || e;
-
-    if (mapBounds && (e < minBounds || w > maxBounds)) {
-      // console.log('Out of bounds case');
-      return [[]];
-    } else if (eastSide < 180) {
-      // console.log('When all markers locates on [0, 180]');
-      return [[w, e]];
-    } else if (eastSide > 180) {
-      // console.log('When all markers locates on [0, 360]');
-      if (w > 180) {
-        // console.log('Markers west and east are > 180, example: Belize');
-        return [[w - 360, eastSide - 360]];
-      } else if (minBounds && w < minBounds) {
-        if (e < 180) {
-          // console.log('Markers west and east stay between minBounds and east');
-          return [[minBounds, e]];
-        } else if (e > maxBounds) {
-          // console.log('When map is moving to right, and east is at maxBounds');
-          return [[minBounds, 180], [-180, maxBounds - 360]];
-        }
-
-        // console.log('When map is moving to west (LEFT) side');
-        return [[minBounds, 180], [-180, e - 360]];
-      } else if (w > 0 && e < 180) {
-        // console.log('Markers west and east stay between 0 and 180. example: Indonesia');
-        return [[w, e]];
-      } else if (e < maxBounds) {
-        // console.log('Left side of Belize');
-        return [[w, 180], [-180, e - 360]];
-      }
-      // console.log('When map is moving to east (RIGHT) side');
-      return [[w, 180], [-180, eastSide - 360]];
-    }
-  }
-
-  buildBbox(n, e, s, w) {
-    const swBound = [w, s];
-    const seBound = [e, s];
-    const neBound = [e, n];
-    const nwBound = [w, n];
-
-    return [[swBound, seBound, neBound, nwBound, swBound]];
-  }
-
-  createBoundingBox(boundingBox) {
-    const north = boundingBox.getNorth();
-    const east = boundingBox.getEast();
-    const south = boundingBox.getSouth();
-    const west = boundingBox.getWest();
-
-    return this.splitWestEast(west, east).map(bound => {
-      return this.buildBbox(north, bound[1], south, bound[0]);
-    });
-  }
-
-  updateBoundingBoxFromZoom() {
-    const { getMapBounds, contentLoadHandler } = this.props;
-    const { mapZoomLevel } = this.state;
-
-    this.map.once('zoomstart', e => contentLoadHandler(true));
-
-    this.map.once('zoomend', e => {
-      const curBounds = e.target.getBounds();
-      const curZoom = e.target.getZoom();
-      const curBBox = this.createBoundingBox(curBounds);
-
-      if (mapZoomLevel === curZoom) {
-        this.setState({ mapZoomLevel: curZoom + 1 });
-        contentLoadHandler(false);
-      } else {
-        this.setState({ mapZoomLevel: curZoom });
-        getMapBounds(curBBox);
-      }
-    });
-  }
-
-  updateBoundingBoxFromPan() {
-    const { mapBoundingBoxCorner } = this.state;
-    const { getMapBounds, contentLoadHandler } = this.props;
-
-    this.map.once('dragstart', e => contentLoadHandler(true));
-
-    this.map.once('dragend', e => {
-      const curBounds = e.target.getBounds();
-      const southBound = curBounds.getSouth();
-      const curBBox = this.createBoundingBox(curBounds);
-
-      setTimeout(() => {
-        if (mapBoundingBoxCorner === southBound) {
-          this.setState({ mapBoundingBoxCorner: southBound + 0.1 });
-          contentLoadHandler(false);
-        } else {
-          this.setState({ mapBoundingBoxCorner: southBound });
-          getMapBounds(curBBox);
-        }
-      }, 750);
-    });
-  }
-
-  createCluster(style_property) {
-    const { radius, padding, margin, color, pulseEffect } = style_property;
+  #createCluster = function createCluster(style_property) {
+    const { radius, padding, margin, color, pulseEffect } = style_property
     const selectMarkerCluster = L.markerClusterGroup({
       showCoverageOnHover: false,
       spiderfyOnMaxZoom: false,
-      iconCreateFunction: function(cluster) {
-        const childCount = cluster.getChildCount();
+      iconCreateFunction: cluster => {
+        const childCount = cluster.getChildCount()
         const clusterStyle = generateClusterIconStyle({
           baseRadius: radius,
           basePadding: padding,
           margin: margin,
           numberMarkers: childCount,
           defaultMarkerColor: color,
-          setPulseAnimation: pulseEffect
-        });
+          setPulseAnimation: pulseEffect,
+        })
 
         return new L.DivIcon({
-          html: `<div style="${clusterStyle}"><span style="${
-            leafletProperty.clusterIconNumberStyles
-          }"> ${childCount} </span></div>`,
-          className: 'marker-cluster-icon'
-        });
-      }
-    });
+          html: `<div style="${clusterStyle}"><span style="${leafletProperty.clusterIconNumberStyles}"> ${childCount} </span></div>`,
+          className: 'marker-cluster-icon',
+        })
+      },
+    })
 
-    return selectMarkerCluster;
+    return selectMarkerCluster
   }
 
-  countClusterPopupChar(clusterArray) {
-    return clusterArray.map(item => `${item.site_name} - ${item.project_name}`);
+  #countClusterPopupChar = function countClusterPopupChar(clusterArray) {
+    return clusterArray.map(item => `${item.site_name} - ${item.project_name}`)
+  }
+
+  #popupHighlightSelect = function popupHighlightSelect(popupContent, siteHighlight) {
+    for (const elem of popupContent) {
+      elem.classList.remove('active')
+    }
+
+    const findSiteId = document.getElementById(`${siteHighlight}`)
+
+    if (findSiteId) findSiteId.classList.add('active')
+  }
+
+  // Use case: For when user selects site when side panel is closed. Panel
+  // Will slide in, and will adjust the center when the site is pushed left
+  recenterView(zoom) {
+    const { sidePanelOpen, siteDetail } = this.props
+    const { siteCenterChange } = this.state
+
+    if (sidePanelOpen && siteDetail[0] && siteCenterChange) {
+      const { latitude, longitude } = siteDetail[0]
+      const longitudeWithinRange = longitude >= 0 && longitude <= 180 ? longitude : 360 + longitude
+      const siteLatLng = [latitude, longitudeWithinRange]
+
+      this.map.setView(siteLatLng, zoom)
+      this.setState({ siteCenterChange: false })
+    }
+  }
+
+  panToCenter(latlng, options) {
+    const { x, y } = latlng.containerPoint
+    const currentZoom = this.map._zoom
+    const newLatlng = this.map.containerPointToLatLng([x, y])
+
+    this.map.setView(newLatlng, currentZoom, { pan: options })
+    this.recenterView(currentZoom)
+  }
+
+  zoomFullMap() {
+    // Zoom to initial load marker cluster.
+    const { zoomFullMap, fullMapZoomHandler, getMapBounds } = this.props
+    const { mapBounds } = this.state
+
+    if (zoomFullMap) {
+      if (mapBounds) {
+        const bbox = this.createBoundingBox(mapBounds)
+
+        this.map.fitBounds(mapBounds)
+        fullMapZoomHandler(false)
+        this.map.closePopup()
+        getMapBounds(bbox)
+      } else this.map.setView(mapProperty.center, mapProperty.zoom)
+    }
+  }
+
+  zoomToSelectedSite() {
+    const { highlightMarker, zoomToSite, zoomToSiteHandler } = this.props
+
+    if (zoomToSite && highlightMarker) {
+      const markerLatlng = highlightMarker._latlng
+
+      this.map.setView([markerLatlng.lat, markerLatlng.lng], 16)
+      zoomToSiteHandler(false)
+    }
+  }
+
+  checkSameSiteInACluster(arr) {
+    // Check sites in cluster by their coordinates and names
+    const markersArr = arr.map(item => item.options.marker)
+
+    const coordinatesArr = markersArr.map(marker => {
+      const { latitude, longitude } = marker[1][0]
+      const latStr = `${this.#toFixedNoRounding(latitude, 3)}`
+      const lngStr = `${this.#toFixedNoRounding(longitude, 3)}`
+
+      return `${latStr},${lngStr}`
+    })
+    const siteNamesArr = markersArr.map(({ site_name }) => site_name)
+
+    const coordinatesSizeResult = new Set(coordinatesArr).size === 1
+    const siteNamesSizeResult = new Set(siteNamesArr).size === 1
+
+    // If all sites property are the same (equals to 1), return true
+    return coordinatesSizeResult && siteNamesSizeResult
+  }
+
+  splitWestEast(w, e) {
+    const { mapBounds } = this.state
+    const maxBounds = mapBounds && mapBounds.getEast()
+    const minBounds = mapBounds && mapBounds.getWest()
+    const eastSide = maxBounds || e
+
+    if (mapBounds && (e < minBounds || w > maxBounds)) {
+      // console.log('Out of bounds case')
+      return [[]]
+    } else if (eastSide <= 180) {
+      // console.log('When all markers locates on [0, 180]')
+      return [[w, e]]
+    } else if (eastSide > 180) {
+      // console.log('When all markers locates on [0, 360]')
+      if (w > 180) {
+        // console.log('Markers west and east are > 180, example: Belize')
+        return [[w - 360, eastSide - 360]]
+      } else if (minBounds && w < minBounds) {
+        if (e < 180) {
+          // console.log('Markers west and east stay between minBounds and east')
+          return [[minBounds, e]]
+        } else if (e > maxBounds) {
+          // console.log('When map is moving to right, and east is at maxBounds')
+          return [
+            [minBounds, 180],
+            [-180, maxBounds - 360],
+          ]
+        }
+
+        // console.log('When map is moving to west (LEFT) side')
+        return [
+          [minBounds, 180],
+          [-180, e - 360],
+        ]
+      } else if (w > 0 && e < 180) {
+        // console.log('Markers west and east stay between 0 and 180. example: Indonesia')
+        return [[w, e]]
+      } else if (e < maxBounds) {
+        // console.log('Left side of Belize')
+        return [
+          [w, 180],
+          [-180, e - 360],
+        ]
+      }
+
+      // console.log('When map is moving to east (RIGHT) side');
+      return [
+        [w, 180],
+        [-180, eastSide - 360],
+      ]
+    }
+
+    return [[]]
+  }
+
+  createBoundingBox(boundingBox) {
+    const north = boundingBox.getNorth()
+    const east = boundingBox.getEast()
+    const south = boundingBox.getSouth()
+    const west = boundingBox.getWest()
+
+    return this.splitWestEast(west, east).map(bound => {
+      return this.#buildBbox(north, bound[1], south, bound[0])
+    })
+  }
+
+  updateBoundingBoxFromZoom() {
+    const { getMapBounds, contentLoadHandler } = this.props
+    const { mapZoomLevel } = this.state
+
+    this.map.once('zoomstart', () => contentLoadHandler(true))
+
+    this.map.once('zoomend', e => {
+      const curBounds = e.target.getBounds()
+      const curZoom = e.target.getZoom()
+      const curBBox = this.createBoundingBox(curBounds)
+
+      if (mapZoomLevel === curZoom) {
+        this.setState({ mapZoomLevel: curZoom + 1 })
+        contentLoadHandler(false)
+      } else {
+        this.setState({ mapZoomLevel: curZoom })
+        getMapBounds(curBBox)
+      }
+    })
+  }
+
+  updateBoundingBoxFromPan() {
+    const { mapBoundingBoxCorner } = this.state
+    const { getMapBounds, contentLoadHandler } = this.props
+
+    this.map.once('dragstart', () => contentLoadHandler(true))
+
+    this.map.once('dragend', e => {
+      const curBounds = e.target.getBounds()
+      const southBound = curBounds.getSouth()
+      const curBBox = this.createBoundingBox(curBounds)
+
+      setTimeout(() => {
+        if (mapBoundingBoxCorner === southBound) {
+          this.setState({ mapBoundingBoxCorner: southBound + 0.1 })
+          contentLoadHandler(false)
+        } else {
+          this.setState({ mapBoundingBoxCorner: southBound })
+          getMapBounds(curBBox)
+        }
+      }, 750)
+    })
   }
 
   createPopup(markersData, coordinates) {
     const popUpContentStyles =
-      markersData.length >= 10 || this.countClusterPopupChar(markersData) >= 450
+      markersData.length >= 10 || this.#countClusterPopupChar(markersData) >= 450
         ? leafletProperty.popUpHigherStyles
-        : leafletProperty.popUpDefaultStyles;
+        : leafletProperty.popUpDefaultStyles
 
     const popUpArray = markersData.map((item, index) => {
       const itemStyle =
         index === markersData.length - 1
           ? leafletProperty.popUpContentLastItemStyles
-          : leafletProperty.popUpContentItemStyles;
+          : leafletProperty.popUpContentItemStyles
 
-      const siteId = item[0];
-      const { site_name, project_name } = item[1][0];
+      const siteId = item[0]
+      const { site_name, project_name } = item[1][0]
 
       return `
             <div style="${itemStyle}" id="${siteId}" class="popup-cluster-site">
               ${site_name} - ${project_name}
-            </div>`;
-    });
+            </div>`
+    })
 
     return L.popup().setLatLng(coordinates).setContent(`
       <div style="${popUpContentStyles}">
         ${popUpArray.join('')}
       </div>
-  `);
+      `)
   }
 
   popupClickHandler(popupCluster, markersData) {
-    popupCluster.openOn(this.map);
-    const { siteClickHandler } = this.props;
+    popupCluster.openOn(this.map)
+    const { siteClickHandler } = this.props
 
-    const el = popupCluster.getElement().children[0].children[0].children[0].children;
+    const el = popupCluster.getElement().children[0].children[0].children[0].children
     const handleInteraction = ({ target }) => {
-      const resultMarker = markersData.filter(site => site[0] === target.id)[0];
-      siteClickHandler(resultMarker);
-    };
+      const resultMarker = markersData.filter(site => site[0] === target.id)[0]
 
-    for (let i of el) {
-      i.addEventListener('touchstart', handleInteraction);
-      i.addEventListener('click', handleInteraction);
+      siteClickHandler(resultMarker)
     }
 
-    const popUpListItem = document.getElementsByClassName('popup-cluster-site');
-    this.setState({ popUpList: popUpListItem });
-  }
-
-  popupHighlightSelect(popupContent, siteHighlight) {
-    for (let elem of popupContent) {
-      elem.classList.remove('active');
+    for (const i of el) {
+      i.addEventListener('touchstart', handleInteraction)
+      i.addEventListener('click', handleInteraction)
     }
-    const findSiteId = document.getElementById(`${siteHighlight}`);
-    if (findSiteId) findSiteId.classList.add('active');
+
+    const popUpListItem = document.getElementsByClassName('popup-cluster-site')
+
+    this.setState({ popUpList: popUpListItem })
   }
 
   updateMarkers(markersData) {
@@ -504,110 +530,144 @@ class LeafletMap extends Component {
       setIconActive,
       removeHighlightCluster,
       setClusterActive,
-      getMapBounds
-    } = this.props;
+      getMapBounds,
+    } = this.props
 
     const allClusterStyle = {
       radius: 10,
       padding: 10,
       margin: 5,
-      color: leafletProperty.defaultMarkerColor
-    };
+      color: leafletProperty.defaultMarkerColor,
+    }
 
-    const markersCluster = this.createCluster(allClusterStyle);
+    const markersCluster = this.#createCluster(allClusterStyle)
 
     markersCluster.on('clusterclick', e => {
-      const markerCluster = e.layer.getAllChildMarkers();
-      const currentZoom = e.layer._zoom;
-      const clusterCoordinates = e.layer.getLatLng();
+      const markerCluster = e.layer.getAllChildMarkers()
+      const currentZoom = e.layer._zoom
+      const clusterCoordinates = e.layer.getLatLng()
       const selectedClusterStyle = {
         radius: 10,
         padding: 20,
         margin: 0,
         color: leafletProperty.selectedMarkerColor,
-        pulseEffect: true
-      };
-
-      //Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
-      if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
-        // if (currentZoom === mapProperty.maxZoom) {
-        const selectedMarkersCluster = this.createCluster(selectedClusterStyle);
-        const markersData = markerCluster.map(item => item.options.marker);
-        const popUpCluster = this.createPopup(markersData, clusterCoordinates);
-
-        this.popupClickHandler(popUpCluster, markersData);
-
-        markerCluster.forEach(selectMaker => {
-          selectedMarkersCluster.addLayer(selectMaker);
-          selectedMarkersCluster.on('clusterclick', () => {
-            const { popUpList } = this.state;
-            const { siteDetail } = this.props;
-            const siteDetailId = siteDetail && siteDetail[0].site_id;
-            this.popupClickHandler(popUpCluster, markersData);
-            this.popupHighlightSelect(popUpList, siteDetailId);
-          });
-        });
-
-        removeHighlight();
-        removeHighlightCluster();
-        setClusterActive(selectedMarkersCluster);
-        siteDropDownHandler(markersData);
-
-        this.recenterView(currentZoom);
-        this.map.addLayer(selectedMarkersCluster);
+        pulseEffect: true,
       }
 
-      fullMapZoomHandler(false);
-    });
+      // Check max zoom and use checkSameSiteInACluster function helps identify the similar sites in a cluster
+      if (currentZoom === mapProperty.maxZoom || this.checkSameSiteInACluster(markerCluster)) {
+        const selectedMarkersCluster = this.#createCluster(selectedClusterStyle)
+        const markersClusterData = markerCluster.map(item => item.options.marker)
+        const popUpCluster = this.createPopup(markersClusterData, clusterCoordinates)
+
+        this.popupClickHandler(popUpCluster, markersClusterData)
+
+        markerCluster.forEach(selectMaker => {
+          selectedMarkersCluster.addLayer(selectMaker)
+          selectedMarkersCluster.on('clusterclick', () => {
+            const { popUpList } = this.state
+            const { siteDetail } = this.props
+            const siteDetailId = siteDetail && siteDetail[0].site_id
+
+            this.popupClickHandler(popUpCluster, markersClusterData)
+            this.#popupHighlightSelect(popUpList, siteDetailId)
+          })
+        })
+
+        removeHighlight()
+        removeHighlightCluster()
+        setClusterActive(selectedMarkersCluster)
+        siteDropDownHandler(markersClusterData)
+
+        this.recenterView(currentZoom)
+        this.map.addLayer(selectedMarkersCluster)
+      }
+
+      fullMapZoomHandler(false)
+    })
 
     markersData.forEach(marker => {
-      const markerLatitude = marker[1][0].latitude;
-      const markerLongitude = L.Util.wrapNum(marker[1][0].longitude, [0, 360], true); //Wrap longitude from [-180, 180] to [0, 360]
+      const [markerId, markerInfo] = marker
+      const markerLatitude = markerInfo[0].latitude
+      const markerLongitude = L.Util.wrapNum(markerInfo[0].longitude, [0, 360], true) // Wrap longitude from [-180, 180] to [0, 360]
 
       const markerPoint = L.marker([markerLatitude, markerLongitude], {
         icon: leafletProperty.icon,
-        marker
-      });
+        marker,
+      })
 
-      markerPoint._leaflet_id = marker.site_id;
+      markerPoint._leaflet_id = markerId
       markersCluster.addLayer(
         markerPoint.on('click', e => {
-          removeHighlight();
-          removeHighlightCluster();
-          setIconActive(markerPoint);
-          siteClickHandler(marker);
-          this.panToCenter(e, { animate: true });
-        })
-      );
-    });
-
-    this.map.addLayer(markersCluster);
+          removeHighlight()
+          removeHighlightCluster()
+          setIconActive(markerPoint)
+          siteClickHandler(marker)
+          this.panToCenter(e, { animate: true })
+        }),
+      )
+    })
 
     if (markersData.length === 0) {
-      this.map.setView(mapProperty.center, mapProperty.zoom);
+      this.map.setView(mapProperty.center, mapProperty.zoom)
     } else {
-      const mapBounds = markersCluster.getBounds().pad(0.1);
-      const mapBoundingBox = this.createBoundingBox(mapBounds);
-      const mapBoundingBoxCorner = mapBounds.getSouth();
+      const mapBounds = markersCluster.getBounds().pad(0.1)
+      const mapBoundingBox = this.createBoundingBox(mapBounds)
+      const mapBoundingBoxCorner = mapBounds.getSouth()
 
       this.setState({
         mapZoomLevel: this.map.getZoom(),
-        mapCenterLevel: markersCluster.getBounds().getCenter(),
-        mapBoundingBoxCorner: mapBoundingBoxCorner,
-        mapBounds: mapBounds
-      });
+        mapBoundingBoxCorner,
+        mapBounds,
+      })
 
-      this.map.fitBounds(mapBounds);
-      getMapBounds(mapBoundingBox);
+      this.map.fitBounds(mapBounds)
+      getMapBounds(mapBoundingBox)
     }
+
+    this.map.addLayer(markersCluster)
   }
 
   render() {
+    const { sidePanelOpen } = this.props
+
     return (
-      <MapContainer sidePanelOpen={this.props.sidePanelOpen}>
+      <MapContainer sidePanelOpen={sidePanelOpen}>
         <MapStyle id="map" />
       </MapContainer>
-    );
+    )
   }
 }
-export default LeafletMap;
+
+LeafletMap.propTypes = {
+  markersData: sitesPropType.isRequired,
+  sidePanelOpen: PropTypes.bool.isRequired,
+  zoomFullMap: PropTypes.bool.isRequired,
+  zoomToSite: PropTypes.bool.isRequired,
+  mobileDisplay: PropTypes.bool.isRequired,
+  popupOpen: PropTypes.bool.isRequired,
+  siteDetail: PropTypes.arrayOf(siteDetailPropType),
+  fullMapZoomHandler: PropTypes.func.isRequired,
+  getMapBounds: PropTypes.func.isRequired,
+  zoomToSiteHandler: PropTypes.func.isRequired,
+  siteClickHandler: PropTypes.func.isRequired,
+  siteDropDownHandler: PropTypes.func.isRequired,
+  removeHighlight: PropTypes.func.isRequired,
+  removeHighlightCluster: PropTypes.func.isRequired,
+  setClusterActive: PropTypes.func.isRequired,
+  setIconActive: PropTypes.func.isRequired,
+  contentLoadHandler: PropTypes.func.isRequired,
+  highlightMarker: PropTypes.shape({
+    _latlng: PropTypes.shape({
+      lat: PropTypes.number,
+      lng: PropTypes.number,
+    }),
+  }),
+}
+
+LeafletMap.defaultProps = {
+  siteDetail: [],
+  highlightMarker: {},
+}
+
+export default LeafletMap

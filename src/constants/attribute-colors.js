@@ -10,8 +10,8 @@ export const benthicAttributeColors = [
   { name: 'Sand', color: '#C2B280' },
   { name: 'Other invertebrates', color: '#4E4E4E' },
   { name: 'Seagrass', color: '#494949' },
-  { name: 'trash', color: '#CBD0D1' }
-];
+  { name: 'trash', color: '#CBD0D1' },
+]
 export const fishBeltAttributeColors = [
   { name: 'herbivore-detritivore', color: '#D9ED8B' },
   { name: 'herbivore-macroalgae', color: '#4D9221' },
@@ -19,8 +19,8 @@ export const fishBeltAttributeColors = [
   { name: 'invertivore-sessile', color: '#FFD92F' },
   { name: 'omnivore', color: '#80CDC1' },
   { name: 'piscivore', color: '#377EB8 ' },
-  { name: 'planktivore', color: '#BEBADA' }
-];
+  { name: 'planktivore', color: '#BEBADA' },
+]
 
 export const privateColorScale = [
   '#DCDCDC',
@@ -30,5 +30,5 @@ export const privateColorScale = [
   '#808080',
   '#696969',
   '#778899',
-  '#708090'
-];
+  '#708090',
+]

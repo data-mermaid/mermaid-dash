@@ -1,40 +1,48 @@
-import React, { useState } from 'react';
+import PropTypes from 'prop-types'
+import React, { useState } from 'react'
 
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import styled from 'styled-components/macro';
+import { makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import styled from 'styled-components/macro'
 
-import { TextLoader, ChartLoader } from './Loader';
-import CardChartContent from './CardChartContent';
-import CartTextContent from './CardTextContent';
-import LiveCoralCoverModal from './LiveCoralCoverModal';
+import { TextLoader, ChartLoader } from './Loader'
+import CardChartContent from './CardChartContent'
+import CartTextContent from './CardTextContent'
+import LiveCoralCoverModal from './LiveCoralCoverModal'
 
-import PropTypes from 'prop-types';
-import ProtocolChartSubHeading from './ProtocolChartSubHeading';
+import ProtocolChartSubHeading from './ProtocolChartSubHeading'
+import {
+  benthicPitPropType,
+  bleachingPropType,
+  fishbeltPropType,
+  histogramContentPropType,
+  pieChartContentPropType,
+  textContentPropType,
+} from '../lib/mermaidDataPropTypes'
 
 const CardDiv = styled('div')`
   padding: ${props => (props.setPaddingOff ? '0 0 16px 0' : '16px 8px 16px 8px')};
   width: 100%;
-`;
+`
 
 const cardStyle = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(2, 1)
+    padding: theme.spacing(2, 1),
   },
   cardWrapper: {
     padding: theme.spacing(2, 1),
-    borderRadius: 0
+    borderRadius: 0,
   },
   iconProperty: {
-    paddingRight: '5px'
+    paddingRight: '5px',
   },
   cardTitleProperty: {
     display: 'flex',
-    alignItems: 'center'
-  }
-}));
+    alignItems: 'center',
+  },
+}))
 
 const InformationCard = ({
   bleachingProtocolSubItems,
@@ -48,14 +56,14 @@ const InformationCard = ({
   type,
   pieChartContent,
   textContent,
-  projectFishFamilies
+  projectFishFamilies,
 }) => {
-  const classes = cardStyle();
-  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />;
+  const classes = cardStyle()
+  const loaderType = type === 'text' ? <TextLoader /> : <ChartLoader />
 
-  const [modalStageOpen, setModalStage] = useState(false);
+  const [modalStageOpen, setModalStage] = useState(false)
 
-  const modalToggleHandler = () => setModalStage(!modalStageOpen);
+  const modalToggleHandler = () => setModalStage(!modalStageOpen)
 
   const pieChartProtocolSubHeadingItem = type === 'pieChart' && (
     <Box>
@@ -68,7 +76,7 @@ const InformationCard = ({
         projectFishFamilies={projectFishFamilies}
       />
     </Box>
-  );
+  )
 
   const contentItem =
     type === 'text' ? (
@@ -82,7 +90,7 @@ const InformationCard = ({
         title={title}
         histogramContent={histogramContent}
       />
-    );
+    )
 
   const cardContent =
     (histogramContent || pieChartContent || textContent) && !isFiltering ? (
@@ -105,24 +113,37 @@ const InformationCard = ({
       </Paper>
     ) : (
       <Paper className={classes.cardWrapper}>{loaderType}</Paper>
-    );
+    )
 
-  return <CardDiv setPaddingOff={type === 'pieChart'}>{cardContent}</CardDiv>;
-};
+  return <CardDiv setPaddingOff={type === 'pieChart'}>{cardContent}</CardDiv>
+}
 
 InformationCard.propTypes = {
-  bleachingProtocolSubItems: PropTypes.object,
+  bleachingProtocolSubItems: bleachingPropType,
   dataPolicy: PropTypes.string,
-  histogramContent: PropTypes.array,
+  histogramContent: histogramContentPropType,
   isFiltering: PropTypes.bool,
   isPrivatePolicy: PropTypes.bool,
-  pieChartContent: PropTypes.array,
-  projectFishFamilies: PropTypes.array,
-  protocol: PropTypes.object,
+  pieChartContent: pieChartContentPropType,
+  projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
+  protocol: PropTypes.oneOfType([fishbeltPropType, benthicPitPropType, bleachingPropType]),
   protocolName: PropTypes.string,
-  textContent: PropTypes.object,
-  title: PropTypes.string,
-  type: PropTypes.string
-};
+  textContent: textContentPropType,
+  title: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+}
 
-export default InformationCard;
+InformationCard.defaultProps = {
+  bleachingProtocolSubItems: {},
+  histogramContent: [],
+  pieChartContent: [],
+  projectFishFamilies: [],
+  textContent: {},
+  protocol: {},
+  protocolName: '',
+  dataPolicy: '',
+  isFiltering: false,
+  isPrivatePolicy: false,
+}
+
+export default InformationCard

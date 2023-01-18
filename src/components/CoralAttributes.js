@@ -1,22 +1,21 @@
-import React from 'react';
+import React from 'react'
 
-import { ReactComponent as Coral } from '../styles/Icons/coral.svg';
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { makeStyles } from '@material-ui/core/styles'
 
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-
-import PropTypes from 'prop-types';
+import Box from '@material-ui/core/Box'
+import Typography from '@material-ui/core/Typography'
+import { ReactComponent as Coral } from '../styles/Icons/coral.svg'
+import { siteDetailPropType } from '../lib/mermaidDataPropTypes'
 
 const coralStyleProperties = makeStyles(theme => ({
   reefProperty: {
-    padding: '8px 8px 8px 0'
+    padding: '8px 8px 8px 0',
   },
   coralIconProperty: {
     width: '20px',
     height: '20px',
-    marginTop: '3px'
+    marginTop: '3px',
   },
   attributeWrapperProperty: {
     display: 'flex',
@@ -28,16 +27,16 @@ const coralStyleProperties = makeStyles(theme => ({
     borderRadius: '20px',
     [theme.breakpoints.down('sm')]: {
       margin: '8px 0 0 0',
-      width: '100%'
-    }
-  }
-}));
+      width: '100%',
+    },
+  },
+}))
 
 const CoralAttributes = ({ currentSelectedSite }) => {
-  const classes = coralStyleProperties();
-  const { reef_zone, reef_type, reef_exposure } = currentSelectedSite;
-  const mediaMax959 = useMediaQuery('(max-width:959px)');
-  const spaceContent = mediaMax959 && ': ';
+  const classes = coralStyleProperties()
+  const { reef_zone, reef_type, reef_exposure } = currentSelectedSite
+  const mediaMax959 = useMediaQuery('(max-width:959px)')
+  const spaceContent = mediaMax959 && ': '
 
   return (
     <Box
@@ -83,15 +82,10 @@ const CoralAttributes = ({ currentSelectedSite }) => {
         </Box>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
 CoralAttributes.propTypes = {
-  currentSelectedSite: PropTypes.shape({
-    reef_exposure: PropTypes.string,
-    reef_type: PropTypes.string,
-    reef_zone: PropTypes.string
-  }),
-  classes: PropTypes.object
-};
-export default CoralAttributes;
+  currentSelectedSite: siteDetailPropType.isRequired,
+}
+export default CoralAttributes

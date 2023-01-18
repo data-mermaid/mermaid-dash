@@ -1,30 +1,16 @@
-import styled, { css } from 'styled-components/macro';
-import { withStyles } from '@material-ui/core/styles';
-import { theme } from '../constants/theme';
-import Button from '@material-ui/core/Button';
+import styled from 'styled-components/macro'
+import { withStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import { theme } from '../constants/theme'
 
 export const ButtonStyle = styled('button')`
   color: ${props => (props.disabled ? props.theme.disabledColor : props.theme.color)};
-  border: 1px solid ${props => props.theme.borderColor};
-  ${props =>
-    props.buttonBorder
-      ? css`
-          border: 2px solid ${props => props.theme.borderColor};
-          border-radius: 4px;
-        `
-      : css`
-          border: none;
-        `}
+  border: 0;
   display: flex;
   flex-direction: ${props => props.theme.flexDirection};
   justify-content: center;
   align-items: center;
-  background: ${props =>
-    props.notAllowed
-      ? props.theme.notAllowedBgColor
-      : props.disabled
-      ? props.theme.disabledBgColor
-      : props.theme.bgColor};
+  background: ${props => (props.disabled ? props.theme.disabledBgColor : props.theme.bgColor)};
   font-size: 1em;
   position: ${props => props.theme.position};
   padding: ${props => props.theme.padding};
@@ -35,7 +21,7 @@ export const ButtonStyle = styled('button')`
     '0px 1px 3px 0px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12)'};
   transform: ${props => props.theme.initialTranslate};
   transition: 0.2s ease-out;
-  cursor: ${props => (props.notAllowed ? 'not-allowed' : props.disabled ? 'default' : 'pointer')};
+  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
   &:hover {
     transform: ${props => props.theme.hoverTranslate};
   }
@@ -48,28 +34,29 @@ export const ButtonStyle = styled('button')`
   &:focus {
     outline: none;
   }
-`;
+`
 
 export const MenuLink = styled('a')`
   text-decoration: none;
   color: ${props => (props.menuButton ? 'black' : 'white')};
-`;
+`
+
+export const DialogTitle = styled('p')`
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+`
+
+export const DialogHeader = styled('p')`
+  font-size: 1.1rem;
+  text-decoration: underline;
+  font-weight: 800;
+  margin: 0;
+`
 
 export const DialogText = styled('p')`
-  font-size: ${props => (props.dialogTitle ? '1.5rem' : props.dialogHeader ? '1.1rem' : '0.85rem')};
-  text-decoration: ${props => props.dialogHeader && 'underline'};
-  ${props =>
-    props.subtext &&
-    css`
-      color: darkgrey;
-    `}
-  ${props =>
-    (props.dialogTitle || props.mrTitleItem || props.dialogHeader) &&
-    css`
-      font-weight: 800;
-      margin: 0;
-    `};
-`;
+  font-size: 0.85rem;
+`
 
 export const MermaidButton = withStyles({
   root: {
@@ -77,7 +64,7 @@ export const MermaidButton = withStyles({
     color: theme.cardButton.color.mermaidWhite,
     backgroundColor: theme.cardButton.bgColor,
     '&:hover': {
-      backgroundColor: theme.cardButton.bgColor
-    }
-  }
-})(Button);
+      backgroundColor: theme.cardButton.bgColor,
+    },
+  },
+})(Button)
