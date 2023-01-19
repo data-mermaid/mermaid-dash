@@ -39,13 +39,14 @@ const BarChart = ({ chartContent }) => {
           data: {
             fill: data => {
               if (data.x < 11) {
-                return '#038004'
+                return '#d7191c'
               }
+
               if (data.x > 10 && data.x < 31) {
                 return '#FFA500'
               }
 
-              return '#d7191c'
+              return '#038004'
             },
           },
         }}
