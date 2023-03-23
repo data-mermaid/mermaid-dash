@@ -6,7 +6,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Box from '@material-ui/core/Box'
 
-import { ReactComponent as MermaidLogo } from '../styles/Icons/logo.svg'
+import { ReactComponent as MermaidLogo } from '../styles/Icons/mermaid-dashboard-logo.svg'
 import { MenuLink } from '../styles/MermaidStyledComponents'
 import HeaderMenu from './HeaderMenu'
 import IntroModal from './IntroModal'
@@ -84,8 +84,8 @@ const Header = () => {
   return (
     <AppBar className={classes.appBarProperty}>
       <Toolbar className={classes.toolBarProperty}>
-        <Box p={1} flexGrow={1}>
-          <MermaidLogo height="38px" />
+        <Box p={1} flexGrow={1} marginTop="5px" marginLeft="5px">
+          <MermaidLogo width="150px" />
         </Box>
         <IntroModal open={modalStageOpen} modalToggleHandler={modalToggleHandler} />
         {HeaderItems}
