@@ -4,10 +4,11 @@
   ],
   "rules": {
     "camelcase": "off",
+    "curly": [
+      "error",
+      "all"
+    ],
     "no-underscore-dangle": "off",
-    "no-undef": "off",
-    "object-shorthand": "off",
-    "react/state-in-constructor": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-boolean-value": "off",
     "react-hooks/rules-of-hooks": "error",
@@ -19,7 +20,15 @@
         "argsIgnorePattern": "^_" // ignore unused vars and args that start with _. These vars are unsued, but named for readability/maintainability of code.
       }
     ],
-    "no-useless-return": "off"
+    "no-useless-return": "off",
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "assert": "either"
+      }
+    ]
   },
-  "plugins": ["react-hooks"]
+  "plugins": [
+    "react-hooks"
+  ]
 }
