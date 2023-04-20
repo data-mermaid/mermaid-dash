@@ -41,11 +41,14 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
   )
 
   const filteredProtocolsForSiteChartCards = useMemo(() => {
+    const sortBy = ['benthicpit', 'benthiclit', 'benthicpqt', 'quadrat_benthic_percent', 'beltfish']
     const ignoreProtocols = ['colonies_bleached', 'habitatcomplexity']
 
-    return Object.entries(currentSelectedSite?.protocols).filter(
-      protocol => !ignoreProtocols.includes(protocol[0]),
+    const sortProtocols = Object.entries(currentSelectedSite?.protocols).sort(
+      (a, b) => sortBy.indexOf(a[0]) - sortBy.indexOf(b[0]),
     )
+
+    return sortProtocols.filter(protocol => !ignoreProtocols.includes(protocol[0]))
   }, [currentSelectedSite.protocols])
 
   const bleachingProtocolSubItems = useMemo(() => currentSelectedSite.protocols.colonies_bleached, [
