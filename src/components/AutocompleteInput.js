@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import AutocompleteFilter from './AutocompleteFilter'
 import { sortArray } from '../lib/array-helpers'
@@ -11,29 +11,47 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices }) => 
   const project_names = sortArray(projects, 'name')
   const tag_names = sortArray(tags, 'name')
 
+  const [countryValue, setCountryValue] = useState([])
+  const [projectValue, setProjectValue] = useState(filterParams.project)
+  const [organizationValue, setOrganizationValue] = useState(filterParams.organization)
+
+  const _initialFetch = useEffect(() => {
+    const initialCountryVal = filterParams.country.map(countryParam => ({
+      label: countryParam,
+      isMatch: false,
+    }))
+    setCountryValue(initialCountryVal)
+  }, [filterParams])
+  const handleCountryValueChange = val => setCountryValue(val)
+  const handleProjectValueChange = val => setProjectValue(val)
+  const handleOrganizationValueChange = val => setOrganizationValue(val)
+
   return (
     <>
       <AutocompleteFilter
         id="country"
         label="Country"
+        testValue={countryValue}
+        handleValueChange={handleCountryValueChange}
         options={country_names}
-        preFilledValues={filterParams.country}
         addQueryStrings={addQueryStrings}
       />
-      <AutocompleteFilter
+      {/* <AutocompleteFilter
         id="project"
         label="Project"
+        testValue={projectValue}
+        handleValueChange={handleProjectValueChange}
         options={project_names}
-        preFilledValues={filterParams.project}
         addQueryStrings={addQueryStrings}
       />
       <AutocompleteFilter
         id="organization"
         label="Organization"
+        testValue={organizationValue}
+        handleValueChange={handleOrganizationValueChange}
         options={tag_names}
-        preFilledValues={filterParams.organization}
         addQueryStrings={addQueryStrings}
-      />
+      /> */}
     </>
   )
 }
