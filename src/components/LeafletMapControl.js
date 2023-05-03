@@ -95,6 +95,7 @@ const LeafletMapControl = ({
   numberOfFilteredSites,
   isFilteringChoices,
   highlightMarker,
+  sites,
 }) => {
   const classes = mapControlStyleProperty()
 
@@ -131,6 +132,7 @@ const LeafletMapControl = ({
         filterParams={filterParams}
         filterChoices={filterChoices}
         isFilteringChoices={isFilteringChoices}
+        sites={sites}
       />
     </Box>
   )

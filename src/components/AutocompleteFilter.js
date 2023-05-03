@@ -32,37 +32,38 @@ const AutocompleteFilter = ({
       <Autocomplete
         multiple
         id={id}
-        options={options}
+        options={options.sort((a, b) => -b.isMatch.localeCompare(a.isMatch))}
+        groupBy={option => option.isMatch}
         value={testValue}
         getOptionLabel={option => option.label}
         onChange={(event, val) => {
-          console.log('on change val ', val)
-          const updatedVal = val.map(item => ({ label: item, isMatch: false }))
-          handleValueChange(updatedVal)
-          addQueryStrings(id, val)
+          const valForQuerying = val.map(item => item.label)
+
+          handleValueChange(val)
+          addQueryStrings(id, valForQuerying)
         }}
         filterSelectedOptions
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
-        // renderOption={(option, { inputValue }) => {
-        //   const optionLabel = option.label
-        //   const matches = match(optionLabel, inputValue)
-        //   const parts = parse(optionLabel, matches)
+        renderOption={(option, { inputValue }) => {
+          const optionName = option.label
+          const matches = match(optionName, inputValue)
+          const parts = parse(optionName, matches)
 
-        //   return (
-        //     <div>
-        //       {parts.map(part => {
-        //         return (
-        //           <span
-        //             key={`dropdown-filter-list-${part.text}`}
-        //             style={{ fontWeight: part.highlight ? 700 : 400 }}
-        //           >
-        //             {part.text}
-        //           </span>
-        //         )
-        //       })}
-        //     </div>
-        //   )
-        // }}
+          return (
+            <div>
+              {parts.map(part => {
+                return (
+                  <span
+                    key={`dropdown-filter-list-${part.text}`}
+                    style={{ fontWeight: part.highlight ? 700 : 400 }}
+                  >
+                    {part.text}
+                  </span>
+                )
+              })}
+            </div>
+          )
+        }}
       />
     </div>
   )
@@ -72,11 +73,18 @@ AutocompleteFilter.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   testValue: PropTypes.arrayOf(
-    PropTypes.shape({ label: PropTypes.string, isMatch: PropTypes.bool }),
+    PropTypes.shape({ label: PropTypes.string, isMatch: PropTypes.string }),
   ).isRequired,
   handleValueChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(PropTypes.string).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({ label: PropTypes.string, isMatch: PropTypes.string }),
+  ).isRequired,
   addQueryStrings: PropTypes.func.isRequired,
+  arraySetOptions: PropTypes.arrayOf(PropTypes.string),
+}
+
+AutocompleteFilter.defaultProps = {
+  arraySetOptions: [],
 }
 
 export default AutocompleteFilter

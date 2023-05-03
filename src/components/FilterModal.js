@@ -29,7 +29,7 @@ const filterModalStyles = makeStyles(() => ({
   },
 }))
 
-const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringChoices }) => {
+const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringChoices, sites }) => {
   const classes = filterModalStyles()
 
   const [open, setOpen] = useState(false)
@@ -94,6 +94,7 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
             filterParams={filterParams}
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
+            sites={sites}
           />
           <DatePickerInputs
             filterParams={filterParams}
