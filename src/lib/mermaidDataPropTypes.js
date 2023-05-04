@@ -145,6 +145,6 @@ export const sitesPropType = PropTypes.arrayOf(sitePropType)
 export const dropdownOptionsPropType = PropTypes.arrayOf(
   PropTypes.shape({
     label: PropTypes.string,
-    isMatch: PropTypes.string,
+    group: PropTypes.string,
   }),
 )

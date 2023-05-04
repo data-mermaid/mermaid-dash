@@ -40,57 +40,45 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
   const [open, setOpen] = useState(false)
   const [queryStrings, setQueryStrings] = useState(filterParams)
 
-  const [countryValue, setCountryValue] = useState([])
-  const [projectValue, setProjectValue] = useState([])
-  const [organizationValue, setOrganizationValue] = useState([])
+  const [countryOptionValues, setCountryOptionValues] = useState([])
+  const [projectOptionValues, setProjectOptionValues] = useState([])
+  const [organizationOptionValues, setOrganizationOptionValues] = useState([])
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
   const [isStartDateGreaterThanEndDate, setIsStartDateGreaterThanEndDate] = useState(false)
 
-  const handleCountryValueChange = val => setCountryValue(val)
-  const handleProjectValueChange = val => setProjectValue(val)
-  const handleOrganizationValueChange = val => setOrganizationValue(val)
+  const handleCountryOptionValuesChange = val => setCountryOptionValues(val)
+  const handleProjectOptionValuesChange = val => setProjectOptionValues(val)
+  const handleOrganizationOptionValuesChange = val => setOrganizationOptionValues(val)
   const handleStartDateValueChange = val => setStartDate(val)
   const handleEndDateValueChange = val => setEndDate(val)
-  const handleDateValidationChange = value => setIsStartDateGreaterThanEndDate(value)
-
-  useEffect(() => {
-    const { sample_date_after, sample_date_before } = filterParams
-
-    if (sample_date_after && sample_date_before) {
-      const sampleDateAfter = new Date(sample_date_after).getTime()
-      const sampleDateBefore = new Date(sample_date_before).getTime()
-
-      setIsStartDateGreaterThanEndDate(sampleDateAfter > sampleDateBefore)
-    }
-  }, [filterParams])
 
   const _updateOptionVal = useEffect(() => {
     if (filterParams.country) {
       const initialCountryVal = filterParams.country.map(countryParam => ({
         label: countryParam,
-        isMatch: '',
+        group: '',
       }))
 
-      setCountryValue(initialCountryVal)
+      setCountryOptionValues(initialCountryVal)
     }
 
     if (filterParams.project) {
       const initialProjectVal = filterParams.project.map(projectItem => ({
         label: projectItem,
-        isMatch: '',
+        group: '',
       }))
 
-      setProjectValue(initialProjectVal)
+      setProjectOptionValues(initialProjectVal)
     }
 
     if (filterParams.organization) {
       const initialOrganizationVal = filterParams.organization.map(organizationItem => ({
         label: organizationItem,
-        isMatch: '',
+        group: '',
       }))
 
-      setOrganizationValue(initialOrganizationVal)
+      setOrganizationOptionValues(initialOrganizationVal)
     }
 
     if (filterParams.sample_date_after) {
@@ -102,8 +90,21 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
     }
   }, [filterParams])
 
+  const _checkDateValidation = useEffect(() => {
+    if (startDate && endDate) {
+      const startDateTime = new Date(startDate).getTime()
+      const endDateTime = new Date(endDate).getTime()
+
+      setIsStartDateGreaterThanEndDate(startDateTime > endDateTime)
+    } else {
+      setIsStartDateGreaterThanEndDate(false)
+    }
+  }, [endDate, startDate])
+
   const addQueryStrings = (property, options) => {
-    const params = { ...queryStrings }
+    const params = {
+      ...queryStrings,
+    }
 
     params[property] = options
 
@@ -146,20 +147,20 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
         <MuiDialogContent dividers>
           <FilterSitesCountText
             sites={sites}
-            countryValue={countryValue}
-            projectValue={projectValue}
-            organizationValue={organizationValue}
+            countryOptionValues={countryOptionValues}
+            projectOptionValues={projectOptionValues}
+            organizationOptionValues={organizationOptionValues}
             startDate={startDate}
             endDate={endDate}
           />
           <AutocompleteInput
             sites={sites}
-            countryValue={countryValue}
-            projectValue={projectValue}
-            organizationValue={organizationValue}
-            handleCountryValueChange={handleCountryValueChange}
-            handleProjectValueChange={handleProjectValueChange}
-            handleOrganizationValueChange={handleOrganizationValueChange}
+            countryOptionValues={countryOptionValues}
+            projectOptionValues={projectOptionValues}
+            organizationOptionValues={organizationOptionValues}
+            handleCountryOptionValuesChange={handleCountryOptionValuesChange}
+            handleProjectOptionValuesChange={handleProjectOptionValuesChange}
+            handleOrganizationOptionValuesChange={handleOrganizationOptionValuesChange}
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
           />
@@ -168,7 +169,6 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
             endDate={endDate}
             handleStartDateValueChange={handleStartDateValueChange}
             handleEndDateValueChange={handleEndDateValueChange}
-            handleDateValidationChange={handleDateValidationChange}
             addQueryStrings={addQueryStrings}
           />
           {isStartDateGreaterThanEndDate && (

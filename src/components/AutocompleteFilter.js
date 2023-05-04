@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
 const AutocompleteFilter = ({
   id,
   label,
-  testValue,
-  handleValueChange,
+  values,
+  handleValuesChange,
   options,
   addQueryStrings,
 }) => {
@@ -41,16 +41,16 @@ const AutocompleteFilter = ({
       <Autocomplete
         multiple
         id={id}
-        options={options.sort((a, b) => -b.isMatch.localeCompare(a.isMatch))}
-        groupBy={option => option.isMatch}
-        value={testValue}
+        options={options.sort((a, b) => -b.group.localeCompare(a.group))}
+        groupBy={option => option.group}
+        value={values}
         getOptionLabel={option => option.label}
         filterSelectedOptions={true}
-        onChange={(event, val) => {
-          const valForQuerying = val.map(item => item.label)
+        onChange={(event, optionsValues) => {
+          const optionLabels = optionsValues.map(option => option.label)
 
-          handleValueChange(val)
-          addQueryStrings(id, valForQuerying)
+          handleValuesChange(optionsValues)
+          addQueryStrings(id, optionLabels)
         }}
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
         renderOption={(option, { inputValue }) => {
@@ -87,13 +87,11 @@ const AutocompleteFilter = ({
 AutocompleteFilter.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  testValue: PropTypes.arrayOf(
-    PropTypes.shape({ label: PropTypes.string, isMatch: PropTypes.string }),
-  ).isRequired,
-  handleValueChange: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(
-    PropTypes.shape({ label: PropTypes.string, isMatch: PropTypes.string }),
-  ).isRequired,
+  values: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.string, group: PropTypes.string }))
+    .isRequired,
+  handleValuesChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.string, group: PropTypes.string }))
+    .isRequired,
   addQueryStrings: PropTypes.func.isRequired,
   arraySetOptions: PropTypes.arrayOf(PropTypes.string),
 }

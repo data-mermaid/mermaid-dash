@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { useState, useEffect } from 'react'
 
 import styled from 'styled-components'
@@ -10,9 +11,9 @@ const FilteredText = styled('div')`
 
 const FilterSitesCountText = ({
   sites,
-  countryValue,
-  projectValue,
-  organizationValue,
+  countryOptionValues,
+  projectOptionValues,
+  organizationOptionValues,
   startDate,
   endDate,
 }) => {
@@ -22,68 +23,57 @@ const FilterSitesCountText = ({
     const allSites = sites.map(site => site[1]).flat()
     const startDateTime = new Date(startDate).getTime()
     const endDateTime = new Date(endDate).getTime()
-    const countryValueLabels = countryValue.map(({ label }) => label)
-    const projectValueLabels = projectValue.map(({ label }) => label)
-    const organizationValueLabels = organizationValue.map(({ label }) => label)
+    const countryOptionLabels = countryOptionValues.map(({ label }) => label)
+    const projectOptionLabels = projectOptionValues.map(({ label }) => label)
+    const organizationOptionLabels = organizationOptionValues.map(({ label }) => label)
 
     const allFiltersSelected =
-      countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
+      countryOptionLabels.length && projectOptionLabels.length && organizationOptionLabels.length
     const oneOfFilteredSelected =
-      countryValueLabels.length || projectValueLabels.length || organizationValueLabels.length
+      countryOptionLabels.length || projectOptionLabels.length || organizationOptionLabels.length
     const noneOfFiltersSelected =
-      !countryValueLabels.length && !projectValueLabels.length && !organizationValueLabels.length
+      !countryOptionLabels.length && !projectOptionLabels.length && !organizationOptionLabels.length
     const countryAndProjectFiltersSelected =
-      countryValueLabels.length && projectValueLabels.length && !organizationValueLabels.length
+      countryOptionLabels.length && projectOptionLabels.length && !organizationOptionLabels.length
     const countryAndOrganizationFiltersSelected =
-      countryValueLabels.length && !projectValueLabels.length && organizationValueLabels.length
+      countryOptionLabels.length && !projectOptionLabels.length && organizationOptionLabels.length
     const projectAndOrganizationFiltersSelected =
-      !countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
+      !countryOptionLabels.length && projectOptionLabels.length && organizationOptionLabels.length
 
     const filteredSitesByAutocompleteInputs = allSites.filter(site => {
       const { country_name, project_name, tags } = site
+      const countryIncludedInCountryOptions = countryOptionLabels.includes(country_name)
+      const projectIncludedInProjectOptions = projectOptionLabels.includes(project_name)
+      const organizationIncludedInOrganizationOptions =
+        tags !== null &&
+        tags.map(({ name }) => name).findIndex(item => organizationOptionLabels.includes(item)) !==
+          -1
 
       if (allFiltersSelected) {
         return (
-          countryValueLabels.includes(country_name) &&
-          projectValueLabels.includes(project_name) &&
-          tags !== null &&
-          tags.map(({ name }) => name).findIndex(item => organizationValueLabels.includes(item)) !==
-            -1
+          countryIncludedInCountryOptions &&
+          projectIncludedInProjectOptions &&
+          organizationIncludedInOrganizationOptions
         )
       }
 
       if (countryAndProjectFiltersSelected) {
-        return (
-          countryValueLabels.includes(country_name) && projectValueLabels.includes(project_name)
-        )
+        return countryIncludedInCountryOptions && projectIncludedInProjectOptions
       }
 
       if (countryAndOrganizationFiltersSelected) {
-        return (
-          countryValueLabels.includes(country_name) &&
-          tags !== null &&
-          tags.map(({ name }) => name).findIndex(item => organizationValueLabels.includes(item)) !==
-            -1
-        )
+        return countryIncludedInCountryOptions && organizationIncludedInOrganizationOptions
       }
 
       if (projectAndOrganizationFiltersSelected) {
-        return (
-          projectValueLabels.includes(sites.project_name) &&
-          tags !== null &&
-          tags.map(({ name }) => name).findIndex(item => organizationValueLabels.includes(item)) !==
-            -1
-        )
+        return projectIncludedInProjectOptions && organizationIncludedInOrganizationOptions
       }
 
       if (oneOfFilteredSelected) {
         return (
-          countryValueLabels.includes(country_name) ||
-          projectValueLabels.includes(project_name) ||
-          (tags !== null &&
-            tags
-              .map(({ name }) => name)
-              .findIndex(item => organizationValueLabels.includes(item)) !== -1)
+          countryIncludedInCountryOptions ||
+          projectIncludedInProjectOptions ||
+          organizationIncludedInOrganizationOptions
         )
       }
 
@@ -109,7 +99,14 @@ const FilterSitesCountText = ({
     const sitesGroupedBySampleEventName = getSitesGroupByName(filteredSitesByDate)
 
     setFilteredSitesCount(sitesGroupedBySampleEventName.length)
-  }, [sites, countryValue, projectValue, startDate, endDate, organizationValue])
+  }, [
+    sites,
+    countryOptionValues,
+    projectOptionValues,
+    organizationOptionValues,
+    startDate,
+    endDate,
+  ])
 
   return sites.length === filteredSitesCount ? (
     <FilteredText>Show all sites</FilteredText>
@@ -125,9 +122,9 @@ FilterSitesCountText.propTypes = {
   startDate: PropTypes.string,
   endDate: PropTypes.string,
   sites: sitesPropType.isRequired,
-  countryValue: dropdownOptionsPropType.isRequired,
-  projectValue: dropdownOptionsPropType.isRequired,
-  organizationValue: dropdownOptionsPropType.isRequired,
+  countryOptionValues: dropdownOptionsPropType.isRequired,
+  projectOptionValues: dropdownOptionsPropType.isRequired,
+  organizationOptionValues: dropdownOptionsPropType.isRequired,
 }
 
 FilterSitesCountText.defaultProps = {

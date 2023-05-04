@@ -12,23 +12,23 @@ import usePrevious from '../lib/usePrevious'
 
 const AutocompleteInput = ({
   sites,
-  countryValue,
-  projectValue,
-  organizationValue,
-  handleCountryValueChange,
-  handleProjectValueChange,
-  handleOrganizationValueChange,
+  countryOptionValues,
+  projectOptionValues,
+  organizationOptionValues,
+  handleCountryOptionValuesChange,
+  handleProjectOptionValuesChange,
+  handleOrganizationOptionValuesChange,
   addQueryStrings,
   filterChoices,
 }) => {
   const { countries, projects, tags } = filterChoices
   const country_names = sortArray(countries, 'name')
   const project_names = sortArray(projects, 'name')
-  const tag_names = sortArray(tags, 'name')
+  const organization_names = sortArray(tags, 'name')
 
-  const previousCountryValue = usePrevious(countryValue)
-  const previousProjectValue = usePrevious(projectValue)
-  const previousOrganizationValue = usePrevious(organizationValue)
+  const previousCountryOptionValues = usePrevious(countryOptionValues)
+  const previousProjectOptionValues = usePrevious(projectOptionValues)
+  const previousOrganizationOptionValues = usePrevious(organizationOptionValues)
 
   const [countryOptions, setCountryOptions] = useState([])
   const [projectOptions, setProjectOptions] = useState([])
@@ -36,156 +36,161 @@ const AutocompleteInput = ({
 
   const _updateCountryOptions = useEffect(() => {
     if (
-      !previousProjectValue ||
-      projectValue.length !== previousProjectValue.length ||
-      !previousOrganizationValue ||
-      organizationValue.length !== previousOrganizationValue.length
+      !previousProjectOptionValues ||
+      projectOptionValues.length !== previousProjectOptionValues.length ||
+      !previousOrganizationOptionValues ||
+      organizationOptionValues.length !== previousOrganizationOptionValues.length
     ) {
       const allSites = sites.map(site => site[1]).flat()
-      const filterSitesByProject = allSites.filter(aSites => {
-        const projectValueLabels = projectValue.map(({ label }) => label)
-        const organizationValueLabels = organizationValue.map(({ label }) => label)
+      const filteredSitesByProjectsAndOrganizations = allSites.filter(site => {
+        const { project_name, tags: organizations } = site
+        const projectOptionLabels = projectOptionValues.map(({ label }) => label)
+        const organizationOptionLabels = organizationOptionValues.map(({ label }) => label)
 
         return (
-          projectValueLabels.includes(aSites.project_name) ||
-          (aSites.tags !== null &&
-            aSites.tags
+          projectOptionLabels.includes(project_name) ||
+          (organizations !== null &&
+            organizations
               .map(({ name }) => name)
-              .findIndex(item => organizationValueLabels.includes(item)) !== -1)
+              .findIndex(item => organizationOptionLabels.includes(item)) !== -1)
         )
       })
 
-      const countryNameSites = filterSitesByProject.map(({ country_name }) => country_name)
-      const countrySetOptions = [...new Set(countryNameSites)]
+      const countriesInFilteredSites = filteredSitesByProjectsAndOrganizations.map(
+        ({ country_name }) => country_name,
+      )
+      const uniqueCountries = [...new Set(countriesInFilteredSites)]
 
-      const groupedByCountryNames = countrySetOptions.length
-        ? country_names.map(cName => {
+      const updatedCountryOptions = uniqueCountries.length
+        ? country_names.map(country_name => {
             return {
-              label: cName,
-              isMatch: countrySetOptions.includes(cName)
+              label: country_name,
+              group: uniqueCountries.includes(country_name)
                 ? 'Countries based on other filters'
                 : 'Countries without filters',
             }
           })
-        : country_names.map(cName => {
+        : country_names.map(country_name => {
             return {
-              label: cName,
-              isMatch: '',
+              label: country_name,
+              group: '',
             }
           })
 
-      setCountryOptions(groupedByCountryNames)
+      setCountryOptions(updatedCountryOptions)
     }
   }, [
     sites,
-    previousProjectValue,
-    previousOrganizationValue,
-    projectValue,
-    organizationValue,
+    projectOptionValues,
+    organizationOptionValues,
+    previousProjectOptionValues,
+    previousOrganizationOptionValues,
     country_names,
   ])
 
   const _updateProjectOptions = useEffect(() => {
     if (
-      !previousCountryValue ||
-      countryValue.length !== previousCountryValue.length ||
-      !previousOrganizationValue ||
-      organizationValue.length !== previousOrganizationValue.length
+      !previousCountryOptionValues ||
+      countryOptionValues.length !== previousCountryOptionValues.length ||
+      !previousOrganizationOptionValues ||
+      organizationOptionValues.length !== previousOrganizationOptionValues.length
     ) {
       const allSites = sites.map(site => site[1]).flat()
-      const filterSitesByCountry = allSites.filter(aSites => {
-        const countryValueLabels = countryValue.map(({ label }) => label)
-        const organizationValueLabels = organizationValue.map(({ label }) => label)
+      const filteredSitesByCountriesAndOrganizations = allSites.filter(site => {
+        const { country_name, tags: organizations } = site
+        const countryOptionLabels = countryOptionValues.map(({ label }) => label)
+        const organizationOptionLabels = organizationOptionValues.map(({ label }) => label)
 
         return (
-          countryValueLabels.includes(aSites.country_name) ||
-          (aSites.tags !== null &&
-            aSites.tags
+          countryOptionLabels.includes(country_name) ||
+          (organizations !== null &&
+            organizations
               .map(({ name }) => name)
-              .findIndex(item => organizationValueLabels.includes(item)) !== -1)
+              .findIndex(item => organizationOptionLabels.includes(item)) !== -1)
         )
       })
 
-      const projectNameSites = filterSitesByCountry.map(({ project_name }) => project_name)
-      const projectSetOptions = [...new Set(projectNameSites)]
-      const groupedByProjectNames = projectSetOptions.length
-        ? project_names.map(pName => {
+      const projectsInFilteredSites = filteredSitesByCountriesAndOrganizations.map(
+        ({ project_name }) => project_name,
+      )
+      const uniqueProjects = [...new Set(projectsInFilteredSites)]
+      const updatedProjectOptions = uniqueProjects.length
+        ? project_names.map(project_name => {
             return {
-              label: pName,
-              isMatch: projectSetOptions.includes(pName)
+              label: project_name,
+              group: uniqueProjects.includes(project_name)
                 ? 'Projects based on other filters'
                 : 'Projects without filters',
             }
           })
-        : project_names.map(pName => {
+        : project_names.map(project_name => {
             return {
-              label: pName,
-              isMatch: '',
+              label: project_name,
+              group: '',
             }
           })
 
-      setProjectOptions(groupedByProjectNames)
+      setProjectOptions(updatedProjectOptions)
     }
   }, [
-    previousCountryValue,
-    previousOrganizationValue,
-    countryValue,
-    organizationValue,
     sites,
+    countryOptionValues,
+    organizationOptionValues,
+    previousCountryOptionValues,
+    previousOrganizationOptionValues,
     project_names,
   ])
 
   const _updateOrganizationOptions = useEffect(() => {
     if (
-      !previousCountryValue ||
-      countryValue.length !== previousCountryValue.length ||
-      !previousProjectValue ||
-      projectValue.length !== previousProjectValue.length
+      !previousCountryOptionValues ||
+      countryOptionValues.length !== previousCountryOptionValues.length ||
+      !previousProjectOptionValues ||
+      projectOptionValues.length !== previousProjectOptionValues.length
     ) {
       const allSites = sites.map(site => site[1]).flat()
-      const filterSitesByCountry = allSites.filter(aSites => {
-        const countryValueLabels = countryValue.map(({ label }) => label)
-        const projectValueLabels = projectValue.map(({ label }) => label)
+      const filteredSitesByCountriesAndProjects = allSites.filter(site => {
+        const { country_name, project_name } = site
+        const countryOptionLabels = countryOptionValues.map(({ label }) => label)
+        const projectOptionLabels = projectOptionValues.map(({ label }) => label)
 
         return (
-          countryValueLabels.includes(aSites.country_name) ||
-          projectValueLabels.includes(aSites.project_name)
+          countryOptionLabels.includes(country_name) || projectOptionLabels.includes(project_name)
         )
       })
 
-      const tagNameSites = filterSitesByCountry
+      const organizationsInFilteredSites = filteredSitesByCountriesAndProjects
         .map(({ tags: organizations }) => organizations)
         .flat()
-      const tagNamesOnly = tagNameSites
+      const organizationNames = organizationsInFilteredSites
         .filter(organization => organization !== null)
         .map(({ name }) => name)
-      const tagSetOptions = [...new Set(tagNamesOnly)]
-      const groupedByOrganizationNames = tagSetOptions.length
-        ? tag_names.map(tName => {
+      const uniqueOrganizations = [...new Set(organizationNames)]
+      const updatedOrganizationOptions = uniqueOrganizations.length
+        ? organization_names.map(organization_name => {
             return {
-              label: tName,
-              isMatch: tagSetOptions.includes(tName)
+              label: organization_name,
+              group: uniqueOrganizations.includes(organization_name)
                 ? 'Organizations based on other filters'
                 : 'Organizations without filters',
             }
           })
-        : tag_names.map(tName => {
+        : organization_names.map(organization_name => {
             return {
-              label: tName,
-              isMatch: '',
+              label: organization_name,
+              group: '',
             }
           })
 
-      setOrganizationOptions(groupedByOrganizationNames)
+      setOrganizationOptions(updatedOrganizationOptions)
     }
   }, [
-    previousCountryValue,
-    previousProjectValue,
-    countryValue,
-    projectValue,
-    project_names,
-    tag_names,
     sites,
+    countryOptionValues,
+    projectOptionValues,
+    previousCountryOptionValues,
+    previousProjectOptionValues,
+    organization_names,
   ])
 
   return (
@@ -193,25 +198,25 @@ const AutocompleteInput = ({
       <AutocompleteFilter
         id="country"
         label="Country"
-        testValue={countryValue}
-        handleValueChange={handleCountryValueChange}
-        autocompleteValue={countryValue}
+        values={countryOptionValues}
+        handleValuesChange={handleCountryOptionValuesChange}
+        autocompleteValue={countryOptionValues}
         options={countryOptions}
         addQueryStrings={addQueryStrings}
       />
       <AutocompleteFilter
         id="project"
         label="Project"
-        testValue={projectValue}
-        handleValueChange={handleProjectValueChange}
+        values={projectOptionValues}
+        handleValuesChange={handleProjectOptionValuesChange}
         options={projectOptions}
         addQueryStrings={addQueryStrings}
       />
       <AutocompleteFilter
         id="organization"
         label="Organization"
-        testValue={organizationValue}
-        handleValueChange={handleOrganizationValueChange}
+        values={organizationOptionValues}
+        handleValuesChange={handleOrganizationOptionValuesChange}
         options={organizationOptions}
         addQueryStrings={addQueryStrings}
       />
@@ -221,12 +226,12 @@ const AutocompleteInput = ({
 
 AutocompleteInput.propTypes = {
   sites: sitesPropType.isRequired,
-  countryValue: dropdownOptionsPropType.isRequired,
-  projectValue: dropdownOptionsPropType.isRequired,
-  organizationValue: dropdownOptionsPropType.isRequired,
-  handleCountryValueChange: PropTypes.func.isRequired,
-  handleProjectValueChange: PropTypes.func.isRequired,
-  handleOrganizationValueChange: PropTypes.func.isRequired,
+  countryOptionValues: dropdownOptionsPropType.isRequired,
+  projectOptionValues: dropdownOptionsPropType.isRequired,
+  organizationOptionValues: dropdownOptionsPropType.isRequired,
+  handleCountryOptionValuesChange: PropTypes.func.isRequired,
+  handleProjectOptionValuesChange: PropTypes.func.isRequired,
+  handleOrganizationOptionValuesChange: PropTypes.func.isRequired,
   addQueryStrings: PropTypes.func.isRequired,
   filterChoices: filterChoicesPropType.isRequired,
 }

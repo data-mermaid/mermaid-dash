@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components/macro'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
@@ -22,20 +22,8 @@ const DatePickerInputs = ({
   endDate,
   handleStartDateValueChange,
   handleEndDateValueChange,
-  handleDateValidationChange,
   addQueryStrings,
 }) => {
-  useEffect(() => {
-    if (startDate && endDate) {
-      const startDateTime = new Date(startDate).getTime()
-      const endDateTime = new Date(endDate).getTime()
-
-      handleDateValidationChange(startDateTime > endDateTime)
-    } else {
-      handleDateValidationChange(false)
-    }
-  }, [endDate, handleDateValidationChange, startDate])
-
   const handleClrStartDate = e => {
     e.stopPropagation()
     handleStartDateValueChange(null)
@@ -59,7 +47,7 @@ const DatePickerInputs = ({
         onChange={date => {
           const dateQuery = formatDateQuery(date)
 
-          handleStartDateValueChange(date)
+          handleStartDateValueChange(dateQuery)
           addQueryStrings('sample_date_after', dateQuery)
         }}
         InputProps={
@@ -81,7 +69,7 @@ const DatePickerInputs = ({
         onChange={date => {
           const dateQuery = formatDateQuery(date)
 
-          handleEndDateValueChange(date)
+          handleEndDateValueChange(dateQuery)
           addQueryStrings('sample_date_before', dateQuery)
         }}
         InputProps={
@@ -103,7 +91,6 @@ DatePickerInputs.propTypes = {
   endDate: PropTypes.string,
   handleStartDateValueChange: PropTypes.func.isRequired,
   handleEndDateValueChange: PropTypes.func.isRequired,
-  handleDateValidationChange: PropTypes.func.isRequired,
   addQueryStrings: PropTypes.func.isRequired,
 }
 
