@@ -11,7 +11,11 @@ import DrawerDashBoard from './DrawerDashBoard'
 import LeafletMap from './LeafletMap'
 import LeafletMapControl from './LeafletMapControl'
 import BottomSummaryPanel from './BottomSummaryPanel'
-import { convertQueryParamsToIds, getChoices, getSitesGroupByName } from '../lib/array-helpers'
+import {
+  convertQueryParamsToIds,
+  getChoices,
+  getSitesGroupBySampleEvents,
+} from '../lib/array-helpers'
 
 class MermaidDash extends Component {
   state = {
@@ -267,7 +271,7 @@ class MermaidDash extends Component {
     let { metrics: updatedMetrics } = this.state
     const updatedParams = await this.fetchAllChoices(params)
     const sampleEvents = await this.fetchEntiresSampleEvents(updatedParams)
-    const sitesGroupedBySampleEventName = getSitesGroupByName(sampleEvents)
+    const sitesGroupedBySampleEventName = getSitesGroupBySampleEvents(sampleEvents)
 
     if (sitesGroupedBySampleEventName.length === 0) {
       updatedMetrics = [
@@ -303,7 +307,7 @@ class MermaidDash extends Component {
       }
 
       const sampleEvents = await this.fetchEntiresSampleEvents(emptyParams)
-      const sitesGroupedBySampleEventName = getSitesGroupByName(sampleEvents)
+      const sitesGroupedBySampleEventName = getSitesGroupBySampleEvents(sampleEvents)
 
       window.sessionStorage.setItem('mermaid-sites', JSON.stringify(sitesGroupedBySampleEventName))
 

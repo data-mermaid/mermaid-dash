@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useState, useEffect } from 'react'
 
 import styled from 'styled-components'
-import { getSitesGroupByName } from '../lib/array-helpers'
+import { getSitesGroupBySampleEvents } from '../lib/array-helpers'
 import { dropdownOptionsPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
 const FilteredText = styled('div')`
@@ -96,7 +96,7 @@ const FilterSitesCountText = ({
       )
     })
 
-    const sitesGroupedBySampleEventName = getSitesGroupByName(filteredSitesByDate)
+    const sitesGroupedBySampleEventName = getSitesGroupBySampleEvents(filteredSitesByDate)
 
     setFilteredSitesCount(sitesGroupedBySampleEventName.length)
   }, [

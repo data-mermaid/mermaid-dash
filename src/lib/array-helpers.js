@@ -27,7 +27,7 @@ export const getChoices = (tableName, choices) => {
   return choices.find(choice => tableName === choice.name).data || []
 }
 
-export const getSitesGroupByName = sampleEvents => {
+export const getSitesGroupBySampleEvents = sampleEvents => {
   const sortedSampleEvents = sampleEvents.sort((a, b) => (a.sample_date > b.sample_date ? 1 : -1))
 
   const siteGroups = sortedSampleEvents.reduce((acc, sample) => {
