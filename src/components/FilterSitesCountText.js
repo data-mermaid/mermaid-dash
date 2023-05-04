@@ -29,7 +29,7 @@ const FilterSitesCountText = ({
 
     const allFiltersSelected =
       countryOptionLabels.length && projectOptionLabels.length && organizationOptionLabels.length
-    const oneOfFilteredSelected =
+    const oneOfFiltersSelected =
       countryOptionLabels.length || projectOptionLabels.length || organizationOptionLabels.length
     const noneOfFiltersSelected =
       !countryOptionLabels.length && !projectOptionLabels.length && !organizationOptionLabels.length
@@ -69,7 +69,7 @@ const FilterSitesCountText = ({
         return projectIncludedInProjectOptions && organizationIncludedInOrganizationOptions
       }
 
-      if (oneOfFilteredSelected) {
+      if (oneOfFiltersSelected) {
         return (
           countryIncludedInCountryOptions ||
           projectIncludedInProjectOptions ||
