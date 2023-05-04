@@ -8,30 +8,38 @@ const FilteredText = styled('div')`
   padding-bottom: 10px;
 `
 
-const FilterSitesCountText = ({ sites, countryValue, projectValue, organizationValue }) => {
+const FilterSitesCountText = ({
+  sites,
+  countryValue,
+  projectValue,
+  organizationValue,
+  startDate,
+  endDate,
+}) => {
   const [filteredSitesCount, setFilteredSitesCount] = useState(0)
 
   const _updateFilteredSitesCount = useEffect(() => {
     const allSites = sites.map(site => site[1]).flat()
+    const startDateTime = new Date(startDate).getTime()
+    const endDateTime = new Date(endDate).getTime()
+    const countryValueLabels = countryValue.map(({ label }) => label)
+    const projectValueLabels = projectValue.map(({ label }) => label)
+    const organizationValueLabels = organizationValue.map(({ label }) => label)
+
+    const allFiltersSelected =
+      countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
+    const oneOfFilteredSelected =
+      countryValueLabels.length || projectValueLabels.length || organizationValueLabels.length
+    const noneOfFiltersSelected =
+      !countryValueLabels.length && !projectValueLabels.length && !organizationValueLabels.length
+    const countryAndProjectFiltersSelected =
+      countryValueLabels.length && projectValueLabels.length && !organizationValueLabels.length
+    const countryAndOrganizationFiltersSelected =
+      countryValueLabels.length && !projectValueLabels.length && organizationValueLabels.length
+    const projectAndOrganizationFiltersSelected =
+      !countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
 
     const filteredSitesByAutocompleteInputs = allSites.filter(sites => {
-      const countryValueLabels = countryValue.map(({ label }) => label)
-      const projectValueLabels = projectValue.map(({ label }) => label)
-      const organizationValueLabels = organizationValue.map(({ label }) => label)
-
-      const allFiltersSelected =
-        countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
-      const oneOfFilteredSelected =
-        countryValueLabels.length || projectValueLabels.length || organizationValueLabels.length
-      const noneOfFiltersSelected =
-        !countryValueLabels.length && !projectValueLabels.length && !organizationValueLabels.length
-      const countryAndProjectFiltersSelected =
-        countryValueLabels.length && projectValueLabels.length && !organizationValueLabels.length
-      const countryAndOrganizationFiltersSelected =
-        countryValueLabels.length && !projectValueLabels.length && organizationValueLabels.length
-      const projectAndOrganizationFiltersSelected =
-        !countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
-
       if (allFiltersSelected) {
         return (
           countryValueLabels.includes(sites.country_name) &&
@@ -81,10 +89,26 @@ const FilterSitesCountText = ({ sites, countryValue, projectValue, organizationV
       }
     })
 
-    const sitesGroupedBySampleEventName = getSitesGroupByName(filteredSitesByAutocompleteInputs)
+    const filteredSitesByDate = filteredSitesByAutocompleteInputs.filter(site => {
+      const siteDateTime = new Date(site.sample_date).getTime()
+
+      if (!startDate && !endDate) {
+        return true
+      }
+
+      if (startDate && endDate) {
+        return startDateTime <= siteDateTime && siteDateTime <= endDateTime
+      }
+
+      return (
+        (startDate && startDateTime <= siteDateTime) || (endDate && siteDateTime <= endDateTime)
+      )
+    })
+
+    const sitesGroupedBySampleEventName = getSitesGroupByName(filteredSitesByDate)
 
     setFilteredSitesCount(sitesGroupedBySampleEventName.length)
-  }, [sites, countryValue, projectValue, organizationValue])
+  }, [sites, countryValue, projectValue, startDate, endDate, organizationValue])
 
   return sites.length === filteredSitesCount ? (
     <FilteredText>Show all sites</FilteredText>

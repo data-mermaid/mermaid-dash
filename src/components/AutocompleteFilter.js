@@ -6,7 +6,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import parse from 'autosuggest-highlight/parse'
 import match from 'autosuggest-highlight/match'
 import { makeStyles } from '@material-ui/core/styles'
-import styled from 'styled-components'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,16 +15,16 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(3),
     },
   },
+  groupHeader: {
+    position: 'sticky',
+    top: '-8px',
+    padding: '5px',
+    backgroundColor: 'white',
+  },
+  groupItems: {
+    padding: 0,
+  },
 }))
-
-const GroupHeader = styled('div')`
-  padding: 4px 10px;
-  font-weight: 700;
-`
-
-const GroupItems = styled('ul')`
-  padding: 0;
-`
 
 const AutocompleteFilter = ({
   id,
@@ -76,8 +75,8 @@ const AutocompleteFilter = ({
         }}
         renderGroup={params => (
           <li key={params.key}>
-            <GroupHeader>{params.group}</GroupHeader>
-            <GroupItems>{params.children}</GroupItems>
+            <div className={classes.groupHeader}>{params.group}</div>
+            <ul className={classes.groupItems}>{params.children}</ul>
           </li>
         )}
       />
