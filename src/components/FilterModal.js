@@ -18,7 +18,11 @@ import DatePickerInputs from './DatePickerInputs'
 import AutocompleteInput from './AutocompleteInput'
 import FilterSitesCountText from './FilterSitesCountText'
 import MermaidDashboardTooltip from './MermaidDashboardTooltip'
-import { filterChoicesPropType, filterParamsPropType } from '../lib/mermaidDataPropTypes'
+import {
+  filterChoicesPropType,
+  filterParamsPropType,
+  sitesPropType,
+} from '../lib/mermaidDataPropTypes'
 
 const filterModalStyles = makeStyles(() => ({
   buttonProgress: {
@@ -191,6 +195,7 @@ FilterModal.propTypes = {
   filterParams: filterParamsPropType.isRequired,
   filterChoices: filterChoicesPropType.isRequired,
   isFilteringChoices: PropTypes.bool.isRequired,
+  sites: sitesPropType.isRequired,
 }
 
 export default FilterModal

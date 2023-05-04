@@ -39,54 +39,55 @@ const FilterSitesCountText = ({
     const projectAndOrganizationFiltersSelected =
       !countryValueLabels.length && projectValueLabels.length && organizationValueLabels.length
 
-    const filteredSitesByAutocompleteInputs = allSites.filter(sites => {
+    const filteredSitesByAutocompleteInputs = allSites.filter(site => {
+      const { country_name, project_name, tags } = site
+
       if (allFiltersSelected) {
         return (
-          countryValueLabels.includes(sites.country_name) &&
-          projectValueLabels.includes(sites.project_name) &&
-          sites.tags !== null &&
-          sites.tags
-            .map(({ name }) => name)
-            .findIndex(item => organizationValueLabels.includes(item)) !== -1
+          countryValueLabels.includes(country_name) &&
+          projectValueLabels.includes(project_name) &&
+          tags !== null &&
+          tags.map(({ name }) => name).findIndex(item => organizationValueLabels.includes(item)) !==
+            -1
         )
       }
-      if (noneOfFiltersSelected) {
-        return true
-      }
+
       if (countryAndProjectFiltersSelected) {
         return (
-          countryValueLabels.includes(sites.country_name) &&
-          projectValueLabels.includes(sites.project_name)
+          countryValueLabels.includes(country_name) && projectValueLabels.includes(project_name)
         )
       }
+
       if (countryAndOrganizationFiltersSelected) {
         return (
-          countryValueLabels.includes(sites.country_name) &&
-          sites.tags !== null &&
-          sites.tags
-            .map(({ name }) => name)
-            .findIndex(item => organizationValueLabels.includes(item)) !== -1
+          countryValueLabels.includes(country_name) &&
+          tags !== null &&
+          tags.map(({ name }) => name).findIndex(item => organizationValueLabels.includes(item)) !==
+            -1
         )
       }
+
       if (projectAndOrganizationFiltersSelected) {
         return (
           projectValueLabels.includes(sites.project_name) &&
-          sites.tags !== null &&
-          sites.tags
-            .map(({ name }) => name)
-            .findIndex(item => organizationValueLabels.includes(item)) !== -1
+          tags !== null &&
+          tags.map(({ name }) => name).findIndex(item => organizationValueLabels.includes(item)) !==
+            -1
         )
       }
+
       if (oneOfFilteredSelected) {
         return (
-          countryValueLabels.includes(sites.country_name) ||
-          projectValueLabels.includes(sites.project_name) ||
-          (sites.tags !== null &&
-            sites.tags
+          countryValueLabels.includes(country_name) ||
+          projectValueLabels.includes(project_name) ||
+          (tags !== null &&
+            tags
               .map(({ name }) => name)
               .findIndex(item => organizationValueLabels.includes(item)) !== -1)
         )
       }
+
+      return noneOfFiltersSelected
     })
 
     const filteredSitesByDate = filteredSitesByAutocompleteInputs.filter(site => {
@@ -121,10 +122,17 @@ const FilterSitesCountText = ({
 }
 
 FilterSitesCountText.propTypes = {
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
   sites: sitesPropType.isRequired,
   countryValue: dropdownOptionsPropType.isRequired,
   projectValue: dropdownOptionsPropType.isRequired,
   organizationValue: dropdownOptionsPropType.isRequired,
+}
+
+FilterSitesCountText.defaultProps = {
+  startDate: null,
+  endDate: null,
 }
 
 export default FilterSitesCountText

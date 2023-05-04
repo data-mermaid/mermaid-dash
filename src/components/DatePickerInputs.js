@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components/macro'
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import IconButton from '@material-ui/core/IconButton'
 import ClearIcon from '@material-ui/icons/Clear'
-import { filterParamsPropType } from '../lib/mermaidDataPropTypes'
 
 const DatePickerWrapper = styled(DatePicker)`
   width: 100%;

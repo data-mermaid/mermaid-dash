@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import AutocompleteFilter from './AutocompleteFilter'
 import { sortArray } from '../lib/array-helpers'
@@ -126,7 +126,14 @@ const AutocompleteInput = ({
 
       setProjectOptions(groupedByProjectNames)
     }
-  }, [previousCountryValue, countryValue, project_names])
+  }, [
+    previousCountryValue,
+    previousOrganizationValue,
+    countryValue,
+    organizationValue,
+    sites,
+    project_names,
+  ])
 
   const _updateOrganizationOptions = useEffect(() => {
     if (
@@ -146,8 +153,12 @@ const AutocompleteInput = ({
         )
       })
 
-      const tagNameSites = filterSitesByCountry.map(({ tags }) => tags).flat()
-      const tagNamesOnly = tagNameSites.filter(tags => tags !== null).map(({ name }) => name)
+      const tagNameSites = filterSitesByCountry
+        .map(({ tags: organizations }) => organizations)
+        .flat()
+      const tagNamesOnly = tagNameSites
+        .filter(organization => organization !== null)
+        .map(({ name }) => name)
       const tagSetOptions = [...new Set(tagNamesOnly)]
       const groupedByOrganizationNames = tagSetOptions.length
         ? tag_names.map(tName => {
@@ -167,7 +178,15 @@ const AutocompleteInput = ({
 
       setOrganizationOptions(groupedByOrganizationNames)
     }
-  }, [previousCountryValue, countryValue, project_names])
+  }, [
+    previousCountryValue,
+    previousProjectValue,
+    countryValue,
+    projectValue,
+    project_names,
+    tag_names,
+    sites,
+  ])
 
   return (
     <>

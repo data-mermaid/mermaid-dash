@@ -53,7 +53,6 @@ class MermaidDash extends Component {
 
   componentDidMount() {
     const { filterParams, queryLimit } = this.state
-    this.fetchAllSitesWithEmptyQueryParams()
 
     const params = new URLSearchParams(this.props.location.search) // eslint-disable-line
     const countryName = params.get('country')
@@ -74,6 +73,7 @@ class MermaidDash extends Component {
     }
 
     this.fetchAllSites(paramsObj)
+    this.fetchAllSitesWithEmptyQueryParams()
 
     if (countryName) {
       filterParams.country = countryName.split(',')
