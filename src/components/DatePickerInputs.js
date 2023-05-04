@@ -18,30 +18,34 @@ const formatDateQuery = date => {
   return year || month || day ? `${year}-${month}-${day}` : null
 }
 
-const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) => {
-  const [startDate, setStateDate] = useState(filterParams.sample_date_after || null)
-  const [endDate, setEndDate] = useState(filterParams.sample_date_before || null)
-
+const DatePickerInputs = ({
+  startDate,
+  endDate,
+  handleStartDateValueChange,
+  handleEndDateValueChange,
+  handleDateValidationChange,
+  addQueryStrings,
+}) => {
   useEffect(() => {
     if (startDate && endDate) {
       const startDateTime = new Date(startDate).getTime()
       const endDateTime = new Date(endDate).getTime()
 
-      setDateValidation(startDateTime > endDateTime)
+      handleDateValidationChange(startDateTime > endDateTime)
     } else {
-      setDateValidation(false)
+      handleDateValidationChange(false)
     }
-  }, [endDate, setDateValidation, startDate])
+  }, [endDate, handleDateValidationChange, startDate])
 
   const handleClrStartDate = e => {
     e.stopPropagation()
-    setStateDate(null)
+    handleStartDateValueChange(null)
     addQueryStrings('sample_date_after', '')
   }
 
   const handleClrEndDate = e => {
     e.stopPropagation()
-    setEndDate(null)
+    handleEndDateValueChange(null)
     addQueryStrings('sample_date_before', '')
   }
 
@@ -56,7 +60,7 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
         onChange={date => {
           const dateQuery = formatDateQuery(date)
 
-          setStateDate(date)
+          handleStartDateValueChange(date)
           addQueryStrings('sample_date_after', dateQuery)
         }}
         InputProps={
@@ -78,7 +82,7 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
         onChange={date => {
           const dateQuery = formatDateQuery(date)
 
-          setEndDate(date)
+          handleEndDateValueChange(date)
           addQueryStrings('sample_date_before', dateQuery)
         }}
         InputProps={
@@ -96,9 +100,17 @@ const DatePickerInputs = ({ filterParams, addQueryStrings, setDateValidation }) 
 }
 
 DatePickerInputs.propTypes = {
-  filterParams: filterParamsPropType.isRequired,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
+  handleStartDateValueChange: PropTypes.func.isRequired,
+  handleEndDateValueChange: PropTypes.func.isRequired,
+  handleDateValidationChange: PropTypes.func.isRequired,
   addQueryStrings: PropTypes.func.isRequired,
-  setDateValidation: PropTypes.func.isRequired,
+}
+
+DatePickerInputs.defaultProps = {
+  startDate: null,
+  endDate: null,
 }
 
 export default DatePickerInputs

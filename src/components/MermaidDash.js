@@ -11,12 +11,13 @@ import DrawerDashBoard from './DrawerDashBoard'
 import LeafletMap from './LeafletMap'
 import LeafletMapControl from './LeafletMapControl'
 import BottomSummaryPanel from './BottomSummaryPanel'
-import { convertQueryParamsToIds, getChoices } from '../lib/array-helpers'
+import { convertQueryParamsToIds, getChoices, getSitesGroupByName } from '../lib/array-helpers'
 
 class MermaidDash extends Component {
   state = {
     showSiteDetail: false,
     sites: [],
+    allSites: [],
     siteDetail: null,
     projectFishFamilies: [],
     metrics: [
@@ -52,6 +53,7 @@ class MermaidDash extends Component {
 
   componentDidMount() {
     const { filterParams, queryLimit } = this.state
+    this.fetchAllSitesWithEmptyQueryParams()
 
     const params = new URLSearchParams(this.props.location.search) // eslint-disable-line
     const countryName = params.get('country')
@@ -265,18 +267,9 @@ class MermaidDash extends Component {
     let { metrics: updatedMetrics } = this.state
     const updatedParams = await this.fetchAllChoices(params)
     const sampleEvents = await this.fetchEntiresSampleEvents(updatedParams)
-    const sortedSampleEvents = sampleEvents.sort((a, b) => (a.sample_date > b.sample_date ? 1 : -1))
+    const sitesGroupedBySampleEventName = getSitesGroupByName(sampleEvents)
 
-    const reducedSites = sortedSampleEvents.reduce((acc, sample) => {
-      acc[sample.site_id] = acc[sample.site_id] || []
-      acc[sample.site_id].push(sample)
-
-      return acc
-    }, {})
-
-    const siteEntries = Object.entries(reducedSites)
-
-    if (siteEntries.length === 0) {
+    if (sitesGroupedBySampleEventName.length === 0) {
       updatedMetrics = [
         { title: 'Countries', count: 0 },
         { title: 'Projects', count: 0 },
@@ -287,7 +280,35 @@ class MermaidDash extends Component {
       ]
     }
 
-    this.setState({ sites: siteEntries, metrics: updatedMetrics, isFiltering: false })
+    this.setState({
+      sites: sitesGroupedBySampleEventName,
+      metrics: updatedMetrics,
+      isFiltering: false,
+    })
+  }
+
+  fetchAllSitesWithEmptyQueryParams = async () => {
+    const sitesStorage = JSON.parse(window.sessionStorage.getItem('mermaid-sites'))
+
+    if (sitesStorage) {
+      this.setState({ allSites: sitesStorage })
+    } else {
+      const emptyParams = {
+        country_name: null,
+        limit: 1000,
+        project_id: null,
+        sample_date_after: null,
+        sample_date_before: null,
+        tag_id: null,
+      }
+
+      const sampleEvents = await this.fetchEntiresSampleEvents(emptyParams)
+      const sitesGroupedBySampleEventName = getSitesGroupByName(sampleEvents)
+
+      window.sessionStorage.setItem('mermaid-sites', JSON.stringify(sitesGroupedBySampleEventName))
+
+      this.setState({ allSites: siteEntries })
+    }
   }
 
   fetchNonTestProjectChoices = (projects, property, property_array) => {
@@ -593,6 +614,7 @@ class MermaidDash extends Component {
       sidePanelOpen,
       siteDetail,
       sites,
+      allSites,
       highlightMarker,
       zoomFullMap,
       zoomToSite,
@@ -627,7 +649,7 @@ class MermaidDash extends Component {
           numberOfFilteredSites={sites.length}
           isFilteringChoices={isFilteringChoices}
           highlightMarker={highlightMarker}
-          sites={sites}
+          sites={allSites}
         />
         <LeafletMap
           sidePanelOpen={sidePanelOpen}

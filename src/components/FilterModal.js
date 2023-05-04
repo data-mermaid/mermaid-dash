@@ -16,6 +16,7 @@ import { theme } from '../constants/theme'
 import { ButtonStyle, DialogTitle } from '../styles/MermaidStyledComponents'
 import DatePickerInputs from './DatePickerInputs'
 import AutocompleteInput from './AutocompleteInput'
+import FilterSitesCountText from './FilterSitesCountText'
 import MermaidDashboardTooltip from './MermaidDashboardTooltip'
 import { filterChoicesPropType, filterParamsPropType } from '../lib/mermaidDataPropTypes'
 
@@ -34,7 +35,20 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
 
   const [open, setOpen] = useState(false)
   const [queryStrings, setQueryStrings] = useState(filterParams)
+
+  const [countryValue, setCountryValue] = useState([])
+  const [projectValue, setProjectValue] = useState([])
+  const [organizationValue, setOrganizationValue] = useState([])
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
   const [isStartDateGreaterThanEndDate, setIsStartDateGreaterThanEndDate] = useState(false)
+
+  const handleCountryValueChange = val => setCountryValue(val)
+  const handleProjectValueChange = val => setProjectValue(val)
+  const handleOrganizationValueChange = val => setOrganizationValue(val)
+  const handleStartDateValueChange = val => setStartDate(val)
+  const handleEndDateValueChange = val => setEndDate(val)
+  const handleDateValidationChange = value => setIsStartDateGreaterThanEndDate(value)
 
   useEffect(() => {
     const { sample_date_after, sample_date_before } = filterParams
@@ -46,6 +60,44 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
       setIsStartDateGreaterThanEndDate(sampleDateAfter > sampleDateBefore)
     }
   }, [filterParams])
+
+  const _updateOptionVal = useEffect(() => {
+    if (filterParams.country) {
+      const initialCountryVal = filterParams.country.map(countryParam => ({
+        label: countryParam,
+        isMatch: '',
+      }))
+
+      setCountryValue(initialCountryVal)
+    }
+
+    if (filterParams.project) {
+      const initialProjectVal = filterParams.project.map(projectItem => ({
+        label: projectItem,
+        isMatch: '',
+      }))
+
+      setProjectValue(initialProjectVal)
+    }
+
+    if (filterParams.organization) {
+      const initialOrganizationVal = filterParams.organization.map(organizationItem => ({
+        label: organizationItem,
+        isMatch: '',
+      }))
+
+      setOrganizationValue(initialOrganizationVal)
+    }
+
+    if (filterParams.sample_date_after) {
+      setStartDate(filterParams.sample_date_after)
+    }
+
+    if (filterParams.sample_date_before) {
+      setEndDate(filterParams.sample_date_before)
+    }
+  }, [filterParams])
+
   const addQueryStrings = (property, options) => {
     const params = { ...queryStrings }
 
@@ -65,8 +117,6 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
 
     filterHandler(queryStrings)
   }
-
-  const setDateValidation = value => setIsStartDateGreaterThanEndDate(value)
 
   const filterSites = (
     <ThemeProvider theme={theme.mapControl}>
@@ -90,16 +140,32 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
           <DialogTitle>Filter By</DialogTitle>
         </MuiDialogTitle>
         <MuiDialogContent dividers>
+          <FilterSitesCountText
+            sites={sites}
+            countryValue={countryValue}
+            projectValue={projectValue}
+            organizationValue={organizationValue}
+            startDate={startDate}
+            endDate={endDate}
+          />
           <AutocompleteInput
-            filterParams={filterParams}
+            sites={sites}
+            countryValue={countryValue}
+            projectValue={projectValue}
+            organizationValue={organizationValue}
+            handleCountryValueChange={handleCountryValueChange}
+            handleProjectValueChange={handleProjectValueChange}
+            handleOrganizationValueChange={handleOrganizationValueChange}
             addQueryStrings={addQueryStrings}
             filterChoices={filterChoices}
-            sites={sites}
           />
           <DatePickerInputs
-            filterParams={filterParams}
+            startDate={startDate}
+            endDate={endDate}
+            handleStartDateValueChange={handleStartDateValueChange}
+            handleEndDateValueChange={handleEndDateValueChange}
+            handleDateValidationChange={handleDateValidationChange}
             addQueryStrings={addQueryStrings}
-            setDateValidation={setDateValidation}
           />
           {isStartDateGreaterThanEndDate && (
             <Typography variant="caption" color="error">

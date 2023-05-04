@@ -4,59 +4,35 @@ import React, { useState, useEffect, useMemo } from 'react'
 import AutocompleteFilter from './AutocompleteFilter'
 import { sortArray } from '../lib/array-helpers'
 import {
+  dropdownOptionsPropType,
   filterChoicesPropType,
-  filterParamsPropType,
   sitesPropType,
 } from '../lib/mermaidDataPropTypes'
 import usePrevious from '../lib/usePrevious'
 
-const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites }) => {
-  const allSites = sites.map(site => site[1]).flat()
-
+const AutocompleteInput = ({
+  sites,
+  countryValue,
+  projectValue,
+  organizationValue,
+  handleCountryValueChange,
+  handleProjectValueChange,
+  handleOrganizationValueChange,
+  addQueryStrings,
+  filterChoices,
+}) => {
   const { countries, projects, tags } = filterChoices
   const country_names = sortArray(countries, 'name')
   const project_names = sortArray(projects, 'name')
   const tag_names = sortArray(tags, 'name')
 
-  const [countryValue, setCountryValue] = useState([])
   const previousCountryValue = usePrevious(countryValue)
-  const [projectValue, setProjectValue] = useState([])
   const previousProjectValue = usePrevious(projectValue)
-  const [organizationValue, setOrganizationValue] = useState([])
   const previousOrganizationValue = usePrevious(organizationValue)
 
   const [countryOptions, setCountryOptions] = useState([])
   const [projectOptions, setProjectOptions] = useState([])
   const [organizationOptions, setOrganizationOptions] = useState([])
-
-  const _updateOptionVal = useMemo(() => {
-    if (filterParams.country) {
-      const initialCountryVal = filterParams.country.map(countryParam => ({
-        label: countryParam,
-        isMatch: '',
-      }))
-
-      setCountryValue(initialCountryVal)
-    }
-
-    if (filterParams.project) {
-      const initialProjectVal = filterParams.project.map(projectItem => ({
-        label: projectItem,
-        isMatch: '',
-      }))
-
-      setProjectValue(initialProjectVal)
-    }
-
-    if (filterParams.organization) {
-      const initialOrganizationVal = filterParams.organization.map(organizationItem => ({
-        label: organizationItem,
-        isMatch: '',
-      }))
-
-      setOrganizationValue(initialOrganizationVal)
-    }
-  }, [filterParams])
 
   const _updateCountryOptions = useEffect(() => {
     if (
@@ -65,6 +41,7 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
       !previousOrganizationValue ||
       organizationValue.length !== previousOrganizationValue.length
     ) {
+      const allSites = sites.map(site => site[1]).flat()
       const filterSitesByProject = allSites.filter(aSites => {
         const projectValueLabels = projectValue.map(({ label }) => label)
         const organizationValueLabels = organizationValue.map(({ label }) => label)
@@ -100,7 +77,7 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
       setCountryOptions(groupedByCountryNames)
     }
   }, [
-    allSites,
+    sites,
     previousProjectValue,
     previousOrganizationValue,
     projectValue,
@@ -115,6 +92,7 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
       !previousOrganizationValue ||
       organizationValue.length !== previousOrganizationValue.length
     ) {
+      const allSites = sites.map(site => site[1]).flat()
       const filterSitesByCountry = allSites.filter(aSites => {
         const countryValueLabels = countryValue.map(({ label }) => label)
         const organizationValueLabels = organizationValue.map(({ label }) => label)
@@ -157,6 +135,7 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
       !previousProjectValue ||
       projectValue.length !== previousProjectValue.length
     ) {
+      const allSites = sites.map(site => site[1]).flat()
       const filterSitesByCountry = allSites.filter(aSites => {
         const countryValueLabels = countryValue.map(({ label }) => label)
         const projectValueLabels = projectValue.map(({ label }) => label)
@@ -166,6 +145,7 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
           projectValueLabels.includes(aSites.project_name)
         )
       })
+
       const tagNameSites = filterSitesByCountry.map(({ tags }) => tags).flat()
       const tagNamesOnly = tagNameSites.filter(tags => tags !== null).map(({ name }) => name)
       const tagSetOptions = [...new Set(tagNamesOnly)]
@@ -188,10 +168,6 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
       setOrganizationOptions(groupedByOrganizationNames)
     }
   }, [previousCountryValue, countryValue, project_names])
-
-  const handleCountryValueChange = val => setCountryValue(val)
-  const handleProjectValueChange = val => setProjectValue(val)
-  const handleOrganizationValueChange = val => setOrganizationValue(val)
 
   return (
     <>
@@ -225,10 +201,15 @@ const AutocompleteInput = ({ filterParams, addQueryStrings, filterChoices, sites
 }
 
 AutocompleteInput.propTypes = {
-  filterParams: filterParamsPropType.isRequired,
+  sites: sitesPropType.isRequired,
+  countryValue: dropdownOptionsPropType.isRequired,
+  projectValue: dropdownOptionsPropType.isRequired,
+  organizationValue: dropdownOptionsPropType.isRequired,
+  handleCountryValueChange: PropTypes.func.isRequired,
+  handleProjectValueChange: PropTypes.func.isRequired,
+  handleOrganizationValueChange: PropTypes.func.isRequired,
   addQueryStrings: PropTypes.func.isRequired,
   filterChoices: filterChoicesPropType.isRequired,
-  sites: sitesPropType.isRequired,
 }
 
 export default AutocompleteInput

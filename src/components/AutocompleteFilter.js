@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import parse from 'autosuggest-highlight/parse'
 import match from 'autosuggest-highlight/match'
 import { makeStyles } from '@material-ui/core/styles'
+import styled from 'styled-components'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,6 +17,15 @@ const useStyles = makeStyles(theme => ({
     },
   },
 }))
+
+const GroupHeader = styled('div')`
+  padding: 4px 10px;
+  font-weight: 700;
+`
+
+const GroupItems = styled('ul')`
+  padding: 0;
+`
 
 const AutocompleteFilter = ({
   id,
@@ -36,13 +46,13 @@ const AutocompleteFilter = ({
         groupBy={option => option.isMatch}
         value={testValue}
         getOptionLabel={option => option.label}
+        filterSelectedOptions={true}
         onChange={(event, val) => {
           const valForQuerying = val.map(item => item.label)
 
           handleValueChange(val)
           addQueryStrings(id, valForQuerying)
         }}
-        filterSelectedOptions
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
         renderOption={(option, { inputValue }) => {
           const optionName = option.label
@@ -55,7 +65,7 @@ const AutocompleteFilter = ({
                 return (
                   <span
                     key={`dropdown-filter-list-${part.text}`}
-                    style={{ fontWeight: part.highlight ? 700 : 400 }}
+                    style={{ fontWeight: part.highlight ? 700 : 350 }}
                   >
                     {part.text}
                   </span>
@@ -64,6 +74,12 @@ const AutocompleteFilter = ({
             </div>
           )
         }}
+        renderGroup={params => (
+          <li key={params.key}>
+            <GroupHeader>{params.group}</GroupHeader>
+            <GroupItems>{params.children}</GroupItems>
+          </li>
+        )}
       />
     </div>
   )
