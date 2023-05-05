@@ -407,25 +407,30 @@ class MermaidDash extends Component {
   }
 
   getBenthicHardCoralCount = protocols => {
-    return protocols.map(({ benthiclit, benthicpit }) => {
-      let hardCoralValue
+    return protocols.map(({ benthiclit, benthicpit, benthicpqt }) => {
+      const benthicLITCover = benthiclit && benthiclit.percent_cover_by_benthic_category_avg
+      const benthicPITCover = benthicpit && benthicpit.percent_cover_by_benthic_category_avg
+      const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_by_benthic_category_avg
 
-      if (benthiclit || benthicpit) {
-        const benthicpitPercentCover =
-          benthicpit !== undefined && benthicpit.percent_cover_by_benthic_category_avg
-        const benthiclitPercentCover =
-          benthiclit !== undefined && benthiclit.percent_cover_by_benthic_category_avg
-        const benthicPercentCover = benthicpit ? benthicpitPercentCover : benthiclitPercentCover
+      const benthicLITCoverHardCoral = benthicLITCover && benthicLITCover['Hard coral']
+      const benthicPITCoverHardCoral = benthicPITCover && benthicPITCover['Hard coral']
+      const benthicPQTCoverHardCoral = benthicPQTCover && benthicPQTCover['Hard coral']
 
-        hardCoralValue = benthicPercentCover && benthicPercentCover['Hard coral']
+      if (benthicLITCoverHardCoral || benthicPITCoverHardCoral || benthicPQTCoverHardCoral) {
+        const numerator =
+          (benthicLITCoverHardCoral !== undefined ? benthicLITCoverHardCoral : 0) +
+          (benthicPITCoverHardCoral !== undefined ? benthicPITCoverHardCoral : 0) +
+          (benthicPQTCoverHardCoral !== undefined ? benthicPQTCoverHardCoral : 0)
 
-        if (benthicpit !== undefined && benthiclit !== undefined) {
-          hardCoralValue =
-            (benthicpitPercentCover['Hard coral'] + benthiclitPercentCover['Hard coral']) / 2
-        }
+        const denominator =
+          (benthicLITCoverHardCoral !== undefined ? 1 : 0) +
+          (benthicPITCoverHardCoral !== undefined ? 1 : 0) +
+          (benthicPQTCoverHardCoral !== undefined ? 1 : 0)
+
+        return numerator / denominator
       }
 
-      return hardCoralValue
+      return 0
     })
   }
 
