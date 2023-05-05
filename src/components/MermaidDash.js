@@ -391,7 +391,6 @@ class MermaidDash extends Component {
 
   getBenthicHardCoralCount = protocols => {
     return protocols.map(({ benthiclit, benthicpit, benthicpqt }) => {
-      let hardCoralAverage = 0
       const benthicLITCover = benthiclit && benthiclit.percent_cover_by_benthic_category_avg
       const benthicPITCover = benthicpit && benthicpit.percent_cover_by_benthic_category_avg
       const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_by_benthic_category_avg
@@ -411,10 +410,10 @@ class MermaidDash extends Component {
           (benthicPITCoverHardCoral !== undefined ? 1 : 0) +
           (benthicPQTCoverHardCoral !== undefined ? 1 : 0)
 
-        hardCoralAverage = numerator / denominator
+        return numerator / denominator
       }
 
-      return hardCoralAverage
+      return 0
     })
   }
 
