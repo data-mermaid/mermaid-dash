@@ -34,7 +34,13 @@ const filterModalStyles = makeStyles(() => ({
   },
 }))
 
-const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringChoices, sites }) => {
+const FilterModal = ({
+  filterHandler,
+  filterParams,
+  filterChoices,
+  isFilteringChoices,
+  allSites,
+}) => {
   const classes = filterModalStyles()
 
   const [open, setOpen] = useState(false)
@@ -146,7 +152,7 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
         </MuiDialogTitle>
         <MuiDialogContent dividers>
           <FilterSitesCountText
-            sites={sites}
+            allSites={allSites}
             countryOptionValues={countryOptionValues}
             projectOptionValues={projectOptionValues}
             organizationOptionValues={organizationOptionValues}
@@ -154,7 +160,7 @@ const FilterModal = ({ filterHandler, filterParams, filterChoices, isFilteringCh
             endDate={endDate}
           />
           <AutocompleteInput
-            sites={sites}
+            allSites={allSites}
             countryOptionValues={countryOptionValues}
             projectOptionValues={projectOptionValues}
             organizationOptionValues={organizationOptionValues}
@@ -195,7 +201,7 @@ FilterModal.propTypes = {
   filterParams: filterParamsPropType.isRequired,
   filterChoices: filterChoicesPropType.isRequired,
   isFilteringChoices: PropTypes.bool.isRequired,
-  sites: sitesPropType.isRequired,
+  allSites: sitesPropType.isRequired,
 }
 
 export default FilterModal

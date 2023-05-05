@@ -11,7 +11,7 @@ import {
 import usePrevious from '../lib/usePrevious'
 
 const AutocompleteInput = ({
-  sites,
+  allSites,
   countryOptionValues,
   projectOptionValues,
   organizationOptionValues,
@@ -41,9 +41,9 @@ const AutocompleteInput = ({
       !previousOrganizationOptionValues ||
       organizationOptionValues.length !== previousOrganizationOptionValues.length
     ) {
-      const allSites = sites.map(site => site[1]).flat()
-      const filteredSitesByProjectsAndOrganizations = allSites.filter(site => {
-        const { project_name, tags: organizations } = site
+      const sampleEvents = allSites.map(site => site[1]).flat()
+      const filteredSitesByProjectsAndOrganizations = sampleEvents.filter(sample_event => {
+        const { project_name, tags: organizations } = sample_event
         const projectOptionLabels = projectOptionValues.map(({ label }) => label)
         const organizationOptionLabels = organizationOptionValues.map(({ label }) => label)
 
@@ -80,7 +80,7 @@ const AutocompleteInput = ({
       setCountryOptions(updatedCountryOptions)
     }
   }, [
-    sites,
+    allSites,
     projectOptionValues,
     organizationOptionValues,
     previousProjectOptionValues,
@@ -95,8 +95,8 @@ const AutocompleteInput = ({
       !previousOrganizationOptionValues ||
       organizationOptionValues.length !== previousOrganizationOptionValues.length
     ) {
-      const allSites = sites.map(site => site[1]).flat()
-      const filteredSitesByCountriesAndOrganizations = allSites.filter(site => {
+      const sampleEvents = allSites.map(site => site[1]).flat()
+      const filteredSitesByCountriesAndOrganizations = sampleEvents.filter(site => {
         const { country_name, tags: organizations } = site
         const countryOptionLabels = countryOptionValues.map(({ label }) => label)
         const organizationOptionLabels = organizationOptionValues.map(({ label }) => label)
@@ -133,7 +133,7 @@ const AutocompleteInput = ({
       setProjectOptions(updatedProjectOptions)
     }
   }, [
-    sites,
+    allSites,
     countryOptionValues,
     organizationOptionValues,
     previousCountryOptionValues,
@@ -148,8 +148,8 @@ const AutocompleteInput = ({
       !previousProjectOptionValues ||
       projectOptionValues.length !== previousProjectOptionValues.length
     ) {
-      const allSites = sites.map(site => site[1]).flat()
-      const filteredSitesByCountriesAndProjects = allSites.filter(site => {
+      const sampleEvents = allSites.map(site => site[1]).flat()
+      const filteredSitesByCountriesAndProjects = sampleEvents.filter(site => {
         const { country_name, project_name } = site
         const countryOptionLabels = countryOptionValues.map(({ label }) => label)
         const projectOptionLabels = projectOptionValues.map(({ label }) => label)
@@ -185,7 +185,7 @@ const AutocompleteInput = ({
       setOrganizationOptions(updatedOrganizationOptions)
     }
   }, [
-    sites,
+    allSites,
     countryOptionValues,
     projectOptionValues,
     previousCountryOptionValues,
@@ -225,7 +225,7 @@ const AutocompleteInput = ({
 }
 
 AutocompleteInput.propTypes = {
-  sites: sitesPropType.isRequired,
+  allSites: sitesPropType.isRequired,
   countryOptionValues: dropdownOptionsPropType.isRequired,
   projectOptionValues: dropdownOptionsPropType.isRequired,
   organizationOptionValues: dropdownOptionsPropType.isRequired,

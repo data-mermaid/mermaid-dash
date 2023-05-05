@@ -309,9 +309,8 @@ class MermaidDash extends Component {
       const sampleEvents = await this.fetchEntiresSampleEvents(emptyParams)
       const sitesGroupedBySampleEventName = getSitesGroupBySampleEvents(sampleEvents)
 
+      this.setState({ allSites: sitesGroupedBySampleEventName })
       window.sessionStorage.setItem('mermaid-sites', JSON.stringify(sitesGroupedBySampleEventName))
-
-      this.setState({ allSites: siteEntries })
     }
   }
 
@@ -653,7 +652,7 @@ class MermaidDash extends Component {
           numberOfFilteredSites={sites.length}
           isFilteringChoices={isFilteringChoices}
           highlightMarker={highlightMarker}
-          sites={allSites}
+          allSites={allSites}
         />
         <LeafletMap
           sidePanelOpen={sidePanelOpen}

@@ -99,7 +99,7 @@ const LeafletMapControl = ({
   numberOfFilteredSites,
   isFilteringChoices,
   highlightMarker,
-  sites,
+  allSites,
 }) => {
   const classes = mapControlStyleProperty()
 
@@ -136,7 +136,7 @@ const LeafletMapControl = ({
         filterParams={filterParams}
         filterChoices={filterChoices}
         isFilteringChoices={isFilteringChoices}
-        sites={sites}
+        allSites={allSites}
       />
     </Box>
   )
@@ -197,7 +197,7 @@ LeafletMapControl.propTypes = {
       lng: PropTypes.number,
     }),
   }),
-  sites: sitesPropType.isRequired,
+  allSites: sitesPropType.isRequired,
 }
 
 LeafletMapControl.defaultProps = {

@@ -10,7 +10,7 @@ const FilteredText = styled('div')`
 `
 
 const FilterSitesCountText = ({
-  sites,
+  allSites,
   countryOptionValues,
   projectOptionValues,
   organizationOptionValues,
@@ -20,7 +20,7 @@ const FilterSitesCountText = ({
   const [filteredSitesCount, setFilteredSitesCount] = useState(0)
 
   const _updateFilteredSitesCount = useEffect(() => {
-    const allSites = sites.map(site => site[1]).flat()
+    const sampleEvents = allSites.map(site => site[1]).flat()
     const startDateTime = new Date(startDate).getTime()
     const endDateTime = new Date(endDate).getTime()
     const countryOptionLabels = countryOptionValues.map(({ label }) => label)
@@ -40,8 +40,8 @@ const FilterSitesCountText = ({
     const projectAndOrganizationFiltersSelected =
       !countryOptionLabels.length && projectOptionLabels.length && organizationOptionLabels.length
 
-    const filteredSitesByAutocompleteInputs = allSites.filter(site => {
-      const { country_name, project_name, tags } = site
+    const filteredSitesByAutocompleteInputs = sampleEvents.filter(sample_event => {
+      const { country_name, project_name, tags } = sample_event
       const countryIncludedInCountryOptions = countryOptionLabels.includes(country_name)
       const projectIncludedInProjectOptions = projectOptionLabels.includes(project_name)
       const organizationIncludedInOrganizationOptions =
@@ -100,7 +100,7 @@ const FilterSitesCountText = ({
 
     setFilteredSitesCount(sitesGroupedBySampleEventName.length)
   }, [
-    sites,
+    allSites,
     countryOptionValues,
     projectOptionValues,
     organizationOptionValues,
@@ -108,12 +108,12 @@ const FilterSitesCountText = ({
     endDate,
   ])
 
-  return sites.length === filteredSitesCount ? (
+  return allSites.length === filteredSitesCount ? (
     <FilteredText>Show all sites</FilteredText>
   ) : (
     <FilteredText>
-      Showing <strong>{filteredSitesCount}</strong> of <strong>{sites.length}</strong> sites based
-      on these filters
+      Showing <strong>{filteredSitesCount}</strong> of <strong>{allSites.length}</strong> sites
+      based on these filters
     </FilteredText>
   )
 }
@@ -121,7 +121,7 @@ const FilterSitesCountText = ({
 FilterSitesCountText.propTypes = {
   startDate: PropTypes.string,
   endDate: PropTypes.string,
-  sites: sitesPropType.isRequired,
+  allSites: sitesPropType.isRequired,
   countryOptionValues: dropdownOptionsPropType.isRequired,
   projectOptionValues: dropdownOptionsPropType.isRequired,
   organizationOptionValues: dropdownOptionsPropType.isRequired,
