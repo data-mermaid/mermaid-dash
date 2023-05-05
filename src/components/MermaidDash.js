@@ -292,26 +292,19 @@ class MermaidDash extends Component {
   }
 
   fetchAllSitesWithEmptyQueryParams = async () => {
-    const sitesStorage = JSON.parse(window.sessionStorage.getItem('mermaid-sites'))
-
-    if (sitesStorage) {
-      this.setState({ allSites: sitesStorage })
-    } else {
-      const emptyParams = {
-        country_name: null,
-        limit: 1000,
-        project_id: null,
-        sample_date_after: null,
-        sample_date_before: null,
-        tag_id: null,
-      }
-
-      const sampleEvents = await this.fetchEntiresSampleEvents(emptyParams)
-      const sitesGroupedBySampleEventName = getSitesGroupBySampleEvents(sampleEvents)
-
-      this.setState({ allSites: sitesGroupedBySampleEventName })
-      window.sessionStorage.setItem('mermaid-sites', JSON.stringify(sitesGroupedBySampleEventName))
+    const emptyParams = {
+      country_name: null,
+      limit: 1000,
+      project_id: null,
+      sample_date_after: null,
+      sample_date_before: null,
+      tag_id: null,
     }
+
+    const sampleEvents = await this.fetchEntiresSampleEvents(emptyParams)
+    const sitesGroupedBySampleEventName = getSitesGroupBySampleEvents(sampleEvents)
+
+    this.setState({ allSites: sitesGroupedBySampleEventName })
   }
 
   fetchNonTestProjectChoices = (projects, property, property_array) => {
