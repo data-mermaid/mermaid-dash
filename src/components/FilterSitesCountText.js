@@ -109,7 +109,9 @@ const FilterSitesCountText = ({
   ])
 
   return allSites.length === filteredSitesCount ? (
-    <FilteredText>Show all sites</FilteredText>
+    <FilteredText>
+      <strong>Showing all sites</strong>
+    </FilteredText>
   ) : (
     <FilteredText>
       Showing <strong>{filteredSitesCount}</strong> of <strong>{allSites.length}</strong> sites

@@ -66,8 +66,8 @@ const AutocompleteInput = ({
             return {
               label: country_name,
               group: uniqueCountries.includes(country_name)
-                ? 'Countries based on other filters'
-                : 'Countries without filters',
+                ? 'Countries based on current filters'
+                : 'Other countries',
             }
           })
         : country_names.map(country_name => {
@@ -119,8 +119,8 @@ const AutocompleteInput = ({
             return {
               label: project_name,
               group: uniqueProjects.includes(project_name)
-                ? 'Projects based on other filters'
-                : 'Projects without filters',
+                ? 'Projects based on current filters'
+                : 'Other projects',
             }
           })
         : project_names.map(project_name => {
@@ -171,8 +171,8 @@ const AutocompleteInput = ({
             return {
               label: organization_name,
               group: uniqueOrganizations.includes(organization_name)
-                ? 'Organizations based on other filters'
-                : 'Organizations without filters',
+                ? 'Organizations based on current filters'
+                : 'Other organizations',
             }
           })
         : organization_names.map(organization_name => {
