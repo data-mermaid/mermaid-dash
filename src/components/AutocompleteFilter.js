@@ -46,6 +46,7 @@ const AutocompleteFilter = ({
           if (a.group.includes('projects') || b.group.includes('projects')) {
             return b.group.localeCompare(a.group)
           }
+
           return -b.group.localeCompare(a.group)
         })}
         groupBy={option => option.group}
