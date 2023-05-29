@@ -36,7 +36,6 @@ const AutocompleteFilter = ({
   addQueryStrings,
 }) => {
   const classes = useStyles()
-  // const optionGroupsAlphabeticallyOrdered = options.sort((a, b) => -b.group.localeCompare(a.group))
   const optionGroupsCustomOrdered = options.sort((a, b) => {
     if (a.group.includes('projects') || b.group.includes('projects')) {
       return b.group.localeCompare(a.group)
@@ -57,13 +56,6 @@ const AutocompleteFilter = ({
       <Autocomplete
         multiple
         id={id}
-        // options={options.sort((a, b) => {
-        //   if (a.group.includes('projects') || b.group.includes('projects')) {
-        //     return b.group.localeCompare(a.group)
-        //   }
-
-        //   return -b.group.localeCompare(a.group)
-        // })}
         options={optionGroupsCustomOrdered}
         groupBy={option => option.group}
         value={values}
