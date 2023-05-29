@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { theme } from '../constants/theme'
 import { ButtonStyle, DialogTitle } from '../styles/MermaidStyledComponents'
 import DatePickerInputs from './DatePickerInputs'
-import AutocompleteInput from './AutocompleteInput'
+import CountryProjectOrganizationInputs from './CountryProjectOrganizationInputs'
 import FilterSitesCountText from './FilterSitesCountText'
 import MermaidDashboardTooltip from './MermaidDashboardTooltip'
 import {
@@ -59,32 +59,32 @@ const FilterModal = ({
   const handleStartDateValueChange = val => setStartDate(val)
   const handleEndDateValueChange = val => setEndDate(val)
 
-  const _updateOptionVal = useEffect(() => {
+  const _initializeOptionValues = useEffect(() => {
     if (filterParams.country) {
-      const initialCountryVal = filterParams.country.map(countryParam => ({
+      const initialCountryValue = filterParams.country.map(countryParam => ({
         label: countryParam,
         group: '',
       }))
 
-      setCountryOptionValues(initialCountryVal)
+      setCountryOptionValues(initialCountryValue)
     }
 
     if (filterParams.project) {
-      const initialProjectVal = filterParams.project.map(projectItem => ({
+      const initialProjectValue = filterParams.project.map(projectItem => ({
         label: projectItem,
         group: '',
       }))
 
-      setProjectOptionValues(initialProjectVal)
+      setProjectOptionValues(initialProjectValue)
     }
 
     if (filterParams.organization) {
-      const initialOrganizationVal = filterParams.organization.map(organizationItem => ({
+      const initialOrganizationValue = filterParams.organization.map(organizationItem => ({
         label: organizationItem,
         group: '',
       }))
 
-      setOrganizationOptionValues(initialOrganizationVal)
+      setOrganizationOptionValues(initialOrganizationValue)
     }
 
     if (filterParams.sample_date_after) {
@@ -159,7 +159,7 @@ const FilterModal = ({
             startDate={startDate}
             endDate={endDate}
           />
-          <AutocompleteInput
+          <CountryProjectOrganizationInputs
             allSites={allSites}
             countryOptionValues={countryOptionValues}
             projectOptionValues={projectOptionValues}

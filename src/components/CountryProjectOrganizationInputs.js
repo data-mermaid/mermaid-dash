@@ -10,7 +10,7 @@ import {
 } from '../lib/mermaidDataPropTypes'
 import usePrevious from '../lib/usePrevious'
 
-const AutocompleteInput = ({
+const CountryProjectOrganizationInputs = ({
   allSites,
   countryOptionValues,
   projectOptionValues,
@@ -224,7 +224,7 @@ const AutocompleteInput = ({
   )
 }
 
-AutocompleteInput.propTypes = {
+CountryProjectOrganizationInputs.propTypes = {
   allSites: sitesPropType.isRequired,
   countryOptionValues: dropdownOptionsPropType.isRequired,
   projectOptionValues: dropdownOptionsPropType.isRequired,
@@ -236,4 +236,4 @@ AutocompleteInput.propTypes = {
   filterChoices: filterChoicesPropType.isRequired,
 }
 
-export default AutocompleteInput
+export default CountryProjectOrganizationInputs
