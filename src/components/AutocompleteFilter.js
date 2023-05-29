@@ -36,29 +36,40 @@ const AutocompleteFilter = ({
   addQueryStrings,
 }) => {
   const classes = useStyles()
+  // const optionGroupsAlphabeticallyOrdered = options.sort((a, b) => -b.group.localeCompare(a.group))
+  const optionGroupsCustomOrdered = options.sort((a, b) => {
+    if (a.group.includes('projects') || b.group.includes('projects')) {
+      return b.group.localeCompare(a.group)
+    }
+
+    return -b.group.localeCompare(a.group)
+  })
+
+  const handleValuesChangeAndUpdateQuery = (event, optionsValues) => {
+    const optionLabels = optionsValues.map(option => option.label)
+
+    handleValuesChange(optionsValues)
+    addQueryStrings(id, optionLabels)
+  }
 
   return (
     <div className={classes.root}>
       <Autocomplete
         multiple
         id={id}
-        options={options.sort((a, b) => {
-          if (a.group.includes('projects') || b.group.includes('projects')) {
-            return b.group.localeCompare(a.group)
-          }
+        // options={options.sort((a, b) => {
+        //   if (a.group.includes('projects') || b.group.includes('projects')) {
+        //     return b.group.localeCompare(a.group)
+        //   }
 
-          return -b.group.localeCompare(a.group)
-        })}
+        //   return -b.group.localeCompare(a.group)
+        // })}
+        options={optionGroupsCustomOrdered}
         groupBy={option => option.group}
         value={values}
         getOptionLabel={option => option.label}
         filterSelectedOptions={true}
-        onChange={(event, optionsValues) => {
-          const optionLabels = optionsValues.map(option => option.label)
-
-          handleValuesChange(optionsValues)
-          addQueryStrings(id, optionLabels)
-        }}
+        onChange={handleValuesChangeAndUpdateQuery}
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
         renderOption={(option, { inputValue }) => {
           const optionName = option.label
@@ -80,10 +91,10 @@ const AutocompleteFilter = ({
             </div>
           )
         }}
-        renderGroup={params => (
-          <li key={params.key}>
-            <div className={classes.groupHeader}>{params.group}</div>
-            <ul className={classes.groupItems}>{params.children}</ul>
+        renderGroup={({ key, group, children }) => (
+          <li key={key}>
+            <div className={classes.groupHeader}>{group}</div>
+            <ul className={classes.groupItems}>{children}</ul>
           </li>
         )}
       />

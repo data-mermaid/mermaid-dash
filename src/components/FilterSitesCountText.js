@@ -27,17 +27,17 @@ const FilterSitesCountText = ({
     const projectOptionLabels = projectOptionValues.map(({ label }) => label)
     const organizationOptionLabels = organizationOptionValues.map(({ label }) => label)
 
-    const allFiltersSelected =
+    const areAllFiltersSelected =
       countryOptionLabels.length && projectOptionLabels.length && organizationOptionLabels.length
-    const oneOfFiltersSelected =
+    const isOneOfFiltersSelected =
       countryOptionLabels.length || projectOptionLabels.length || organizationOptionLabels.length
-    const noneOfFiltersSelected =
+    const areNoneOfFiltersSelected =
       !countryOptionLabels.length && !projectOptionLabels.length && !organizationOptionLabels.length
-    const countryAndProjectFiltersSelected =
+    const areCountryAndProjectFiltersSelected =
       countryOptionLabels.length && projectOptionLabels.length && !organizationOptionLabels.length
-    const countryAndOrganizationFiltersSelected =
+    const areCountryAndOrganizationFiltersSelected =
       countryOptionLabels.length && !projectOptionLabels.length && organizationOptionLabels.length
-    const projectAndOrganizationFiltersSelected =
+    const areProjectAndOrganizationFiltersSelected =
       !countryOptionLabels.length && projectOptionLabels.length && organizationOptionLabels.length
 
     const filteredSitesByAutocompleteInputs = sampleEvents.filter(sample_event => {
@@ -49,7 +49,7 @@ const FilterSitesCountText = ({
         tags.map(({ name }) => name).findIndex(item => organizationOptionLabels.includes(item)) !==
           -1
 
-      if (allFiltersSelected) {
+      if (areAllFiltersSelected) {
         return (
           countryIncludedInCountryOptions &&
           projectIncludedInProjectOptions &&
@@ -57,19 +57,19 @@ const FilterSitesCountText = ({
         )
       }
 
-      if (countryAndProjectFiltersSelected) {
+      if (areCountryAndProjectFiltersSelected) {
         return countryIncludedInCountryOptions && projectIncludedInProjectOptions
       }
 
-      if (countryAndOrganizationFiltersSelected) {
+      if (areCountryAndOrganizationFiltersSelected) {
         return countryIncludedInCountryOptions && organizationIncludedInOrganizationOptions
       }
 
-      if (projectAndOrganizationFiltersSelected) {
+      if (areProjectAndOrganizationFiltersSelected) {
         return projectIncludedInProjectOptions && organizationIncludedInOrganizationOptions
       }
 
-      if (oneOfFiltersSelected) {
+      if (isOneOfFiltersSelected) {
         return (
           countryIncludedInCountryOptions ||
           projectIncludedInProjectOptions ||
@@ -77,7 +77,7 @@ const FilterSitesCountText = ({
         )
       }
 
-      return noneOfFiltersSelected
+      return areNoneOfFiltersSelected
     })
 
     const filteredSitesByDate = filteredSitesByAutocompleteInputs.filter(site => {
