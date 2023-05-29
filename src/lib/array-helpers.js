@@ -26,3 +26,16 @@ export const convertQueryParamsToIds = (queryNames, filteredOptions) => {
 export const getChoices = (tableName, choices) => {
   return choices.find(choice => tableName === choice.name).data || []
 }
+
+export const getSitesGroupBySampleEvents = sampleEvents => {
+  const sortedSampleEvents = sampleEvents.sort((a, b) => (a.sample_date > b.sample_date ? 1 : -1))
+
+  const siteGroups = sortedSampleEvents.reduce((acc, sample) => {
+    acc[sample.site_id] = acc[sample.site_id] || []
+    acc[sample.site_id].push(sample)
+
+    return acc
+  }, {})
+
+  return Object.entries(siteGroups)
+}
