@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
     top: '-8px',
     padding: '5px',
     backgroundColor: 'white',
+    fontWeight: 800,
   },
   groupItems: {
     padding: 0,
@@ -35,7 +36,13 @@ const AutocompleteFilter = ({
   addQueryStrings,
 }) => {
   const classes = useStyles()
-  const optionGroupsAlphabeticallyOrdered = options.sort((a, b) => -b.group.localeCompare(a.group))
+  const optionGroupsCustomOrdered = options.sort((a, b) => {
+    if (a.group.includes('projects') || b.group.includes('projects')) {
+      return b.group.localeCompare(a.group)
+    }
+
+    return -b.group.localeCompare(a.group)
+  })
 
   const handleValuesChangeAndUpdateQuery = (event, optionsValues) => {
     const optionLabels = optionsValues.map(option => option.label)
@@ -49,7 +56,7 @@ const AutocompleteFilter = ({
       <Autocomplete
         multiple
         id={id}
-        options={optionGroupsAlphabeticallyOrdered}
+        options={optionGroupsCustomOrdered}
         groupBy={option => option.group}
         value={values}
         getOptionLabel={option => option.label}
@@ -67,7 +74,7 @@ const AutocompleteFilter = ({
                 return (
                   <span
                     key={`dropdown-filter-list-${part.text}`}
-                    style={{ fontWeight: part.highlight ? 700 : 350 }}
+                    style={{ fontWeight: part.highlight ? 700 : 400 }}
                   >
                     {part.text}
                   </span>
