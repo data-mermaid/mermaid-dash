@@ -11,16 +11,6 @@ export const color = {
 }
 
 export const theme = {
-  backButton: {
-    color: color.mermaidDark,
-    bgColor: color.mermaidWhite,
-    width: '65px',
-    height: '65px',
-    padding: '5px',
-    flexDirection: 'column',
-    initialTranslate: 'translate(0%)',
-    hoverTranslate: 'translate(-5%, 0%)',
-  },
   cardButton: {
     color: color.mermaidWhite,
     bgColor: color.mermaidDarkBlue,
