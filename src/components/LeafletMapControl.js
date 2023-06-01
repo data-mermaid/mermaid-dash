@@ -18,7 +18,11 @@ import { color, theme } from '../constants/theme'
 
 import FilterModal from './FilterModal'
 import MermaidDashboardTooltip from './MermaidDashboardTooltip'
-import { filterChoicesPropType, filterParamsPropType } from '../lib/mermaidDataPropTypes'
+import {
+  filterChoicesPropType,
+  filterParamsPropType,
+  sitesPropType,
+} from '../lib/mermaidDataPropTypes'
 
 const mapControlStyleProperty = makeStyles(muiTheme => ({
   numberOfFilteredSitesWrapperProperty: {
@@ -95,6 +99,7 @@ const LeafletMapControl = ({
   numberOfFilteredSites,
   isFilteringChoices,
   highlightMarker,
+  allSites,
 }) => {
   const classes = mapControlStyleProperty()
 
@@ -131,6 +136,7 @@ const LeafletMapControl = ({
         filterParams={filterParams}
         filterChoices={filterChoices}
         isFilteringChoices={isFilteringChoices}
+        allSites={allSites}
       />
     </Box>
   )
@@ -191,6 +197,7 @@ LeafletMapControl.propTypes = {
       lng: PropTypes.number,
     }),
   }),
+  allSites: sitesPropType.isRequired,
 }
 
 LeafletMapControl.defaultProps = {

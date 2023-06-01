@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import parse from 'autosuggest-highlight/parse'
@@ -15,28 +15,58 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(3),
     },
   },
+  groupHeader: {
+    position: 'sticky',
+    top: '-8px',
+    padding: '5px',
+    backgroundColor: 'white',
+    fontWeight: 800,
+  },
+  groupItems: {
+    padding: 0,
+  },
 }))
 
-const AutocompleteFilter = ({ id, label, options, preFilledValues, addQueryStrings }) => {
+const AutocompleteFilter = ({
+  id,
+  label,
+  values,
+  handleValuesChange,
+  options,
+  addQueryStrings,
+}) => {
   const classes = useStyles()
-  const [value, setValue] = useState(preFilledValues)
+  const optionGroupsCustomOrdered = options.sort((a, b) => {
+    if (a.group.includes('projects') || b.group.includes('projects')) {
+      return b.group.localeCompare(a.group)
+    }
+
+    return -b.group.localeCompare(a.group)
+  })
+
+  const handleValuesChangeAndUpdateQuery = (event, optionsValues) => {
+    const optionLabels = optionsValues.map(option => option.label)
+
+    handleValuesChange(optionsValues)
+    addQueryStrings(id, optionLabels)
+  }
 
   return (
     <div className={classes.root}>
       <Autocomplete
         multiple
         id={id}
-        options={options}
-        value={value}
-        onChange={(event, val) => {
-          setValue(val)
-          addQueryStrings(id, val)
-        }}
-        filterSelectedOptions
+        options={optionGroupsCustomOrdered}
+        groupBy={option => option.group}
+        value={values}
+        getOptionLabel={option => option.label}
+        filterSelectedOptions={true}
+        onChange={handleValuesChangeAndUpdateQuery}
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
         renderOption={(option, { inputValue }) => {
-          const matches = match(option, inputValue)
-          const parts = parse(option, matches)
+          const optionName = option.label
+          const matches = match(optionName, inputValue, { insideWords: true })
+          const parts = parse(optionName, matches)
 
           return (
             <div>
@@ -53,6 +83,12 @@ const AutocompleteFilter = ({ id, label, options, preFilledValues, addQueryStrin
             </div>
           )
         }}
+        renderGroup={({ key, group, children }) => (
+          <li key={key}>
+            <div className={classes.groupHeader}>{group}</div>
+            <ul className={classes.groupItems}>{children}</ul>
+          </li>
+        )}
       />
     </div>
   )
@@ -61,9 +97,17 @@ const AutocompleteFilter = ({ id, label, options, preFilledValues, addQueryStrin
 AutocompleteFilter.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.string).isRequired,
-  preFilledValues: PropTypes.arrayOf(PropTypes.string).isRequired,
+  values: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.string, group: PropTypes.string }))
+    .isRequired,
+  handleValuesChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.string, group: PropTypes.string }))
+    .isRequired,
   addQueryStrings: PropTypes.func.isRequired,
+  arraySetOptions: PropTypes.arrayOf(PropTypes.string),
+}
+
+AutocompleteFilter.defaultProps = {
+  arraySetOptions: [],
 }
 
 export default AutocompleteFilter

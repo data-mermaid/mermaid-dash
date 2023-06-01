@@ -19,6 +19,7 @@ export const chartTitles = {
   beltfish: 'Fish Belt',
   quadrat_benthic_percent: 'Bleaching',
 }
+
 export const protocolMethods = {
   beltfish: 'Fish Belt',
   benthiclit: 'Benthic LIT',
