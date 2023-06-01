@@ -65,7 +65,7 @@ const AutocompleteFilter = ({
         renderInput={params => <TextField {...params} variant="outlined" label={label} fullWidth />}
         renderOption={(option, { inputValue }) => {
           const optionName = option.label
-          const matches = match(optionName, inputValue)
+          const matches = match(optionName, inputValue, { insideWords: true })
           const parts = parse(optionName, matches)
 
           return (
