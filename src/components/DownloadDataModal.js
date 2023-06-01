@@ -46,9 +46,10 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
     const allSites = sites.map(site => site[1]).flat()
     const allProtocols = allSites.map(site => Object.keys(site.protocols)).flat()
 
-    // Both keys 'colonies_bleached' and 'quadrat_benthic_percent' are part of Bleaching protocol.
-    // this filter is based on the setup in transect-protocol.js as 'quadrat_benthic_percent' is used to determined as Bleaching.
     const uniqueAvailableProtocol = [...new Set(allProtocols)].filter(
+      // Both keys 'colonies_bleached' and 'quadrat_benthic_percent' are part of Bleaching protocol.
+      // this filter is based on the setup in transect-protocol.js as 'quadrat_benthic_percent' is used to determined as Bleaching.
+
       protocols => protocols !== 'colonies_bleached',
     )
 
