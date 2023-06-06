@@ -10,39 +10,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: set up node.js
         uses: actions/setup-node@v3
         with:
           node-version: '14.17.6'
-      - name: Install Dependencies
+
+      - name: install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install awscli python3-requests
           npm install
 
-      - name: Run lint
+      - name: run lint
         run: npm run lint
 
-  test:
-    needs: [setup]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Run test
+      - name: run test
         run: npm run test
 
-  deploy:
-    needs: [test]
-    runs-on: ubuntu-latest
-
-    steps:
       - name: set dev settings
         if: startsWith(github.ref, 'refs/heads/dev')
         run: |
