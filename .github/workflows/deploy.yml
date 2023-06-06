@@ -1,0 +1,67 @@
+name: Build, Test, and Deploy
+
+on:
+  push:
+    branches:
+      - dev
+    tags:
+      - 'v[0-9]+.[0-9]+'        # eg: v1.1
+      - 'v[0-9]+.[0-9]+.[0-9]+' # eg: v1.1.1
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install awscli python3-requests
+          npm install
+
+      - name: Run lint
+        run: npm run lint
+
+  test:
+    needs: [setup]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run test
+        run: npm run test
+
+  deploy:
+    needs: [test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: set dev settings
+        if: startsWith(github.ref, 'refs/heads/dev')
+        run: |
+          echo "REACT_APP_MERMAID_API_URL=https://dev-api.datamermaid.org" >> $GITHUB_ENV
+          echo "DASH_URL=dev-dashboard.datamermaid.org" >> $GITHUB_ENV
+
+      - name: set prod settings
+        if: startsWith(github.ref, 'refs/tags')
+        run: |
+          echo "REACT_APP_MERMAID_API_URL=https://api.datamermaid.org" >> $GITHUB_ENV
+          echo "DASH_URL=dashboard.datamermaid.org" >> $GITHUB_ENV
+
+      - name: build and deploy
+        run: |
+          export REACT_APP_MERMAID_API_URL=$REACT_APP_MERMAID_API_URL
+          npm run build
+          ./deploy.sh $DASH_URL
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
