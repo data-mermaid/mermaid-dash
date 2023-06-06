@@ -37,6 +37,7 @@ jobs:
       - name: set dev settings
         if: startsWith(github.ref, 'refs/heads/dev')
         run: |
+          echo "AWS_CF_ID=${{ secrets.AWS_CF_ID_DEV }}" >> $GITHUB_ENV
           echo "REACT_APP_MERMAID_API_URL=https://dev-api.datamermaid.org" >> $GITHUB_ENV
           echo "DASH_URL=dev-dashboard.datamermaid.org" >> $GITHUB_ENV
 
@@ -47,11 +48,15 @@ jobs:
           echo "DASH_URL=dashboard.datamermaid.org" >> $GITHUB_ENV
 
       - name: build and deploy
-        run: |
-          export REACT_APP_MERMAID_API_URL=$REACT_APP_MERMAID_API_URL
-          npm run build
-          ./deploy.sh $DASH_URL
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'us-east-1'
+        run: |
+          export REACT_APP_MERMAID_API_URL=$REACT_APP_MERMAID_API_URL
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region $AWS_DEFAULT_REGION
+          npm run build
+          aws s3 sync build/ s3://$DASH_URL/ --delete
+          aws cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
