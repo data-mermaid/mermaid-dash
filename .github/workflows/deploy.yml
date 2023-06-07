@@ -47,16 +47,16 @@ jobs:
           echo "REACT_APP_MERMAID_API_URL=https://api.datamermaid.org" >> $GITHUB_ENV
           echo "DASH_URL=dashboard.datamermaid.org" >> $GITHUB_ENV
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: build and deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: 'us-east-1'
         run: |
           export REACT_APP_MERMAID_API_URL=$REACT_APP_MERMAID_API_URL
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region $AWS_DEFAULT_REGION
           npm run build
           aws s3 sync build/ s3://$DASH_URL/ --delete
           aws cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths "/*"
