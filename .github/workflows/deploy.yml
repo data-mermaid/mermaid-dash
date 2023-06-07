@@ -39,22 +39,19 @@ jobs:
         run: |
           echo "AWS_CF_ID=${{ secrets.AWS_CF_ID_DEV }}" >> $GITHUB_ENV
           echo "REACT_APP_MERMAID_API_URL=https://dev-api.datamermaid.org" >> $GITHUB_ENV
-          echo "DASH_URL=dev-dashboard.datamermaid.org" >> $GITHUB_ENV
+          echo "DASH_URL=dev-dashboard2.datamermaid.org" >> $GITHUB_ENV
 
       - name: set prod settings
         if: startsWith(github.ref, 'refs/tags')
         run: |
           echo "REACT_APP_MERMAID_API_URL=https://api.datamermaid.org" >> $GITHUB_ENV
-          echo "DASH_URL=dashboard.datamermaid.org" >> $GITHUB_ENV
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 
+          echo "DASH_URL=dashboard2.datamermaid.org" >> $GITHUB_ENV
 
       - name: build and deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
         run: |
           export REACT_APP_MERMAID_API_URL=$REACT_APP_MERMAID_API_URL
           npm run build
