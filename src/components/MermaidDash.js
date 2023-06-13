@@ -142,7 +142,7 @@ class MermaidDash extends Component {
     const prevMetricYearsCount = prevMetrics[2].count
     const prevMetricSitesCount = prevMetrics[3].count
     const prevMetricTransectsCount = prevMetrics[4].count
-    const prevMetricaverageCoralCoverageCount = prevMetrics[5].count
+    const prevMetricAvgCoralCoverCount = prevMetrics[5].count
 
     if (
       countryName !== prevCountryName ||
@@ -190,7 +190,7 @@ class MermaidDash extends Component {
       if (prevMetricTransectsCount !== transectCount) {
         metrics[4].count = transectCount
       }
-      if (prevMetricaverageCoralCoverageCount !== averageCoralCoverageCount) {
+      if (prevMetricAvgCoralCoverCount !== averageCoralCoverageCount) {
         metrics[5].count = averageCoralCoverageCount
       }
 
