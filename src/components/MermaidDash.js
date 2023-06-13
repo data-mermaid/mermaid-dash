@@ -406,40 +406,41 @@ class MermaidDash extends Component {
     return protocolCount
   }
 
-  getBenthicHardCoralCount = protocols => {
+  getSampleEventBenthicHardCoralAverages = protocols => {
     return protocols.map(({ benthiclit, benthicpit, benthicpqt }) => {
       const benthicLITCover = benthiclit && benthiclit.percent_cover_by_benthic_category_avg
       const benthicPITCover = benthicpit && benthicpit.percent_cover_by_benthic_category_avg
       const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_by_benthic_category_avg
 
-      const benthicLITCoverHardCoral = benthicLITCover && benthicLITCover['Hard coral']
-      const benthicPITCoverHardCoral = benthicPITCover && benthicPITCover['Hard coral']
-      const benthicPQTCoverHardCoral = benthicPQTCover && benthicPQTCover['Hard coral']
+      if (benthicLITCover || benthicPITCover || benthicPQTCover) {
+        const benthicLITHardCoral = benthicLITCover && benthicLITCover['Hard coral']
+        const benthicPITHardCoral = benthicPITCover && benthicPITCover['Hard coral']
+        const benthicPQTHardCoral = benthicPQTCover && benthicPQTCover['Hard coral']
 
-      if (benthicLITCoverHardCoral || benthicPITCoverHardCoral || benthicPQTCoverHardCoral) {
         const numerator =
-          (benthicLITCoverHardCoral !== undefined ? benthicLITCoverHardCoral : 0) +
-          (benthicPITCoverHardCoral !== undefined ? benthicPITCoverHardCoral : 0) +
-          (benthicPQTCoverHardCoral !== undefined ? benthicPQTCoverHardCoral : 0)
+          (benthicLITHardCoral !== undefined ? benthicLITHardCoral : 0) +
+          (benthicPITHardCoral !== undefined ? benthicPITHardCoral : 0) +
+          (benthicPQTHardCoral !== undefined ? benthicPQTHardCoral : 0)
 
         const denominator =
-          (benthicLITCoverHardCoral !== undefined ? 1 : 0) +
-          (benthicPITCoverHardCoral !== undefined ? 1 : 0) +
-          (benthicPQTCoverHardCoral !== undefined ? 1 : 0)
+          (benthicLITHardCoral !== undefined ? 1 : 0) +
+          (benthicPITHardCoral !== undefined ? 1 : 0) +
+          (benthicPQTHardCoral !== undefined ? 1 : 0)
 
         return numerator / denominator
       }
 
-      return 0
+      return null
     })
   }
 
   getAvgCoralCount = protocols => {
-    const benthicHardCoralCount = this.getBenthicHardCoralCount(protocols)
-    const filteredBenthicHardCoralCount = benthicHardCoralCount.filter(val => val !== undefined)
-    const sumOfCoralCover = filteredBenthicHardCoralCount.reduce((acc, val) => acc + val, 0)
+    const benthicHardCoralAverages = this.getSampleEventBenthicHardCoralAverages(protocols)
+    const filteredBenthicHardCoralAverages = benthicHardCoralAverages.filter(val => val !== null)
+    const sumOfCoralCover = filteredBenthicHardCoralAverages.reduce((acc, val) => acc + val, 0)
+
     const avgCoralCover = sumOfCoralCover
-      ? sumOfCoralCover / filteredBenthicHardCoralCount.length
+      ? sumOfCoralCover / filteredBenthicHardCoralAverages.length
       : sumOfCoralCover
 
     return Math.round(avgCoralCover)
@@ -516,7 +517,7 @@ class MermaidDash extends Component {
   zoomToSiteHandler = zoomToSiteOption => this.setState({ zoomToSite: zoomToSiteOption })
 
   histogramCount = (protocols, histogramData) => {
-    const benthicHardCoralCount = this.getBenthicHardCoralCount(protocols)
+    const benthicHardCoralCount = this.getSampleEventBenthicHardCoralAverages(protocols)
 
     return histogramData.map(({ x }) => {
       let count = 0
