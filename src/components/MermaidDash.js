@@ -142,7 +142,7 @@ class MermaidDash extends Component {
     const prevMetricYearsCount = prevMetrics[2].count
     const prevMetricSitesCount = prevMetrics[3].count
     const prevMetricTransectsCount = prevMetrics[4].count
-    const prevMetricAvgCoralCoverCount = prevMetrics[5].count
+    const prevMetricaverageCoralCoverageCount = prevMetrics[5].count
 
     if (
       countryName !== prevCountryName ||
@@ -173,7 +173,7 @@ class MermaidDash extends Component {
       const yearCount = this.getCount(sampleEventsFromSites, 'sample_date')
       const uniqueSiteCount = updatedSites.length
       const transectCount = this.getTransectCount(sampleEventProtocols)
-      const avgCoralCoverCount = this.getAvgCoralCount(sampleEventProtocols)
+      const averageCoralCoverageCount = this.getAverageCoralCoverage(sampleEventProtocols)
 
       if (prevMetricCountriesCount !== countryCount) {
         metrics[0].count = countryCount
@@ -190,8 +190,8 @@ class MermaidDash extends Component {
       if (prevMetricTransectsCount !== transectCount) {
         metrics[4].count = transectCount
       }
-      if (prevMetricAvgCoralCoverCount !== avgCoralCoverCount) {
-        metrics[5].count = avgCoralCoverCount
+      if (prevMetricaverageCoralCoverageCount !== averageCoralCoverageCount) {
+        metrics[5].count = averageCoralCoverageCount
       }
 
       this.setState({ metrics, isLoading: false })
@@ -434,16 +434,17 @@ class MermaidDash extends Component {
     })
   }
 
-  getAvgCoralCount = protocols => {
+  getAverageCoralCoverage = protocols => {
     const benthicHardCoralAverages = this.getSampleEventBenthicHardCoralAverages(protocols)
     const filteredBenthicHardCoralAverages = benthicHardCoralAverages.filter(val => val !== null)
-    const sumOfCoralCover = filteredBenthicHardCoralAverages.reduce((acc, val) => acc + val, 0)
+    const sumOfHardCoralAverages = filteredBenthicHardCoralAverages.reduce(
+      (acc, val) => acc + val,
+      0,
+    )
 
-    const avgCoralCover = sumOfCoralCover
-      ? sumOfCoralCover / filteredBenthicHardCoralAverages.length
-      : sumOfCoralCover
-
-    return Math.round(avgCoralCover)
+    return filteredBenthicHardCoralAverages.length
+      ? Math.round(sumOfHardCoralAverages / filteredBenthicHardCoralAverages.length)
+      : 0
   }
 
   siteClickHandler = site => {
