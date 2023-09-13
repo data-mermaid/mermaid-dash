@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
+import styled from 'styled-components/macro'
 import { Typography } from '@material-ui/core'
 import FishFamilyModal from './FishFamilyModal'
 import {
@@ -7,9 +8,25 @@ import {
   bleachingPropType,
   fishbeltPropType,
 } from '../lib/mermaidDataPropTypes'
+import {
+  BENTHIC_LIT_SAMPLE_UNIT,
+  BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT,
+  BENTHIC_PIT_SAMPLE_UNIT,
+  BLEACHING_SAMPLE_UNIT,
+  FISHBELT_SAMPLE_UNIT,
+} from '../constants/transect-protocols'
+
+const SubHeadingText = ({ propertyName, propertyInfo, unit = '' }) => {
+  return propertyInfo ? (
+    <Typography m={1}>
+      {propertyName}: {propertyInfo}
+      {unit}
+    </Typography>
+  ) : null
+}
 
 const ProtocolChartSubHeading = ({
-  protocolName,
+  sampleUnit,
   protocolProperties,
   isPrivatePolicy,
   bleachingProtocolSubItems,
@@ -19,17 +36,21 @@ const ProtocolChartSubHeading = ({
 
   const fishFamilyModalToggleHandler = () => setFishFamilyModalStageOpen(!fishFamilyModalStageOpen)
 
-  if (isPrivatePolicy || !protocolName) {
+  if (isPrivatePolicy || !sampleUnit) {
     return <></>
   }
 
-  if (protocolName === 'beltfish') {
+  if (sampleUnit === FISHBELT_SAMPLE_UNIT) {
+    const { sample_unit_count, biomass_kgha_avg } = protocolProperties
+
     return (
       <>
-        <Typography m={1}>Sample units: {protocolProperties.sample_unit_count} </Typography>
-        <Typography m={1}>
-          Reef fish biomass: {protocolProperties.biomass_kgha_avg} kg/ha
-        </Typography>
+        <SubHeadingText propertyName={'Sample units'} propertyInfo={sample_unit_count} />
+        <SubHeadingText
+          propertyName={'Reef fish biomass'}
+          propertyInfo={biomass_kgha_avg}
+          unit={'kg/ha'}
+        />
         {projectFishFamilies.length > 0 && (
           <>
             <Typography m={1} display="inline">
@@ -47,33 +68,47 @@ const ProtocolChartSubHeading = ({
   }
 
   if (
-    protocolName === 'benthiclit' ||
-    protocolName === 'benthicpit' ||
-    protocolName === 'benthicpqt'
+    sampleUnit === BENTHIC_LIT_SAMPLE_UNIT ||
+    sampleUnit === BENTHIC_PIT_SAMPLE_UNIT ||
+    sampleUnit === BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT
   ) {
+    const { sample_unit_count, percent_cover_by_benthic_category_avg } = protocolProperties
+
     return (
       <>
-        <Typography m={1}>Sample units: {protocolProperties.sample_unit_count} </Typography>
-        <Typography m={1}>
-          Hard coral cover: {protocolProperties.percent_cover_by_benthic_category_avg['Hard coral']}
-          %
-        </Typography>
+        <SubHeadingText propertyName={'Sample units'} propertyInfo={sample_unit_count} />
+        <SubHeadingText
+          propertyName={'Hard coral cover'}
+          propertyInfo={percent_cover_by_benthic_category_avg['Hard coral']}
+          unit={'%'}
+        />
       </>
     )
   }
 
-  if (protocolName === 'bleachingqc') {
+  if (sampleUnit === BLEACHING_SAMPLE_UNIT) {
+    const { count_total_avg, count_genera_avg } = bleachingProtocolSubItems
+    const { percent_hard_avg_avg, percent_soft_avg_avg, percent_algae_avg_avg } = protocolProperties
+
     return (
       <>
-        <Typography m={1}>
-          Bleached colonies: {bleachingProtocolSubItems.percent_bleached_avg.toFixed(1)}%
-        </Typography>
-        <Typography m={1}>
-          Hard coral genera: {bleachingProtocolSubItems.count_genera_avg}
-        </Typography>
-        <Typography m={1}>
-          Observed coral colonies: {bleachingProtocolSubItems.count_total_avg}
-        </Typography>
+        <SubHeadingText propertyName={'Observed coral colonies'} propertyInfo={count_total_avg} />
+        <SubHeadingText propertyName={'Hard coral genera'} propertyInfo={count_genera_avg} />
+        <SubHeadingText
+          propertyName={'Avg hard coral cover'}
+          propertyInfo={percent_hard_avg_avg}
+          unit={'%'}
+        />
+        <SubHeadingText
+          propertyName={'Avg soft coral cover'}
+          propertyInfo={percent_soft_avg_avg}
+          unit={'%'}
+        />
+        <SubHeadingText
+          propertyName={'Avg macroalgae cover'}
+          propertyInfo={percent_algae_avg_avg}
+          unit={'%'}
+        />
       </>
     )
   }
@@ -82,7 +117,7 @@ const ProtocolChartSubHeading = ({
 }
 
 ProtocolChartSubHeading.propTypes = {
-  protocolName: PropTypes.string.isRequired,
+  sampleUnit: PropTypes.string.isRequired,
   protocolProperties: PropTypes.oneOfType([
     fishbeltPropType,
     benthicPitPropType,
