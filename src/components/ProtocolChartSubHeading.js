@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import React, { useState } from 'react'
-import styled from 'styled-components/macro'
 import { Typography } from '@material-ui/core'
 import FishFamilyModal from './FishFamilyModal'
 import {
@@ -16,7 +15,7 @@ import {
   FISHBELT_SAMPLE_UNIT,
 } from '../constants/transect-protocols'
 
-const SubHeadingText = ({ propertyName, propertyInfo, unit = '' }) => {
+const SubHeadingText = ({ propertyName, propertyInfo, unit }) => {
   return propertyInfo ? (
     <Typography m={1}>
       {propertyName}: {propertyInfo}
@@ -45,11 +44,11 @@ const ProtocolChartSubHeading = ({
 
     return (
       <>
-        <SubHeadingText propertyName={'Sample units'} propertyInfo={sample_unit_count} />
+        <SubHeadingText propertyName="Sample units" propertyInfo={sample_unit_count} />
         <SubHeadingText
-          propertyName={'Reef fish biomass'}
+          propertyName="Reef fish biomass"
           propertyInfo={biomass_kgha_avg}
-          unit={'kg/ha'}
+          unit="kg/ha"
         />
         {projectFishFamilies.length > 0 && (
           <>
@@ -76,11 +75,11 @@ const ProtocolChartSubHeading = ({
 
     return (
       <>
-        <SubHeadingText propertyName={'Sample units'} propertyInfo={sample_unit_count} />
+        <SubHeadingText propertyName="Sample units" propertyInfo={sample_unit_count} />
         <SubHeadingText
-          propertyName={'Hard coral cover'}
+          propertyName="Hard coral cover"
           propertyInfo={percent_cover_by_benthic_category_avg['Hard coral']}
-          unit={'%'}
+          unit="%"
         />
       </>
     )
@@ -92,28 +91,38 @@ const ProtocolChartSubHeading = ({
 
     return (
       <>
-        <SubHeadingText propertyName={'Observed coral colonies'} propertyInfo={count_total_avg} />
-        <SubHeadingText propertyName={'Hard coral genera'} propertyInfo={count_genera_avg} />
+        <SubHeadingText propertyName="Observed coral colonies" propertyInfo={count_total_avg} />
+        <SubHeadingText propertyName="Hard coral genera" propertyInfo={count_genera_avg} />
         <SubHeadingText
-          propertyName={'Avg hard coral cover'}
+          propertyName="Avg hard coral cover"
           propertyInfo={percent_hard_avg_avg}
-          unit={'%'}
+          unit="%"
         />
         <SubHeadingText
-          propertyName={'Avg soft coral cover'}
+          propertyName="Avg soft coral cover"
           propertyInfo={percent_soft_avg_avg}
-          unit={'%'}
+          unit="%"
         />
         <SubHeadingText
-          propertyName={'Avg macroalgae cover'}
+          propertyName="Avg macroalgae cover"
           propertyInfo={percent_algae_avg_avg}
-          unit={'%'}
+          unit="%"
         />
       </>
     )
   }
 
   return <></>
+}
+
+SubHeadingText.propTypes = {
+  propertyName: PropTypes.string.isRequired,
+  propertyInfo: PropTypes.string.isRequired,
+  unit: PropTypes.string,
+}
+
+SubHeadingText.defaultProps = {
+  unit: '',
 }
 
 ProtocolChartSubHeading.propTypes = {
