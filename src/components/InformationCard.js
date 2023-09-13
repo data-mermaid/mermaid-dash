@@ -50,8 +50,8 @@ const InformationCard = ({
   histogramContent,
   isFiltering,
   isPrivatePolicy,
-  protocol,
-  protocolName,
+  protocolProperties,
+  sampleUnit,
   title,
   type,
   pieChartContent,
@@ -69,8 +69,8 @@ const InformationCard = ({
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
       <ProtocolChartSubHeading
-        protocolName={protocolName}
-        protocolProperties={protocol}
+        sampleUnit={sampleUnit}
+        protocolProperties={protocolProperties}
         isPrivatePolicy={isPrivatePolicy}
         bleachingProtocolSubItems={bleachingProtocolSubItems}
         projectFishFamilies={projectFishFamilies}
@@ -84,7 +84,7 @@ const InformationCard = ({
     ) : (
       <CardChartContent
         chartType={type}
-        protocolName={protocolName}
+        sampleUnit={sampleUnit}
         pieChartContent={pieChartContent}
         isPrivatePolicy={isPrivatePolicy}
         title={title}
@@ -126,8 +126,12 @@ InformationCard.propTypes = {
   isPrivatePolicy: PropTypes.bool,
   pieChartContent: pieChartContentPropType,
   projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
-  protocol: PropTypes.oneOfType([fishbeltPropType, benthicPitPropType, bleachingPropType]),
-  protocolName: PropTypes.string,
+  protocolProperties: PropTypes.oneOfType([
+    fishbeltPropType,
+    benthicPitPropType,
+    bleachingPropType,
+  ]),
+  sampleUnit: PropTypes.string,
   textContent: textContentPropType,
   title: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
@@ -139,8 +143,8 @@ InformationCard.defaultProps = {
   pieChartContent: [],
   projectFishFamilies: [],
   textContent: {},
-  protocol: {},
-  protocolName: '',
+  protocolProperties: {},
+  sampleUnit: '',
   dataPolicy: '',
   isFiltering: false,
   isPrivatePolicy: false,

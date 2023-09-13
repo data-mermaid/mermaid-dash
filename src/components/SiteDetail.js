@@ -13,7 +13,18 @@ import SiteNote from './SiteNote'
 import InformationCard from './InformationCard'
 import { TextLoader } from './Loader'
 import { defaultPieChartContent } from '../constants/sample-data'
-import { chartContentProperties, chartTitles } from '../constants/transect-protocols'
+import {
+  BENTHIC_LIT_SAMPLE_UNIT,
+  BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT,
+  BENTHIC_PIT_SAMPLE_UNIT,
+  BLEACHING_PROPERTY_COLONIES_BLEACHED,
+  BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT,
+  BLEACHING_SAMPLE_UNIT,
+  FISHBELT_SAMPLE_UNIT,
+  HABITAT_COMPLEXITY_SAMPLE_UNIT,
+  chartContentProperties,
+  chartTitles,
+} from '../constants/transect-protocols'
 import getChartContent from '../lib/chart-helpers'
 import { ReactComponent as OrganizationIcon } from '../styles/Icons/earth.svg'
 import { sitesPropType } from '../lib/mermaidDataPropTypes'
@@ -41,8 +52,14 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
   )
 
   const filteredProtocolsForSiteChartCards = useMemo(() => {
-    const sortBy = ['benthicpit', 'benthiclit', 'benthicpqt', 'quadrat_benthic_percent', 'beltfish']
-    const ignoreProtocols = ['colonies_bleached', 'habitatcomplexity']
+    const sortBy = [
+      BENTHIC_PIT_SAMPLE_UNIT,
+      BENTHIC_LIT_SAMPLE_UNIT,
+      BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT,
+      BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT,
+      FISHBELT_SAMPLE_UNIT,
+    ]
+    const ignoreProtocols = [BLEACHING_PROPERTY_COLONIES_BLEACHED, HABITAT_COMPLEXITY_SAMPLE_UNIT]
 
     const sortProtocols = Object.entries(currentSelectedSite?.protocols).sort(
       (a, b) => sortBy.indexOf(a[0]) - sortBy.indexOf(b[0]),
@@ -51,9 +68,10 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
     return sortProtocols.filter(protocol => !ignoreProtocols.includes(protocol[0]))
   }, [currentSelectedSite.protocols])
 
-  const bleachingProtocolSubItems = useMemo(() => currentSelectedSite.protocols.colonies_bleached, [
-    currentSelectedSite,
-  ])
+  const bleachingProtocolSubItems = useMemo(
+    () => currentSelectedSite.protocols[BLEACHING_PROPERTY_COLONIES_BLEACHED],
+    [currentSelectedSite],
+  )
 
   const handleCurrentSelectedSiteChange = event => {
     const filterSampleEventSite = selectSite.filter(
@@ -93,19 +111,19 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
 
   const siteChartCards = filteredProtocolsForSiteChartCards.map(
     ([protocol, protocolProperties]) => {
-      const isBleachingProtocol = protocol === 'quadrat_benthic_percent'
-      const protocolName = isBleachingProtocol ? 'bleachingqc' : protocol
-      const dataPolicy = currentSelectedSite[`data_policy_${protocolName}`]
+      const isBleachingSampleUnit = protocol === BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT
+      const sampleUnit = isBleachingSampleUnit ? BLEACHING_SAMPLE_UNIT : protocol
+      const dataPolicy = currentSelectedSite[`data_policy_${sampleUnit}`]
       const isPrivatePolicy = dataPolicy === 'private'
       const chartTitle = chartTitles[protocol]
       const chartInfoProperty = chartContentProperties[protocol]
-      const chartInfo = isBleachingProtocol
+      const chartInfo = isBleachingSampleUnit
         ? protocolProperties
         : protocolProperties[chartInfoProperty]
 
       const sourceContent = isPrivatePolicy
         ? defaultPieChartContent
-        : getChartContent(chartInfo, isBleachingProtocol)
+        : getChartContent(chartInfo, isBleachingSampleUnit)
 
       return (
         <div key={protocol}>
@@ -115,8 +133,8 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
             isPrivatePolicy={isPrivatePolicy}
             pieChartContent={sourceContent}
             projectFishFamilies={projectFishFamilies}
-            protocol={protocolProperties}
-            protocolName={protocolName}
+            protocolProperties={protocolProperties}
+            sampleUnit={sampleUnit}
             title={chartTitle}
             type="pieChart"
           />

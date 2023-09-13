@@ -16,7 +16,11 @@ import ContactIcon from '@material-ui/icons/Email'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 
 import { DialogText, DialogTitle, MermaidButton } from '../styles/MermaidStyledComponents'
-import { protocolMethods, pluralizedProtocols } from '../constants/transect-protocols'
+import {
+  protocolTitles,
+  pluralizedSampleUnits,
+  BLEACHING_PROPERTY_COLONIES_BLEACHED,
+} from '../constants/transect-protocols'
 import MermaidDashboardTooltip from './MermaidDashboardTooltip'
 import { siteDetailPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
@@ -50,18 +54,18 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
       // Both keys 'colonies_bleached' and 'quadrat_benthic_percent' are part of Bleaching protocol.
       // this filter is based on the setup in transect-protocol.js as 'quadrat_benthic_percent' is used to determined as Bleaching.
 
-      protocols => protocols !== 'colonies_bleached',
+      protocols => protocols !== BLEACHING_PROPERTY_COLONIES_BLEACHED,
     )
 
     return uniqueAvailableProtocol.reduce((accumulator, protocol) => {
-      const protocolMethod = protocolMethods[protocol]
+      const protocolTitle = protocolTitles[protocol]
 
-      if (protocolMethod) {
+      if (protocolTitle) {
         const protocolDataPolicy =
-          protocolMethod === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${protocol}`
+          protocolTitle === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${protocol}`
 
         const protocolInfo = {
-          method: protocolMethod,
+          method: protocolTitle,
           policy: currentSelectedSite[protocolDataPolicy],
           protocol,
         }
@@ -80,7 +84,7 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
   }
 
   const handleDownloadCSV = protocol => {
-    const protocolToDownload = pluralizedProtocols[protocol]
+    const protocolToDownload = pluralizedSampleUnits[protocol]
     const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`
 
     window.open(downloadCSVApi)

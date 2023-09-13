@@ -9,7 +9,7 @@ import { histogramContentPropType, pieChartContentPropType } from '../lib/mermai
 
 const CardChartContent = ({
   chartType,
-  protocolName,
+  sampleUnit,
   pieChartContent,
   isPrivatePolicy,
   title,
@@ -20,7 +20,7 @@ const CardChartContent = ({
       <BarChart chartContent={histogramContent} />
     ) : (
       <PieChart
-        protocolName={protocolName}
+        sampleUnit={sampleUnit}
         chartContent={pieChartContent}
         isPrivatePolicy={isPrivatePolicy}
         title={title}
@@ -32,7 +32,7 @@ const CardChartContent = ({
 
 CardChartContent.propTypes = {
   chartType: PropTypes.string.isRequired,
-  protocolName: PropTypes.string,
+  sampleUnit: PropTypes.string,
   title: PropTypes.string,
   isPrivatePolicy: PropTypes.bool,
   pieChartContent: pieChartContentPropType,
@@ -40,7 +40,7 @@ CardChartContent.propTypes = {
 }
 
 CardChartContent.defaultProps = {
-  protocolName: undefined,
+  sampleUnit: undefined,
   title: undefined,
   isPrivatePolicy: undefined,
   pieChartContent: [],

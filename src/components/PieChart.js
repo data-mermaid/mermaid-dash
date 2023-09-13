@@ -10,6 +10,7 @@ import {
   fishBeltAttributeColors,
 } from '../constants/attribute-colors'
 import { pieChartContentPropType } from '../lib/mermaidDataPropTypes'
+import { FISHBELT_SAMPLE_UNIT } from '../constants/transect-protocols'
 
 const ChartWrapper = styled('div')`
   width: 100%;
@@ -43,7 +44,7 @@ const SvgWrapper = styled('svg')`
     `}
 `
 
-const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
+const PieChart = ({ sampleUnit, chartContent, isPrivatePolicy, title }) => {
   const mediaMin600 = useMediaQuery('(min-width:600px)')
   const mediaMax600 = useMediaQuery('(max-width:600px)')
   const mediaMax960 = useMediaQuery('(max-width:960px')
@@ -54,7 +55,7 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
   const mediaMin960_Max1280 = mediaMax1280 && mediaMin960
 
   const attributeColors =
-    protocolName === 'beltfish' ? fishBeltAttributeColors : benthicAttributeColors
+    sampleUnit === FISHBELT_SAMPLE_UNIT ? fishBeltAttributeColors : benthicAttributeColors
   const attributeCollection = chartContent.map(({ x, y }) => y !== 0 && x)
   const filteredAttributeCollection = attributeColors.filter(({ name }) =>
     attributeCollection.includes(name),
@@ -66,7 +67,7 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
     return { x: name, y: foundAttribute.y }
   })
 
-  const labelUnit = protocolName === 'beltfish' ? 'kg/ha' : '%'
+  const labelUnit = sampleUnit === FISHBELT_SAMPLE_UNIT ? 'kg/ha' : '%'
   const legendData = contentData
     .filter(({ y }) => y > 0)
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }))
@@ -187,7 +188,7 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
 PieChart.propTypes = {
   chartContent: pieChartContentPropType.isRequired,
   isPrivatePolicy: PropTypes.bool,
-  protocolName: PropTypes.string.isRequired,
+  sampleUnit: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 }
 
