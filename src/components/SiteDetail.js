@@ -118,7 +118,7 @@ const SiteDetail = ({ selectSite, projectFishFamilies, sites }) => {
       const chartTitle = chartTitles[protocol]
       const chartInfoProperty = chartContentProperties[protocol]
       const chartInfo = isBleachingSampleUnit
-        ? protocolProperties
+        ? bleachingProtocolSubItems
         : protocolProperties[chartInfoProperty]
 
       const sourceContent = isPrivatePolicy

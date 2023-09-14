@@ -32,17 +32,14 @@ const CardChartContent = ({
 
 CardChartContent.propTypes = {
   chartType: PropTypes.string.isRequired,
-  sampleUnit: PropTypes.string,
-  title: PropTypes.string,
-  isPrivatePolicy: PropTypes.bool,
+  sampleUnit: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  isPrivatePolicy: PropTypes.bool.isRequired,
   pieChartContent: pieChartContentPropType,
   histogramContent: histogramContentPropType,
 }
 
 CardChartContent.defaultProps = {
-  sampleUnit: undefined,
-  title: undefined,
-  isPrivatePolicy: undefined,
   pieChartContent: [],
   histogramContent: [],
 }

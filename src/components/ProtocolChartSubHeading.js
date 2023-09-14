@@ -117,11 +117,12 @@ const ProtocolChartSubHeading = ({
 
 SubHeadingText.propTypes = {
   propertyName: PropTypes.string.isRequired,
-  propertyInfo: PropTypes.string.isRequired,
+  propertyInfo: PropTypes.number,
   unit: PropTypes.string,
 }
 
 SubHeadingText.defaultProps = {
+  propertyInfo: null,
   unit: '',
 }
 

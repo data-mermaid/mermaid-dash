@@ -4,13 +4,9 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import styled, { css } from 'styled-components/macro'
 
 import PropTypes from 'prop-types'
-import {
-  privateColorScale,
-  benthicAttributeColors,
-  fishBeltAttributeColors,
-} from '../constants/attribute-colors'
+import { privateColorScale } from '../constants/attribute-colors'
 import { pieChartContentPropType } from '../lib/mermaidDataPropTypes'
-import { FISHBELT_SAMPLE_UNIT } from '../constants/transect-protocols'
+import { FISHBELT_SAMPLE_UNIT, sampleUnitAttributeColors } from '../constants/transect-protocols'
 
 const ChartWrapper = styled('div')`
   width: 100%;
@@ -54,10 +50,8 @@ const PieChart = ({ sampleUnit, chartContent, isPrivatePolicy, title }) => {
   const mediaMin600_Max960 = mediaMax960 && mediaMin600
   const mediaMin960_Max1280 = mediaMax1280 && mediaMin960
 
-  const attributeColors =
-    sampleUnit === FISHBELT_SAMPLE_UNIT ? fishBeltAttributeColors : benthicAttributeColors
   const attributeCollection = chartContent.map(({ x, y }) => y !== 0 && x)
-  const filteredAttributeCollection = attributeColors.filter(({ name }) =>
+  const filteredAttributeCollection = sampleUnitAttributeColors[sampleUnit].filter(({ name }) =>
     attributeCollection.includes(name),
   )
   const attributeColorScale = filteredAttributeCollection.map(({ color }) => color)

@@ -1,3 +1,9 @@
+import {
+  benthicAttributeColors,
+  bleachingAttributeColors,
+  fishBeltAttributeColors,
+} from './attribute-colors'
+
 export const FISHBELT_SAMPLE_UNIT = 'beltfish'
 export const BENTHIC_PIT_SAMPLE_UNIT = 'benthicpit'
 export const BENTHIC_LIT_SAMPLE_UNIT = 'benthiclit'
@@ -8,11 +14,10 @@ export const BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT = 'quadrat_benthic_perce
 export const BLEACHING_PROPERTY_COLONIES_BLEACHED = 'colonies_bleached'
 
 export const bleachingCategories = [
-  { type: 'percent_hard_avg_avg', name: 'Hard coral' },
-  { type: 'percent_soft_avg_avg', name: 'Soft coral' },
-  { type: 'percent_algae_avg_avg', name: 'Macroalgae' },
+  { type: 'percent_normal_avg', name: 'Normal' },
+  { type: 'percent_pale_avg', name: 'Pale' },
+  { type: 'percent_bleached_avg', name: 'Bleached & Recently Dead' },
 ]
-
 export const chartContentProperties = {
   [BENTHIC_LIT_SAMPLE_UNIT]: 'percent_cover_by_benthic_category_avg',
   [BENTHIC_PIT_SAMPLE_UNIT]: 'percent_cover_by_benthic_category_avg',
@@ -45,4 +50,13 @@ export const pluralizedSampleUnits = {
   [BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT]: 'benthicpqts',
   [HABITAT_COMPLEXITY_SAMPLE_UNIT]: 'habitatcomplexities',
   [BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT]: 'bleachingqcs',
+}
+
+export const sampleUnitAttributeColors = {
+  [FISHBELT_SAMPLE_UNIT]: fishBeltAttributeColors,
+  [BENTHIC_LIT_SAMPLE_UNIT]: benthicAttributeColors,
+  [BENTHIC_PIT_SAMPLE_UNIT]: benthicAttributeColors,
+  [BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT]: benthicAttributeColors,
+  [HABITAT_COMPLEXITY_SAMPLE_UNIT]: benthicAttributeColors,
+  [BLEACHING_SAMPLE_UNIT]: bleachingAttributeColors,
 }
