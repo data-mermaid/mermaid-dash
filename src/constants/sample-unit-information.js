@@ -34,7 +34,7 @@ export const chartTitles = {
   [BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT]: 'Bleaching',
 }
 
-export const protocolTitles = {
+export const sampleUnitTitles = {
   [FISHBELT_SAMPLE_UNIT]: 'Fish Belt',
   [BENTHIC_LIT_SAMPLE_UNIT]: 'Benthic LIT',
   [BENTHIC_PIT_SAMPLE_UNIT]: 'Benthic PIT',

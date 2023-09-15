@@ -70,10 +70,10 @@ const AutocompleteFilter = ({
 
           return (
             <div>
-              {parts.map(part => {
+              {parts.map((part, index) => {
                 return (
                   <span
-                    key={`dropdown-filter-list-${part.text}`}
+                    key={`dropdown-filter-list-${part.text}-${index}`}
                     style={{ fontWeight: part.highlight ? 700 : 400 }}
                   >
                     {part.text}

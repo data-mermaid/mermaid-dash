@@ -17,10 +17,10 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 
 import { DialogText, DialogTitle, MermaidButton } from '../styles/MermaidStyledComponents'
 import {
-  protocolTitles,
+  sampleUnitTitles,
   pluralizedSampleUnits,
   BLEACHING_PROPERTY_COLONIES_BLEACHED,
-} from '../constants/transect-protocols'
+} from '../constants/sample-unit-information'
 import MermaidDashboardTooltip from './MermaidDashboardTooltip'
 import { siteDetailPropType, sitesPropType } from '../lib/mermaidDataPropTypes'
 
@@ -46,31 +46,31 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
   const mediaMin1281 = useMediaQuery('(min-width:1281px)')
   const [open, setOpen] = useState(false)
 
-  const availableProtocols = useMemo(() => {
+  const availableSampleUnits = useMemo(() => {
     const allSites = sites.map(site => site[1]).flat()
-    const allProtocols = allSites.map(site => Object.keys(site.protocols)).flat()
+    const allSampleUnits = allSites.map(site => Object.keys(site.protocols)).flat()
 
-    const uniqueAvailableProtocol = [...new Set(allProtocols)].filter(
-      // Both keys 'colonies_bleached' and 'quadrat_benthic_percent' are part of Bleaching protocol.
-      // this filter is based on the setup in transect-protocol.js as 'quadrat_benthic_percent' is used to determined as Bleaching.
+    const uniqueAvailableSampleUnits = [...new Set(allSampleUnits)].filter(
+      // Both keys 'colonies_bleached' and 'quadrat_benthic_percent' are part of Bleaching sample unit.
+      // this filter is based on the setup in sample-unit-information.js as 'quadrat_benthic_percent' is used to determined as Bleaching.
 
-      protocols => protocols !== BLEACHING_PROPERTY_COLONIES_BLEACHED,
+      sampleUnitType => sampleUnitType !== BLEACHING_PROPERTY_COLONIES_BLEACHED,
     )
 
-    return uniqueAvailableProtocol.reduce((accumulator, protocol) => {
-      const protocolTitle = protocolTitles[protocol]
+    return uniqueAvailableSampleUnits.reduce((accumulator, sampleUnit) => {
+      const sampleUnitTitle = sampleUnitTitles[sampleUnit]
 
-      if (protocolTitle) {
-        const protocolDataPolicy =
-          protocolTitle === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${protocol}`
+      if (sampleUnitTitle) {
+        const sampleUnitDataPolicy =
+          sampleUnitTitle === 'Bleaching' ? `data_policy_bleachingqc` : `data_policy_${sampleUnit}`
 
-        const protocolInfo = {
-          method: protocolTitle,
-          policy: currentSelectedSite[protocolDataPolicy],
-          protocol,
+        const sampleUnitInfo = {
+          method: sampleUnitTitle,
+          policy: currentSelectedSite[sampleUnitDataPolicy],
+          sampleUnit,
         }
 
-        accumulator.push(protocolInfo)
+        accumulator.push(sampleUnitInfo)
       }
 
       return accumulator
@@ -83,9 +83,9 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
     setOpen(false)
   }
 
-  const handleDownloadCSV = protocol => {
-    const protocolToDownload = pluralizedSampleUnits[protocol]
-    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/projects/${currentSelectedSite.project_id}/${protocolToDownload}/sampleevents/csv/`
+  const handleDownloadCSV = sampleUnit => {
+    const sampleUnitToDownload = pluralizedSampleUnits[sampleUnit]
+    const downloadCSVApi = `${process.env.REACT_APP_MERMAID_API_URL}/v1/projects/${currentSelectedSite.project_id}/${sampleUnitToDownload}/sampleevents/csv/`
 
     window.open(downloadCSVApi)
   }
@@ -105,12 +105,12 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
     </MermaidButton>
   )
 
-  const downloadCSVButton = protocol => (
+  const downloadCSVButton = sampleUnit => (
     <MermaidButton
       size="small"
       variant="contained"
       color="primary"
-      onClick={() => handleDownloadCSV(protocol)}
+      onClick={() => handleDownloadCSV(sampleUnit)}
     >
       <CloudDownloadIconWrapper />
       <Box fontWeight="fontWeightMedium">Download CSV</Box>
@@ -141,13 +141,13 @@ const DownloadDataModal = ({ currentSelectedSite, sites }) => {
           </TableRow>
         </TableHeadWrapper>
         <TableBody>
-          {availableProtocols.map(row => (
-            <TableRow key={row.method}>
-              <TableCellWrapper>{row.method}</TableCellWrapper>
-              <TableCellWrapper>{row.policy}</TableCellWrapper>
+          {availableSampleUnits.map(({ method, policy, sampleUnit }) => (
+            <TableRow key={method}>
+              <TableCellWrapper>{method}</TableCellWrapper>
+              <TableCellWrapper>{policy}</TableCellWrapper>
               <TableCellWrapper>
-                {row.policy === 'public' || row.policy === 'public summary'
-                  ? downloadCSVButton(row.protocol)
+                {policy === 'public' || policy === 'public summary'
+                  ? downloadCSVButton(sampleUnit)
                   : contactAdminsButton}
               </TableCellWrapper>
             </TableRow>

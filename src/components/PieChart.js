@@ -6,7 +6,10 @@ import styled, { css } from 'styled-components/macro'
 import PropTypes from 'prop-types'
 import { privateColorScale } from '../constants/attribute-colors'
 import { pieChartContentPropType } from '../lib/mermaidDataPropTypes'
-import { FISHBELT_SAMPLE_UNIT, sampleUnitAttributeColors } from '../constants/transect-protocols'
+import {
+  FISHBELT_SAMPLE_UNIT,
+  sampleUnitAttributeColors,
+} from '../constants/sample-unit-information'
 
 const ChartWrapper = styled('div')`
   width: 100%;

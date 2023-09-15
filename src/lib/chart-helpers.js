@@ -1,4 +1,4 @@
-import { bleachingCategories } from '../constants/transect-protocols'
+import { bleachingCategories } from '../constants/sample-unit-information'
 
 export default function getChartContent(content, isBleaching) {
   if (isBleaching) {

@@ -12,7 +12,7 @@ import CardChartContent from './CardChartContent'
 import CartTextContent from './CardTextContent'
 import LiveCoralCoverModal from './LiveCoralCoverModal'
 
-import ProtocolChartSubHeading from './ProtocolChartSubHeading'
+import SampleUnitChartSubHeading from './SampleUnitChartSubHeading'
 import {
   benthicPitPropType,
   bleachingPropType,
@@ -45,12 +45,12 @@ const cardStyle = makeStyles(theme => ({
 }))
 
 const InformationCard = ({
-  bleachingProtocolSubItems,
+  bleachingSampleUnitSubItems,
   dataPolicy,
   histogramContent,
   isFiltering,
   isPrivatePolicy,
-  protocolProperties,
+  sampleUnitProperties,
   sampleUnit,
   title,
   type,
@@ -65,14 +65,14 @@ const InformationCard = ({
 
   const modalToggleHandler = () => setModalStage(!modalStageOpen)
 
-  const pieChartProtocolSubHeadingItem = type === 'pieChart' && (
+  const pieChartSubHeadingItem = type === 'pieChart' && (
     <Box>
       <Typography m={1}>Data sharing: {dataPolicy}</Typography>
-      <ProtocolChartSubHeading
+      <SampleUnitChartSubHeading
         sampleUnit={sampleUnit}
-        protocolProperties={protocolProperties}
+        sampleUnitProperties={sampleUnitProperties}
         isPrivatePolicy={isPrivatePolicy}
-        bleachingProtocolSubItems={bleachingProtocolSubItems}
+        bleachingSampleUnitSubItems={bleachingSampleUnitSubItems}
         projectFishFamilies={projectFishFamilies}
       />
     </Box>
@@ -106,7 +106,7 @@ const InformationCard = ({
                 />
               )}
             </Box>
-            {pieChartProtocolSubHeadingItem}
+            {pieChartSubHeadingItem}
           </Box>
         </Box>
         {contentItem}
@@ -119,14 +119,14 @@ const InformationCard = ({
 }
 
 InformationCard.propTypes = {
-  bleachingProtocolSubItems: bleachingPropType,
+  bleachingSampleUnitSubItems: bleachingPropType,
   dataPolicy: PropTypes.string,
   histogramContent: histogramContentPropType,
   isFiltering: PropTypes.bool,
   isPrivatePolicy: PropTypes.bool,
   pieChartContent: pieChartContentPropType,
   projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
-  protocolProperties: PropTypes.oneOfType([
+  sampleUnitProperties: PropTypes.oneOfType([
     fishbeltPropType,
     benthicPitPropType,
     bleachingPropType,
@@ -138,12 +138,12 @@ InformationCard.propTypes = {
 }
 
 InformationCard.defaultProps = {
-  bleachingProtocolSubItems: {},
+  bleachingSampleUnitSubItems: {},
   histogramContent: [],
   pieChartContent: [],
   projectFishFamilies: [],
   textContent: {},
-  protocolProperties: {},
+  sampleUnitProperties: {},
   sampleUnit: '',
   dataPolicy: '',
   isFiltering: false,

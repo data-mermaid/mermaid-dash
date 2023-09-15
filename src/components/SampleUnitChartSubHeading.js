@@ -13,7 +13,7 @@ import {
   BENTHIC_PIT_SAMPLE_UNIT,
   BLEACHING_SAMPLE_UNIT,
   FISHBELT_SAMPLE_UNIT,
-} from '../constants/transect-protocols'
+} from '../constants/sample-unit-information'
 
 const SubHeadingText = ({ propertyName, propertyInfo, unit }) => {
   return propertyInfo ? (
@@ -24,11 +24,11 @@ const SubHeadingText = ({ propertyName, propertyInfo, unit }) => {
   ) : null
 }
 
-const ProtocolChartSubHeading = ({
+const SampleUnitChartSubHeading = ({
   sampleUnit,
-  protocolProperties,
+  sampleUnitProperties,
   isPrivatePolicy,
-  bleachingProtocolSubItems,
+  bleachingSampleUnitSubItems,
   projectFishFamilies,
 }) => {
   const [fishFamilyModalStageOpen, setFishFamilyModalStageOpen] = useState(false)
@@ -40,7 +40,7 @@ const ProtocolChartSubHeading = ({
   }
 
   if (sampleUnit === FISHBELT_SAMPLE_UNIT) {
-    const { sample_unit_count, biomass_kgha_avg } = protocolProperties
+    const { sample_unit_count, biomass_kgha_avg } = sampleUnitProperties
 
     return (
       <>
@@ -71,7 +71,7 @@ const ProtocolChartSubHeading = ({
     sampleUnit === BENTHIC_PIT_SAMPLE_UNIT ||
     sampleUnit === BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT
   ) {
-    const { sample_unit_count, percent_cover_by_benthic_category_avg } = protocolProperties
+    const { sample_unit_count, percent_cover_by_benthic_category_avg } = sampleUnitProperties
 
     return (
       <>
@@ -86,8 +86,12 @@ const ProtocolChartSubHeading = ({
   }
 
   if (sampleUnit === BLEACHING_SAMPLE_UNIT) {
-    const { count_total_avg, count_genera_avg } = bleachingProtocolSubItems
-    const { percent_hard_avg_avg, percent_soft_avg_avg, percent_algae_avg_avg } = protocolProperties
+    const { count_total_avg, count_genera_avg } = bleachingSampleUnitSubItems
+    const {
+      percent_hard_avg_avg,
+      percent_soft_avg_avg,
+      percent_algae_avg_avg,
+    } = sampleUnitProperties
 
     return (
       <>
@@ -126,23 +130,23 @@ SubHeadingText.defaultProps = {
   unit: '',
 }
 
-ProtocolChartSubHeading.propTypes = {
+SampleUnitChartSubHeading.propTypes = {
   sampleUnit: PropTypes.string.isRequired,
-  protocolProperties: PropTypes.oneOfType([
+  sampleUnitProperties: PropTypes.oneOfType([
     fishbeltPropType,
     benthicPitPropType,
     bleachingPropType,
   ]),
   isPrivatePolicy: PropTypes.bool,
-  bleachingProtocolSubItems: bleachingPropType,
+  bleachingSampleUnitSubItems: bleachingPropType,
   projectFishFamilies: PropTypes.arrayOf(PropTypes.string),
 }
 
-ProtocolChartSubHeading.defaultProps = {
-  bleachingProtocolSubItems: {},
-  protocolProperties: {},
+SampleUnitChartSubHeading.defaultProps = {
+  bleachingSampleUnitSubItems: {},
+  sampleUnitProperties: {},
   isPrivatePolicy: false,
   projectFishFamilies: [],
 }
 
-export default ProtocolChartSubHeading
+export default SampleUnitChartSubHeading
