@@ -1,4 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/no-array-index-key */
+
 import PropTypes from 'prop-types'
 import React from 'react'
 import TextField from '@material-ui/core/TextField'
@@ -70,10 +72,10 @@ const AutocompleteFilter = ({
 
           return (
             <div>
-              {parts.map(part => {
+              {parts.map((part, index) => {
                 return (
                   <span
-                    key={`dropdown-filter-list-${part.text}`}
+                    key={`dropdown-filter-list-${part.text}-${index}`}
                     style={{ fontWeight: part.highlight ? 700 : 400 }}
                   >
                     {part.text}

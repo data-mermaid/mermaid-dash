@@ -22,6 +22,12 @@ export const fishBeltAttributeColors = [
   { name: 'planktivore', color: '#BEBADA' },
 ]
 
+export const bleachingAttributeColors = [
+  { name: 'Normal', color: '#3c6e99' },
+  { name: 'Pale', color: '#a8bed5' },
+  { name: 'Bleached & Recently Dead', color: '#B4B4B4' },
+]
+
 export const privateColorScale = [
   '#DCDCDC',
   '#D3D3D3',

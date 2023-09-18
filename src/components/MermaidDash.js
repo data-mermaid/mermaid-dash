@@ -164,16 +164,16 @@ class MermaidDash extends Component {
         return sampleEvents
       }, [])
 
-      const sampleEventProtocols = sampleEventsFromSites.map(({ protocols }) => protocols)
+      const sampleUnitProtocols = sampleEventsFromSites.map(({ protocols }) => protocols)
 
-      setHistogram(this.histogramCount(sampleEventProtocols, histogram))
+      setHistogram(this.histogramCount(sampleUnitProtocols, histogram))
 
       const countryCount = this.getCount(sampleEventsFromSites, 'country_id')
       const projectCount = this.getCount(sampleEventsFromSites, 'project_id')
       const yearCount = this.getCount(sampleEventsFromSites, 'sample_date')
       const uniqueSiteCount = updatedSites.length
-      const transectCount = this.getTransectCount(sampleEventProtocols)
-      const averageCoralCoverageCount = this.getAverageCoralCoverage(sampleEventProtocols)
+      const transectCount = this.getTransectCount(sampleUnitProtocols)
+      const averageCoralCoverageCount = this.getAverageCoralCoverage(sampleUnitProtocols)
 
       if (prevMetricCountriesCount !== countryCount) {
         metrics[0].count = countryCount
@@ -384,8 +384,8 @@ class MermaidDash extends Component {
     return new Set(result).size
   }
 
-  getTransectCount = protocols => {
-    const protocolCount = protocols
+  getTransectCount = sampleUnits => {
+    const sampleUnitCount = sampleUnits
       .map(({ beltfish, benthicpit, benthiclit, habitatcomplexity, colonies_bleached }) => {
         const beltfishCount = beltfish ? beltfish.sample_unit_count : 0
         const benthicPitCount = benthicpit ? benthicpit.sample_unit_count : 0
@@ -403,11 +403,11 @@ class MermaidDash extends Component {
       })
       .reduce((acc, val) => acc + val, 0)
 
-    return protocolCount
+    return sampleUnitCount
   }
 
-  getSampleEventBenthicHardCoralAverages = protocols => {
-    return protocols.map(({ benthiclit, benthicpit, benthicpqt }) => {
+  getSampleEventBenthicHardCoralAverages = sampleUnits => {
+    return sampleUnits.map(({ benthiclit, benthicpit, benthicpqt }) => {
       const benthicLITCover = benthiclit && benthiclit.percent_cover_by_benthic_category_avg
       const benthicPITCover = benthicpit && benthicpit.percent_cover_by_benthic_category_avg
       const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_by_benthic_category_avg
@@ -434,8 +434,8 @@ class MermaidDash extends Component {
     })
   }
 
-  getAverageCoralCoverage = protocols => {
-    const benthicHardCoralAverages = this.getSampleEventBenthicHardCoralAverages(protocols)
+  getAverageCoralCoverage = sampleUnits => {
+    const benthicHardCoralAverages = this.getSampleEventBenthicHardCoralAverages(sampleUnits)
     const filteredBenthicHardCoralAverages = benthicHardCoralAverages.filter(val => val !== null)
     const sumOfHardCoralAverages = filteredBenthicHardCoralAverages.reduce(
       (acc, val) => acc + val,
@@ -517,8 +517,8 @@ class MermaidDash extends Component {
 
   zoomToSiteHandler = zoomToSiteOption => this.setState({ zoomToSite: zoomToSiteOption })
 
-  histogramCount = (protocols, histogramData) => {
-    const benthicHardCoralCount = this.getSampleEventBenthicHardCoralAverages(protocols)
+  histogramCount = (sampleUnits, histogramData) => {
+    const benthicHardCoralCount = this.getSampleEventBenthicHardCoralAverages(sampleUnits)
 
     return histogramData.map(({ x }) => {
       let count = 0

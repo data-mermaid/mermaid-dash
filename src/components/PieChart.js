@@ -4,12 +4,12 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import styled, { css } from 'styled-components/macro'
 
 import PropTypes from 'prop-types'
-import {
-  privateColorScale,
-  benthicAttributeColors,
-  fishBeltAttributeColors,
-} from '../constants/attribute-colors'
+import { privateColorScale } from '../constants/attribute-colors'
 import { pieChartContentPropType } from '../lib/mermaidDataPropTypes'
+import {
+  FISHBELT_SAMPLE_UNIT,
+  sampleUnitAttributeColors,
+} from '../constants/sample-unit-information'
 
 const ChartWrapper = styled('div')`
   width: 100%;
@@ -43,7 +43,7 @@ const SvgWrapper = styled('svg')`
     `}
 `
 
-const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
+const PieChart = ({ sampleUnit, chartContent, isPrivatePolicy, title }) => {
   const mediaMin600 = useMediaQuery('(min-width:600px)')
   const mediaMax600 = useMediaQuery('(max-width:600px)')
   const mediaMax960 = useMediaQuery('(max-width:960px')
@@ -53,10 +53,8 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
   const mediaMin600_Max960 = mediaMax960 && mediaMin600
   const mediaMin960_Max1280 = mediaMax1280 && mediaMin960
 
-  const attributeColors =
-    protocolName === 'beltfish' ? fishBeltAttributeColors : benthicAttributeColors
   const attributeCollection = chartContent.map(({ x, y }) => y !== 0 && x)
-  const filteredAttributeCollection = attributeColors.filter(({ name }) =>
+  const filteredAttributeCollection = sampleUnitAttributeColors[sampleUnit].filter(({ name }) =>
     attributeCollection.includes(name),
   )
   const attributeColorScale = filteredAttributeCollection.map(({ color }) => color)
@@ -66,7 +64,7 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
     return { x: name, y: foundAttribute.y }
   })
 
-  const labelUnit = protocolName === 'beltfish' ? 'kg/ha' : '%'
+  const labelUnit = sampleUnit === FISHBELT_SAMPLE_UNIT ? 'kg/ha' : '%'
   const legendData = contentData
     .filter(({ y }) => y > 0)
     .map(({ x }) => ({ name: x, symbol: { type: 'square' } }))
@@ -187,7 +185,7 @@ const PieChart = ({ protocolName, chartContent, isPrivatePolicy, title }) => {
 PieChart.propTypes = {
   chartContent: pieChartContentPropType.isRequired,
   isPrivatePolicy: PropTypes.bool,
-  protocolName: PropTypes.string.isRequired,
+  sampleUnit: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 }
 
