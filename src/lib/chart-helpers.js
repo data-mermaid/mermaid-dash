@@ -1,9 +1,9 @@
-import { bleachingCategories } from '../constants/transect-protocols'
+import { bleachingCategories } from '../constants/sample-unit-information'
 
 export default function getChartContent(content, isBleaching) {
   if (isBleaching) {
     return bleachingCategories.reduce((accumulator, category) => {
-      const { name, type } = category
+      const { type, name } = category
 
       if (content[type]) {
         accumulator.push({ x: name, y: content[type] })
