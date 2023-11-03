@@ -19,10 +19,10 @@ export const bleachingCategories = [
   { type: 'percent_bleached_avg', name: 'Bleached & Recently Dead' },
 ]
 export const chartContentProperties = {
-  [BENTHIC_LIT_SAMPLE_UNIT]: 'percent_cover_by_benthic_category_avg',
-  [BENTHIC_PIT_SAMPLE_UNIT]: 'percent_cover_by_benthic_category_avg',
-  [BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT]: 'percent_cover_by_benthic_category_avg',
-  [FISHBELT_SAMPLE_UNIT]: 'biomass_kgha_by_trophic_group_avg',
+  [BENTHIC_LIT_SAMPLE_UNIT]: 'percent_cover_benthic_category_avg',
+  [BENTHIC_PIT_SAMPLE_UNIT]: 'percent_cover_benthic_category_avg',
+  [BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT]: 'percent_cover_benthic_category_avg',
+  [FISHBELT_SAMPLE_UNIT]: 'biomass_kgha_trophic_group_avg',
   [BLEACHING_PROPERTY_QUADRAT_BENTHIC_PERCENT]: 'quadrat_benthic_percent',
 }
 
