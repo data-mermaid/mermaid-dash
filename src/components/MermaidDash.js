@@ -408,9 +408,9 @@ class MermaidDash extends Component {
 
   getSampleEventBenthicHardCoralAverages = sampleUnits => {
     return sampleUnits.map(({ benthiclit, benthicpit, benthicpqt }) => {
-      const benthicLITCover = benthiclit && benthiclit.percent_cover_by_benthic_category_avg
-      const benthicPITCover = benthicpit && benthicpit.percent_cover_by_benthic_category_avg
-      const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_by_benthic_category_avg
+      const benthicLITCover = benthiclit && benthiclit.percent_cover_benthic_category_avg
+      const benthicPITCover = benthicpit && benthicpit.percent_cover_benthic_category_avg
+      const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_benthic_category_avg
 
       if (benthicLITCover || benthicPITCover || benthicPQTCover) {
         const benthicLITHardCoral = benthicLITCover && benthicLITCover['Hard coral']

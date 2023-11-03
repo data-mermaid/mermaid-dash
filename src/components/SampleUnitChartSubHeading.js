@@ -71,14 +71,14 @@ const SampleUnitChartSubHeading = ({
     sampleUnit === BENTHIC_PIT_SAMPLE_UNIT ||
     sampleUnit === BENTHIC_PHOTO_QUADRAT_SAMPLE_UNIT
   ) {
-    const { sample_unit_count, percent_cover_by_benthic_category_avg } = sampleUnitProperties
+    const { sample_unit_count, percent_cover_benthic_category_avg } = sampleUnitProperties
 
     return (
       <>
         <SubHeadingText propertyName="Sample units" propertyInfo={sample_unit_count} />
         <SubHeadingText
           propertyName="Hard coral cover"
-          propertyInfo={percent_cover_by_benthic_category_avg['Hard coral']}
+          propertyInfo={percent_cover_benthic_category_avg['Hard coral']}
           unit="%"
         />
       </>

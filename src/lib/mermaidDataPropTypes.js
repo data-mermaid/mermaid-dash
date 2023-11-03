@@ -48,7 +48,7 @@ export const bleachingPropType = PropTypes.shape({
 export const fishbeltPropType = PropTypes.shape({
   sample_unit_count: PropTypes.number,
   biomass_kgha_avg: PropTypes.number,
-  biomass_kgha_by_trophic_group_avg: PropTypes.shape({
+  biomass_kgha_trophic_group_avg: PropTypes.shape({
     'herbivore-detritivore': PropTypes.number,
     'herbivore-macroalgae': PropTypes.number,
     'invertivore-mobile': PropTypes.number,
@@ -61,7 +61,7 @@ export const fishbeltPropType = PropTypes.shape({
 })
 
 export const benthicPitPropType = PropTypes.shape({
-  percent_cover_by_benthic_category_avg: PropTypes.shape({
+  percent_cover_benthic_category_avg: PropTypes.shape({
     'Bare substrate': PropTypes.number,
     'Crustose coralline algae': PropTypes.number,
     Cyanobacteria: PropTypes.number,
