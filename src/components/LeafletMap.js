@@ -82,14 +82,14 @@ const generateClusterIconStyle = ({
 }
 
 const miniMapLayer = L.tileLayer(
-  'https://stamen-tiles-{s}.a.ssl.fastly.net/toner-background/{z}/{x}/{y}{r}.{ext}',
+  'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.{extension}',
   {
     attribution:
-      'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Data by &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright">ODbL</a>',
     subdomains: 'abcd',
     minZoom: 0,
     maxZoom: 13,
-    ext: 'png',
+    extension: 'png',
   },
 )
 
