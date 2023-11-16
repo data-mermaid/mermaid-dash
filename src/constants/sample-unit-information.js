@@ -16,7 +16,11 @@ export const BLEACHING_PROPERTY_COLONIES_BLEACHED = 'colonies_bleached'
 export const bleachingCategories = [
   { type: 'percent_normal_avg', name: 'Normal' },
   { type: 'percent_pale_avg', name: 'Pale' },
-  { type: 'percent_bleached_avg', name: 'Bleached & Recently Dead' },
+  { type: 'percent_20_avg', name: 'Up to 20% Bleached' },
+  { type: 'percent_50_avg', name: '20% - 50% Bleached' },
+  { type: 'percent_80_avg', name: '50% - 80% Bleached' },
+  { type: 'percent_100_avg', name: '80% - 100% Bleached' },
+  { type: 'percent_dead_avg', name: 'Recently Dead' },
 ]
 export const chartContentProperties = {
   [BENTHIC_LIT_SAMPLE_UNIT]: 'percent_cover_benthic_category_avg',

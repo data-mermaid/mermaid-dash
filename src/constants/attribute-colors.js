@@ -24,8 +24,12 @@ export const fishBeltAttributeColors = [
 
 export const bleachingAttributeColors = [
   { name: 'Normal', color: '#3c6e99' },
-  { name: 'Pale', color: '#a8bed5' },
-  { name: 'Bleached & Recently Dead', color: '#B4B4B4' },
+  { name: 'Pale', color: '#6288ad' },
+  { name: 'Up to 20% Bleached', color: '#85a3c1' },
+  { name: '20% - 50% Bleached', color: '#a8bed5' },
+  { name: '50% - 80% Bleached', color: '#cbdaea' },
+  { name: '80% - 100% Bleached', color: '#eff7ff' },
+  { name: 'Recently Dead', color: '#B4B4B4' },
 ]
 
 export const privateColorScale = [
