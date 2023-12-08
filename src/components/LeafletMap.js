@@ -82,15 +82,7 @@ const generateClusterIconStyle = ({
 }
 
 const miniMapLayer = L.tileLayer(
-  'https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.{extension}',
-  {
-    attribution:
-      'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> &mdash; Data by &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright">ODbL</a>',
-    subdomains: 'abcd',
-    minZoom: 0,
-    maxZoom: 13,
-    extension: 'png',
-  },
+  'https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',
 )
 
 const worldImageryMapLayer = L.tileLayer(
@@ -101,7 +93,7 @@ const worldImageryMapLayer = L.tileLayer(
 )
 
 const labelLayer = L.tileLayer(
-  'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x} ',
+  'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
 )
 
 const mapProperty = {

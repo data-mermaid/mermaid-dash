@@ -2,10 +2,6 @@ body {
 	overflow: hidden;
 }
 
-.leaflet-bottom .leaflet-control {
-  opacity: 0.6 !important;
-}
-
 .leaflet-popup-content {
 	margin: 5px 15px  !important;
 }
