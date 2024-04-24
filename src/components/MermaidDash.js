@@ -407,25 +407,30 @@ class MermaidDash extends Component {
   }
 
   getSampleEventBenthicHardCoralAverages = sampleUnits => {
-    return sampleUnits.map(({ benthiclit, benthicpit, benthicpqt }) => {
+    return sampleUnits.map(({ benthiclit, benthicpit, benthicpqt, quadrat_benthic_percent }) => {
       const benthicLITCover = benthiclit && benthiclit.percent_cover_benthic_category_avg
       const benthicPITCover = benthicpit && benthicpit.percent_cover_benthic_category_avg
       const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_benthic_category_avg
+      const bleachingBQCCover =
+        quadrat_benthic_percent && quadrat_benthic_percent.percent_hard_avg_avg
 
-      if (benthicLITCover || benthicPITCover || benthicPQTCover) {
+      if (benthicLITCover || benthicPITCover || benthicPQTCover || bleachingBQCCover) {
         const benthicLITHardCoral = benthicLITCover && benthicLITCover['Hard coral']
         const benthicPITHardCoral = benthicPITCover && benthicPITCover['Hard coral']
         const benthicPQTHardCoral = benthicPQTCover && benthicPQTCover['Hard coral']
+        const benthicBQCHardCoral = bleachingBQCCover
 
         const numerator =
           (benthicLITHardCoral !== undefined ? benthicLITHardCoral : 0) +
           (benthicPITHardCoral !== undefined ? benthicPITHardCoral : 0) +
-          (benthicPQTHardCoral !== undefined ? benthicPQTHardCoral : 0)
+          (benthicPQTHardCoral !== undefined ? benthicPQTHardCoral : 0) +
+          (benthicBQCHardCoral !== undefined ? benthicBQCHardCoral : 0)
 
         const denominator =
           (benthicLITHardCoral !== undefined ? 1 : 0) +
           (benthicPITHardCoral !== undefined ? 1 : 0) +
-          (benthicPQTHardCoral !== undefined ? 1 : 0)
+          (benthicPQTHardCoral !== undefined ? 1 : 0) +
+          (benthicBQCHardCoral !== undefined ? 1 : 0)
 
         return numerator / denominator
       }
