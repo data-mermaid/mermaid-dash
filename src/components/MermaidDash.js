@@ -411,14 +411,13 @@ class MermaidDash extends Component {
       const benthicLITCover = benthiclit && benthiclit.percent_cover_benthic_category_avg
       const benthicPITCover = benthicpit && benthicpit.percent_cover_benthic_category_avg
       const benthicPQTCover = benthicpqt && benthicpqt.percent_cover_benthic_category_avg
-      const bleachingBQCCover =
+      const benthicBQCHardCoral =
         quadrat_benthic_percent && quadrat_benthic_percent.percent_hard_avg_avg
 
-      if (benthicLITCover || benthicPITCover || benthicPQTCover || bleachingBQCCover) {
+      if (benthicLITCover || benthicPITCover || benthicPQTCover || benthicBQCHardCoral) {
         const benthicLITHardCoral = benthicLITCover && benthicLITCover['Hard coral']
         const benthicPITHardCoral = benthicPITCover && benthicPITCover['Hard coral']
         const benthicPQTHardCoral = benthicPQTCover && benthicPQTCover['Hard coral']
-        const benthicBQCHardCoral = bleachingBQCCover
 
         const numerator =
           (benthicLITHardCoral !== undefined ? benthicLITHardCoral : 0) +
