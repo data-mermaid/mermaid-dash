@@ -546,10 +546,9 @@ class MermaidDash extends Component {
 
     return sites.reduce((newSites, site) => {
       const { longitude, latitude } = site[1][0]
-      const point = [longitude, latitude]
 
       for (const { x, y } of bboxList) {
-        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1]) {
+        if (longitude >= x[0] && longitude <= x[1] && latitude >= y[0] && latitude <= y[1]) {
           newSites.push(site)
         }
       }

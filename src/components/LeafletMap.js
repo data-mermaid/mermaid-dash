@@ -603,17 +603,17 @@ class LeafletMap extends Component {
     if (markersData.length === 0) {
       this.map.setView(mapProperty.center, mapProperty.zoom)
     } else {
-      const mapBounds = markersCluster.getBounds().pad(0.1)
+      const mapBounds = markersCluster.getBounds().pad(0.5)
       const mapBoundingBox = this.createBoundingBox(mapBounds)
       const mapBoundingBoxCorner = mapBounds.getSouth()
 
+      this.map.fitBounds(mapBounds)
       this.setState({
         mapZoomLevel: this.map.getZoom(),
         mapBoundingBoxCorner,
         mapBounds,
       })
 
-      this.map.fitBounds(mapBounds)
       getMapBounds(mapBoundingBox)
     }
 
