@@ -546,10 +546,9 @@ class MermaidDash extends Component {
 
     return sites.reduce((newSites, site) => {
       const { longitude, latitude } = site[1][0]
-      const point = [longitude, latitude]
 
       for (const { x, y } of bboxList) {
-        if (point[0] >= x[0] && point[0] <= x[1] && point[1] >= y[0] && point[1] <= y[1]) {
+        if (longitude >= x[0] && longitude <= x[1] && latitude >= y[0] && latitude <= y[1]) {
           newSites.push(site)
         }
       }
@@ -570,7 +569,8 @@ class MermaidDash extends Component {
     })
   }
 
-  filterUpdate = (queryStrings = []) => {
+  filterUpdate = () => {
+    const queryStrings = new URLSearchParams()
     const { filterParams } = this.state
     const countryProperty = Object.entries(filterParams)[0]
     const projectIdProperty = Object.entries(filterParams)[1]
@@ -579,28 +579,28 @@ class MermaidDash extends Component {
     const sampleDateBeforeProperty = Object.entries(filterParams)[4]
 
     if (countryProperty[1].length > 0) {
-      queryStrings.push([countryProperty[0], countryProperty[1].join(',')].join('='))
+      queryStrings.append(`${countryProperty[0]}`, `${countryProperty[1].join(',')}`)
     }
 
     if (projectIdProperty[1].length > 0) {
-      queryStrings.push([projectIdProperty[0], projectIdProperty[1].join(',')].join('='))
+      queryStrings.append(`${projectIdProperty[0]}`, `${projectIdProperty[1].join(',')}`)
     }
 
     if (organizationIdProperty[1].length > 0) {
-      queryStrings.push([organizationIdProperty[0], organizationIdProperty[1].join(',')].join('='))
+      queryStrings.append(`${organizationIdProperty[0]}`, `${organizationIdProperty[1].join(',')}`)
     }
 
     if (sampleDateAfterProperty[1].length > 0) {
-      queryStrings.push([sampleDateAfterProperty[0], sampleDateAfterProperty[1]].join('='))
+      queryStrings.append(`${sampleDateAfterProperty[0]}`, `${sampleDateAfterProperty[1]}`)
     }
     if (sampleDateBeforeProperty[1].length > 0) {
-      queryStrings.push([sampleDateBeforeProperty[0], sampleDateBeforeProperty[1]].join('='))
+      queryStrings.append(`${sampleDateBeforeProperty[0]}`, `${sampleDateBeforeProperty[1]}`)
     }
 
     // eslint-disable-next-line
     this.props.history.push({
       pathname: '/',
-      search: `?${queryStrings.join('&')}`,
+      search: `?${queryStrings.toString()}`,
     })
 
     window.location.reload()
