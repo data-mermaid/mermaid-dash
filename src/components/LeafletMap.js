@@ -163,7 +163,7 @@ class LeafletMap extends Component {
     )
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const {
       markersData: prevMarkersData,
       sidePanelOpen: prevSidePanelOpen,
@@ -182,20 +182,11 @@ class LeafletMap extends Component {
       zoomToSite,
     } = this.props
 
-    const {
-      mapZoomLevel: prevMapZoomLevel,
-      mapBoundingBoxCorner: prevMapBoundingBoxCorner,
-    } = prevState
-
-    const { mapZoomLevel, mapBoundingBoxCorner, popUpList, miniMap } = this.state
+    const { popUpList, miniMap } = this.state
     const prevSiteDetailId = prevSiteDetail && prevSiteDetail[0].site_id
     const siteDetailId = siteDetail && siteDetail[0].site_id
 
     if (markersData !== prevMarkersData) this.updateMarkers(markersData)
-
-    if (mapZoomLevel !== prevMapZoomLevel) this.updateBoundingBoxFromZoom()
-
-    if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) this.updateBoundingBoxFromPan()
 
     // Redraw leaflet map when dashboard is open or close
     if (sidePanelOpen !== prevSidePanelOpen) this.map.invalidateSize()
@@ -420,50 +411,6 @@ class LeafletMap extends Component {
     })
   }
 
-  updateBoundingBoxFromZoom() {
-    const { getMapBounds, contentLoadHandler } = this.props
-    const { mapZoomLevel } = this.state
-
-    this.map.once('zoomstart', () => contentLoadHandler(true))
-
-    this.map.once('zoomend', e => {
-      const curBounds = e.target.getBounds()
-      const curZoom = e.target.getZoom()
-      const curBBox = this.createBoundingBox(curBounds)
-
-      if (mapZoomLevel === curZoom) {
-        this.setState({ mapZoomLevel: curZoom + 1 })
-        contentLoadHandler(false)
-      } else {
-        this.setState({ mapZoomLevel: curZoom })
-        getMapBounds(curBBox)
-      }
-    })
-  }
-
-  updateBoundingBoxFromPan() {
-    const { mapBoundingBoxCorner } = this.state
-    const { getMapBounds, contentLoadHandler } = this.props
-
-    this.map.once('dragstart', () => contentLoadHandler(true))
-
-    this.map.once('dragend', e => {
-      const curBounds = e.target.getBounds()
-      const southBound = curBounds.getSouth()
-      const curBBox = this.createBoundingBox(curBounds)
-
-      setTimeout(() => {
-        if (mapBoundingBoxCorner === southBound) {
-          this.setState({ mapBoundingBoxCorner: southBound + 0.1 })
-          contentLoadHandler(false)
-        } else {
-          this.setState({ mapBoundingBoxCorner: southBound })
-          getMapBounds(curBBox)
-        }
-      }, 750)
-    })
-  }
-
   createPopup(markersData, coordinates) {
     const popUpContentStyles =
       markersData.length >= 10 || this.#countClusterPopupChar(markersData) >= 450
@@ -651,7 +598,6 @@ LeafletMap.propTypes = {
   removeHighlightCluster: PropTypes.func.isRequired,
   setClusterActive: PropTypes.func.isRequired,
   setIconActive: PropTypes.func.isRequired,
-  contentLoadHandler: PropTypes.func.isRequired,
   highlightMarker: PropTypes.shape({
     _latlng: PropTypes.shape({
       lat: PropTypes.number,

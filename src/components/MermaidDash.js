@@ -77,7 +77,6 @@ class MermaidDash extends Component {
     }
 
     this.fetchAllSites(paramsObj)
-    this.fetchAllSitesWithEmptyQueryParams()
 
     if (countryName) {
       filterParams.country = countryName.split(',')
@@ -155,8 +154,7 @@ class MermaidDash extends Component {
     }
 
     if (bbox !== prevBbox && !isFiltering) {
-      const updatedSites = this.filterSites(sites, bbox)
-      const sampleEventsFromSites = updatedSites.reduce((sampleEvents, site) => {
+      const sampleEventsFromSites = sites.reduce((sampleEvents, site) => {
         for (const sampleEvent of site[1]) {
           sampleEvents.push(sampleEvent)
         }
@@ -171,7 +169,7 @@ class MermaidDash extends Component {
       const countryCount = this.getCount(sampleEventsFromSites, 'country_id')
       const projectCount = this.getCount(sampleEventsFromSites, 'project_id')
       const yearCount = this.getCount(sampleEventsFromSites, 'sample_date')
-      const uniqueSiteCount = updatedSites.length
+      const uniqueSiteCount = sites.length
       const transectCount = this.getTransectCount(sampleUnitProtocols)
       const averageCoralCoverageCount = this.getAverageCoralCoverage(sampleUnitProtocols)
 
@@ -540,22 +538,6 @@ class MermaidDash extends Component {
   }
 
   contentLoadHandler = option => this.setState({ isLoading: option })
-
-  filterSites = (sites, bbox) => {
-    const bboxList = this.getBboxXY(bbox)
-
-    return sites.reduce((newSites, site) => {
-      const { longitude, latitude } = site[1][0]
-
-      for (const { x, y } of bboxList) {
-        if (longitude >= x[0] && longitude <= x[1] && latitude >= y[0] && latitude <= y[1]) {
-          newSites.push(site)
-        }
-      }
-
-      return newSites
-    }, [])
-  }
 
   filterHandler = ({ country, project, organization, sample_date_after, sample_date_before }) => {
     this.setState({
