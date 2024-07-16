@@ -226,7 +226,9 @@ class MermaidDash extends Component {
     const { filterChoices } = this.state
     const projectsParam = updatedParams.project_id && updatedParams.project_id.split(/,(?=\S)|:/)
     const organizationsParam = updatedParams.tag_id && updatedParams.tag_id.split(/,(?=\S)|:/)
-    const projectApi = summary.get('/projects/?showall&status=90&limit=1000')
+    const projectApi = summary.get(
+      '/projects/?showall&status=90&limit=1000&fields=id,name,countries,tags',
+    )
     const organizationApi = summary.get('/projecttags/?limit=1000')
     const choicesApi = summary.get('/choices/')
     const fishFamiliesApi = summary.get('fishfamilies/?limit=500')
