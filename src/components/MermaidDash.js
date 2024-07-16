@@ -541,19 +541,53 @@ class MermaidDash extends Component {
   contentLoadHandler = option => this.setState({ isLoading: option })
 
   filterSites = (sites, bbox) => {
-    const bboxList = this.getBboxXY(bbox)
+    const normalizeLongitude = lon => {
+      let lng = lon
 
-    return sites.reduce((newSites, site) => {
+      while (lng < -180) {
+        lng += 360
+      }
+      while (lng > 180) {
+        lng -= 360
+      }
+
+      return lng
+    }
+
+    const x1 = bbox._southWest.lng
+    const x2 = bbox._northEast.lng
+    const y1 = bbox._southWest.lat
+    const y2 = bbox._northEast.lat
+    const searchBoxes = []
+
+    if (x1 < -180 && x2 > 180) {
+      searchBoxes.push([-180, y1, 180, y2])
+    } else if (x1 >= -180 && x2 > 180) {
+      searchBoxes.push([x1, y1, 180, y2])
+      searchBoxes.push([-180, y1, normalizeLongitude(x2), y2])
+    } else if (x1 < -180 && x2 <= 180) {
+      searchBoxes.push([-180, y1, x2, y2])
+      searchBoxes.push([normalizeLongitude(x1), y1, 180, y2])
+    } else {
+      searchBoxes.push([x1, y1, x2, y2])
+    }
+
+    const filteredSites = sites.reduce((newSites, site) => {
       const { longitude, latitude } = site[1][0]
 
-      for (const { x, y } of bboxList) {
-        if (longitude >= x[0] && longitude <= x[1] && latitude >= y[0] && latitude <= y[1]) {
-          newSites.push(site)
-        }
+      const is_in_bbox =
+        searchBoxes.filter(([_x1, _y1, _x2, _y2]) => {
+          return longitude >= _x1 && longitude <= _x2 && latitude >= _y1 && latitude <= _y2
+        }).length > 0
+
+      if (is_in_bbox) {
+        newSites.push(site)
       }
 
       return newSites
     }, [])
+
+    return filteredSites
   }
 
   filterHandler = ({ country, project, organization, sample_date_after, sample_date_before }) => {
