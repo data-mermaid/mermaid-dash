@@ -564,6 +564,8 @@ class MermaidDash extends Component {
 
     if (x1 < -180 && x2 > 180) {
       searchBoxes.push([-180, y1, 180, y2])
+    } else if ((x1 > 180 && x2 > 180) || (x1 < -180 && x2 <= 180)) {
+      searchBoxes.push([normalizeLongitude(x1), y1, normalizeLongitude(x2), y2])
     } else if (x1 >= -180 && x2 > 180) {
       searchBoxes.push([x1, y1, 180, y2])
       searchBoxes.push([-180, y1, normalizeLongitude(x2), y2])
