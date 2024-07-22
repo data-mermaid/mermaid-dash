@@ -198,7 +198,7 @@ class LeafletMap extends Component {
     if (mapBoundingBoxCorner !== prevMapBoundingBoxCorner) this.updateBoundingBoxFromPan()
 
     // Redraw leaflet map when dashboard is open or close
-    if (sidePanelOpen !== prevSidePanelOpen) this.map.invalidateSize()
+    if (sidePanelOpen !== prevSidePanelOpen) this.updateBoundingBoxMapResize()
 
     // Reset when selected site view is set to center
     if (!sidePanelOpen && sidePanelOpen !== prevSidePanelOpen)
@@ -313,7 +313,7 @@ class LeafletMap extends Component {
 
     if (zoomFullMap) {
       if (mapBounds) {
-        const bbox = this.createBoundingBox(mapBounds)
+        const bbox = mapBounds
 
         this.map.fitBounds(mapBounds)
         fullMapZoomHandler(false)
@@ -354,72 +354,6 @@ class LeafletMap extends Component {
     return coordinatesSizeResult && siteNamesSizeResult
   }
 
-  splitWestEast(w, e) {
-    const { mapBounds } = this.state
-    const maxBounds = mapBounds && mapBounds.getEast()
-    const minBounds = mapBounds && mapBounds.getWest()
-    const eastSide = maxBounds || e
-
-    if (mapBounds && (e < minBounds || w > maxBounds)) {
-      // console.log('Out of bounds case')
-      return [[]]
-    } else if (eastSide <= 180) {
-      // console.log('When all markers locates on [0, 180]')
-      return [[w, e]]
-    } else if (eastSide > 180) {
-      // console.log('When all markers locates on [0, 360]')
-      if (w > 180) {
-        // console.log('Markers west and east are > 180, example: Belize')
-        return [[w - 360, eastSide - 360]]
-      } else if (minBounds && w < minBounds) {
-        if (e < 180) {
-          // console.log('Markers west and east stay between minBounds and east')
-          return [[minBounds, e]]
-        } else if (e > maxBounds) {
-          // console.log('When map is moving to right, and east is at maxBounds')
-          return [
-            [minBounds, 180],
-            [-180, maxBounds - 360],
-          ]
-        }
-
-        // console.log('When map is moving to west (LEFT) side')
-        return [
-          [minBounds, 180],
-          [-180, e - 360],
-        ]
-      } else if (w > 0 && e < 180) {
-        // console.log('Markers west and east stay between 0 and 180. example: Indonesia')
-        return [[w, e]]
-      } else if (e < maxBounds) {
-        // console.log('Left side of Belize')
-        return [
-          [w, 180],
-          [-180, e - 360],
-        ]
-      }
-
-      // console.log('When map is moving to east (RIGHT) side');
-      return [
-        [w, 180],
-        [-180, eastSide - 360],
-      ]
-    }
-
-    return [[]]
-  }
-
-  createBoundingBox(boundingBox) {
-    const north = boundingBox.getNorth()
-    const east = boundingBox.getEast()
-    const south = boundingBox.getSouth()
-    const west = boundingBox.getWest()
-
-    return this.splitWestEast(west, east).map(bound => {
-      return this.#buildBbox(north, bound[1], south, bound[0])
-    })
-  }
-
   updateBoundingBoxFromZoom() {
     const { getMapBounds, contentLoadHandler } = this.props
     const { mapZoomLevel } = this.state
@@ -429,14 +363,13 @@ class LeafletMap extends Component {
     this.map.once('zoomend', e => {
       const curBounds = e.target.getBounds()
       const curZoom = e.target.getZoom()
-      const curBBox = this.createBoundingBox(curBounds)
 
       if (mapZoomLevel === curZoom) {
         this.setState({ mapZoomLevel: curZoom + 1 })
         contentLoadHandler(false)
       } else {
         this.setState({ mapZoomLevel: curZoom })
-        getMapBounds(curBBox)
+        getMapBounds(curBounds)
       }
     })
   }
@@ -450,7 +383,6 @@ class LeafletMap extends Component {
     this.map.once('dragend', e => {
       const curBounds = e.target.getBounds()
       const southBound = curBounds.getSouth()
-      const curBBox = this.createBoundingBox(curBounds)
 
       setTimeout(() => {
         if (mapBoundingBoxCorner === southBound) {
@@ -458,10 +390,28 @@ class LeafletMap extends Component {
           contentLoadHandler(false)
         } else {
           this.setState({ mapBoundingBoxCorner: southBound })
-          getMapBounds(curBBox)
+          getMapBounds(curBounds)
         }
       }, 750)
     })
+  }
+
+  updateBoundingBoxMapResize() {
+    const { mapBoundingBoxCorner } = this.state
+    const { getMapBounds, contentLoadHandler } = this.props
+
+    this.map.invalidateSize()
+
+    const curBounds = this.map.getBounds()
+    const southBound = curBounds.getSouth()
+
+    if (mapBoundingBoxCorner === southBound) {
+      this.setState({ mapBoundingBoxCorner: southBound + 0.1 })
+      contentLoadHandler(false)
+    } else {
+      this.setState({ mapBoundingBoxCorner: southBound })
+      getMapBounds(curBounds)
+    }
   }
 
   createPopup(markersData, coordinates) {
@@ -608,7 +558,6 @@ class LeafletMap extends Component {
       this.map.fitBounds(markerBounds)
 
       const mapBounds = this.map.getBounds()
-      const mapBoundingBox = this.createBoundingBox(mapBounds)
       const mapBoundingBoxCorner = mapBounds.getSouth()
 
       this.setState({
@@ -617,7 +566,7 @@ class LeafletMap extends Component {
         mapBounds,
       })
 
-      getMapBounds(mapBoundingBox)
+      getMapBounds(mapBounds)
     }
 
     this.map.addLayer(markersCluster)
