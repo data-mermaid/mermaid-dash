@@ -14,7 +14,7 @@
     "url": "https://github.com/data-mermaid/mermaid-dash/issues"
   },
   "engines": {
-    "node": ">=10.15.3 <11.00",
+    "node": ">=16",
     "npm": "~6.8.0"
   },
   "scripts": {
