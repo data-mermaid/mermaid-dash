@@ -77,6 +77,7 @@ class MermaidDash extends Component {
     }
 
     this.fetchAllSites(paramsObj)
+    this.fetchAllSitesWithEmptyQueryParams()
 
     if (countryName) {
       filterParams.country = countryName.split(',')
