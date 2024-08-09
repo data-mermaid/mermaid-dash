@@ -388,21 +388,32 @@ class MermaidDash extends Component {
 
   getTransectCount = sampleUnits => {
     const sampleUnitCount = sampleUnits
-      .map(({ beltfish, benthicpit, benthiclit, habitatcomplexity, colonies_bleached }) => {
-        const beltfishCount = beltfish ? beltfish.sample_unit_count : 0
-        const benthicPitCount = benthicpit ? benthicpit.sample_unit_count : 0
-        const benthicLitCount = benthiclit ? benthiclit.sample_unit_count : 0
-        const habitatComplexityCount = habitatcomplexity ? habitatcomplexity.sample_unit_count : 0
-        const coloniesBleachedCount = colonies_bleached ? colonies_bleached.sample_unit_count : 0
+      .map(
+        ({
+          beltfish,
+          benthicpit,
+          benthiclit,
+          benthicpqt,
+          habitatcomplexity,
+          colonies_bleached,
+        }) => {
+          const beltfishCount = beltfish ? beltfish.sample_unit_count : 0
+          const benthicPitCount = benthicpit ? benthicpit.sample_unit_count : 0
+          const benthicLitCount = benthiclit ? benthiclit.sample_unit_count : 0
+          const benthicPqtCount = benthicpqt ? benthicpqt.sample_unit_count : 0
+          const habitatComplexityCount = habitatcomplexity ? habitatcomplexity.sample_unit_count : 0
+          const coloniesBleachedCount = colonies_bleached ? colonies_bleached.sample_unit_count : 0
 
-        return (
-          beltfishCount +
-          benthicPitCount +
-          benthicLitCount +
-          habitatComplexityCount +
-          coloniesBleachedCount
-        )
-      })
+          return (
+            beltfishCount +
+            benthicPitCount +
+            benthicLitCount +
+            benthicPqtCount +
+            habitatComplexityCount +
+            coloniesBleachedCount
+          )
+        },
+      )
       .reduce((acc, val) => acc + val, 0)
 
     return sampleUnitCount
