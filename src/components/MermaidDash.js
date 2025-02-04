@@ -308,18 +308,9 @@ class MermaidDash extends Component {
   }
 
   fetchNonTestProjectChoices = (projects, property, property_array) => {
-    const result = projects
-      .reduce((nonTestProject, project) => {
-        if (project[property].length !== 0) {
-          nonTestProject.push(project[property])
-        }
+    const result = new Set(projects.flatMap(project => project[property] || []))
 
-        return nonTestProject
-      }, [])
-      .join(',')
-      .split(',')
-
-    return property_array.filter(({ name }) => [...new Set(result)].includes(name))
+    return property_array.filter(({ name }) => result.has(name))
   }
 
   getBboxXY = bbox => {
